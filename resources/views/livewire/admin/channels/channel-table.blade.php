@@ -189,7 +189,6 @@
         {{ $channels->links() }}
     </div>
 </div>
-
 @push('js')
     <script>
         function confirmDelete(channelID) {

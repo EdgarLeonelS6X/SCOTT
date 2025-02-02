@@ -12,6 +12,12 @@
             'route' => route('admin.channels.index'),
             'active' => request()->routeIs('admin.channels.*'),
         ],
+        [
+            'name' => __('Stages'),
+            'icon' => 'fa-solid fa-bars-staggered',
+            'route' => route('admin.stages.index'),
+            'active' => request()->routeIs('admin.stages.*'),
+        ],
     ];
 @endphp
 
