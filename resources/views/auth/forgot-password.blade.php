@@ -30,7 +30,7 @@
                         </div>
                         <x-button class="w-full mt-6 font-bold">
                             <i class="fa-solid fa-paper-plane mr-2"></i>
-                            {{ __('Email Password Reset Link') }}
+                            {{ __('Email password reset link') }}
                         </x-button>
                     </form>
                 </div>

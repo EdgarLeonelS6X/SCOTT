@@ -5,7 +5,13 @@
             'icon' => 'fa-solid fa-house',
             'route' => route('admin.dashboard'),
             'active' => request()->routeIs('admin.dashboard'),
-        ]
+        ],
+        [
+            'name' => __('Channels'),
+            'icon' => 'fa-solid fa-tv',
+            'route' => route('admin.channels.index'),
+            'active' => request()->routeIs('admin.channels.*'),
+        ],
     ];
 @endphp
 

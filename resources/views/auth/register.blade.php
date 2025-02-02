@@ -8,7 +8,7 @@
                     <a href="{{ route('redirectToGoogle') }}"
                         class="flex items-center justify-center w-full text-gray-700 bg-transparent border 
                         border-gray-400 hover:bg-gray-100 hover:text-gray-900 focus:ring-4 focus:outline-none 
-                        focus:ring-gray-300 font-bold rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 shadow">
+                        focus:ring-gray-300 font-bold rounded-lg text-base px-5 py-2.5 text-center me-2 mb-2 shadow">
                         <i class="fa-brands fa-google mr-2"></i>
                         {{ __('Sign up with Google') }}
                     </a>
