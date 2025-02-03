@@ -23,7 +23,7 @@ class GoogleAuthController extends Controller
             if (!str_ends_with($email, '@stargroup.com.mx')) {
                 session()->flash('swal', [
                     'icon' => 'error',
-                    'title' => __('Access Denied'),
+                    'title' => __('¡Access denied!'),
                     'text' => __('Only emails with the @stargroup.com.mx domain are allowed.')
                 ]);
 

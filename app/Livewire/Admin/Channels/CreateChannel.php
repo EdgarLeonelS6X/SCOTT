@@ -22,12 +22,18 @@ class CreateChannel extends Component
     {
         $this->withValidator(function ($validator) {
             if ($validator->fails()) {
-                $errors = collect($validator->errors()->all())->implode('<br>');
+                $errorMessages = '<ul style="list-style-type: disc; padding-left: 20px; margin-left: 0; padding-right: 0;">';
+
+                foreach ($validator->errors()->all() as $error) {
+                    $errorMessages .= "<li style='list-style-position: inside;'>$error</li>";
+                }
+
+                $errorMessages .= '</ul>';
 
                 $this->dispatch('swal', [
                     'icon' => 'error',
                     'title' => '¡Error!',
-                    'html' => __('Your registration for a new channel contains the following errors:') . '<br>' . '<br>' . $errors,
+                    'html' => '<b>' . __('Your registration for a new channel contains the following errors:') . '</b><br><br>' . $errorMessages,
                 ]);
             }
         });
