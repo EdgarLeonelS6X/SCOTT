@@ -7,10 +7,10 @@
                     <div @click.stop="editingName = true" class="dark:text-white text-lg font-semibold">
                         <template x-if="!editingName">
                             <h3 title="{{ __('Click here to edit the name of the report category') }}">
-                                {{ $category['name'] ?: __('New report') }}</h3>
+                                {{ $reportData['category'] ?: __('New report') }}</h3>
                         </template>
                         <template x-if="editingName">
-                            <x-input type="text" wire:model.lazy="category.name" @click.away="editingName = false"
+                            <x-input type="text" wire:model.lazy="reportData.category" @click.away="editingName = false"
                                 @keydown.enter="editingName = false" placeholder="{{ __('Category name') }}"
                                 autofocus />
                         </template>
@@ -25,7 +25,7 @@
                 </button>
             </div>
             <div x-show="open" class="mt-6 space-y-6">
-                @foreach ($category['channels'] as $channelIndex => $channel)
+                @foreach ($reportData['channels'] as $channelIndex => $channel)
                     <div class="p-6 bg-gray-50 border dark:bg-gray-700 rounded-xl shadow-2xl">
                         <div class="flex justify-between items-center mb-4">
                             <h4 class="text-md font-semibold text-gray-800 dark:text-white">
@@ -43,13 +43,14 @@
                                     <i class="fa-solid fa-tv mr-1.5"></i>
                                     {{ __('Channel') }}
                                 </label>
-                                <select wire:model="category.channels.{{ $channelIndex }}.channel_id"
+                                <select wire:model="reportData.channels.{{ $channelIndex }}.channel_id"
                                     class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
                                     <option disabled selected value="">
                                         {{ __('Select a channel') }}
                                     </option>
                                     @foreach ($channels as $channel)
-                                        <option value="{{ $channel->id }}">{{ $channel->number }}  {{ $channel->name }}</option>
+                                        <option value="{{ $channel->id }}">{{ $channel->number }}
+                                            {{ $channel->name }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -58,7 +59,7 @@
                                     <i class="fa-solid fa-bars-staggered mr-1.5"></i>
                                     {{ __('Stage') }}
                                 </label>
-                                <select wire:model="category.channels.{{ $channelIndex }}.stage"
+                                <select wire:model="reportData.channels.{{ $channelIndex }}.stage"
                                     class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
                                     <option disabled selected value="">
                                         {{ __('Select a stage') }}
@@ -73,7 +74,7 @@
                                     <i class="fa-solid fa-server mr-1.5"></i>
                                     {{ __('Protocol') }}
                                 </label>
-                                <select wire:model="category.channels.{{ $channelIndex }}.protocol"
+                                <select wire:model="reportData.channels.{{ $channelIndex }}.protocol"
                                     class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
                                     <option value="" disabled selected>
                                         {{ __('Select a protocol') }}
@@ -88,7 +89,7 @@
                                     <i class="fa-solid fa-forward mr-1.5"></i>
                                     {{ __('Audiovisual') }}
                                 </label>
-                                <select wire:model="category.channels.{{ $channelIndex }}.media"
+                                <select wire:model="reportData.channels.{{ $channelIndex }}.media"
                                     class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
                                     <option value="" disabled selected>
                                         {{ __('Select an audiovisual problem') }}
@@ -103,7 +104,7 @@
                                     <i class="fa-solid fa-comment mr-1.5"></i>
                                     {{ __('Description (Optional)') }}
                                 </label>
-                                <textarea wire:model="category.channels.{{ $channelIndex }}.description" rows="3"
+                                <textarea wire:model="reportData.channels.{{ $channelIndex }}.description" rows="3"
                                     class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                                     placeholder="{{ __('Enter a description of the problem') }}"></textarea>
                             </div>

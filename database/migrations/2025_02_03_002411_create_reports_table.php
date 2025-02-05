@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('reports', function (Blueprint $table) {
             $table->id();
             $table->string('type');
+            $table->string('category');
             $table->date('report_date');
             $table->time('start_time')->nullable()->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->time('end_time')->nullable()->default(DB::raw('CURRENT_TIMESTAMP'));

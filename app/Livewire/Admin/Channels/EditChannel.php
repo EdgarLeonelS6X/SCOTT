@@ -62,7 +62,7 @@ class EditChannel extends Component
             'name' => 'required|string',
             'url' => 'nullable|url',
             'category' => 'required|string',
-            'status' => 'required|string',
+            'status' => 'required|numeric',
             'new_image' => 'nullable|image',
         ], [], [
             'number' => __('channel number'),

@@ -52,16 +52,24 @@
     <div class="p-4 sm:ml-52">
         <div class="mt-14">
             <div class="flex justify-between items-center">
+
                 @include('layouts.partials.admin.breadcrumb')
 
                 @isset($action)
+
                     <div>
+
                         {{ $action }}
                     </div>
+
                 @endisset
+
             </div>
+
             <div class="p-4 rounded-lg">
+
                 {{ $slot }}
+                
             </div>
         </div>
     </div>

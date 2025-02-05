@@ -51,12 +51,8 @@
                         {{ __('Image') }}
                     </th>
                     <th scope="col" class="px-4 py-3">
-                        <i class="fa-solid fa-hashtag mr-1"></i>
-                        {{ __('Number') }}
-                    </th>
-                    <th scope="col" class="px-4 py-3">
                         <i class="fa-solid fa-tv mr-1"></i>
-                        {{ __('Name') }}
+                        {{ __('Channel') }}
                     </th>
                     <th scope="col" class="px-4 py-3">
                         <i class="fa-solid fa-arrow-right-arrow-left mr-1"></i>
@@ -78,7 +74,7 @@
                     </th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody x-data="{ openDropdown: null }">
                 @forelse ($channels as $channel)
                     <tr onclick="window.location.href='{{ route('admin.channels.show', $channel) }}'"
                         class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-600 text-black dark:text-white cursor-pointer">
@@ -88,10 +84,7 @@
                         </td>
                         <th scope="row"
                             class="px-4 py-2.5 font-bold text-gray-900 whitespace-nowrap dark:text-white">
-                            {{ $channel->number }}
-                        </th>
-                        <td class="px-4 py-2.5">
-                            {{ $channel->name }}
+                            {{ $channel->number }} {{ $channel->name }}
                         </td>
                         <td class="px-4 py-2.5">
                             {{ $channel->origin }}
@@ -119,24 +112,24 @@
                             @endif
                         </td>
                         <td class="px-4 py-2.5 flex items-center justify-center">
-                            <button id="channel-dropdown-button-{{ $channel->id }}"
-                                data-dropdown-toggle="channel-dropdown-{{ $channel->id }}"
-                                onclick="event.stopPropagation()"
+                            <button
+                                @click="openDropdown = (openDropdown === {{ $channel->id }} ? null : {{ $channel->id }})"
+                                @click.stop
                                 class="inline-flex items-center p-3 text-sm font-medium text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none dark:text-gray-400 dark:hover:text-gray-100"
                                 type="button">
                                 <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20"
                                     xmlns="http://www.w3.org/2000/svg">
                                     <path
-                                        d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z" />
+                                        d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a 2 2 0 100-4 2 2 0 000 4z" />
                                 </svg>
                             </button>
-                            <div id="channel-dropdown-{{ $channel->id }}"
-                                class="hidden z-auto w-44 bg-white rounded divide-y divide-gray-300 shadow-2xl dark:bg-gray-700 dark:divide-gray-600">
-                                <ul class="flex flex-col items-start py-1 text-sm text-gray-700 dark:text-gray-200"
-                                    aria-labelledby="channel-dropdown-button-{{ $channel->id }}">
+                            <div x-show="openDropdown === {{ $channel->id }}" @click.away="openDropdown = null"
+                                x-transition
+                                class="absolute z-50 w-44 bg-white rounded divide-y divide-gray-300 shadow-2xl dark:bg-gray-700 dark:divide-gray-600">
+                                <ul class="flex flex-col items-start py-1 text-sm text-gray-700 dark:text-gray-200">
                                     <li class="w-full">
                                         <a href="#" title="{{ __('Play channel') }}"
-                                            onclick="event.preventDefault(); openMiniPlayer('{{ $channel->url }}');"
+                                            @click.prevent.stop="openMiniPlayer('{{ $channel->url }}'); openDropdown = null"
                                             class="flex items-center w-full py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
                                             <i class="fa-solid fa-play mr-2"></i>
                                             {{ __('Play') }}
@@ -146,7 +139,7 @@
                                         <a href="{{ route('admin.channels.show', $channel) }}"
                                             title="{{ __('Show channel information') }}"
                                             class="flex items-center w-full py-2 px-3.5 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
-                                            <i class="fa-solid fa-eye mr-2"></i> 
+                                            <i class="fa-solid fa-eye mr-2"></i>
                                             {{ __('Show') }}
                                         </a>
                                     </li>
@@ -154,7 +147,7 @@
                                         <a href="{{ route('admin.channels.edit', $channel) }}"
                                             title="{{ __('Edit channel') }}"
                                             class="flex items-center w-full py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
-                                            <i class="fa-solid fa-pen-to-square mr-2"></i> 
+                                            <i class="fa-solid fa-pen-to-square mr-2"></i>
                                             {{ __('Edit') }}
                                         </a>
                                     </li>
@@ -164,7 +157,8 @@
                                         id="delete-form-{{ $channel->id }}">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="button" onclick="confirmDelete({{ $channel->id }})"
+                                        <button type="button"
+                                            @click.stop.prevent="confirmDelete({{ $channel->id }}); openDropdown = null"
                                             title="{{ __('Delete channel') }}"
                                             class="flex items-center w-full text-left py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">
                                             <i class="fa-solid fa-trash-can mr-2"></i>
@@ -185,7 +179,7 @@
             </tbody>
         </table>
     </div>
-    <div>
+    <div class="p-4">
         {{ $channels->links() }}
     </div>
 </div>

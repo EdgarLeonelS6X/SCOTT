@@ -8,6 +8,7 @@ class Report extends Model
 {
     protected $fillable = [
         'type',
+        'category',
         'report_date',
         'start_time',
         'end_time',

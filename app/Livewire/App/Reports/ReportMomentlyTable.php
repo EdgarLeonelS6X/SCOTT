@@ -2,9 +2,8 @@
 
 namespace App\Livewire\App\Reports;
 
-use App\Models\Channel;
-use Livewire\Component;
 use App\Models\Report;
+use Livewire\Component;
 use Livewire\WithPagination;
 use Carbon\Carbon;
 
@@ -12,11 +11,13 @@ class ReportMomentlyTable extends Component
 {
     use WithPagination;
 
-    protected $listeners = ['reportCreated' => '$refresh'];
     public $search = '';
     public $order = 'desc';
-    protected $queryString = ['search'];
     public $selectedReport = null;
+    public $showModal = false;
+
+    protected $queryString = ['search'];
+    protected $listeners = ['reportCreated' => '$refresh'];
 
     public function updatingSearch()
     {
@@ -35,37 +36,41 @@ class ReportMomentlyTable extends Component
         }
     }
 
-    public function toggleOrder()
-    {
-        $this->order = $this->order === 'asc' ? 'desc' : 'asc';
-    }
-
     public function openReportDetails($reportId)
     {
-        $this->selectedReport = Report::with(['reportDetails.channel', 'reportedBy'])->find($reportId);
+        $this->selectedReport = Report::with(['reportDetails.channel'])->find($reportId);
+        $this->showModal = true;
     }
 
     public function closeReportDetails()
     {
         $this->selectedReport = null;
+        $this->showModal = false;
+    }
+
+    public function toggleOrder()
+    {
+        $this->order = $this->order === 'asc' ? 'desc' : 'asc';
+        $this->resetPage();
     }
 
     public function render()
     {
-        $filteredChannels = Channel::where('number', 'like', '%' . $this->search . '%')
-            ->orWhere('name', 'like', '%' . $this->search . '%')
-            ->get();
-
         $reports = Report::where('type', 'Momentary')
-            ->whereHas('reportDetails', function ($query) use ($filteredChannels) {
-                $query->whereIn('channel_id', $filteredChannels->pluck('id')->toArray());
+            ->where(function ($query) {
+                $query->where('category', 'like', '%' . $this->search . '%') 
+                    ->orWhereHas('reportDetails.channel', function ($channelQuery) {
+                        $channelQuery->where('name', 'like', '%' . $this->search . '%') 
+                            ->orWhere('number', 'like', '%' . $this->search . '%');
+                    });
             })
-            ->with(['reportDetails.channel', 'reportedBy'])
+            ->with(['reportDetails.channel'])
             ->orderBy('created_at', $this->order)
-            ->paginate(5);
+            ->paginate(6);
 
         $reports->getCollection()->transform(function ($report) {
             $report->formatted_date = $this->formatDate($report->created_at);
+            $report->channels_preview = $report->reportDetails->take(3)->map(fn($detail) => $detail->channel->name)->implode(', ') . ($report->reportDetails->count() > 3 ? '...' : '');
             return $report;
         });
 

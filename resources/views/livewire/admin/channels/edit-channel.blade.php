@@ -31,12 +31,12 @@ use App\Enums\ChannelOrigin;
                 </x-label>
                 <figure
                     class="bg-gray-100 dark:bg-gray-700 rounded-lg cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-600">
-                    <input type="file" id="image-input" class="hidden" wire:model="image_url" accept="image/*">
+                    <input type="file" id="image-input" class="hidden" wire:model="new_image" accept="image/*">
                     <div id="drop-area"
                         class="flex flex-col justify-center items-center p-10 border border-dashed border-gray-300 rounded-lg">
                         @if ($image_url)
                             <img class="object-contain object-center w-60 h-60 rounded-lg"
-                            src="{{ $new_image ? $new_image->temporaryUrl() : ($image_url ? asset('storage/' . $image_url) : asset('img/no-image.png')) }}"
+                             src="{{ $new_image ? $new_image->temporaryUrl() : ($image_url ? asset('storage/' . $image_url) : asset('img/no-image.png')) }}"
                             alt="{{ __('Image preview') }}">
                         @else
                             <p class="text-sm text-gray-400 dark:text-gray-300 text-center">
@@ -86,7 +86,7 @@ use App\Enums\ChannelOrigin;
                     <select id="category"
                         class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                         wire:model="category" required>
-                        <option value="" disabled>{{ __('Select category') }}</option>
+                        <option value="" selected disabled>{{ __('Select category') }}</option>
                         @foreach (ChannelCategory::cases() as $category)
                             <option value="{{ $category->value }}">{{ $category->value }}</option>
                         @endforeach
@@ -115,7 +115,7 @@ use App\Enums\ChannelOrigin;
                 <select id="status"
                     class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                     wire:model="status" required>
-                    <option value="" disabled>{{ __('Select status') }}</option>
+                    <option value="" selected disabled>{{ __('Select status') }}</option>
                     <option value="1">{{ __('Active') }}</option>
                     <option value="0">{{ __('Inactive') }}</option>
                 </select>
@@ -129,3 +129,31 @@ use App\Enums\ChannelOrigin;
         </form>
     </div>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const dropArea = document.getElementById('drop-area');
+        const fileInput = document.getElementById('image-input');
+
+        dropArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropArea.classList.add('border-primary-500');
+        });
+
+        dropArea.addEventListener('dragleave', () => {
+            dropArea.classList.remove('border-primary-500');
+        });
+
+        dropArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropArea.classList.remove('border-primary-500');
+
+            if (e.dataTransfer.files.length) {
+                fileInput.files = e.dataTransfer.files;
+                fileInput.dispatchEvent(new Event('change'));
+            }
+        });
+
+        dropArea.addEventListener('click', () => fileInput.click());
+    });
+</script>
