@@ -1,3 +1,9 @@
+<?php
+
+use App\Enums\ChannelReviewer;
+
+?>
+
 <div>
     <x-validation-errors></x-validation-errors>
     <form wire:submit.prevent="saveReport" class="space-y-8">
@@ -10,9 +16,9 @@
                                 {{ $reportData['category'] ?: __('New report') }}</h3>
                         </template>
                         <template x-if="editingName">
-                            <x-input type="text" wire:model.lazy="reportData.category" @click.away="editingName = false"
-                                @keydown.enter="editingName = false" placeholder="{{ __('Category name') }}"
-                                autofocus />
+                            <x-input type="text" wire:model.lazy="reportData.category"
+                                @click.away="editingName = false" @keydown.enter="editingName = false"
+                                placeholder="{{ __('Category name') }}" autofocus />
                         </template>
                     </div>
                     <span class="ml-2 bg-primary-100 text-primary-800 text-sm font-medium py-1 px-2 rounded-full">
@@ -116,6 +122,21 @@
                     <i class="fas fa-plus-circle"></i>
                     {{ __('Add channel') }}
                 </button>
+            </div>
+            <div class="my-4">
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                    <i class="fa-solid fa-gear mr-1.5"></i>
+                    {{ __('Under review by') }}
+                </label>
+                <select wire:model="reportData.attended_by"
+                    class="mt-2 bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                    <option disabled selected value="">
+                        {{ __('Select a reviewer') }}
+                    </option>
+                    @foreach (ChannelReviewer::cases() as $reviewer)
+                        <option value="{{ $reviewer->value }}">{{ $reviewer->value }}</option>
+                    @endforeach
+                </select>
             </div>
         </div>
         <div class="flex justify-end gap-4">
