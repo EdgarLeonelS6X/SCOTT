@@ -94,21 +94,8 @@
                                 </td>
                                 <td class="py-3 px-4">
                                     <span
-                                        class="inline-flex items-center px-2 py-1 text-sm font-medium 
-                                            {{ $report->status === 'Pending'
-                                                ? 'text-yellow-800 bg-yellow-200 dark:bg-yellow-800 dark:text-yellow-200'
-                                                : ($report->status === 'Resolved'
-                                                    ? 'text-green-800 bg-green-200 dark:bg-green-800 dark:text-green-200'
-                                                    : 'text-red-800 bg-red-200 dark:bg-red-800 dark:text-red-200') }} 
-                                            rounded-full">
-                                        <i
-                                            class="fa-solid {{ $report->status === 'Pending'
-                                                ? 'fa-hourglass-half'
-                                                : ($report->status === 'Resolved'
-                                                    ? 'fa-check-circle'
-                                                    : 'fa-exclamation-triangle') }} 
-                                            mr-1.5">
-                                        </i>
+                                        class="inline-flex items-center px-2 py-1 text-sm font-medium text-yellow-800 bg-yellow-200 dark:bg-yellow-800 dark:text-yellow-200 rounded-full">
+                                        <i class="fa-solid fa-magnifying-glass mr-1.5"></i>
                                         {{ $report->status }}
                                     </span>
                                 </td>
@@ -172,12 +159,7 @@
                                 class="flex items-center gap-3 bg-white/20 dark:bg-gray-800 px-4 py-3 rounded-lg shadow-md">
                                 <div
                                     class="flex items-center justify-center w-10 h-10 bg-white text-gray-700 dark:bg-gray-700 dark:text-gray-300 rounded-full shadow-md">
-                                    <i
-                                        class="fa-solid {{ $selectedReport->status === 'Solved'
-                                            ? 'fa-check-circle'
-                                            : ($selectedReport->status === 'Pending'
-                                                ? 'fa-hourglass-half'
-                                                : 'fa-exclamation-circle') }} text-lg"></i>
+                                    <i class="fa-solid fa-magnifying-glass text-lg"></i>
                                 </div>
                                 <div>
                                     <h4 class="text-sm text-white dark:text-gray-300">
@@ -206,26 +188,33 @@
                         </div>
                     </div>
                 </div>
-                <div class="mt-8">
-                    <h4 class="text-xl font-semibold text-gray-800 dark:text-white mb-4 flex items-center">
-                        <i class="fa-solid fa-layer-group mr-2"></i>
+                <div class="mt-6">
+                    <i class="fa-solid fa-layer-group text-xl text-gray-800 dark:text-white mr-1.5"></i>
+                    <span class="text-lg font-semibold text-gray-800 dark:text-white mr-1.5">
                         {{ __('This report contains') }}
-                    </h4>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                    </span>
+                    <span class="bg-primary-100 text-primary-800 text-sm font-medium py-1 px-3 rounded-full">
+                        {{ $report->reportDetails->count() }}
+                        {{ $report->reportDetails->count() === 1 ? __('channel') : __('channels') }}
+                    </span>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-2 mt-6 max-h-56 overflow-auto overscroll-x-none" style="scrollbar-width: none">
                         @foreach ($selectedReport->reportDetails as $detail)
-                            <div
-                                class="flex flex-col items-center p-6 bg-white dark:bg-gray-800 rounded-xl shadow-2xl transform transition-transform hover:scale-105">
+                            <div @click.prevent="openMiniPlayer('{{ $detail->channel->url }}')"
+                                class="flex flex-col items-center p-6 bg-gray-50 border dark:bg-gray-800 rounded-xl transform transition-transform hover:scale-[1.02] relative cursor-pointer">
                                 @if ($detail->description)
                                     <div class="absolute top-2 right-2">
-                                        <i class="fa-solid fa-info-circle text-gray-500 text-xl"
+                                        <i class="fa-solid fa-info-circle text-gray-500 dark:text-white text-xl"
                                             title="{{ $detail->description }}"></i>
                                     </div>
                                 @endif
                                 <img src="{{ $detail->channel->image }}" alt="{{ $detail->channel->name }}"
                                     class="w-16 h-16 object-contain rounded-lg mb-4">
+
                                 <span class="block text-base font-semibold text-gray-900 dark:text-white">
-                                    {{ $detail->channel->number }}
-                                    {{ $detail->channel->name }}
+                                    {{ $detail->channel->number }} {{ $detail->channel->name }}
+                                </span>
+                                <span class="block mt-1 text-xs text-gray-500">
+                                    {{ $detail->stage->name }}
                                 </span>
                                 <div class="flex space-x-4 mt-4">
                                     @if ($detail->media === 'VIDEO' || $detail->media === 'AUDIO/VIDEO')
@@ -269,8 +258,8 @@
                         @endforeach
                     </div>
                 </div>
-                <div class="flex justify-end mt-8 space-x-4">
-                    <button type="submit"
+                <div class="flex justify-end mt-6 space-x-4">
+                    <button wire:click.prevent="markAsSolved()"
                         class="py-2 px-4 bg-primary-600 hover:bg-primary-700 text-white rounded-lg shadow font-bold text-base">
                         <i class="fa-solid fa-circle-check mr-1"></i>
                         {{ __('Mark as solved') }}
@@ -285,3 +274,55 @@
         </div>
     @endif
 </div>
+
+<script>
+    function openMiniPlayer(url) {
+        const youtubeRegex = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/)([\w-]{11})/;
+        const match = url.match(youtubeRegex);
+
+        if (match) {
+            const videoId = match[1];
+            url = `https://www.youtube.com/embed/${videoId}`;
+        }
+
+        let playerContainer = document.getElementById('miniPlayerContainer');
+        if (!playerContainer) {
+            playerContainer = document.createElement('div');
+            playerContainer.id = 'miniPlayerContainer';
+            playerContainer.classList =
+                'fixed bottom-4 right-4 w-80 bg-white shadow-lg rounded-lg overflow-hidden z-50';
+            document.body.appendChild(playerContainer);
+
+            const controlBar = document.createElement('div');
+            controlBar.classList =
+                'w-full flex justify-between items-center bg-primary-600 dark:bg-primary-700 text-white p-2 shadow-2xl';
+            controlBar.style.height = '40px';
+            controlBar.innerHTML = `
+                <span>{{ __('Playing channel') }}</span>
+                <button onclick="closeMiniPlayer()" class="text-gray-300 hover:text-white">
+                    <i class="fa-solid fa-times"></i>
+                </button>
+            `;
+            playerContainer.appendChild(controlBar);
+
+            const iframe = document.createElement('iframe');
+            iframe.classList = 'w-full';
+            iframe.style.height =
+                'calc(100% - 40px)';
+            iframe.frameBorder = 0;
+            iframe.allowFullscreen = true;
+            playerContainer.appendChild(iframe);
+        }
+
+        playerContainer.querySelector('iframe').src = url;
+        playerContainer.style.display = 'block';
+    }
+
+    function closeMiniPlayer() {
+        const playerContainer = document.getElementById('miniPlayerContainer');
+        if (playerContainer) {
+            playerContainer.style.display = 'none';
+            playerContainer.querySelector('iframe').src = '';
+        }
+    }
+</script>

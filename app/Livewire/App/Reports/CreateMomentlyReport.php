@@ -56,7 +56,7 @@ class CreateMomentlyReport extends Component
 
             foreach ($this->reportData['channels'] as $channel) {
                 $existingChannel = ReportDetail::where('channel_id', $channel['channel_id'])
-                    ->where('status', 'Pending')
+                    ->where('status', 'Revision')
                     ->exists();
 
                 if ($existingChannel) {
@@ -74,7 +74,7 @@ class CreateMomentlyReport extends Component
                 'reported_by' => Auth::user()->id,
                 'end_time' => null,
                 'duration' => null,
-                'status' => __('Pending'),
+                'status' => __('Revision'),
             ]);
 
             foreach ($this->reportData['channels'] as $channel) {
@@ -85,7 +85,7 @@ class CreateMomentlyReport extends Component
                     'protocol' => $channel['protocol'],
                     'media' => $channel['media'],
                     'description' => $channel['description'],
-                    'status' => __('Pending'),
+                    'status' => __('Revision'),
                 ]);
             }
 

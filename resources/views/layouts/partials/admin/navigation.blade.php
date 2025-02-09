@@ -88,7 +88,7 @@
                                 <x-dropdown-link href="{{ route('logout') }}" @click.prevent="$root.submit();"
                                     class="px-4 py-2 text-base flex justify-start items-center">
                                     <i class="fa-solid fa-circle-xmark mr-2"></i>
-                                    {{ __('Log Out') }}
+                                    {{ __('Log out') }}
                                 </x-dropdown-link>
                             </form>
                         </x-slot>
