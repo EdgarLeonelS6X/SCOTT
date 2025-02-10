@@ -20,9 +20,19 @@
 
     <!-- Font Awesome -->
     <script src="https://kit.fontawesome.com/de19704bb3.js" crossorigin="anonymous"></script>
+
+    <!-- Dark Mode -->
+    <script>
+        if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia(
+                '(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark')
+        }
+    </script>
 </head>
 
-<body>
+<body class="font-sans antialiased bg-gray-100 dark:bg-gray-900">
     <div class="font-sans text-gray-900 dark:text-gray-100 antialiased">
         {{ $slot }}
     </div>

@@ -68,14 +68,15 @@
                     <div class="inline-flex items-center justify-center w-full">
                         <hr class="w-full h-px bg-gray-200 border-0 dark:bg-gray-700">
                         <span
-                            class="absolute px-3 font-medium text-gray-900 -translate-x-1/2 bg-white left-1/2 dark:text-white dark:bg-gray-900">
+                            class="absolute px-3 font-medium text-gray-900 -translate-x-1/2 bg-white left-1/2 dark:text-white dark:bg-gray-800">
                             {{ __('Or') }}
                         </span>
                     </div>
                     <a href="{{ route('redirectToGoogle') }}"
                         class="flex items-center justify-center w-full text-gray-700 bg-transparent border 
-                        border-gray-400 hover:bg-gray-100 hover:text-gray-900 focus:ring-4 focus:outline-none 
-                        focus:ring-gray-300 font-bold rounded-lg text-base px-5 py-2.5 text-center me-2 mb-2 shadow">
+                                border-gray-400 hover:bg-gray-100 hover:text-gray-900 focus:ring-4 focus:outline-none 
+                                focus:ring-gray-300 font-bold rounded-lg text-base px-5 py-2.5 text-center me-2 mb-2 shadow
+                                dark:text-white dark:bg-transparent dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:text-white dark:focus:ring-gray-500">
                         <i class="fa-brands fa-google mr-2"></i>
                         {{ __('Log in with Google') }}
                     </a>
