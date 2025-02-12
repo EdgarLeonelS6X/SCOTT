@@ -77,6 +77,12 @@ class ReportHistoryTable extends Component
         }
     }
 
+    public function resetFilters()
+    {
+        $this->reset(['search', 'orderField', 'orderDirection', 'statusFilter', 'selectedUser', 'currentUserIndex']);
+        $this->resetPage();
+    }
+
     public function render()
     {
         $query = Report::query()

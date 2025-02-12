@@ -103,11 +103,9 @@
                                 @endif
                             </button>
                         </th>
-                        <th scope="col" class="px-4 py-3">
-                            <span class="sr-only">
-                                <i class="fa-solid fa-sliders-h mr-1"></i>
-                                {{ __('Options') }}
-                            </span>
+                        <th scope="col" class="px-4 py-3 cursor-pointer" wire:click="resetFilters">
+                            <i class="fa-solid fa-rotate-left mr-1"></i>
+                            {{ __('Reset') }}
                         </th>
                     </tr>
                 </thead>
@@ -154,7 +152,7 @@
                                 <span
                                     class="inline-flex items-center px-2 py-1 text-sm font-medium text-blue-800 bg-blue-200 dark:bg-blue-800 dark:text-blue-200 rounded-full">
                                     <i class="fa-solid fa-clock mr-1.5"></i>
-                                    {{ $report->created_at->format('d/m/Y H:i') }}
+                                    {{ $report->created_at->format('d/m/Y h:i A') }}
                                 </span>
                             </td>
                             <td class="px-4 py-3 flex items-center">
