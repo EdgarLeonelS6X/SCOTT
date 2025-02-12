@@ -20,7 +20,7 @@
                 </form>
             </div>
             <div class="w-full md:w-auto flex items-center justify-end space-x-3">
-                <a href=""
+                <a href="{{ route('report.history') }}"
                     class="text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800">
                     <i class="fa-solid fa-folder mr-1"></i>
                     {{ __('Report history') }}
@@ -150,6 +150,10 @@
                                     {{ $selectedReport->reportedBy->name }}
                                 </p>
                                 <p class="text-xs text-gray-200 dark:text-gray-300 opacity-80">
+                                    <span
+                                        class="inline-flex items-center px-2 py-0.5 font-bold bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200 rounded-full shadow-lg">
+                                        {{ __('Folio') }} {{ $selectedReport->id }}
+                                    </span>
                                     {{ $selectedReport->created_at->format('d/m/Y h:i A') }}
                                 </p>
                             </div>
@@ -197,7 +201,8 @@
                         {{ $report->reportDetails->count() }}
                         {{ $report->reportDetails->count() === 1 ? __('channel') : __('channels') }}
                     </span>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-2 mt-6 max-h-56 overflow-auto overscroll-x-none" style="scrollbar-width: none">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-2 mt-6 max-h-56 overflow-auto overscroll-x-none"
+                        style="scrollbar-width: none">
                         @foreach ($selectedReport->reportDetails as $detail)
                             <div @click.prevent="openMiniPlayer('{{ $detail->channel->url }}')"
                                 class="flex flex-col items-center p-6 bg-gray-50 border dark:bg-gray-800 rounded-xl transform transition-transform hover:scale-[1.02] relative cursor-pointer">

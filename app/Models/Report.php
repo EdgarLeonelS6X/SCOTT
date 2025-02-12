@@ -33,4 +33,9 @@ class Report extends Model
     {
         return $this->belongsTo(User::class, 'reported_by');
     }
+
+    public function stages()
+    {
+        return $this->hasManyThrough(Stage::class, ReportDetail::class, 'report_id', 'id', 'id', 'stage_id');
+    }
 }
