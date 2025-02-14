@@ -3,9 +3,11 @@
 namespace App\Livewire\App\Reports;
 
 use App\Models\Report;
+use App\Mail\ReportResolvedMail;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Mail;
 
 class ReportMomentlyTable extends Component
 {
@@ -15,7 +17,6 @@ class ReportMomentlyTable extends Component
     public $order = 'desc';
     public $selectedReport = null;
     public $showModal = false;
-
     protected $queryString = ['search'];
     protected $listeners = ['reportCreated' => '$refresh'];
 
@@ -38,7 +39,7 @@ class ReportMomentlyTable extends Component
 
     public function openReportDetails($reportId)
     {
-        $this->selectedReport = Report::with(['reportDetails.channel'])->find($reportId);
+        $this->selectedReport = Report::with(['reportDetails.channel', 'reportedBy'])->find($reportId);
         $this->showModal = true;
     }
 
@@ -57,21 +58,32 @@ class ReportMomentlyTable extends Component
     public function markAsSolved()
     {
         if ($this->selectedReport) {
-            $this->selectedReport->status = 'Resolved';
-            $this->selectedReport->save();
+            $endTime = Carbon::now();
+            $createdTime = Carbon::parse($this->selectedReport->created_at);
+            $duration = $createdTime->diff($endTime)->format('%H:%I:%S');
+
+            $this->selectedReport->update([
+                'status' => 'Resolved',
+                'end_time' => $endTime,
+                'duration' => $duration
+            ]);
 
             foreach ($this->selectedReport->reportDetails as $detail) {
-                $detail->status = 'Resolved';
-                $detail->save();
+                $detail->update(['status' => 'Resolved']);
             }
 
-            $this->showModal = false;
+            $this->dispatch('reportUpdated');
 
             $this->dispatch('swal', [
                 'icon' => 'success',
                 'title' => __('Well done!'),
                 'text' => __('The report and channels have been marked as resolved.'),
             ]);
+
+            sleep(1);
+            Mail::to($this->selectedReport->reportedBy->email)->send(new ReportResolvedMail($this->selectedReport));
+
+            $this->showModal = false;
         }
     }
 
@@ -86,7 +98,7 @@ class ReportMomentlyTable extends Component
                             ->orWhere('number', 'like', '%' . $this->search . '%');
                     });
             })
-            ->with(['reportDetails.channel'])
+            ->with(['reportDetails.channel', 'reportedBy'])
             ->orderBy('created_at', $this->order)
             ->paginate(5);
 

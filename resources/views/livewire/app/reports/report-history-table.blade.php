@@ -51,7 +51,7 @@
     </div>
     <div class="overflow-x-auto">
         @if ($reports->isEmpty())
-            <div class="text-center">
+            <div class="text-center m-2 pb-2">
                 <span class="text-gray-500 dark:text-gray-300">
                     <i class="fa-solid fa-circle-info mr-1"></i>
                     {{ __('No reports found with the current filters.') }}
@@ -65,23 +65,23 @@
                             <i class="fa-solid fa-flag mr-1"></i>
                             {{ __('Folio') }}
                         </th>
-                        <th class="py-3 px-4 text-left">
+                        <th class="py-3 px-4 text-left w-36 min-w-[190px] max-w-[190px]">
                             <i class="fa-solid fa-folder mr-1"></i>
                             {{ __('Report') }}
                         </th>
-                        <th class="py-3 px-4 text-left">
+                        <th class="py-3 px-4 text-left w-36 min-w-[150px] max-w-[150px]">
                             <i class="fa-solid fa-layer-group mr-1"></i>
                             {{ __('Channels') }}
-                        </th>
+                        </th>                        
                         <th class="py-3 px-4 text-left">
                             <i class="fa-solid fa-circle-check mr-1"></i>
                             {{ __('Status') }}
                         </th>
                         <th class="py-3 px-4 text-left cursor-pointer" wire:click="setOrder('created_at')">
-                            <i class="fa-solid fa-calendar-alt mr-1"></i>
+                            <i class="fa-solid fa-calendar mr-1"></i>
                             {{ __('Datetime') }}
                             <button
-                                class="ml-2 text-gray-500 dark:text-white focus:outline-none transform transition-all hover:scale-110">
+                                class="ml-1 text-gray-500 dark:text-white focus:outline-none transform transition-all hover:scale-110">
                                 @if ($orderField === 'created_at')
                                     <i
                                         class="fa-solid {{ $orderDirection === 'asc' ? 'fa-sort-up' : 'fa-sort-down' }}"></i>
@@ -94,7 +94,7 @@
                             <i class="fa-solid fa-user mr-1"></i>
                             {{ __('Reported By') }}
                             <button
-                                class="ml-2 text-gray-500 dark:text-white focus:outline-none transform transition-all hover:scale-110">
+                                class="ml-1 text-gray-500 dark:text-white focus:outline-none transform transition-all hover:scale-110">
                                 @if ($orderField === 'reported_by')
                                     <i
                                         class="fa-solid {{ $orderDirection === 'asc' ? 'fa-sort-up' : 'fa-sort-down' }}"></i>
@@ -103,9 +103,9 @@
                                 @endif
                             </button>
                         </th>
-                        <th scope="col" class="px-4 py-3 cursor-pointer" wire:click="resetFilters">
+                        <th class="px-4 py-3 cursor-pointer" wire:click="resetFilters">
                             <i class="fa-solid fa-rotate-left mr-1"></i>
-                            {{ __('Reset') }}
+                            {{ __('Reset table') }}
                         </th>
                     </tr>
                 </thead>
@@ -168,7 +168,7 @@
                 </tbody>
             </table>
         @endif
-        <div class="mt-4">
+        <div class="m-4">
             {{ $reports->links() }}
         </div>
         @if ($showModal && $selectedReport)
