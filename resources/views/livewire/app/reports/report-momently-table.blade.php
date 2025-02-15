@@ -20,7 +20,7 @@
                 </form>
             </div>
             <div class="w-full md:w-auto flex items-center justify-end space-x-3">
-                <a href="{{ route('report.history') }}"
+                <a href="{{ route('reports.index') }}"
                     class="text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800">
                     <i class="fa-solid fa-folder mr-1"></i>
                     {{ __('Report history') }}
@@ -198,69 +198,72 @@
                         {{ __('This report contains') }}
                     </span>
                     <span class="bg-primary-100 text-primary-800 text-sm font-medium py-1 px-3 rounded-full">
-                        {{ $report->reportDetails->count() }}
-                        {{ $report->reportDetails->count() === 1 ? __('channel') : __('channels') }}
+                        {{ isset($selectedReport) && $selectedReport ? $selectedReport->reportDetails->count() : 0 }}
+                        {{ isset($selectedReport) && $selectedReport->reportDetails->count() === 1 ? __('channel') : __('channels') }}
                     </span>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-2 mt-6 max-h-56 overflow-auto overscroll-x-none"
+                    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-2 mt-6
+                        @if (isset($selectedReport) && $selectedReport->reportDetails->count() > 4) max-h-56 overflow-auto @else overflow-hidden @endif"
                         style="scrollbar-width: none">
-                        @foreach ($selectedReport->reportDetails as $detail)
-                            <div @click.prevent="openMiniPlayer('{{ $detail->channel->url }}')"
-                                class="flex flex-col items-center p-6 bg-gray-50 border dark:bg-gray-800 rounded-xl transform transition-transform hover:scale-[1.02] relative cursor-pointer">
-                                @if ($detail->description)
-                                    <div class="absolute top-2 right-2">
-                                        <i class="fa-solid fa-info-circle text-gray-500 dark:text-white text-xl"
-                                            title="{{ $detail->description }}"></i>
+                        @if (isset($selectedReport) && $selectedReport)
+                            @foreach ($selectedReport->reportDetails as $detail)
+                                <div @click.prevent="openMiniPlayer('{{ $detail->channel->url }}')"
+                                    class="flex flex-col items-center p-6 bg-gray-50 border dark:bg-gray-800 rounded-xl transform transition-transform hover:scale-[1.02] relative cursor-pointer">
+                                    @if ($detail->description)
+                                        <div class="absolute top-2 right-2">
+                                            <i class="fa-solid fa-info-circle text-gray-500 dark:text-white text-xl"
+                                                title="{{ $detail->description }}"></i>
+                                        </div>
+                                    @endif
+                                    <img src="{{ $detail->channel->image }}" alt="{{ $detail->channel->name }}"
+                                        class="w-16 h-16 object-contain rounded-lg mb-4">
+                                    <span class="block text-base font-semibold text-gray-900 dark:text-white">
+                                        {{ $detail->channel->number }} {{ $detail->channel->name }}
+                                    </span>
+                                    <span class="block mt-1 text-xs text-gray-500">
+                                        {{ $detail->stage->name }}
+                                    </span>
+                                    <div class="flex space-x-4 mt-4">
+                                        @if ($detail->media === 'VIDEO' || $detail->media === 'AUDIO/VIDEO')
+                                            <div class="tooltip" title="{{ __('The channel does not have video') }}">
+                                                <i class="fa-solid fa-video-slash text-red-500 text-xl"></i>
+                                            </div>
+                                        @else
+                                            <div class="tooltip" title="{{ __('The channel has video') }}">
+                                                <i class="fa-solid fa-video text-green-500 text-xl"></i>
+                                            </div>
+                                        @endif
+                                        @if ($detail->media === 'AUDIO' || $detail->media === 'AUDIO/VIDEO')
+                                            <div class="tooltip" title="{{ __('The channel does not have audio') }}">
+                                                <i class="fa-solid fa-volume-xmark text-red-500 text-xl"></i>
+                                            </div>
+                                        @else
+                                            <div class="tooltip" title="{{ __('The channel has audio') }}">
+                                                <i class="fa-solid fa-volume-up text-green-500 text-xl"></i>
+                                            </div>
+                                        @endif
+                                        @if ($detail->protocol === 'DASH' || $detail->protocol === 'DASH/HLS')
+                                            <div class="tooltip"
+                                                title="{{ __('Not working on Web Client (DASH)') }}">
+                                                <i class="fa-solid fa-computer text-red-500 text-xl"></i>
+                                            </div>
+                                        @else
+                                            <div class="tooltip" title="{{ __('Working on Web Client (DASH)') }}">
+                                                <i class="fa-solid fa-computer text-green-500 text-xl"></i>
+                                            </div>
+                                        @endif
+                                        @if ($detail->protocol === 'HLS' || $detail->protocol === 'DASH/HLS')
+                                            <div class="tooltip" title="{{ __('Not working on Set Up Box (HLS)') }}">
+                                                <i class="fa-solid fa-tv text-red-500 text-xl"></i>
+                                            </div>
+                                        @else
+                                            <div class="tooltip" title="{{ __('Working on Set Up Box (HLS)') }}">
+                                                <i class="fa-solid fa-tv text-green-500 text-xl"></i>
+                                            </div>
+                                        @endif
                                     </div>
-                                @endif
-                                <img src="{{ $detail->channel->image }}" alt="{{ $detail->channel->name }}"
-                                    class="w-16 h-16 object-contain rounded-lg mb-4">
-
-                                <span class="block text-base font-semibold text-gray-900 dark:text-white">
-                                    {{ $detail->channel->number }} {{ $detail->channel->name }}
-                                </span>
-                                <span class="block mt-1 text-xs text-gray-500">
-                                    {{ $detail->stage->name }}
-                                </span>
-                                <div class="flex space-x-4 mt-4">
-                                    @if ($detail->media === 'VIDEO' || $detail->media === 'AUDIO/VIDEO')
-                                        <div class="tooltip" title="{{ __('The channel does not have video') }}">
-                                            <i class="fa-solid fa-video-slash text-red-500 text-xl"></i>
-                                        </div>
-                                    @else
-                                        <div class="tooltip" title="{{ __('The channel has video') }}">
-                                            <i class="fa-solid fa-video text-green-500 text-xl"></i>
-                                        </div>
-                                    @endif
-                                    @if ($detail->media === 'AUDIO' || $detail->media === 'AUDIO/VIDEO')
-                                        <div class="tooltip" title="{{ __('The channel does not have audio') }}">
-                                            <i class="fa-solid fa-volume-xmark text-red-500 text-xl"></i>
-                                        </div>
-                                    @else
-                                        <div class="tooltip" title="{{ __('The channel has audio') }}">
-                                            <i class="fa-solid fa-volume-up text-green-500 text-xl"></i>
-                                        </div>
-                                    @endif
-                                    @if ($detail->protocol === 'DASH' || $detail->protocol === 'DASH/HLS')
-                                        <div class="tooltip" title="{{ __('Not working on Web Client (DASH)') }}">
-                                            <i class="fa-solid fa-computer text-red-500 text-xl"></i>
-                                        </div>
-                                    @else
-                                        <div class="tooltip" title="{{ __('Working on Web Client (DASH)') }}">
-                                            <i class="fa-solid fa-computer text-green-500 text-xl"></i>
-                                        </div>
-                                    @endif
-                                    @if ($detail->protocol === 'HLS' || $detail->protocol === 'DASH/HLS')
-                                        <div class="tooltip" title="{{ __('Not working on Set Up Box (HLS)') }}">
-                                            <i class="fa-solid fa-tv text-red-500 text-xl"></i>
-                                        </div>
-                                    @else
-                                        <div class="tooltip" title="{{ __('Working on Set Up Box (HLS)') }}">
-                                            <i class="fa-solid fa-tv text-green-500 text-xl"></i>
-                                        </div>
-                                    @endif
                                 </div>
-                            </div>
-                        @endforeach
+                            @endforeach
+                        @endif
                     </div>
                 </div>
                 <div class="flex justify-end mt-6 space-x-4">

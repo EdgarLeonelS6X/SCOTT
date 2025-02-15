@@ -70,11 +70,11 @@
                             {{ __('Report') }}
                         </th>
                         <th class="py-3 px-4 text-left w-36 min-w-[150px] max-w-[150px]">
-                            <i class="fa-solid fa-layer-group mr-1"></i>
-                            {{ __('Channels') }}
-                        </th>                        
+                            <i class="fa-solid fa-list mr-1"></i>
+                            {{ __('Type') }}
+                        </th>
                         <th class="py-3 px-4 text-left">
-                            <i class="fa-solid fa-circle-check mr-1"></i>
+                            <i class="fa-solid fa-gear mr-1"></i>
                             {{ __('Status') }}
                         </th>
                         <th class="py-3 px-4 text-left cursor-pointer" wire:click="setOrder('created_at')">
@@ -119,22 +119,16 @@
                             <td class="px-4 py-3 text-sm font-bold">
                                 {{ $report->category }}
                             </td>
-                            <td class="px-4 py-3">
-                                <div class="flex items-center space-x-3">
-                                    @foreach ($report->reportDetails->take(3) as $detail)
-                                        <div class="relative w-8 h-8 overflow-hidden">
-                                            <img class="w-full h-full object-contain object-center rounded"
-                                                src="{{ $detail->channel->image }}" alt="{{ $detail->channel->name }}"
-                                                title="{{ $detail->channel->number }} {{ $detail->channel->name }}">
-                                        </div>
-                                    @endforeach
-                                    @if ($report->reportDetails->count() > 3)
-                                        <span
-                                            class="flex items-center justify-center w-8 h-8 text-xs font-bold text-white bg-primary-700 rounded-full shadow-md">
-                                            +{{ $report->reportDetails->count() - 3 }}
-                                        </span>
-                                    @endif
-                                </div>
+                            <td class="py-3 px-4">
+                                @if ($report->type === 'Momentary')
+                                    <span
+                                        class="inline-flex items-center px-2 py-1 text-sm font-medium rounded-full text-red-800 bg-red-200 dark:bg-red-800 dark:text-red-200">
+                                        <i class="fa-solid fa-triangle-exclamation mr-1.5"></i>
+                                        {{ __($report->type) }}
+                                    </span>
+                                @elseif ($report->type === 'Hourly')
+                                @else
+                                @endif
                             </td>
                             <td class="py-3 px-4">
                                 <span

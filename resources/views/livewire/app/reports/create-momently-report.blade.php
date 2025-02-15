@@ -44,21 +44,27 @@ use App\Enums\ChannelReviewer;
                             </button>
                         </div>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div>
+                            <div x-data="{ selectedChannel: '' }">
                                 <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                     <i class="fa-solid fa-tv mr-1.5"></i>
                                     {{ __('Channel') }}
                                 </label>
-                                <select wire:model="reportData.channels.{{ $channelIndex }}.channel_id"
-                                    class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
-                                    <option disabled selected value="">
-                                        {{ __('Select a channel') }}
-                                    </option>
-                                    @foreach ($channels as $channel)
-                                        <option value="{{ $channel->id }}">{{ $channel->number }}
-                                            {{ $channel->name }}</option>
-                                    @endforeach
-                                </select>
+                                <div class="relative">
+                                    <img x-show="selectedChannel" :src="selectedChannel"
+                                        class="absolute left-2 top-1/2 transform -translate-y-1/2 w-8 h-8 object-contain object-center">
+                                    <select wire:model="reportData.channels.{{ $channelIndex }}.channel_id"
+                                        @change="selectedChannel = $event.target.selectedOptions[0].getAttribute('data-image')"
+                                        class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 pl-12 dark:bg-gray-700 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                                        <option disabled selected value="">
+                                            {{ __('Select a channel') }}
+                                        </option>
+                                        @foreach ($channels as $channel)
+                                            <option value="{{ $channel->id }}" data-image="{{ $channel->image }}">
+                                                {{ $channel->number }} {{ $channel->name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
                             </div>
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">

@@ -7,6 +7,6 @@ Route::get('/', function () {
     return view('admin.dashboard');
 })->name('dashboard');
 
-Route::resource('/channels', ChannelController::class);
+Route::resource('/channels', ChannelController::class)->middleware('auth');
 
-Route::resource('/stages', StageController::class);
+Route::resource('/stages', StageController::class)->middleware('auth');

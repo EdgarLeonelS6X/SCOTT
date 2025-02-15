@@ -1,3 +1,5 @@
+@props(['breadcrumbs' => []])
+
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
@@ -38,17 +40,21 @@
 
     <div class="mt-16">
 
+        @if (request()->routeIs('reports.*'))
+            <div class="px-3.5 py-1.5 mb-2 flex justify-start">
+                @include('layouts.partials.app.breadcrumb')
+            </div>
+        @endif
+
         {{ $slot }}
 
     </div>
 
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/flowbite@3.1.1/dist/flowbite.min.js"></script>
-
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     @livewireScripts
-
     @stack('js')
 
     @if (session('swal'))

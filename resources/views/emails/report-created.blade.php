@@ -174,6 +174,14 @@
                 </tr>
                 <tr>
                     <th>
+                        Attended By
+                    </th>
+                    <td>
+                        {{ $report->attended_by }}
+                    </td>
+                </tr>
+                <tr>
+                    <th>
                         Created At
                     </th>
                     <td>
