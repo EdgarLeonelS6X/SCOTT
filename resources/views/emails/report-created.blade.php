@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>
-        Report Resolved
+        New Report Created
     </title>
     <style>
         body {
@@ -98,11 +98,6 @@
             text-transform: uppercase;
         }
 
-        .badge-resolved {
-            background: #27ae60;
-            color: #fff;
-        }
-
         .badge-pending {
             background: #e67e22;
             color: #fff;
@@ -135,7 +130,7 @@
     <div class="container">
         <div class="header">
             <h2>
-                Report Resolved Notification
+                New Report Created Notification
             </h2>
         </div>
         <div class="details">
@@ -164,7 +159,7 @@
                         Status
                     </th>
                     <td>
-                        <span class="badge {{ $report->status === 'Resolved' ? 'badge-resolved' : 'badge-pending' }}">
+                        <span class="badge badge-pending">
                             {{ ucfirst($report->status) }}
                         </span>
                     </td>
@@ -179,47 +174,10 @@
                 </tr>
                 <tr>
                     <th>
-                        Resolved By
-                    </th>
-                    <td>
-                        {{ $report->attended_by }}
-                    </td>
-                </tr>
-                <tr>
-                    <th>
                         Created At
                     </th>
                     <td>
                         {{ $report->created_at->format('d/m/Y H:i') }}
-                    </td>
-                </tr>
-                <tr>
-                    <th>
-                        Resolved At</th>
-                    <td>
-                        {{ $report->end_time->format('d/m/Y H:i') }}
-                    </td>
-                </tr>
-                <tr>
-                    <th>
-                        Duration
-                    </th>
-                    <td>
-                        @php
-                            $createdAt = \Carbon\Carbon::parse($report->created_at);
-                            $resolvedAt = \Carbon\Carbon::parse($report->end_time);
-                            $totalSeconds = intval($createdAt->diffInSeconds($resolvedAt));
-
-                            if ($totalSeconds < 60) {
-                                echo $totalSeconds . ' seconds';
-                            } elseif ($totalSeconds < 3600) {
-                                echo floor($totalSeconds / 60) . ' minutes';
-                            } else {
-                                $hours = floor($totalSeconds / 3600);
-                                $minutes = floor(($totalSeconds % 3600) / 60);
-                                echo $hours . ' hours ' . ($minutes > 0 ? $minutes . ' minutes' : '');
-                            }
-                        @endphp
                     </td>
                 </tr>
             </table>
@@ -240,7 +198,7 @@
                         Media
                     </th>
                 </tr>
-                @foreach ($channels as $detail)
+                @foreach ($report->reportDetails as $detail)
                     <tr>
                         <td>
                             {{ $detail->channel->number }} {{ $detail->channel->name }}

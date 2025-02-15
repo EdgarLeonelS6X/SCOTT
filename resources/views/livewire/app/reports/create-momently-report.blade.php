@@ -123,7 +123,7 @@ use App\Enums\ChannelReviewer;
                     {{ __('Add channel') }}
                 </button>
             </div>
-            <div class="my-4">
+            <div class="my-6">
                 <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">
                     <i class="fa-solid fa-gear mr-1.5"></i>
                     {{ __('Under review by') }}

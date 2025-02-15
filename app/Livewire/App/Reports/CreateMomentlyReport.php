@@ -2,6 +2,7 @@
 
 namespace App\Livewire\App\Reports;
 
+use App\Mail\ReportCreatedMail;
 use Livewire\Component;
 use App\Models\Report;
 use App\Models\ReportDetail;
@@ -9,6 +10,7 @@ use App\Models\Stage;
 use App\Models\Channel;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Facades\Mail;
 
 class CreateMomentlyReport extends Component
 {
@@ -88,6 +90,8 @@ class CreateMomentlyReport extends Component
                     'status' => __('Revision'),
                 ]);
             }
+
+            Mail::to(Auth::user()->email, )->send(new ReportCreatedMail($report));
 
             $this->dispatch('swal', [
                 'icon' => 'success',

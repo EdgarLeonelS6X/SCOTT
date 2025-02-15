@@ -80,7 +80,6 @@ class ReportMomentlyTable extends Component
                 'text' => __('The report and channels have been marked as resolved.'),
             ]);
 
-            sleep(1);
             Mail::to($this->selectedReport->reportedBy->email)->send(new ReportResolvedMail($this->selectedReport));
 
             $this->showModal = false;
