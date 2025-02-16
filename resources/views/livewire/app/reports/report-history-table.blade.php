@@ -90,18 +90,9 @@
                                 @endif
                             </button>
                         </th>
-                        <th class="py-3 px-4 text-left cursor-pointer" wire:click="setOrderByReporter()">
+                        <th class="py-3 px-4 text-left min-w-[190px] max-w-[190px]"">
                             <i class="fa-solid fa-user mr-1"></i>
                             {{ __('Reported By') }}
-                            <button
-                                class="ml-1 text-gray-500 dark:text-white focus:outline-none transform transition-all hover:scale-110">
-                                @if ($orderField === 'reported_by')
-                                    <i
-                                        class="fa-solid {{ $orderDirection === 'asc' ? 'fa-sort-up' : 'fa-sort-down' }}"></i>
-                                @else
-                                    <i class="fa-solid fa-sort"></i>
-                                @endif
-                            </button>
                         </th>
                         <th class="px-4 py-3 cursor-pointer" wire:click="resetFilters">
                             <i class="fa-solid fa-rotate-left mr-1"></i>
@@ -111,7 +102,7 @@
                 </thead>
                 <tbody>
                     @foreach ($reports as $report)
-                        <tr wire:click="openReportDetails({{ $report->id }})"
+                        <tr onclick="window.location='{{ route('reports.show', $report->id) }}'"
                             class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-600 text-black dark:text-white cursor-pointer">
                             <td class="px-4 py-3 text-sm font-bold">
                                 {{ $report->id }}
@@ -165,160 +156,5 @@
         <div class="m-4">
             {{ $reports->links() }}
         </div>
-        @if ($showModal && $selectedReport)
-            <div class="fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-center items-center">
-                <div class="bg-white dark:bg-gray-900 p-8 rounded-2xl shadow-xl w-11/12 md:w-3/4 max-w-4xl">
-                    <div class="flex justify-between items-center mb-8">
-                        <h2 class="text-2xl font-semibold text-gray-800 dark:text-white flex items-center">
-                            <i class="fa-solid fa-tag mr-3"></i>
-                            {{ $selectedReport->category }}
-                        </h2>
-                        <button wire:click="closeReportDetails"
-                            class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-white">
-                            <i class="fa-solid fa-xmark text-xl"></i>
-                        </button>
-                    </div>
-                    <div
-                        class="p-5 rounded-xl shadow-md transition-transform hover:scale-[1.02]
-                        bg-gradient-to-br from-pink-500 via-orange-400 to-red-500
-                        dark:from-blue-900 dark:via-indigo-800 dark:to-purple-900
-                        text-white dark:text-gray-100 ring-1 ring-white/20 dark:ring-gray-700 hover:shadow-[0_8px_25px_rgba(0,0,0,0.3)]">
-                        <div class="flex justify-between items-center gap-6">
-                            <div class="flex items-center gap-4 flex-1">
-                                <img src="{{ $selectedReport->reportedBy->profile_photo_url }}"
-                                    alt="{{ $selectedReport->reportedBy->name }}"
-                                    class="w-12 h-12 rounded-full shadow-2xl">
-                                <div>
-                                    <h4 class="text-sm font-semibold text-white dark:text-gray-300">
-                                        {{ __('Reported by') }}
-                                    </h4>
-                                    <p class="text-base font-bold text-white dark:text-gray-100">
-                                        {{ $selectedReport->reportedBy->name }}
-                                    </p>
-                                    <p class="text-xs text-gray-200 dark:text-gray-300 opacity-80">
-                                        <span
-                                            class="inline-flex items-center px-2 py-0.5 font-bold bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200 rounded-full shadow-lg">
-                                            {{ __('Folio') }} {{ $selectedReport->id }}
-                                        </span>
-                                        {{ $selectedReport->created_at->format('d/m/Y h:i A') }}
-                                    </p>
-                                </div>
-                            </div>
-                            <div class="flex gap-4">
-                                <div
-                                    class="flex items-center gap-3 bg-white/20 dark:bg-gray-800 px-4 py-3 rounded-lg shadow-md">
-                                    <div
-                                        class="flex items-center justify-center w-10 h-10 bg-white text-gray-700 dark:bg-gray-700 dark:text-gray-300 rounded-full shadow-md">
-                                        <i class="fa-solid fa-magnifying-glass text-lg"></i>
-                                    </div>
-                                    <div>
-                                        <h4 class="text-sm text-white dark:text-gray-300">
-                                            {{ __('Status') }}
-                                        </h4>
-                                        <p class="text-sm font-bold uppercase">
-                                            {{ $selectedReport->status }}
-                                        </p>
-                                    </div>
-                                </div>
-                                <div
-                                    class="flex items-center gap-3 bg-white/20 dark:bg-gray-800 px-4 py-3 rounded-lg shadow-md">
-                                    <div
-                                        class="flex items-center justify-center w-10 h-10 bg-white text-gray-700 dark:bg-gray-700 dark:text-gray-300 rounded-full shadow-md">
-                                        <i class="fa-solid fa-gear text-lg"></i>
-                                    </div>
-                                    <div>
-                                        <h4 class="text-sm text-white dark:text-gray-300">
-                                            {{ __('Under review by') }}
-                                        </h4>
-                                        <p class="text-sm font-bold text-white dark:text-gray-100">
-                                            {{ $selectedReport->attended_by }}
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="mt-6">
-                        <i class="fa-solid fa-layer-group text-xl text-gray-800 dark:text-white mr-1.5"></i>
-                        <span class="text-lg font-semibold text-gray-800 dark:text-white mr-1.5">
-                            {{ __('This report contains') }}
-                        </span>
-                        <span class="bg-primary-100 text-primary-800 text-sm font-medium py-1 px-3 rounded-full">
-                            {{ $selectedReport->reportDetails->count() }}
-                            {{ $selectedReport->reportDetails->count() === 1 ? __('channel') : __('channels') }}
-                        </span>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-2 mt-6 max-h-56 overflow-auto overscroll-x-none"
-                            style="scrollbar-width: none">
-                            @foreach ($selectedReport->reportDetails as $detail)
-                                <div
-                                    class="flex flex-col items-center p-6 bg-gray-50 border dark:bg-gray-800 rounded-xl transform transition-transform hover:scale-[1.02] relative">
-                                    @if ($detail->description)
-                                        <div class="absolute top-2 right-2">
-                                            <i class="fa-solid fa-info-circle text-gray-500 dark:text-white text-xl"
-                                                title="{{ $detail->description }}"></i>
-                                        </div>
-                                    @endif
-                                    <img src="{{ $detail->channel->image }}" alt="{{ $detail->channel->name }}"
-                                        class="w-16 h-16 object-contain rounded-lg mb-4">
-
-                                    <span class="block text-base font-semibold text-gray-900 dark:text-white">
-                                        {{ $detail->channel->number }} {{ $detail->channel->name }}
-                                    </span>
-                                    <span class="block mt-1 text-xs text-gray-500">
-                                        {{ $detail->stage->name }}
-                                    </span>
-                                    <div class="flex space-x-4 mt-4">
-                                        @if ($detail->media === 'VIDEO' || $detail->media === 'AUDIO/VIDEO')
-                                            <div class="tooltip" title="{{ __('The channel does not have video') }}">
-                                                <i class="fa-solid fa-video-slash text-red-500 text-xl"></i>
-                                            </div>
-                                        @else
-                                            <div class="tooltip" title="{{ __('The channel has video') }}">
-                                                <i class="fa-solid fa-video text-green-500 text-xl"></i>
-                                            </div>
-                                        @endif
-                                        @if ($detail->media === 'AUDIO' || $detail->media === 'AUDIO/VIDEO')
-                                            <div class="tooltip" title="{{ __('The channel does not have audio') }}">
-                                                <i class="fa-solid fa-volume-xmark text-red-500 text-xl"></i>
-                                            </div>
-                                        @else
-                                            <div class="tooltip" title="{{ __('The channel has audio') }}">
-                                                <i class="fa-solid fa-volume-up text-green-500 text-xl"></i>
-                                            </div>
-                                        @endif
-                                        @if ($detail->protocol === 'DASH' || $detail->protocol === 'DASH/HLS')
-                                            <div class="tooltip"
-                                                title="{{ __('Not working on Web Client (DASH)') }}">
-                                                <i class="fa-solid fa-computer text-red-500 text-xl"></i>
-                                            </div>
-                                        @else
-                                            <div class="tooltip" title="{{ __('Working on Web Client (DASH)') }}">
-                                                <i class="fa-solid fa-computer text-green-500 text-xl"></i>
-                                            </div>
-                                        @endif
-                                        @if ($detail->protocol === 'HLS' || $detail->protocol === 'DASH/HLS')
-                                            <div class="tooltip" title="{{ __('Not working on Set Up Box (HLS)') }}">
-                                                <i class="fa-solid fa-tv text-red-500 text-xl"></i>
-                                            </div>
-                                        @else
-                                            <div class="tooltip" title="{{ __('Working on Set Up Box (HLS)') }}">
-                                                <i class="fa-solid fa-tv text-green-500 text-xl"></i>
-                                            </div>
-                                        @endif
-                                    </div>
-                                </div>
-                            @endforeach
-                        </div>
-                    </div>
-                    <div class="flex justify-end mt-6 space-x-4">
-                        <button wire:click="closeReportDetails"
-                            class="flex items-center gap-2 py-2 px-4 text-base font-bold text-gray-700 bg-white rounded-lg border border-gray-400 hover:border-primary-600 hover:text-primary-600 focus:ring-4 focus:ring-primary-200 dark:text-gray-300 dark:bg-gray-800 dark:border-gray-600 dark:hover:text-primary-400 dark:hover:bg-gray-700">
-                            <i class="fa-solid fa-xmark"></i>
-                            {{ __('Close') }}
-                        </button>
-                    </div>
-                </div>
-            </div>
-        @endif
     </div>
 </div>
