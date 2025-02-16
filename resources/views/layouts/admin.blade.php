@@ -32,6 +32,28 @@
             document.documentElement.classList.remove('dark')
         }
     </script>
+
+    <!-- Scrollbar Styles -->
+    <style>
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background-color: #888;
+            border-radius: 10px;
+            border: 2px solid transparent;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background-color: #555;
+        }
+    </style>
 </head>
 
 <body class="font-sans antialiased bg-gray-200 dark:bg-gray-900" x-data="{
@@ -56,13 +78,11 @@
                 @include('layouts.partials.admin.breadcrumb')
 
                 @isset($action)
-
                     <div>
 
                         {{ $action }}
-                        
-                    </div>
 
+                    </div>
                 @endisset
 
             </div>
@@ -70,7 +90,7 @@
             <div class="p-4 rounded-lg">
 
                 {{ $slot }}
-                
+
             </div>
         </div>
     </div>

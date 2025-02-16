@@ -51,13 +51,10 @@
                                 <i class="fa-solid fa-circle-check mr-1"></i>
                                 {{ __('Status') }}
                             </th>
-                            <th class="py-3 px-4 text-left flex items-center">
+                            <th wire:click="toggleOrder" class="py-3 px-4 text-left flex items-center cursor-pointer">
                                 <i class="fa-solid fa-calendar mr-1"></i>
                                 {{ __('Reported') }}
-                                <button wire:click="toggleOrder"
-                                    class="ml-2 text-gray-500 dark:text-white focus:outline-none transform transition-all hover:scale-110">
-                                    <i class="fa-solid {{ $order === 'asc' ? 'fa-sort-up' : 'fa-sort-down' }}"></i>
-                                </button>
+                                <i class="fa-solid {{ $order === 'asc' ? 'fa-sort-up' : 'fa-sort-down' }} ml-1"></i>
                             </th>
                             <th scope="col" class="px-4 py-3">
                                 <span class="sr-only">
@@ -121,12 +118,23 @@
     </div>
     @if ($showModal && $selectedReport)
         <div class="fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-center items-center">
-            <div class="bg-white dark:bg-gray-900 p-8 rounded-2xl shadow-xl w-11/12 md:w-3/4 max-w-4xl">
+            <div class="bg-white dark:bg-gray-900 p-6 rounded-2xl shadow-xl w-11/12 md:w-3/4 max-w-4xl">
                 <div class="flex justify-between items-center mb-8">
-                    <h2 class="text-2xl font-semibold text-gray-800 dark:text-white flex items-center">
-                        <i class="fa-solid fa-tag mr-3"></i>
-                        {{ $selectedReport->category }}
-                    </h2>
+                    <div
+                        class="flex items-center gap-4 bg-white dark:bg-gray-800 px-4 py-2 rounded-xl shadow-2xl border border-gray-200 dark:border-gray-700">
+                        <i class="fa-solid fa-file-alt text-gray-800 dark:text-gray-100 text-2xl"></i>
+                        <span class="text-xl font-semibold text-gray-900 dark:text-white leading-tight">
+                            {{ $selectedReport->category }}
+                        </span>
+                        <span
+                            class="text-xs font-medium text-white bg-red-500 dark:bg-red-600 px-3 py-1 rounded-full shadow-sm">
+                            <i class="fa-solid fa-triangle-exclamation mr-1"></i>
+                            {{ $report->type }}
+                        </span>
+                        <span class="text-sm font-medium text-gray-500 dark:text-gray-400">
+                            {{ __('Folio') }} #{{ $report->id }}
+                        </span>
+                    </div>
                     <button wire:click="closeReportDetails"
                         class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-white">
                         <i class="fa-solid fa-xmark text-xl"></i>
@@ -201,7 +209,7 @@
                         {{ isset($selectedReport) && $selectedReport ? $selectedReport->reportDetails->count() : 0 }}
                         {{ isset($selectedReport) && $selectedReport->reportDetails->count() === 1 ? __('channel') : __('channels') }}
                     </span>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-2 mt-6
+                    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-2 mt-4
                         @if (isset($selectedReport) && $selectedReport->reportDetails->count() > 4) max-h-56 overflow-auto @else overflow-hidden @endif"
                         style="scrollbar-width: none">
                         @if (isset($selectedReport) && $selectedReport)
@@ -266,7 +274,7 @@
                         @endif
                     </div>
                 </div>
-                <div class="flex justify-end mt-6 space-x-4">
+                <div class="flex justify-end mt-4 space-x-4">
                     <button wire:click.prevent="markAsSolved()"
                         class="py-2 px-4 bg-primary-600 hover:bg-primary-700 text-white rounded-lg shadow font-bold text-base">
                         <i class="fa-solid fa-circle-check mr-1"></i>
