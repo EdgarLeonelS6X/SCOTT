@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
@@ -13,16 +12,13 @@ return new class extends Migration
     {
         Schema::create('reports', function (Blueprint $table) {
             $table->id();
-            $table->string('type');
             $table->string('category');
-            $table->date('report_date');
-            $table->time('start_time')->nullable()->default(DB::raw('CURRENT_TIMESTAMP'));
-            $table->time('end_time')->nullable()->default(DB::raw('CURRENT_TIMESTAMP'));
-            $table->time('duration')->nullable()->default(DB::raw('CURRENT_TIMESTAMP'));
+            $table->string('type');
+            $table->time('duration')->nullable();
             $table->string('reported_by');
+            $table->string('reviewed_by');
             $table->string('attended_by')->nullable();
             $table->string('status')->nullable();
-            $table->string('solution')->nullable();
             $table->timestamps();
         });
     }

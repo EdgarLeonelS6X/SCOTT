@@ -171,7 +171,8 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="7" class="bg-white dark:bg-gray-800 px-4 py-3 text-center">
+                        <td colspan="7" class="bg-white dark:bg-gray-800 pt-7 text-center">
+                            <i class="fa-solid fa-circle-info mr-1"></i>
                             {{ __('There are no channels that match your search.') }}
                         </td>
                     </tr>

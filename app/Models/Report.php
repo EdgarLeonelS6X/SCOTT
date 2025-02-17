@@ -7,16 +7,13 @@ use Illuminate\Database\Eloquent\Model;
 class Report extends Model
 {
     protected $fillable = [
-        'type',
         'category',
-        'report_date',
-        'start_time',
-        'end_time',
+        'type',
         'duration',
         'reported_by',
+        'reviewed_by',
         'attended_by',
         'status',
-        'solution',
     ];
 
     public function channel()

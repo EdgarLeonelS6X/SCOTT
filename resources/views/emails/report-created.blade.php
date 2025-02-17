@@ -174,10 +174,10 @@
                 </tr>
                 <tr>
                     <th>
-                        Attended By
+                        Reviewed By
                     </th>
                     <td>
-                        {{ $report->attended_by }}
+                        {{ $report->reviewed_by }}
                     </td>
                 </tr>
                 <tr>

@@ -24,7 +24,9 @@ class CreateMomentlyReport extends Component
         $this->stages = Stage::where('status', '1')->get();
         $this->reportData = [
             'category' => '',
-            'attended_by' => '',
+            'type' => 'Momentary',
+            'reported_by' => '',
+            'reviewed_by' => '',
             'channels' => [$this->initializeChannel()],
         ];
     }
@@ -69,13 +71,12 @@ class CreateMomentlyReport extends Component
             }
 
             $report = Report::create([
-                'type' => 'Momentary',
                 'category' => $this->reportData['category'],
-                'attended_by' => $this->reportData['attended_by'],
-                'report_date' => now()->toDateString(),
-                'reported_by' => Auth::user()->id,
-                'end_time' => null,
+                'type' => $this->reportData['type'],
                 'duration' => null,
+                'reported_by' => Auth::user()->id,
+                'reviewed_by' => $this->reportData['reviewed_by'],
+                'attended_by' => null,
                 'status' => __('Revision'),
             ]);
 
@@ -91,7 +92,7 @@ class CreateMomentlyReport extends Component
                 ]);
             }
 
-            Mail::to(Auth::user()->email, )->send(new ReportCreatedMail($report));
+            Mail::to(Auth::user()->email)->send(new ReportCreatedMail($report));
 
             $this->dispatch('swal', [
                 'icon' => 'success',
@@ -124,11 +125,11 @@ class CreateMomentlyReport extends Component
     {
         $this->validate([
             'reportData.category' => 'required|string|max:255',
-            'reportData.attended_by' => 'required|string|max:255',
+            'reportData.reviewed_by' => 'required|string|max:255',
             'reportData.channels' => 'required|array|min:1',
         ], [], [
             'reportData.category' => __('category name'),
-            'reportData.attended_by' => __('attended by'),
+            'reportData.reviewed_by' => __('reviewed by'),
             'reportData.channels' => __('channels')
         ]);
 

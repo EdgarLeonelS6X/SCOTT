@@ -158,10 +158,6 @@
                                     {{ $selectedReport->reportedBy->name }}
                                 </p>
                                 <p class="text-xs text-gray-200 dark:text-gray-300 opacity-80">
-                                    <span
-                                        class="inline-flex items-center px-2 py-0.5 font-bold bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200 rounded-full shadow-lg">
-                                        {{ __('Folio') }} {{ $selectedReport->id }}
-                                    </span>
                                     {{ $selectedReport->created_at->format('d/m/Y h:i A') }}
                                 </p>
                             </div>
