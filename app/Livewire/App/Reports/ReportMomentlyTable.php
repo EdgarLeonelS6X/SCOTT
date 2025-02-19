@@ -63,9 +63,9 @@ class ReportMomentlyTable extends Component
             $duration = $createdTime->diff($endTime)->format('%H:%I:%S');
 
             $this->selectedReport->update([
+                'duration' => $duration,
+                'attended_by' => auth()->user()->id,
                 'status' => 'Resolved',
-                'end_time' => $endTime,
-                'duration' => $duration
             ]);
 
             foreach ($this->selectedReport->reportDetails as $detail) {
@@ -80,7 +80,10 @@ class ReportMomentlyTable extends Component
                 'text' => __('The report and channels have been marked as resolved.'),
             ]);
 
-            Mail::to($this->selectedReport->reportedBy->email)->send(new ReportResolvedMail($this->selectedReport));
+            if ($this->selectedReport->reportedBy) {
+                Mail::to($this->selectedReport->reportedBy->email)
+                    ->send(new ReportResolvedMail($this->selectedReport));
+            }
 
             $this->showModal = false;
         }
@@ -97,7 +100,7 @@ class ReportMomentlyTable extends Component
                             ->orWhere('number', 'like', '%' . $this->search . '%');
                     });
             })
-            ->with(['reportDetails.channel', 'reportedBy'])
+            ->with(['reportDetails.channel', 'reportedBy', 'attendedBy'])
             ->orderBy('created_at', $this->order)
             ->paginate(5);
 

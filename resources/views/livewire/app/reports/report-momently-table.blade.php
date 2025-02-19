@@ -127,7 +127,7 @@
                             {{ $selectedReport->category }}
                         </span>
                         <span
-                            class="text-xs font-medium text-white bg-red-500 dark:bg-red-600 px-3 py-1 rounded-full shadow-sm">
+                            class="text-xs font-medium text-white bg-red-500 dark:bg-red-600 px-3 py-1 rounded-lg shadow-2xl">
                             <i class="fa-solid fa-triangle-exclamation mr-1"></i>
                             {{ $report->type }}
                         </span>
@@ -189,7 +189,7 @@
                                         {{ __('Under review by') }}
                                     </h4>
                                     <p class="text-sm font-bold text-white dark:text-gray-100">
-                                        {{ $selectedReport->attended_by }}
+                                        {{ $selectedReport->reviewed_by }}
                                     </p>
                                 </div>
                             </div>
@@ -197,14 +197,17 @@
                     </div>
                 </div>
                 <div class="mt-6">
-                    <i class="fa-solid fa-layer-group text-xl text-gray-800 dark:text-white mr-1.5"></i>
-                    <span class="text-lg font-semibold text-gray-800 dark:text-white mr-1.5">
-                        {{ __('This report contains') }}
-                    </span>
-                    <span class="bg-primary-100 text-primary-800 text-sm font-medium py-1 px-3 rounded-full">
-                        {{ isset($selectedReport) && $selectedReport ? $selectedReport->reportDetails->count() : 0 }}
-                        {{ isset($selectedReport) && $selectedReport->reportDetails->count() === 1 ? __('channel') : __('channels') }}
-                    </span>
+                    <div class="flex items-center">
+                        <i class="fa-solid fa-layer-group text-xl text-gray-800 dark:text-white mr-1.5"></i>
+                        <span class="text-lg font-semibold text-gray-800 dark:text-white mr-1.5">
+                            {{ __('This report contains') }}
+                        </span>
+                        <span
+                            class="bg-primary-100 text-primary-800 text-sm font-medium py-1 px-3 rounded-full ml-1.5">
+                            {{ isset($selectedReport) && $selectedReport ? $selectedReport->reportDetails->count() : 0 }}
+                            {{ isset($selectedReport) && $selectedReport->reportDetails->count() === 1 ? __('channel') : __('channels') }}
+                        </span>
+                    </div>
                     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-2 mt-4
                         @if (isset($selectedReport) && $selectedReport->reportDetails->count() > 4) max-h-56 overflow-auto @else overflow-hidden @endif"
                         style="scrollbar-width: none">

@@ -7,8 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 class Report extends Model
 {
     protected $fillable = [
-        'category',
         'type',
+        'category',
         'duration',
         'reported_by',
         'reviewed_by',
@@ -29,6 +29,11 @@ class Report extends Model
     public function reportedBy()
     {
         return $this->belongsTo(User::class, 'reported_by');
+    }
+
+    public function attendedBy()
+    {
+        return $this->belongsTo(User::class, 'attended_by');
     }
 
     public function stages()

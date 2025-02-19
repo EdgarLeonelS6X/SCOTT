@@ -12,11 +12,11 @@ return new class extends Migration {
     {
         Schema::create('reports', function (Blueprint $table) {
             $table->id();
-            $table->string('category');
             $table->string('type');
-            $table->time('duration')->nullable();
+            $table->string('category');
+            $table->string('duration')->nullable();
             $table->string('reported_by');
-            $table->string('reviewed_by');
+            $table->string('reviewed_by')->nullable();
             $table->string('attended_by')->nullable();
             $table->string('status')->nullable();
             $table->timestamps();

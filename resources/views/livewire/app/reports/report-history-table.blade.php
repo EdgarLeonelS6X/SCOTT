@@ -65,7 +65,7 @@
                             <i class="fa-solid fa-flag mr-1"></i>
                             {{ __('Folio') }}
                         </th>
-                        <th class="py-3 px-4 text-left w-36 min-w-[190px] max-w-[190px]">
+                        <th class="py-3 px-4 text-left w-36 min-w-[300px] max-w-[300px]">
                             <i class="fa-solid fa-folder mr-1"></i>
                             {{ __('Report') }}
                         </th>
@@ -118,20 +118,33 @@
                                         {{ __($report->type) }}
                                     </span>
                                 @elseif ($report->type === 'Hourly')
+                                    <span
+                                        class="inline-flex items-center px-2 py-1 text-sm font-medium rounded-full text-green-800 bg-green-200 dark:bg-green-800 dark:text-green-200">
+                                        <i class="fa-solid fa-clock mr-1.5"></i>
+                                        {{ __($report->type) }}
+                                    </span>
                                 @else
                                 @endif
                             </td>
                             <td class="py-3 px-4">
-                                <span
-                                    class="inline-flex items-center px-2 py-1 text-sm font-medium rounded-full
+                                @if ($report->type === 'Momentary')
+                                    <span
+                                        class="inline-flex items-center px-2 py-1 text-sm font-medium rounded-full
                                 {{ $report->status === 'Resolved' ? 'text-green-800 bg-green-200 dark:bg-green-800 dark:text-green-200' : 'text-yellow-800 bg-yellow-200 dark:bg-yellow-800 dark:text-yellow-200' }}">
-                                    @if ($report->status === 'Resolved')
-                                        <i class="fa-solid fa-circle-check mr-1.5"></i>
-                                    @elseif ($report->status === 'Revision')
-                                        <i class="fa-solid fa-magnifying-glass mr-1.5"></i>
-                                    @endif
-                                    {{ __($report->status) }}
-                                </span>
+                                        @if ($report->status === 'Resolved')
+                                            <i class="fa-solid fa-circle-check mr-1.5"></i>
+                                        @elseif ($report->status === 'Revision')
+                                            <i class="fa-solid fa-magnifying-glass mr-1.5"></i>
+                                        @endif
+                                        {{ __($report->status) }}
+                                    </span>
+                                @else
+                                    <span
+                                        class="inline-flex items-center px-2 py-1 text-sm font-medium rounded-full text-gray-800 bg-gray-200 dark:bg-gray-700 dark:text-gray-200">
+                                        <i class="fa-solid fa-folder mr-1.5"></i>
+                                        {{ __($report->status) }}
+                                    </span>
+                                @endif
                             </td>
                             <td class="py-3 px-4">
                                 <span

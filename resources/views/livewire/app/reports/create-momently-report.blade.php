@@ -6,7 +6,7 @@ use App\Enums\ChannelReviewer;
 
 <div>
     <x-validation-errors></x-validation-errors>
-    <form wire:submit.prevent="saveReport" class="space-y-8">
+    <form wire:submit.prevent="saveReport" class="space-y-5">
         <div x-data="{ open: true, editingName: false }" class="p-6 border bg-white dark:bg-gray-800 rounded-2xl shadow-2xl">
             <div class="flex items-center justify-between cursor-pointer" @click="open = !open">
                 <div class="flex items-center">

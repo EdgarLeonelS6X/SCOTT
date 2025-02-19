@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>
-        {{ __('Report Resolved') }}
+        {{ __('Report Resolved Notification') }}
     </title>
     <style>
         body {
@@ -39,7 +39,7 @@
         }
 
         .details,
-        .channels {
+        .categories {
             background: #1a1a1a;
             padding: 20px;
             border-radius: 10px;
@@ -48,7 +48,7 @@
         }
 
         .details h3,
-        .channels h3 {
+        .categories h3 {
             margin-top: 0;
             color: #f1f1f1;
             font-size: 16px;
@@ -98,13 +98,13 @@
             text-transform: uppercase;
         }
 
-        .badge-resolved {
-            background: #057A55;
+        .badge-status {
+            background: #374151;
             color: #fff;
         }
 
         .badge-type {
-            background: #E02424;
+            background: #057A55;
             color: #fff;
         }
 
@@ -153,14 +153,6 @@
                 </tr>
                 <tr>
                     <th>
-                        {{ __('Category') }}
-                    </th>
-                    <td>
-                        {{ $report->category }}
-                    </td>
-                </tr>
-                <tr>
-                    <th>
                         {{ __('Type') }}
                     </th>
                     <td>
@@ -174,17 +166,9 @@
                         {{ __('Status') }}
                     </th>
                     <td>
-                        <span class="badge {{ $report->status === 'Resolved' ? 'badge-resolved' : 'badge-pending' }}">
+                        <span class="badge badge-status">
                             {{ ucfirst($report->status) }}
                         </span>
-                    </td>
-                </tr>
-                <tr>
-                    <th>
-                        {{ __('Reviewed By') }}
-                    </th>
-                    <td>
-                        {{ $report->reviewed_by }}
                     </td>
                 </tr>
                 <tr>
@@ -197,55 +181,18 @@
                 </tr>
                 <tr>
                     <th>
-                        {{ __('Attended By') }}
-                    </th>
-                    <td>
-                        {{ $attendedBy->name }} ({{ $attendedBy->email }})
-                    </td>
-                </tr>
-                <tr>
-                    <th>
                         {{ __('Created At') }}
                     </th>
                     <td>
                         {{ $report->created_at->format('d/m/Y H:i') }}
                     </td>
                 </tr>
-                <tr>
-                    <th>
-                        {{ __('Resolved At') }}
-                    </th>
-                    <td>
-                        {{ $report->updated_at->format('d/m/Y H:i') }}
-                    </td>
-                </tr>
-                <tr>
-                    <th>
-                        {{ __('Duration') }}
-                    </th>
-                    <td>
-                        @php
-                            $createdAt = \Carbon\Carbon::parse($report->created_at);
-                            $resolvedAt = \Carbon\Carbon::parse($report->updated_at);
-                            $totalSeconds = intval($createdAt->diffInSeconds($resolvedAt));
-
-                            if ($totalSeconds < 60) {
-                                echo $totalSeconds . ' seconds';
-                            } elseif ($totalSeconds < 3600) {
-                                echo floor($totalSeconds / 60) . ' minutes';
-                            } else {
-                                $hours = floor($totalSeconds / 3600);
-                                $minutes = floor(($totalSeconds % 3600) / 60);
-                                echo $hours . ' hours ' . ($minutes > 0 ? $minutes . ' minutes' : '');
-                            }
-                        @endphp
-                    </td>
-                </tr>
             </table>
         </div>
-        <div class="channels">
+
+        <div class="categories">
             <h3>
-                📡 {{ __('Channels Involved') }}
+                📡 {{ $category['name'] }}
             </h3>
             <table>
                 <tr>

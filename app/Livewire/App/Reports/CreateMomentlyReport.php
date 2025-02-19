@@ -16,15 +16,15 @@ class CreateMomentlyReport extends Component
 {
     public $reportData;
     public $stages;
-    public $protocols = ['DASH', 'HLS', 'DASH/HLS'];
+    public $protocols = ['HLS', 'DASH', 'HLS/DASH'];
     public $mediaOptions = ['AUDIO', 'VIDEO', 'AUDIO/VIDEO'];
 
     public function mount()
     {
         $this->stages = Stage::where('status', '1')->get();
         $this->reportData = [
+            'type' => __('Momentary'),
             'category' => '',
-            'type' => 'Momentary',
             'reported_by' => '',
             'reviewed_by' => '',
             'channels' => [$this->initializeChannel()],

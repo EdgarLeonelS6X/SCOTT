@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>
-        New Report Created
+        {{ __('New Report Created') }}
     </title>
     <style>
         body {
@@ -99,7 +99,12 @@
         }
 
         .badge-pending {
-            background: #e67e22;
+            background: #D8DE6A;
+            color: #fff;
+        }
+
+        .badge-type {
+            background: #E02424;
             color: #fff;
         }
 
@@ -130,17 +135,17 @@
     <div class="container">
         <div class="header">
             <h2>
-                New Report Created Notification
+                {{ __('New Report Created Notification') }}
             </h2>
         </div>
         <div class="details">
             <h3>
-                📌 Report Details
+                📌 {{ __('Report Details') }}
             </h3>
             <table>
                 <tr>
                     <th>
-                        Folio
+                        {{ __('Folio') }}
                     </th>
                     <td>
                         {{ $report->id }}
@@ -148,7 +153,7 @@
                 </tr>
                 <tr>
                     <th>
-                        Category
+                        {{ __('Category') }}
                     </th>
                     <td>
                         {{ $report->category }}
@@ -156,7 +161,17 @@
                 </tr>
                 <tr>
                     <th>
-                        Status
+                        {{ __('Type') }}
+                    </th>
+                    <td>
+                        <span class="badge badge-type">
+                            {{ ucfirst($report->type) }}
+                        </span>
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        {{ __('Status') }}
                     </th>
                     <td>
                         <span class="badge badge-pending">
@@ -166,15 +181,7 @@
                 </tr>
                 <tr>
                     <th>
-                        Reported By
-                    </th>
-                    <td>
-                        {{ $reportedBy->name }} ({{ $reportedBy->email }})
-                    </td>
-                </tr>
-                <tr>
-                    <th>
-                        Reviewed By
+                        {{ __('Reviewed By') }}
                     </th>
                     <td>
                         {{ $report->reviewed_by }}
@@ -182,7 +189,15 @@
                 </tr>
                 <tr>
                     <th>
-                        Created At
+                        {{ __('Reported By') }}
+                    </th>
+                    <td>
+                        {{ $reportedBy->name }} ({{ $reportedBy->email }})
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        {{ __('Created At') }}
                     </th>
                     <td>
                         {{ $report->created_at->format('d/m/Y H:i') }}
@@ -192,18 +207,18 @@
         </div>
         <div class="channels">
             <h3>
-                📡 Channels Involved
+                📡 {{ __('Channels Involved') }}
             </h3>
             <table>
                 <tr>
                     <th>
-                        Channel
+                        {{ __('Channel') }}
                     </th>
                     <th>
-                        Stage
+                        {{ __('Stage') }}
                     </th>
                     <th>
-                        Media
+                        {{ __('Media') }}
                     </th>
                 </tr>
                 @foreach ($report->reportDetails as $detail)
@@ -226,7 +241,7 @@
                 SCOTT
             </h3>
             <p class="footer-subtitle">
-                OTT Communications System
+                {{ __('OTT Communications System') }}
             </p>
         </div>
     </div>

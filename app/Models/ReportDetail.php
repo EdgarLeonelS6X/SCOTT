@@ -10,6 +10,7 @@ class ReportDetail extends Model
         'report_id',
         'channel_id',
         'stage_id',
+        'subcategory',
         'protocol',
         'media',
         'description',

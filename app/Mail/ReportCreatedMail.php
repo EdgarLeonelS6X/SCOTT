@@ -34,7 +34,7 @@ class ReportCreatedMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: '⚠️ New Report Created',
+            subject: __('⚠️ New Report Created'),
         );
     }
 
