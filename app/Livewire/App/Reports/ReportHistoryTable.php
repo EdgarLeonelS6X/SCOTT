@@ -5,6 +5,7 @@ namespace App\Livewire\App\Reports;
 use Livewire\Component;
 use Livewire\WithPagination;
 use App\Models\Report;
+use App\Models\User;
 
 class ReportHistoryTable extends Component
 {
@@ -13,24 +14,25 @@ class ReportHistoryTable extends Component
     public $search = '';
     public $orderField = 'created_at';
     public $orderDirection = 'desc';
-    public $selectedReport = null;
-    public $showModal = false;
     public $statusFilter = null;
     public $selectedUser = null;
+    public $typeFilter = null;
+    public $reportTypes = ['Momentary', 'Hourly', 'Functions'];
+    public $currentTypeIndex = 0;
+    public $statusOptions = ['Revision', 'Resolved', 'Reported'];
+    public $currentStatusIndex = 0;
+    public $userOptions = [];
     public $currentUserIndex = 0;
 
     protected $queryString = ['search', 'orderField', 'orderDirection'];
 
-    public function openReportDetails($reportId)
+    public function mount()
     {
-        $this->selectedReport = Report::with(['reportedBy', 'stages', 'reportDetails.channel'])->find($reportId);
-        $this->showModal = true;
-    }
+        $this->userOptions = User::whereHas('reports')->pluck('name')->toArray();
 
-    public function closeReportDetails()
-    {
-        $this->selectedReport = null;
-        $this->showModal = false;
+        if (!empty($this->userOptions)) {
+            $this->selectedUser = $this->userOptions[0];
+        }
     }
 
     public function updatingSearch()
@@ -68,19 +70,32 @@ class ReportHistoryTable extends Component
         $this->selectedUser = $usersWithReports[$this->currentUserIndex];
     }
 
-    public function toggleStatusFilter($status)
+    public function toggleStatusFilter()
     {
-        if ($this->statusFilter === $status) {
-            $this->statusFilter = null;
-        } else {
-            $this->statusFilter = $status;
-        }
+        $this->currentStatusIndex = ($this->currentStatusIndex + 1) % count($this->statusOptions);
+        $this->statusFilter = $this->statusOptions[$this->currentStatusIndex];
+    }
+
+    public function toggleTypeFilter()
+    {
+        $this->currentTypeIndex = ($this->currentTypeIndex + 1) % count($this->reportTypes);
+        $this->typeFilter = $this->reportTypes[$this->currentTypeIndex];
     }
 
     public function resetFilters()
     {
-        $this->reset(['search', 'orderField', 'orderDirection', 'statusFilter', 'selectedUser', 'currentUserIndex']);
+        $this->reset(['search', 'orderField', 'orderDirection', 'statusFilter', 'selectedUser', 'currentUserIndex', 'typeFilter', 'currentTypeIndex']);
         $this->resetPage();
+    }
+
+    public function toggleUserFilter()
+    {
+        if (empty($this->userOptions)) {
+            return;
+        }
+
+        $this->currentUserIndex = ($this->currentUserIndex + 1) % count($this->userOptions);
+        $this->selectedUser = $this->userOptions[$this->currentUserIndex];
     }
 
     public function render()
@@ -98,12 +113,18 @@ class ReportHistoryTable extends Component
             })
             ->with(['reportedBy', 'stages', 'reportDetails.channel']);
 
-        if ($this->selectedUser) {
-            $query->where('reported_by', $this->selectedUser);
-        }
-
         if ($this->statusFilter) {
             $query->where('status', $this->statusFilter);
+        }
+
+        if ($this->typeFilter) {
+            $query->where('type', $this->typeFilter);
+        }
+
+        if ($this->selectedUser) {
+            $query->whereHas('reportedBy', function ($q) {
+                $q->where('name', $this->selectedUser);
+            });
         }
 
         $query->orderBy($this->orderField, $this->orderDirection);

@@ -1,4 +1,4 @@
-<div class="bg-white dark:bg-gray-800 relative shadow-2xl sm:rounded-lg overflow-hidden">
+<div class="bg-white dark:bg-gray-800 relative shadow-2xl sm:rounded-lg overflow-hidden mb-6">
     <div class="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 p-4">
         <div class="w-full md:w-1/2">
             <form class="flex items-center">
@@ -47,6 +47,13 @@
                     </div>
                 </div>
             </div>
+            <div class="flex items-center">
+                <button wire:click="resetFilters"
+                    class="flex items-center justify-center py-2 px-4 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
+                    <i class="fa-solid fa-rotate-left mr-1"></i>
+                    {{ __('Reset table') }}
+                </button>
+            </div>
         </div>
     </div>
     <div class="overflow-x-auto">
@@ -69,13 +76,28 @@
                             <i class="fa-solid fa-folder mr-1"></i>
                             {{ __('Report') }}
                         </th>
-                        <th class="py-3 px-4 text-left w-36 min-w-[150px] max-w-[150px]">
+                        <th class="py-3 px-4 text-left w-36 min-w-[150px] max-w-[150px] cursor-pointer"
+                            wire:click="toggleTypeFilter">
                             <i class="fa-solid fa-list mr-1"></i>
-                            {{ __('Type') }}
+                            <span class="text-gray-500 dark:text-white">
+                                @if ($typeFilter)
+                                    {{ $typeFilter }}
+                                @else
+                                    {{ __('Type') }}
+                                @endif
+                                <i class="ml-1 fa-solid fa-sort"></i>
+                            </span>
                         </th>
-                        <th class="py-3 px-4 text-left">
-                            <i class="fa-solid fa-gear mr-1"></i>
-                            {{ __('Status') }}
+                        <th class="py-3 px-4 text-left cursor-pointer" wire:click="toggleStatusFilter">
+                            <i class="fa-solid fa-circle-check mr-1"></i>
+                            <span class="text-gray-500 dark:text-white">
+                                @if ($statusFilter)
+                                    {{ $statusFilter }}
+                                @else
+                                    {{ __('Status') }}
+                                @endif
+                                <i class="ml-1 fa-solid fa-sort"></i>
+                            </span>
                         </th>
                         <th class="py-3 px-4 text-left cursor-pointer" wire:click="setOrder('created_at')">
                             <i class="fa-solid fa-calendar mr-1"></i>
@@ -90,13 +112,24 @@
                                 @endif
                             </button>
                         </th>
-                        <th class="py-3 px-4 text-left min-w-[190px] max-w-[190px]"">
+                        <th class="py-3 px-4 text-left min-w-[325px] max-w-[325px] cursor-pointer"
+                            wire:click="toggleUserFilter">
                             <i class="fa-solid fa-user mr-1"></i>
                             {{ __('Reported By') }}
+                            <span class="text-gray-500 dark:text-white">
+                                @if ($selectedUser)
+                                    {{ $selectedUser }}
+                                @else
+                                    {{ __('All Users') }}
+                                @endif
+                                <i class="ml-1 fa-solid fa-sort"></i>
+                            </span>
                         </th>
-                        <th class="px-4 py-3 cursor-pointer" wire:click="resetFilters">
-                            <i class="fa-solid fa-rotate-left mr-1"></i>
-                            {{ __('Reset table') }}
+                        <th scope="col" class="py-3 px-4">
+                            <span class="sr-only">
+                                <i class="fa-solid fa-sliders-h mr-1"></i>
+                                {{ __('Options') }}
+                            </span>
                         </th>
                     </tr>
                 </thead>
@@ -124,6 +157,11 @@
                                         {{ __($report->type) }}
                                     </span>
                                 @else
+                                    <span
+                                        class="inline-flex items-center px-2 py-1 text-sm font-medium rounded-full text-blue-800 bg-blue-200 dark:bg-blue-800 dark:text-blue-200">
+                                        <i class="fa-solid fa-forward mr-1.5"></i>
+                                        {{ __($report->type) }}
+                                    </span>
                                 @endif
                             </td>
                             <td class="py-3 px-4">
@@ -155,7 +193,8 @@
                             </td>
                             <td class="px-4 py-3 flex items-center">
                                 <img src="{{ $report->reportedBy->profile_photo_url }}"
-                                    alt="{{ $report->reportedBy->name }}" class="w-8 h-8 rounded-full mr-2 shadow-2xl">
+                                    alt="{{ $report->reportedBy->name }}"
+                                    class="w-8 h-8 rounded-full mr-2 shadow-2xl">
                                 {{ $report->reportedBy->name }}
                             </td>
                             <td class="py-3 px-4 text-center">

@@ -13,6 +13,7 @@ class ReportGeneralCreatedMail extends Mailable
 
     public $report;
     public $categories;
+    public $reportedBy;
 
     /**
      * Create a new message instance.
@@ -21,6 +22,7 @@ class ReportGeneralCreatedMail extends Mailable
     {
         $this->report = $report;
         $this->categories = $categories;
+        $this->reportedBy = $report->reportedBy;
     }
 
     /**
@@ -43,6 +45,7 @@ class ReportGeneralCreatedMail extends Mailable
             with: [
                 'report' => $this->report,
                 'categories' => $this->categories,
+                'reportedBy' => $this->reportedBy,
             ]
         );
     }

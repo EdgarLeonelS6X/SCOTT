@@ -69,7 +69,6 @@ class CreateFunctionsReport extends Component
         ];
     }
 
-    // Guarda el reporte
     public function saveReport()
     {
         try {
@@ -101,9 +100,12 @@ class CreateFunctionsReport extends Component
                         'description' => $channel['description'],
                     ]);
 
+                    $channelData = Channel::find($reportDetail->channel_id);
+
                     $categoryData['channels'][] = [
                         'channel_id' => $reportDetail->channel_id,
-                        'name' => Channel::find($reportDetail->channel_id)->name ?? 'Unknown',
+                        'number' => $channelData->number ?? 'N/A',
+                        'name' => $channelData->name ?? 'Unknown',
                         'stage' => Stage::find($reportDetail->stage_id)->name ?? 'Unknown',
                         'media' => $reportDetail->media,
                     ];

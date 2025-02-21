@@ -85,7 +85,7 @@
                         <th scope="row"
                             class="px-4 py-2.5 font-bold text-gray-900 whitespace-nowrap dark:text-white">
                             {{ $channel->number }} {{ $channel->name }}
-                        </td>
+                            </td>
                         <td class="px-4 py-2.5">
                             {{ $channel->origin }}
                         </td>

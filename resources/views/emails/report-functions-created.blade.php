@@ -189,38 +189,54 @@
                 </tr>
             </table>
         </div>
-
-        <div class="categories">
-            <h3>
-                📡 {{ $category['name'] }}
-            </h3>
-            <table>
-                <tr>
-                    <th>
-                        {{ __('Channel') }}
-                    </th>
-                    <th>
-                        {{ __('Stage') }}
-                    </th>
-                    <th>
-                        {{ __('Media') }}
-                    </th>
-                </tr>
-                @foreach ($channels as $detail)
+        @foreach ($categories as $category)
+            <div class="categories">
+                <h3>
+                    📡 {{ $category['name'] }}
+                </h3>
+                <table>
                     <tr>
-                        <td>
-                            {{ $detail->channel->number }} {{ $detail->channel->name }}
-                        </td>
-                        <td>
-                            {{ $detail->stage->name }}
-                        </td>
-                        <td>
-                            {{ $detail->media }}
-                        </td>
+                        <th>
+                            {{ __('Channel') }}
+                        </th>
+                        <th>
+                            {{ __('Stage') }}
+                        </th>
+                        <th>
+                            {{ __('Media') }}
+                        </th>
                     </tr>
-                @endforeach
-            </table>
-        </div>
+                    @if (count($category['channels']) > 0)
+                        @foreach ($category['channels'] as $channel)
+                            <tr>
+                                <td>
+                                    {{ $channel['number'] }} {{ $channel['name'] }}
+                                </td>
+                                <td>
+                                    {{ $channel['stage'] }}
+                                </td>
+                                <td>
+                                    {{ $channel['media'] }}
+                                </td>
+                            </tr>
+                        @endforeach
+                    @else
+                        <tr>
+                            <td colspan="3"
+                                style="
+                        text-align: center;
+                        font-weight: bold;
+                        color: #057A55;
+                        background: #252525;
+                        padding: 12px;
+                            ">
+                                {{ __('All channels on this function are working properly.') }}
+                            </td>
+                        </tr>
+                    @endif
+                </table>
+            </div>
+        @endforeach
         <div class="footer">
             <h3 class="footer-title">
                 SCOTT
