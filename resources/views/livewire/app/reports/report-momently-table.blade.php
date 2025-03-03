@@ -248,7 +248,7 @@
                                                 <i class="fa-solid fa-volume-up text-green-500 text-xl"></i>
                                             </div>
                                         @endif
-                                        @if ($detail->protocol === 'DASH' || $detail->protocol === 'DASH/HLS')
+                                        @if ($detail->protocol === 'DASH' || $detail->protocol === 'HLS/DASH')
                                             <div class="tooltip"
                                                 title="{{ __('Not working on Web Client (DASH)') }}">
                                                 <i class="fa-solid fa-computer text-red-500 text-xl"></i>
@@ -258,7 +258,7 @@
                                                 <i class="fa-solid fa-computer text-green-500 text-xl"></i>
                                             </div>
                                         @endif
-                                        @if ($detail->protocol === 'HLS' || $detail->protocol === 'DASH/HLS')
+                                        @if ($detail->protocol === 'HLS' || $detail->protocol === 'HLS/DASH')
                                             <div class="tooltip" title="{{ __('Not working on Set Up Box (HLS)') }}">
                                                 <i class="fa-solid fa-tv text-red-500 text-xl"></i>
                                             </div>

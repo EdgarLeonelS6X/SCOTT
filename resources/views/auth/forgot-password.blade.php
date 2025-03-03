@@ -12,11 +12,12 @@
                         </div>
                     </h1>
                     @session('status')
-                        <div class="mb-4 font-medium text-sm text-green-600 dark:text-green-400">
+                        <div class="w-full text-center mb-4 font-medium text-sm text-green-600 dark:text-green-400">
+                            <i class="fa-solid fa-circle-check mr-1"></i>
                             {{ $value }}
                         </div>
                     @endsession
-                    <x-validation-errors class="mb-4" />
+                    <x-validation-errors class="w-full text-center mb-4" />
                     <form method="POST" action="{{ route('password.email') }}">
                         @csrf
                         <div class="block">

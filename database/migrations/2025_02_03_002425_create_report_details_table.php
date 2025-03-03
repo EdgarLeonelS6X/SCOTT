@@ -19,7 +19,7 @@ return new class extends Migration {
             $table->string('protocol')->nullable();
             $table->string('media')->nullable();
             $table->text('description')->nullable();
-            $table->text('status');
+            $table->text('status')->nullable();
             $table->timestamps();
         });
     }
