@@ -30,9 +30,7 @@ class ReportHistoryTable extends Component
     {
         $this->userOptions = User::whereHas('reports')->pluck('name')->toArray();
 
-        if (!empty($this->userOptions)) {
-            $this->selectedUser = $this->userOptions[0];
-        }
+        $this->selectedUser = null;
     }
 
     public function updatingSearch()
