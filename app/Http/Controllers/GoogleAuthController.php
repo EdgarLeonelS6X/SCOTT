@@ -17,17 +17,13 @@ class GoogleAuthController extends Controller
     {
         try {
             $user_google = Socialite::driver('google')->stateless()->user();
-
             $email = $user_google->email;
 
             if (!str_ends_with($email, '@stargroup.com.mx')) {
-                session()->flash('swal', [
-                    'icon' => 'error',
-                    'title' => __('Error!'),
-                    'text' => __('Only emails with the @stargroup.com.mx domain are allowed.')
-                ]);
-
-                return redirect('/login');
+                return "<script>
+                window.opener.postMessage({ error: 'Only emails with the @stargroup.com.mx domain are allowed.' }, '*');
+                window.close();
+            </script>";
             }
 
             $user = User::updateOrCreate(
@@ -40,15 +36,15 @@ class GoogleAuthController extends Controller
 
             Auth::login($user);
 
-            return redirect('/dashboard');
+            return "<script>
+            window.opener.postMessage({ success: true }, '*');
+            window.close();
+        </script>";
         } catch (\Exception $e) {
-            session()->flash('swal', [
-                'icon' => 'error',
-                'title' => __('Oops!'),
-                'text' => __('An error occurred during Google authentication.')
-            ]);
-
-            return redirect('/login');
+            return "<script>
+            window.opener.postMessage({ error: 'An error occurred during Google authentication: " . $e->getMessage() . "' }, '*');
+            window.close();
+        </script>";
         }
     }
 }

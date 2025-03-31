@@ -8,12 +8,22 @@
                     <h1 class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
                         {{ __('Sign in to your account') }}
                     </h1>
-                    <x-validation-errors class="mb-4" />
                     @session('status')
                         <div class="mb-4 font-medium text-sm text-green-600 dark:text-green-400">
                             {{ $value }}
                         </div>
                     @endsession
+                    @if (session('swal'))
+                        <script>
+                            window.onload = function() {
+                                Swal.fire({
+                                    icon: '{{ session('swal')['icon'] }}',
+                                    title: '{{ session('swal')['title'] }}',
+                                    text: '{{ session('swal')['text'] }}'
+                                });
+                            };
+                        </script>
+                    @endif
                     <form method="POST" action="{{ route('login') }}">
                         @csrf
                         <div>
@@ -72,11 +82,11 @@
                             {{ __('Or') }}
                         </span>
                     </div>
-                    <a href="{{ route('redirectToGoogle') }}"
-                        class="flex items-center justify-center w-full text-gray-700 bg-transparent border 
-                                border-gray-400 hover:bg-gray-100 hover:text-gray-900 focus:ring-4 focus:outline-none 
-                                focus:ring-gray-300 font-bold rounded-lg text-base px-5 py-2.5 text-center me-2 mb-2 shadow
-                                dark:text-white dark:bg-transparent dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:text-white dark:focus:ring-gray-500">
+                    <a class="flex items-center justify-center w-full text-gray-700 bg-transparent border 
+                        border-gray-400 hover:bg-gray-100 hover:text-gray-900 focus:ring-4 focus:outline-none 
+                        focus:ring-gray-300 font-bold rounded-lg text-base px-5 py-2.5 text-center me-2 mb-2 shadow
+                        dark:text-white dark:bg-transparent dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:text-white dark:focus:ring-gray-500"
+                        onclick="openGooglePopup()">
                         <i class="fa-brands fa-google mr-2"></i>
                         {{ __('Log in with Google') }}
                     </a>
@@ -85,3 +95,27 @@
         </div>
     </section>
 </x-guest-layout>
+
+<script>
+    function openGooglePopup() {
+        let width = 600,
+            height = 600;
+        let left = (screen.width - width) / 2;
+        let top = (screen.height - height) / 2;
+
+        let popup = window.open("{{ route('redirectToGoogle') }}", "Google Login",
+            `width=${width},height=${height},top=${top},left=${left}`);
+    }
+
+    window.addEventListener("message", function(event) {
+        if (event.data.error) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops!',
+                text: event.data.error
+            });
+        } else if (event.data.success) {
+            location.reload();
+        }
+    });
+</script>

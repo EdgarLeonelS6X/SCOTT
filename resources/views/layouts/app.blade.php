@@ -54,6 +54,13 @@
             background-color: #555;
         }
     </style>
+
+    <script>
+        if (window.opener) {
+            window.opener.location.reload();
+        }
+        window.close();
+    </script>
 </head>
 
 <body class="font-sans antialiased bg-gray-200 dark:bg-gray-900">
