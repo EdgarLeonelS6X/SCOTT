@@ -27,12 +27,14 @@ class CreateHourlyReport extends Component
 
     protected function initializeDefaultCategories()
     {
-        $defaultCategories = ['CDN TELMEX', 'CDN CEF+'];
+        $defaultCategories = ['CDN TELMEX', 'CDN CEF+', 'Stingray'];
 
         foreach ($defaultCategories as $category) {
             $this->categories[] = [
                 'name' => $category,
-                'channels' => [],
+                'channels' => [
+                    $this->initializeChannel($category),
+                ],
             ];
         }
     }
@@ -55,7 +57,8 @@ class CreateHourlyReport extends Component
 
     public function addChannel($categoryIndex)
     {
-        $this->categories[$categoryIndex]['channels'][] = $this->initializeChannel();
+        $categoryName = $this->categories[$categoryIndex]['name'];
+        $this->categories[$categoryIndex]['channels'][] = $this->initializeChannel($categoryName);
     }
 
     public function removeChannel($categoryIndex, $channelIndex)
@@ -64,11 +67,18 @@ class CreateHourlyReport extends Component
         $this->categories[$categoryIndex]['channels'] = array_values($this->categories[$categoryIndex]['channels']);
     }
 
-    protected function initializeChannel()
+    protected function initializeChannel($category = '')
     {
+        $defaultStage = '';
+        if ($category === 'CDN TELMEX') {
+            $defaultStage = Stage::where('name', 'CDN TELMEX')->first()->id ?? '';
+        } elseif ($category === 'CDN CEF+') {
+            $defaultStage = Stage::where('name', 'CDN CEF+')->first()->id ?? '';
+        }
+
         return [
             'channel_id' => '',
-            'stage' => '',
+            'stage' => $defaultStage,
             'protocol' => '',
             'media' => '',
             'description' => '',
@@ -92,12 +102,20 @@ class CreateHourlyReport extends Component
             $categories = [];
 
             foreach ($this->categories as $category) {
+                if (empty($category['channels'])) {
+                    continue;
+                }
+
                 $categoryData = [
                     'name' => $category['name'],
                     'channels' => [],
                 ];
 
                 foreach ($category['channels'] as $channel) {
+                    if (empty($channel['channel_id'])) {
+                        continue;
+                    }
+
                     $reportDetail = ReportDetail::create([
                         'report_id' => $report->id,
                         'subcategory' => $category['name'],
@@ -109,17 +127,20 @@ class CreateHourlyReport extends Component
                     ]);
 
                     $channelData = Channel::find($reportDetail->channel_id);
+                    $stageData = Stage::find($reportDetail->stage_id);
 
                     $categoryData['channels'][] = [
                         'channel_id' => $reportDetail->channel_id,
                         'number' => $channelData->number ?? 'N/A',
                         'name' => $channelData->name ?? 'Unknown',
-                        'stage' => Stage::find($reportDetail->stage_id)->name ?? 'Unknown',
+                        'stage' => $stageData->name ?? 'Unknown',
                         'media' => $reportDetail->media,
                     ];
                 }
 
-                $categories[] = $categoryData;
+                if (!empty($categoryData['channels'])) {
+                    $categories[] = $categoryData;
+                }
             }
 
             Mail::to(Auth::user()->email)->send(new ReportGeneralCreatedMail($report, $categories));
@@ -153,8 +174,10 @@ class CreateHourlyReport extends Component
         foreach ($this->categories as $index => $category) {
             $this->validate([
                 "categories.$index.name" => 'required|string|max:255',
+                "categories.$index.channels" => 'required|array|min:1',
             ], [], [
                 "categories.$index.name" => __('category name'),
+                "categories.$index.channels" => __('category channels'),
             ]);
         }
     }
@@ -163,6 +186,7 @@ class CreateHourlyReport extends Component
     {
         return view('livewire.app.reports.create-hourly-report', [
             'channels' => Channel::where('status', '1')->get(),
+            'stingrayChannels' => Channel::where('status', '1')->where('category', 'Stingray')->get(),
         ]);
     }
 }

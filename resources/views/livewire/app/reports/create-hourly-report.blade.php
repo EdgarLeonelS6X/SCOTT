@@ -43,28 +43,71 @@
                                 </button>
                             </div>
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <div x-data="{ selectedChannel: '' }">
+                                <div x-data="{
+                                    open: false,
+                                    search: '',
+                                    selectedChannelImage: @entangle('selectedChannelImage').defer,
+                                    selectedChannelNumber: '',
+                                    selectedChannelName: '',
+                                    clearSelection() {
+                                        this.selectedChannelImage = '';
+                                        this.selectedChannelNumber = '';
+                                        this.selectedChannelName = '';
+                                        this.search = '';
+                                        this.open = true; // Abre la lista solo si no hay canal seleccionado
+                                    }
+                                }">
                                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                        <i class="fa-solid fa-tv mr-1.5"></i>
-                                        {{ __('Channel') }}
+                                        <i class="fa-solid fa-tv mr-1.5"></i> {{ __('Channel') }}
                                     </label>
                                     <div class="relative">
-                                        <img x-show="selectedChannel" :src="selectedChannel"
-                                            class="absolute left-2 top-1/2 transform -translate-y-1/2 w-8 h-8 object-contain object-center">
-                                        <select
-                                            wire:model="categories.{{ $index }}.channels.{{ $channelIndex }}.channel_id"
-                                            @change="selectedChannel = $event.target.selectedOptions[0].getAttribute('data-image')"
-                                            class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 pl-12 dark:bg-gray-700 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
-                                            <option disabled selected value="">
-                                                {{ __('Select a channel') }}
-                                            </option>
-                                            @foreach ($channels as $channel)
-                                                <option value="{{ $channel->id }}"
-                                                    data-image="{{ $channel->image }}">
-                                                    {{ $channel->number }} {{ $channel->name }}
-                                                </option>
-                                            @endforeach
-                                        </select>
+                                        <input type="text" x-model="search"
+                                            :placeholder="selectedChannelNumber ? selectedChannelNumber + ' ' + selectedChannelName :
+                                                '{{ __('Search channel...') }}'"
+                                            @focus="if (!selectedChannelNumber) open = true"
+                                            @input="if (search === '') clearSelection()" @click.away="open = false"
+                                            class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 pl-14 dark:bg-gray-700 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                                        <div
+                                            class="absolute left-3 top-1/2 transform -translate-y-1/2 flex items-center space-x-2">
+                                            <img x-show="selectedChannelImage" :src="selectedChannelImage"
+                                                class="w-8 h-8 object-contain object-center transition-opacity duration-200"
+                                                x-cloak>
+                                        </div>
+                                        <i class="fa-solid fa-chevron-down absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 dark:text-gray-300 cursor-pointer transition-transform duration-200"
+                                            :class="open ? 'rotate-180' : ''" @click="open = !open"></i>
+                                    </div>
+                                    <div class="relative">
+                                        <div x-show="open" x-cloak
+                                            class="absolute z-10 mt-1 w-full max-w-md bg-white border border-gray-300 rounded-lg shadow-2xl dark:bg-gray-700 dark:border-gray-600 transition-all duration-200 ease-in-out">
+                                            <ul
+                                                class="max-h-60 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-100 dark:scrollbar-thumb-gray-600 dark:scrollbar-track-gray-700">
+                                                @php
+                                                    $filteredChannels =
+                                                        $category['name'] === 'Stingray'
+                                                            ? $stingrayChannels
+                                                            : $channels;
+                                                @endphp
+                                                @foreach ($filteredChannels as $channel)
+                                                    <li x-show="search === '' || '{{ strtolower($channel->name) }}'.includes(search.toLowerCase()) || '{{ $channel->number }}'.includes(search)"
+                                                        @click="
+                                                            $wire.set('categories.{{ $index }}.channels.{{ $channelIndex }}.channel_id', {{ $channel->id }});
+                                                            selectedChannelImage = '{{ $channel->image }}';
+                                                            selectedChannelNumber = '{{ $channel->number }}';
+                                                            selectedChannelName = '{{ $channel->name }}';
+                                                            search = selectedChannelNumber + ' ' + selectedChannelName;
+                                                            open = false;
+                                                        "
+                                                        class="cursor-pointer px-4 py-2 flex items-center space-x-3 hover:bg-gray-100 dark:hover:bg-gray-600 transition-all duration-200 ease-in-out">
+                                                        <img src="{{ $channel->image }}"
+                                                            class="w-10 h-10 object-contain object-center">
+                                                        <span
+                                                            class="text-sm font-medium text-gray-900 dark:text-gray-300">
+                                                            {{ $channel->number }} {{ $channel->name }}
+                                                        </span>
+                                                    </li>
+                                                @endforeach
+                                            </ul>
+                                        </div>
                                     </div>
                                 </div>
                                 <div>
@@ -74,7 +117,8 @@
                                     </label>
                                     <select
                                         wire:model="categories.{{ $index }}.channels.{{ $channelIndex }}.stage"
-                                        class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                                        class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                                        @if (in_array($category['name'], ['CDN TELMEX', 'CDN CEF+'])) disabled @endif>
                                         <option disabled selected value="">
                                             {{ __('Select a stage') }}
                                         </option>

@@ -60,34 +60,40 @@
                             @endif
                         </x-slot>
                         <x-slot name="content">
-                            <div class="px-4 py-2 text-xs text-gray-400 flex justify-start items-center">
-                                <i class="fa-solid fa-gear mr-2"></i>
-                                {{ __('Manage Account') }}
+                            <div class="px-4 py-2 border-b border-gray-200 dark:border-gray-600">
+                                <div class="text-sm text-center font-medium text-gray-900 dark:text-white">
+                                    {{ Auth::user()->name }}
+                                </div>
+                                <div class="text-xs text-gray-500 dark:text-gray-400 truncate">
+                                    {{ Auth::user()->email }}
+                                </div>
                             </div>
-                            <x-dropdown-link href="{{ route('profile.show') }}" class="px-4 py-2 text-base flex justify-start items-center">
-                                <i class="fa-solid fa-user mr-2"></i>
-                                {{ __('Profile') }}
-                            </x-dropdown-link>
-                            <x-dropdown-link href="{{ route('dashboard') }}" class="px-4 py-2 text-base flex justify-start items-center">
-                                <i class="fa-solid fa-paste mr-2"></i>
-                                {{ __('Reports') }}
-                            </x-dropdown-link>
-                            <x-dropdown-link href="{{ route('admin.dashboard') }}"
-                                class="px-4 py-2 text-base flex justify-start items-center">
-                                <i class="fa-solid fa-screwdriver-wrench mr-2"></i>
-                                {{ __('Dashboard') }}
-                            </x-dropdown-link>
-                            @if (Laravel\Jetstream\Jetstream::hasApiFeatures())
-                                <x-dropdown-link href="{{ route('api-tokens.index') }}">
-                                    {{ __('API Tokens') }}
+                            <div class="py-2">
+                                <x-dropdown-link href="{{ route('profile.show') }}" class="menu-item">
+                                    <i class="fa-solid fa-user"></i>
+                                    {{ __('Profile') }}
                                 </x-dropdown-link>
-                            @endif
+                                <x-dropdown-link href="{{ route('dashboard') }}" class="menu-item">
+                                    <i class="fa-solid fa-paste"></i>
+                                    {{ __('Reports') }}
+                                </x-dropdown-link>
+                                <x-dropdown-link href="{{ route('admin.dashboard') }}" class="menu-item">
+                                    <i class="fa-solid fa-screwdriver-wrench"></i>
+                                    {{ __('Dashboard') }}
+                                </x-dropdown-link>
+                                @if (Laravel\Jetstream\Jetstream::hasApiFeatures())
+                                    <x-dropdown-link href="{{ route('api-tokens.index') }}" class="menu-item">
+                                        <i class="fa-solid fa-key"></i>
+                                        {{ __('API Tokens') }}
+                                    </x-dropdown-link>
+                                @endif
+                            </div>
                             <div class="border-t border-gray-200 dark:border-gray-600"></div>
                             <form method="POST" action="{{ route('logout') }}" x-data>
                                 @csrf
                                 <x-dropdown-link href="{{ route('logout') }}" @click.prevent="$root.submit();"
-                                    class="px-4 py-2 text-base flex justify-start items-center">
-                                    <i class="fa-solid fa-circle-xmark mr-2"></i>
+                                    class="menu-item text-red-600 dark:text-red-400">
+                                    <i class="fa-solid fa-circle-xmark"></i>
                                     {{ __('Log out') }}
                                 </x-dropdown-link>
                             </form>

@@ -33,7 +33,7 @@ enum ChannelCategory: string
     case LOCAL = 'Local';
     case MILITARY = 'Military';
     case MOVIES = 'Movies';
-    case MUSIC = 'Music';
+    case STINGRAY = 'Stingray';
     case MYSTERY = 'Mystery';
     case NEWS = 'News';
     case POLITICS = 'Politics';
