@@ -136,7 +136,7 @@
                 <i class="fas fa-file-lines mr-1.5"></i>
                 {{ __('Generate report') }}
             </button>
-            <button data-modal-hide="create-hourly-report-modal" type="button"
+            <button data-modal-hide="create-functions-report-modal" type="button"
                 class="py-2 px-4 text-base font-bold text-gray-700 bg-white rounded-lg border border-gray-400 hover:border-primary-600 hover:text-primary-600 dark:text-gray-300 dark:bg-gray-800 dark:border-gray-600 dark:hover:text-primary-400 dark:hover:bg-gray-700">
                 <i class="fa-solid fa-xmark"></i>
                 {{ __('Discard') }}

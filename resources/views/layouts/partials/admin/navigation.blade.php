@@ -70,15 +70,15 @@
                             </div>
                             <div class="py-2">
                                 <x-dropdown-link href="{{ route('profile.show') }}" class="menu-item">
-                                    <i class="fa-solid fa-user"></i>
+                                    <i class="fa-solid fa-user mr-1"></i>
                                     {{ __('Profile') }}
                                 </x-dropdown-link>
                                 <x-dropdown-link href="{{ route('dashboard') }}" class="menu-item">
-                                    <i class="fa-solid fa-paste"></i>
+                                    <i class="fa-solid fa-paste mr-1"></i>
                                     {{ __('Reports') }}
                                 </x-dropdown-link>
                                 <x-dropdown-link href="{{ route('admin.dashboard') }}" class="menu-item">
-                                    <i class="fa-solid fa-screwdriver-wrench"></i>
+                                    <i class="fa-solid fa-screwdriver-wrench mr-1"></i>
                                     {{ __('Dashboard') }}
                                 </x-dropdown-link>
                                 @if (Laravel\Jetstream\Jetstream::hasApiFeatures())
@@ -93,7 +93,7 @@
                                 @csrf
                                 <x-dropdown-link href="{{ route('logout') }}" @click.prevent="$root.submit();"
                                     class="menu-item text-red-600 dark:text-red-400">
-                                    <i class="fa-solid fa-circle-xmark"></i>
+                                    <i class="fa-solid fa-circle-xmark mr-1"></i>
                                     {{ __('Log out') }}
                                 </x-dropdown-link>
                             </form>

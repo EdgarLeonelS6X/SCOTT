@@ -18,6 +18,9 @@ class CreateHourlyReport extends Component
     public $categories = [];
     public $protocols = ['HLS', 'DASH', 'HLS/DASH'];
     public $mediaOptions = ['AUDIO', 'VIDEO', 'AUDIO/VIDEO'];
+    public $reportData = [
+        'category' => '',
+    ];
 
     public function mount()
     {
@@ -35,24 +38,30 @@ class CreateHourlyReport extends Component
                 'channels' => [
                     $this->initializeChannel($category),
                 ],
+                'fixed' => true
             ];
         }
     }
 
     public function addCategory()
-    {
-        $this->categories[] = [
-            'name' => '',
-            'channels' => [
-                $this->initializeChannel(),
-            ],
-        ];
-    }
+{
+    $this->categories[] = [
+        'name' => '',
+        'channels' => [
+            $this->initializeChannel(),
+        ],
+        'fixed' => false
+    ];
+
+    $this->reportData['category'] = ''; // Asegura que la nueva categoría pueda editarse
+}
 
     public function removeCategory($index)
     {
-        unset($this->categories[$index]);
-        $this->categories = array_values($this->categories);
+        if (!isset($this->categories[$index]['fixed']) || !$this->categories[$index]['fixed']) {
+            unset($this->categories[$index]);
+            $this->categories = array_values($this->categories);
+        }
     }
 
     public function addChannel($categoryIndex)
@@ -66,6 +75,15 @@ class CreateHourlyReport extends Component
         unset($this->categories[$categoryIndex]['channels'][$channelIndex]);
         $this->categories[$categoryIndex]['channels'] = array_values($this->categories[$categoryIndex]['channels']);
     }
+
+    public function getChannelCount($categoryIndex)
+{
+    if (!isset($this->categories[$categoryIndex])) {
+        return 0;
+    }
+
+    return count($this->categories[$categoryIndex]['channels']);
+}
 
     protected function initializeChannel($category = '')
     {
@@ -184,6 +202,12 @@ class CreateHourlyReport extends Component
 
     public function render()
     {
+        foreach ($this->categories as $index => $category) {
+            if (!isset($this->categories[$index]['fixed'])) {
+                $this->categories[$index]['fixed'] = in_array($category['name'], ['CDN TELMEX', 'CDN CEF+', 'Stingray']);
+            }
+        }
+
         return view('livewire.app.reports.create-hourly-report', [
             'channels' => Channel::where('status', '1')->get(),
             'stingrayChannels' => Channel::where('status', '1')->where('category', 'Stingray')->get(),
