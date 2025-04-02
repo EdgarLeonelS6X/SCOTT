@@ -18,9 +18,7 @@ class CreateHourlyReport extends Component
     public $categories = [];
     public $protocols = ['HLS', 'DASH', 'HLS/DASH'];
     public $mediaOptions = ['AUDIO', 'VIDEO', 'AUDIO/VIDEO'];
-    public $reportData = [
-        'category' => '',
-    ];
+    protected $fixedCategories = ['CDN TELMEX', 'CDN CEF+', 'STINGRAY'];
 
     public function mount()
     {
@@ -30,31 +28,25 @@ class CreateHourlyReport extends Component
 
     protected function initializeDefaultCategories()
     {
-        $defaultCategories = ['CDN TELMEX', 'CDN CEF+', 'Stingray'];
-
-        foreach ($defaultCategories as $category) {
+        foreach ($this->fixedCategories as $category) {
             $this->categories[] = [
                 'name' => $category,
-                'channels' => [
-                    $this->initializeChannel($category),
-                ],
+                'channels' => [],
                 'fixed' => true
             ];
         }
     }
 
     public function addCategory()
-{
-    $this->categories[] = [
-        'name' => '',
-        'channels' => [
-            $this->initializeChannel(),
-        ],
-        'fixed' => false
-    ];
-
-    $this->reportData['category'] = ''; // Asegura que la nueva categoría pueda editarse
-}
+    {
+        $this->categories[] = [
+            'name' => '',
+            'channels' => [
+                $this->initializeChannel(),
+            ],
+            'fixed' => false
+        ];
+    }
 
     public function removeCategory($index)
     {
@@ -77,13 +69,13 @@ class CreateHourlyReport extends Component
     }
 
     public function getChannelCount($categoryIndex)
-{
-    if (!isset($this->categories[$categoryIndex])) {
-        return 0;
-    }
+    {
+        if (!isset($this->categories[$categoryIndex])) {
+            return 0;
+        }
 
-    return count($this->categories[$categoryIndex]['channels']);
-}
+        return count($this->categories[$categoryIndex]['channels']);
+    }
 
     protected function initializeChannel($category = '')
     {
@@ -101,6 +93,13 @@ class CreateHourlyReport extends Component
             'media' => '',
             'description' => '',
         ];
+    }
+
+    public function updateCategoryName($index, $name)
+    {
+        if (isset($this->categories[$index])) {
+            $this->categories[$index]['name'] = $name;
+        }
     }
 
     public function saveReport()
@@ -191,12 +190,38 @@ class CreateHourlyReport extends Component
     {
         foreach ($this->categories as $index => $category) {
             $this->validate([
-                "categories.$index.name" => 'required|string|max:255',
-                "categories.$index.channels" => 'required|array|min:1',
+                "categories.$index.name" => 'required|string|max:255'
             ], [], [
-                "categories.$index.name" => __('category name'),
-                "categories.$index.channels" => __('category channels'),
+                "categories.$index.name" => __('category name')
             ]);
+
+            if (!in_array($category['name'], $this->fixedCategories) && empty($category['channels'])) {
+                throw ValidationException::withMessages([
+                    "categories.$index.channels" => __('New categories must have at least one channel.')
+                ]);
+            }
+
+            if (!in_array($category['name'], $this->fixedCategories)) {
+                foreach ($category['channels'] as $channelIndex => $channel) {
+                    if (empty($channel['channel_id']) || empty($channel['stage']) || empty($channel['protocol']) || empty($channel['media'])) {
+                        throw ValidationException::withMessages([
+                            "categories.$index.channels.$channelIndex" => __('All fields are required for each channel in new categories.')
+                        ]);
+                    }
+
+                    $this->validate([
+                        "categories.$index.channels.$channelIndex.channel_id" => 'required|exists:channels,id',
+                        "categories.$index.channels.$channelIndex.stage" => 'required|exists:stages,id',
+                        "categories.$index.channels.$channelIndex.protocol" => 'required|in:' . implode(',', $this->protocols),
+                        "categories.$index.channels.$channelIndex.media" => 'required|in:' . implode(',', $this->mediaOptions),
+                    ], [], [
+                        "categories.$index.channels.$channelIndex.channel_id" => __('channel'),
+                        "categories.$index.channels.$channelIndex.stage" => __('stage'),
+                        "categories.$index.channels.$channelIndex.protocol" => __('protocol'),
+                        "categories.$index.channels.$channelIndex.media" => __('media'),
+                    ]);
+                }
+            }
         }
     }
 
@@ -204,7 +229,7 @@ class CreateHourlyReport extends Component
     {
         foreach ($this->categories as $index => $category) {
             if (!isset($this->categories[$index]['fixed'])) {
-                $this->categories[$index]['fixed'] = in_array($category['name'], ['CDN TELMEX', 'CDN CEF+', 'Stingray']);
+                $this->categories[$index]['fixed'] = in_array($category['name'], ['CDN TELMEX', 'CDN CEF+', 'STINGRAY']);
             }
         }
 

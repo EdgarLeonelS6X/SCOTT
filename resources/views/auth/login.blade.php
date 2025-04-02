@@ -100,11 +100,17 @@
     function openGooglePopup() {
         let width = 800,
             height = 600;
-        let left = (screen.width - width) / 2;
-        let top = (screen.height - height) / 2;
+        let left = window.innerWidth / 2 - width / 2 + window.screenX;
+        let top = window.innerHeight / 2 - height / 2 + window.screenY;
 
         let popup = window.open("{{ route('redirectToGoogle') }}", "Google Login",
-            `width=${width},height=${height},top=${top},left=${left}`);
+            `width=${width},height=${height},top=${top},left=${left},resizable=yes,scrollbars=yes`);
+
+        if (popup) {
+            popup.focus();
+        } else {
+            alert("Popup blocked! Please allow popups for this site.");
+        }
     }
 
     window.addEventListener("message", function(event) {

@@ -1,54 +1,43 @@
 <div>
     <form wire:submit.prevent="saveReport" class="space-y-5">
         @foreach ($categories as $index => $category)
-        <div x-data="{ 
-            open: true, 
-            editingName: false, 
-            firstEdit: true, 
-            categoryName: '{{ $category['name'] ?? __('New category') }}',
-            isFixed: @json(collect(['CDN TELMEX', 'CDN CEF+', 'Stingray'])->contains($category['name']))
-        }">
-                <div class="p-6 border bg-white dark:bg-gray-800 rounded-2xl shadow-2xl">
-                    <div class="flex items-center justify-between cursor-pointer">
-                        <div class="flex items-center">
+            @php
+                $isFixed = in_array($category['name'], ['CDN TELMEX', 'CDN CEF+', 'STINGRAY']);
+            @endphp
+            <div x-data="{
+                open: true,
+                editingName: false,
+                isFixed: @json($isFixed),
+            }">
+                <div class="p-6 border bg-white dark:bg-gray-800 rounded-2xl shadow-2xl mb-5">
+                    <div class="flex items-center justify-between cursor-pointer" @click="if (!editingName) open = !open">
+                        <div class="flex items-center w-full">
+                            <i :class="open ? 'fas fa-chevron-down' : 'fas fa-chevron-right'"
+                                class="text-primary-600 mr-3"></i>
                             <div class="dark:text-white text-lg font-semibold relative">
-                                <h3 title="{{ __('Click here to edit the category name') }}" x-show="!editingName"
-                                    @click="if (!isFixed) { 
-                                        editingName = true; 
-                                        if (firstEdit) { 
-                                            categoryName = ''; 
-                                            firstEdit = false; 
-                                        } 
-                                    }"
+                                <h3 x-show="!editingName" title="{{ __('Click here to edit the category name') }}"
+                                    @click.stop="if (!isFixed) editingName = true"
                                     class="cursor-pointer px-3 py-2 rounded-full shadow-md flex items-center gap-2 transition bg-gray-50 border dark:bg-gray-700 dark:border-white">
-                                    <i class="fa-solid fa-pen text-gray-800 dark:text-gray-200 transition duration-200"></i>
-                                    <span x-text="isFixed ? '{{ $category['name'] }}' : categoryName"></span>
+                                    <i class="fa-solid fa-pen text-gray-800 dark:text-gray-200 transition duration-200"
+                                        x-show="!isFixed">...</i>
+                                    <span x-text="$wire.categories[{{ $index }}].name"></span>
                                 </h3>
-
-                                <template x-if="editingName">
-                                    <input type="text" x-model="categoryName"
-                                        @click.away="editingName = false; 
-                                             if (categoryName.trim() === '') { 
-                                                 categoryName = '{{ __('New category') }}'; 
-                                             } 
-                                             $wire.set('reportData.category', categoryName);"
-                                        @keydown.enter.prevent="editingName = false; 
-                                                        if (categoryName.trim() === '') { 
-                                                            categoryName = '{{ __('New category') }}'; 
-                                                        } 
-                                                        $wire.set('reportData.category', categoryName);"
-                                        class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg p-2 w-full focus:ring-primary-600 focus:border-primary-600"
-                                        placeholder="{{ __('Category name') }}" autofocus />
-                                </template>
+                                <x-input type="text" x-show="editingName" x-ref="categoryInput"
+                                    wire:model.defer="categories.{{ $index }}.name" @click.stop
+                                    @click.away="editingName = false" @keydown.enter.prevent="editingName = false"
+                                    placeholder="{{ __('Category name') }}" x-bind:disabled="isFixed" />
                             </div>
                             <span
-                                class="ml-4 bg-primary-100 text-primary-800 text-sm font-medium py-1 px-2 rounded-full">
+                                class="ml-3 bg-primary-100 text-primary-800 text-sm font-medium py-1 px-2 rounded-full">
                                 {{ __('Contains') }} {{ $this->getChannelCount($index) }}
                                 {{ $this->getChannelCount($index) === 1 ? __('channel') : __('channels') }}
                             </span>
                         </div>
-                        <button type="button" class="text-primary-600 ml-4" @click="open = !open">
-                            <i :class="open ? 'fas fa-chevron-down' : 'fas fa-chevron-right'"></i>
+                        <button type="button"
+                            class="flex items-center text-red-500 hover:text-red-700 dark:hover:text-red-400"
+                            x-show="!isFixed" @click.stop="$wire.removeCategory({{ $index }})">
+                            <i class="fas fa-trash-alt mr-1"></i>
+                            {{ __('Delete') }}
                         </button>
                     </div>
                     <div x-show="open" class="mt-6 space-y-6">
@@ -77,7 +66,7 @@
                                             this.selectedChannelNumber = '';
                                             this.selectedChannelName = '';
                                             this.search = '';
-                                            this.open = true; // Abre la lista solo si no hay canal seleccionado
+                                            this.open = true;
                                         }
                                     }">
                                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
@@ -107,7 +96,7 @@
                                                     class="max-h-60 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-100 dark:scrollbar-thumb-gray-600 dark:scrollbar-track-gray-700">
                                                     @php
                                                         $filteredChannels =
-                                                            $category['name'] === 'Stingray'
+                                                            $category['name'] === 'STINGRAY'
                                                                 ? $stingrayChannels
                                                                 : $channels;
                                                     @endphp

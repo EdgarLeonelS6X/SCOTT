@@ -5,30 +5,31 @@ use App\Enums\ChannelReviewer;
 ?>
 
 <div>
-    <x-validation-errors></x-validation-errors>
     <form wire:submit.prevent="saveReport" class="space-y-5">
         <div x-data="{
             open: true,
             editingName: false,
             firstEdit: true,
-            categoryName: @entangle('reportData.category').defer || '{{ __('New category') }}',
+            categoryName: @entangle('reportData.category').defer || '',
         }">
             <div class="p-6 border bg-white dark:bg-gray-800 rounded-2xl shadow-2xl">
-                <div class="flex items-center justify-between cursor-pointer">
+                <div class="flex items-center justify-between cursor-pointer" @click="if (!editingName) open = !open">
                     <div class="flex items-center">
                         <div class="dark:text-white text-lg font-semibold relative">
                             <h3 title="{{ __('Click here to edit the category name') }}" x-show="!editingName"
-                                @click="editingName = true; if (firstEdit) { categoryName = ''; firstEdit = false; }"
+                                @click.stop="editingName = true; 
+                                             if (firstEdit) { categoryName = ''; firstEdit = false; }"
                                 class="cursor-pointer px-3 py-2 rounded-full shadow-md flex items-center gap-2 transition bg-gray-50 border dark:bg-gray-700 dark:border-white">
-                                <i class="fa-solid fa-pen text-gray-800 dark:text-gray-200 transition duration-200"></i>
+                                <i
+                                    class="fa-solid fa-pen text-gray-800 dark:text-gray-200 transition duration-200">...</i>
                                 <span x-text="categoryName"></span>
                             </h3>
-                            <x-input x-show="editingName" x-model="categoryName"
+                            <x-input x-show="editingName" x-model="categoryName" @click.stop
                                 @click.away="editingName = false; 
-                                             if (categoryName.trim() === '') { categoryName = '{{ __('New category') }}'; } 
+                                             if (categoryName.trim() === '') { categoryName = ''; } 
                                              $wire.set('reportData.category', categoryName);"
                                 @keydown.enter.prevent="editingName = false; 
-                                                        if (categoryName.trim() === '') { categoryName = '{{ __('New category') }}'; } 
+                                                        if (categoryName.trim() === '') { categoryName = ''; } 
                                                         $wire.set('reportData.category', categoryName);"
                                 placeholder="{{ __('Category name') }}" autofocus />
                         </div>
@@ -37,11 +38,11 @@ use App\Enums\ChannelReviewer;
                             {{ $this->getChannelCount(0) === 1 ? __('channel') : __('channels') }}
                         </span>
                     </div>
-                    <button type="button" class="text-primary-600 ml-4" @click="open = !open">
+                    <button type="button" class="text-primary-600 ml-4" @click.stop="open = !open">
                         <i :class="open ? 'fas fa-chevron-down' : 'fas fa-chevron-right'"></i>
                     </button>
                 </div>
-                <div x-show="open" class="mt-6 space-y-6">
+                <div x-show="open" x-transition class="mt-6 space-y-6">
                     @foreach ($reportData['channels'] as $channelIndex => $channel)
                         <div class="p-6 bg-gray-50 border dark:bg-gray-700 rounded-xl shadow-2xl">
                             <div class="flex justify-between items-center mb-4">
