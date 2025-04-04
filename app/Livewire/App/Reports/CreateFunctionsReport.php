@@ -20,10 +20,11 @@ class CreateFunctionsReport extends Component
     public $categories = [];
     public $protocols = ['HLS', 'DASH', 'HLS/DASH'];
     public $mediaOptions = ['AUDIO', 'VIDEO', 'AUDIO/VIDEO'];
+    public $allowedStages = ['CDN TELMEX', 'CDN CEF+', 'CDN TELMEX/CEF+'];
 
     public function mount()
     {
-        $this->stages = Stage::where('status', '1')->get();
+        $this->stages = Stage::whereIn('name', $this->allowedStages)->pluck('id', 'name')->toArray();
         $this->initializeDefaultCategories();
     }
 
@@ -111,10 +112,85 @@ class CreateFunctionsReport extends Component
     public function saveReport()
     {
         try {
-            $categoryNames = implode(', ', array_column($this->categories, 'name'));
+            // Recorremos cada categoría y validamos sus canales
+            foreach ($this->categories as $categoryIndex => $category) {
+                if (empty($category['channels'])) {
+                    continue;
+                }
+
+                foreach ($category['channels'] as $channelIndex => $channel) {
+                    $rules = [];
+                    $messages = [];
+
+                    switch ($category['name']) {
+                        case 'RESTART':
+                            $rules = [
+                                "categories.$categoryIndex.channels.$channelIndex.channel_id" => 'required|exists:channels,id',
+                                "categories.$categoryIndex.channels.$channelIndex.stage" => 'required|exists:stages,id',
+                                "categories.$categoryIndex.channels.$channelIndex.protocol" => 'required|in:HLS,DASH,HLS/DASH',
+                                "categories.$categoryIndex.channels.$channelIndex.media" => 'required|in:AUDIO,VIDEO,AUDIO/VIDEO',
+                            ];
+                            break;
+
+                        case 'CUTV':
+                            $rules = [
+                                "categories.$categoryIndex.channels.$channelIndex.channel_id" => 'required|exists:channels,id',
+                                "categories.$categoryIndex.channels.$channelIndex.stage" => 'required|exists:stages,id',
+                                "categories.$categoryIndex.channels.$channelIndex.protocol" => 'required|in:HLS,DASH,HLS/DASH',
+                                "categories.$categoryIndex.channels.$channelIndex.media" => 'required|in:AUDIO,VIDEO,AUDIO/VIDEO',
+                                "categories.$categoryIndex.channels.$channelIndex.loss_periods" => 'required|array|min:1',
+                            ];
+
+                            if (!empty($channel['loss_periods'])) {
+                                foreach ($channel['loss_periods'] as $periodIndex => $period) {
+                                    $rules["categories.$categoryIndex.channels.$channelIndex.loss_periods.$periodIndex.start_time"] = 'required|date|before_or_equal:now';
+                                    $rules["categories.$categoryIndex.channels.$channelIndex.loss_periods.$periodIndex.end_time"] = 'required|date|after:categories.' . $categoryIndex . '.channels.' . $channelIndex . '.loss_periods.' . $periodIndex . '.start_time|before_or_equal:now';
+                                }
+                            }
+                            break;
+
+                        case 'EPG':
+                            $rules = [
+                                "categories.$categoryIndex.channels.$channelIndex.channel_id" => 'required|exists:channels,id',
+                                "categories.$categoryIndex.channels.$channelIndex.stage" => 'required|exists:stages,id',
+                                "categories.$categoryIndex.channels.$channelIndex.protocol" => 'required|in:HLS,DASH,HLS/DASH',
+                            ];
+                            break;
+
+                        case 'PC':
+                            $rules = [
+                                "categories.$categoryIndex.channels.$channelIndex.channel_id" => 'required|exists:channels,id',
+                                "categories.$categoryIndex.channels.$channelIndex.stage" => 'required|exists:stages,id',
+                                "categories.$categoryIndex.channels.$channelIndex.protocol" => 'required|in:HLS,DASH,HLS/DASH',
+                            ];
+                            break;
+                    }
+
+                    $messages = [
+                        "categories.$categoryIndex.channels.$channelIndex.channel_id.required" => __("The channel is required."),
+                        "categories.$categoryIndex.channels.$channelIndex.stage.required" => __("The stage is required."),
+                        "categories.$categoryIndex.channels.$channelIndex.protocol.required" => __("The protocol is required."),
+                        "categories.$categoryIndex.channels.$channelIndex.media.required" => __("The media type is required."),
+                        "categories.$categoryIndex.channels.$channelIndex.description.required" => __("The description is required."),
+                        "categories.$categoryIndex.channels.$channelIndex.description.min" => __("The description must have at least 5 characters."),
+                    ];
+
+                    if ($category['name'] === 'CUTV') {
+                        $messages["categories.$categoryIndex.channels.$channelIndex.loss_periods.required"] = __("Each channel in CUTV must have at least one loss period.");
+                        $messages["categories.$categoryIndex.channels.$channelIndex.loss_periods.min"] = __("Each channel in CUTV must have at least one loss period.");
+                        foreach ($channel['loss_periods'] as $periodIndex => $period) {
+                            $messages["categories.$categoryIndex.channels.$channelIndex.loss_periods.$periodIndex.start_time.required"] = __("The start time is required.");
+                            $messages["categories.$categoryIndex.channels.$channelIndex.loss_periods.$periodIndex.end_time.required"] = __("The end time is required.");
+                        }
+                    }
+
+                    $this->validate($rules, $messages);
+                }
+            }
+
             $report = Report::create([
                 'type' => __('Functions'),
-                'category' => $categoryNames,
+                'category' => implode(', ', array_column($this->categories, 'name')),
                 'reported_by' => Auth::user()->id,
                 'status' => __('Reported'),
             ]);
@@ -125,12 +201,6 @@ class CreateFunctionsReport extends Component
                 }
 
                 foreach ($category['channels'] as $channel) {
-                    if ($category['name'] === 'CUTV' && empty($channel['loss_periods'])) {
-                        throw ValidationException::withMessages([
-                            'CUTV' => __('Each channel in CUTV must have at least one loss period.')
-                        ]);
-                    }
-
                     $reportDetail = ReportDetail::create([
                         'report_id' => $report->id,
                         'subcategory' => $category['name'],
@@ -141,37 +211,13 @@ class CreateFunctionsReport extends Component
                         'description' => $channel['description'] ?? null,
                     ]);
 
-                    if ($category['name'] === 'CUTV') {
+                    if ($category['name'] === 'CUTV' && !empty($channel['loss_periods'])) {
                         foreach ($channel['loss_periods'] as $period) {
-                            $startTime = Carbon::parse($period['start_time']);
-                            $endTime = Carbon::parse($period['end_time']);
-                            $now = Carbon::now();
-
-                            if (!$startTime || !$endTime) {
-                                throw ValidationException::withMessages([
-                                    'CUTV - loss_periods' => __('Start time and end time are required.')
-                                ]);
-                            }
-
-                            if ($startTime->greaterThan($now) || $endTime->greaterThan($now)) {
-                                throw ValidationException::withMessages([
-                                    'CUTV - start_time' => __('Start and end times cannot be in the future.')
-                                ]);
-                            }
-
-                            if ($endTime->lessThanOrEqualTo($startTime)) {
-                                throw ValidationException::withMessages([
-                                    'CUTV - end_time' => __('End time must be after start time.')
-                                ]);
-                            }
-
-                            $duration = $startTime->diffInMinutes($endTime);
-
                             ReportContentLoss::create([
                                 'report_detail_id' => $reportDetail->id,
-                                'start_time' => $startTime,
-                                'end_time' => $endTime,
-                                'duration' => $duration,
+                                'start_time' => Carbon::parse($period['start_time']),
+                                'end_time' => Carbon::parse($period['end_time']),
+                                'duration' => Carbon::parse($period['start_time'])->diffInMinutes(Carbon::parse($period['end_time'])),
                             ]);
                         }
                     }
@@ -186,10 +232,46 @@ class CreateFunctionsReport extends Component
                 'text' => __('Function report created successfully.'),
             ]);
         } catch (ValidationException $e) {
+            $groupedErrors = [];
+
+            foreach ($e->errors() as $field => $messages) {
+                preg_match('/categories\.(\d+)\./', $field, $matches);
+                $categoryIndex = $matches[1] ?? null;
+
+                if ($categoryIndex !== null && isset($this->categories[$categoryIndex]['name'])) {
+                    $categoryName = $this->categories[$categoryIndex]['name'];
+                    if (!isset($groupedErrors[$categoryName])) {
+                        $groupedErrors[$categoryName] = [];
+                    }
+
+                    foreach ($messages as $message) {
+                        if (str_contains($message, 'end time field must be a date after')) {
+                            $message = __('The end time must be later than the start time.');
+                        } elseif (str_contains($message, 'before_or_equal:now')) {
+                            $message = __('The selected time must not be in the future.');
+                        } elseif (str_contains($message, 'must be a date')) {
+                            $message = __('Please enter a valid date and time.');
+                        }
+
+                        $groupedErrors[$categoryName][] = $message;
+                    }
+                }
+            }
+
+            $errorHtml = '<b>' . __('Your report log contains errors:') . '</b><br><br>';
+
+            foreach ($groupedErrors as $categoryName => $errors) {
+                $errorHtml .= '<b>' . __('Category') . ': ' . e($categoryName) . '</b><ul>';
+                foreach ($errors as $error) {
+                    $errorHtml .= '<li>• ' . e($error) . '</li>';
+                }
+                $errorHtml .= '</ul><br>';
+            }
+
             $this->dispatch('swal', [
                 'icon' => 'error',
                 'title' => __('Error'),
-                'html' => '<b>' . __('Your report log contains errors:') . '</b><br><br><ul>' . implode('', array_map(fn($msg) => "<li>• $msg</li>", array_flatten($e->errors()))) . '</ul>',
+                'html' => $errorHtml,
             ]);
         }
     }

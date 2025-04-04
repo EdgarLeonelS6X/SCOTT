@@ -16,9 +16,9 @@
                 shouldShowField(category, field) {
                     const visibilityRules = {
                         'RESTART': ['channel', 'stage', 'protocol', 'media', 'description'],
-                        'CUTV': ['channel', 'stage', 'periods'],
-                        'EPG': ['channel', 'description'],
-                        'PC': ['channel']
+                        'CUTV': ['channel', 'stage', 'protocol', 'media', 'periods'],
+                        'EPG': ['channel', 'stage', 'protocol', 'description'],
+                        'PC': ['channel', 'stage', 'protocol', 'description']
                     };
                     return visibilityRules[category]?.includes(field) ?? false;
                 }
@@ -57,127 +57,146 @@
                             </div>
                             <div
                                 :class="{
-                                    'w-full': ['EPG', 'PC'].includes(
+                                    'w-full': ['EPG', 'PC'].includes('{{ $category['name'] }}'),
+                                    'grid grid-cols-2 gap-6': !['EPG', 'PC', 'RESTART', 'CUTV'].includes(
                                         '{{ $category['name'] }}'),
-                                    'grid grid-cols-1 md:grid-cols-2 gap-6': !['EPG', 'PC']
-                                        .includes('{{ $category['name'] }}')
+                                    '': ['RESTART', 'CUTV'].includes(
+                                        '{{ $category['name'] }}')
                                 }">
-                                <div x-data="{
-                                    open: false,
-                                    search: '',
-                                    selectedChannelImage: @entangle('selectedChannelImage').defer,
-                                    selectedChannelNumber: '',
-                                    selectedChannelName: '',
-                                    clearSelection() {
-                                        this.selectedChannelImage = '';
-                                        this.selectedChannelNumber = '';
-                                        this.selectedChannelName = '';
-                                        this.search = '';
-                                        this.open = true;
-                                    }
-                                }">
-                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                        <i class="fa-solid fa-tv mr-1.5"></i> {{ __('Channel') }}
-                                    </label>
-                                    <div class="relative">
-                                        <input type="text" x-model="search"
-                                            :placeholder="selectedChannelNumber ? selectedChannelNumber + ' ' +
-                                                selectedChannelName :
-                                                '{{ __('Search channel...') }}'"
-                                            @focus="if (!selectedChannelNumber) open = true"
-                                            @input="if (search === '') clearSelection()" @click.away="open = false"
-                                            class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 pl-14 dark:bg-gray-700 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
-                                        <div
-                                            class="absolute left-3 top-1/2 transform -translate-y-1/2 flex items-center space-x-2">
-                                            <img x-show="selectedChannelImage" :src="selectedChannelImage"
-                                                class="w-8 h-8 object-contain object-center transition-opacity duration-200"
-                                                x-cloak>
+                                <div
+                                    :class="{
+                                        'grid grid-cols-3 gap-6': ['EPG', 'PC'].includes(
+                                            '{{ $category['name'] }}'),
+                                        'grid grid-cols-2 gap-6': ['RESTART', 'CUTV'].includes(
+                                            '{{ $category['name'] }}')
+                                    }">
+                                    <div x-data="{
+                                        open: false,
+                                        search: '',
+                                        selectedChannelImage: @entangle('selectedChannelImage').defer,
+                                        selectedChannelNumber: '',
+                                        selectedChannelName: '',
+                                        clearSelection() {
+                                            this.selectedChannelImage = '';
+                                            this.selectedChannelNumber = '';
+                                            this.selectedChannelName = '';
+                                            this.search = '';
+                                            this.open = true;
+                                        }
+                                    }">
+                                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                            <i class="fa-solid fa-tv mr-1.5"></i> {{ __('Channel') }}
+                                        </label>
+                                        <div class="relative">
+                                            <input type="text" x-model="search"
+                                                :placeholder="selectedChannelNumber ? selectedChannelNumber + ' ' +
+                                                    selectedChannelName :
+                                                    '{{ __('Search channel...') }}'"
+                                                @focus="if (!selectedChannelNumber) open = true"
+                                                @input="if (search === '') clearSelection()" @click.away="open = false"
+                                                class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 pl-14 dark:bg-gray-700 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                                            <div
+                                                class="absolute left-3 top-1/2 transform -translate-y-1/2 flex items-center space-x-2">
+                                                <img x-show="selectedChannelImage" :src="selectedChannelImage"
+                                                    class="w-8 h-8 object-contain object-center transition-opacity duration-200"
+                                                    x-cloak>
+                                            </div>
+                                            <i class="fa-solid fa-chevron-down absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 dark:text-gray-300 cursor-pointer transition-transform duration-200"
+                                                :class="open ? 'rotate-180' : ''" @click="open = !open"></i>
                                         </div>
-                                        <i class="fa-solid fa-chevron-down absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 dark:text-gray-300 cursor-pointer transition-transform duration-200"
-                                            :class="open ? 'rotate-180' : ''" @click="open = !open"></i>
-                                    </div>
-                                    <div class="relative">
-                                        <div x-show="open" x-cloak
-                                            class="absolute z-10 mt-1 w-full max-w-md bg-white border border-gray-300 rounded-lg shadow-2xl dark:bg-gray-700 dark:border-gray-600 transition-all duration-200 ease-in-out">
-                                            <ul
-                                                class="max-h-60 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-100 dark:scrollbar-thumb-gray-600 dark:scrollbar-track-gray-700">
-                                                @foreach ($channels as $channel)
-                                                    <li x-show="search === '' || '{{ strtolower($channel->name) }}'.includes(search.toLowerCase()) || '{{ $channel->number }}'.includes(search)"
-                                                        @click="
-                                                        $wire.set('categories.{{ $index }}.channels.{{ $channelIndex }}.channel_id', {{ $channel->id }});
-                                                        selectedChannelImage = '{{ $channel->image }}';
-                                                        selectedChannelNumber = '{{ $channel->number }}';
-                                                        selectedChannelName = '{{ $channel->name }}';
-                                                        search = selectedChannelNumber + ' ' + selectedChannelName;
-                                                        open = false;
-                                                        "
-                                                        class="cursor-pointer px-4 py-2 flex items-center space-x-3 hover:bg-gray-100 dark:hover:bg-gray-600 transition-all duration-200 ease-in-out">
-                                                        <img src="{{ $channel->image }}"
-                                                            class="w-10 h-10 object-contain object-center">
-                                                        <span
-                                                            class="text-sm font-medium text-gray-900 dark:text-gray-300">
-                                                            {{ $channel->number }} {{ $channel->name }}
-                                                        </span>
-                                                    </li>
-                                                @endforeach
-                                            </ul>
+                                        <div class="relative">
+                                            <div x-show="open" x-cloak
+                                                class="absolute z-10 mt-1 w-full max-w-md bg-white border border-gray-300 rounded-lg shadow-2xl dark:bg-gray-700 dark:border-gray-600 transition-all duration-200 ease-in-out">
+                                                <ul
+                                                    class="max-h-60 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-100 dark:scrollbar-thumb-gray-600 dark:scrollbar-track-gray-700">
+                                                    @foreach ($channels as $channel)
+                                                        <li x-show="search === '' || '{{ strtolower($channel->name) }}'.includes(search.toLowerCase()) || '{{ $channel->number }}'.includes(search)"
+                                                            @click="
+                                                            $wire.set('categories.{{ $index }}.channels.{{ $channelIndex }}.channel_id', {{ $channel->id }});
+                                                            selectedChannelImage = '{{ $channel->image }}';
+                                                            selectedChannelNumber = '{{ $channel->number }}';
+                                                            selectedChannelName = '{{ $channel->name }}';
+                                                            search = selectedChannelNumber + ' ' + selectedChannelName;
+                                                            open = false;
+                                                            "
+                                                            class="cursor-pointer px-4 py-2 flex items-center space-x-3 hover:bg-gray-100 dark:hover:bg-gray-600 transition-all duration-200 ease-in-out">
+                                                            <img src="{{ $channel->image }}"
+                                                                class="w-10 h-10 object-contain object-center">
+                                                            <span
+                                                                class="text-sm font-medium text-gray-900 dark:text-gray-300">
+                                                                {{ $channel->number }} {{ $channel->name }}
+                                                            </span>
+                                                        </li>
+                                                    @endforeach
+                                                </ul>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div x-show="shouldShowField('{{ $category['name'] }}', 'stage')">
-                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                        <i class="fa-solid fa-bars-staggered mr-1.5"></i>
-                                        {{ __('Stage') }}
-                                    </label>
-                                    <select
-                                        class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg
-                                        focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5
-                                        dark:bg-gray-700 dark:placeholder-gray-400 dark:text-white
-                                        dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                                        wire:model="categories.{{ $index }}.channels.{{ $channelIndex }}.stage">
-                                        @foreach ($stages as $stage)
-                                            <option value="{{ $stage->id }}">{{ $stage->name }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                <div x-show="shouldShowField('{{ $category['name'] }}', 'protocol')">
-                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                        <i class="fa-solid fa-server mr-1.5"></i>
-                                        {{ __('Protocol') }}
-                                    </label>
-                                    <select
-                                        class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg
-                                    focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5
-                                    dark:bg-gray-700 dark:placeholder-gray-400 dark:text-white
-                                    dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                                        wire:model="categories.{{ $index }}.channels.{{ $channelIndex }}.protocol">
-                                        @foreach ($protocols as $protocol)
-                                            <option value="{{ $protocol }}">{{ $protocol }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                <div x-show="shouldShowField('{{ $category['name'] }}', 'media')">
-                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                        <i class="fa-solid fa-forward mr-1.5"></i>
-                                        {{ __('Audiovisual') }}
-                                    </label>
-                                    <select
-                                        class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg
-                                        focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5
-                                        dark:bg-gray-700 dark:placeholder-gray-400 dark:text-white
-                                        dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                                        wire:model="categories.{{ $index }}.channels.{{ $channelIndex }}.media">
-                                        @foreach ($mediaOptions as $option)
-                                            <option value="{{ $option }}">{{ $option }}</option>
-                                        @endforeach
-                                    </select>
+                                    <div x-show="shouldShowField('{{ $category['name'] }}', 'stage')">
+                                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                            <i class="fa-solid fa-bars-staggered mr-1.5"></i>
+                                            {{ __('Stage') }}
+                                        </label>
+                                        <select
+                                            class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg
+                                                focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5
+                                                dark:bg-gray-700 dark:placeholder-gray-400 dark:text-white
+                                                dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                                            wire:model="categories.{{ $index }}.channels.{{ $channelIndex }}.stage">
+                                            <option disabled selected value="">
+                                                {{ __('Select a stage') }}
+                                            </option>
+                                            @foreach ($this->stages as $name => $id)
+                                                <option value="{{ $id }}">{{ $name }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <div x-show="shouldShowField('{{ $category['name'] }}', 'protocol')">
+                                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                            <i class="fa-solid fa-server mr-1.5"></i>
+                                            {{ __('Protocol') }}
+                                        </label>
+                                        <select
+                                            class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg
+                                            focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5
+                                            dark:bg-gray-700 dark:placeholder-gray-400 dark:text-white
+                                            dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                                            wire:model="categories.{{ $index }}.channels.{{ $channelIndex }}.protocol">
+                                            <option value="" disabled selected>
+                                                {{ __('Select a protocol') }}
+                                            </option>
+                                            @foreach ($protocols as $protocol)
+                                                <option value="{{ $protocol }}">{{ $protocol }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <div x-show="shouldShowField('{{ $category['name'] }}', 'media')">
+                                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                            <i class="fa-solid fa-forward mr-1.5"></i>
+                                            {{ __('Audiovisual') }}
+                                        </label>
+                                        <select
+                                            class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg
+                                                    focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5
+                                                    dark:bg-gray-700 dark:placeholder-gray-400 dark:text-white
+                                                    dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                                            wire:model="categories.{{ $index }}.channels.{{ $channelIndex }}.media">
+                                            <option value="" disabled selected>
+                                                {{ __('Select an audiovisual problem') }}
+                                            </option>
+                                            @foreach ($mediaOptions as $option)
+                                                <option value="{{ $option }}">{{ $option }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
                                 </div>
                                 <div x-show="shouldShowField('{{ $category['name'] }}', 'description')"
                                     :class="{
-                                        'col-span-full': '{{ $category['name'] }}'
+                                        'col-span-full mt-6': '{{ $category['name'] }}'
                                         === 'RESTART',
                                         'mt-6': '{{ $category['name'] }}'
-                                        === 'EPG'
+                                        === 'EPG' || '{{ $category['name'] }}'
+                                        === 'PC'
                                     }">
                                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                         <i class="fa-solid fa-comment mr-1.5"></i>

@@ -42,7 +42,7 @@ use App\Enums\ChannelReviewer;
                         <i :class="open ? 'fas fa-chevron-down' : 'fas fa-chevron-right'"></i>
                     </button>
                 </div>
-                <div x-show="open" x-transition class="mt-6 space-y-6">
+                <div x-show="open" class="mt-6 space-y-6">
                     @foreach ($reportData['channels'] as $channelIndex => $channel)
                         <div class="p-6 bg-gray-50 border dark:bg-gray-700 rounded-xl shadow-2xl">
                             <div class="flex justify-between items-center mb-4">
