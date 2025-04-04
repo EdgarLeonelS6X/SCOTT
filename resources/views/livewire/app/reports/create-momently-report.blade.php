@@ -15,6 +15,9 @@ use App\Enums\ChannelReviewer;
             <div class="p-6 border bg-white dark:bg-gray-800 rounded-2xl shadow-2xl">
                 <div class="flex items-center justify-between cursor-pointer" @click="if (!editingName) open = !open">
                     <div class="flex items-center">
+                        <button type="button" class="text-primary-600 mr-3" @click.stop="open = !open">
+                            <i :class="open ? 'fas fa-chevron-down' : 'fas fa-chevron-right'"></i>
+                        </button>
                         <div class="dark:text-white text-lg font-semibold relative">
                             <h3 title="{{ __('Click here to edit the category name') }}" x-show="!editingName"
                                 @click.stop="editingName = true; 
@@ -33,14 +36,13 @@ use App\Enums\ChannelReviewer;
                                                         $wire.set('reportData.category', categoryName);"
                                 placeholder="{{ __('Category name') }}" autofocus />
                         </div>
+                    </div>
+                    <div class="flex items-center gap-3">
                         <span class="ml-4 bg-primary-100 text-primary-800 text-sm font-medium py-1 px-2 rounded-full">
                             {{ __('Contains') }} {{ $this->getChannelCount(0) }}
                             {{ $this->getChannelCount(0) === 1 ? __('channel') : __('channels') }}
                         </span>
                     </div>
-                    <button type="button" class="text-primary-600 ml-4" @click.stop="open = !open">
-                        <i :class="open ? 'fas fa-chevron-down' : 'fas fa-chevron-right'"></i>
-                    </button>
                 </div>
                 <div x-show="open" class="mt-6 space-y-6">
                     @foreach ($reportData['channels'] as $channelIndex => $channel)

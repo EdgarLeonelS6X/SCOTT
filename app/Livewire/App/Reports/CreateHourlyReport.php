@@ -234,8 +234,14 @@ class CreateHourlyReport extends Component
         }
 
         return view('livewire.app.reports.create-hourly-report', [
-            'channels' => Channel::where('status', '1')->get(),
-            'stingrayChannels' => Channel::where('status', '1')->where('category', 'Stingray')->get(),
+            'channels' => Channel::where('status', '1')
+                ->orderBy('number')
+                ->get(),
+
+            'stingrayChannels' => Channel::where('status', '1')
+                ->where('category', 'Stingray')
+                ->orderBy('number')
+                ->get(),
         ]);
     }
 }

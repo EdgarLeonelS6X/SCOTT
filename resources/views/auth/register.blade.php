@@ -90,8 +90,8 @@
 
 <script>
     function openGooglePopup() {
-        let width = 800,
-            height = 600;
+        let width = 600,
+            height = 500;
         let left = (screen.width - width) / 2;
         let top = (screen.height - height) / 2;
 

@@ -35,11 +35,11 @@
                                 <span>{{ $category['name'] ?: __('New category') }}</span>
                             </h3>
                         </div>
-                        <span class="ml-2 bg-primary-100 text-primary-800 text-sm font-medium py-1 px-2 rounded-full">
-                            {{ __('Contains') }} {{ count($category['channels'] ?? []) }}
-                            {{ count($category['channels'] ?? []) === 1 ? __('channel') : __('channels') }}
-                        </span>
                     </div>
+                    <span class="ml-2 bg-primary-100 text-primary-800 text-sm font-medium py-1 px-2 rounded-full">
+                        {{ __('Contains') }} {{ count($category['channels'] ?? []) }}
+                        {{ count($category['channels'] ?? []) === 1 ? __('channel') : __('channels') }}
+                    </span>
                 </div>
                 <div x-show="open" class="mt-6 space-y-6">
                     @foreach ($category['channels'] as $channelIndex => $channel)
@@ -109,7 +109,7 @@
                                                 class="absolute z-10 mt-1 w-full max-w-md bg-white border border-gray-300 rounded-lg shadow-2xl dark:bg-gray-700 dark:border-gray-600 transition-all duration-200 ease-in-out">
                                                 <ul
                                                     class="max-h-60 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-100 dark:scrollbar-thumb-gray-600 dark:scrollbar-track-gray-700">
-                                                    @foreach ($channels as $channel)
+                                                    @foreach ($channelsByCategory[$category['name']] ?? [] as $channel)
                                                         <li x-show="search === '' || '{{ strtolower($channel->name) }}'.includes(search.toLowerCase()) || '{{ $channel->number }}'.includes(search)"
                                                             @click="
                                                             $wire.set('categories.{{ $index }}.channels.{{ $channelIndex }}.channel_id', {{ $channel->id }});

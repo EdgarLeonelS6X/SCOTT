@@ -50,6 +50,29 @@ class CreateFunctionsReport extends Component
         ];
     }
 
+    protected function getChannelsByCategory()
+    {
+        $allChannels = Channel::where('status', '1')
+            ->orderBy('number')
+            ->get();
+
+        $channelsByCategory = [];
+
+        foreach ($this->categories as $category) {
+            $categoryName = $category['name'];
+
+            if (in_array($categoryName, ['RESTART', 'CUTV'])) {
+                $channelsByCategory[$categoryName] = $allChannels->filter(function ($channel) {
+                    return $channel->category === 'RESTART/CUTV';
+                });
+            } else {
+                $channelsByCategory[$categoryName] = $allChannels;
+            }
+        }
+
+        return $channelsByCategory;
+    }
+
     public function addChannel($categoryIndex)
     {
         $this->categories[$categoryIndex]['channels'][] = $this->initializeChannel();
@@ -112,7 +135,6 @@ class CreateFunctionsReport extends Component
     public function saveReport()
     {
         try {
-            // Recorremos cada categoría y validamos sus canales
             foreach ($this->categories as $categoryIndex => $category) {
                 if (empty($category['channels'])) {
                     continue;
@@ -279,7 +301,7 @@ class CreateFunctionsReport extends Component
     public function render()
     {
         return view('livewire.app.reports.create-functions-report', [
-            'channels' => Channel::where('status', '1')->get(),
+            'channelsByCategory' => $this->getChannelsByCategory(),
         ]);
     }
 }

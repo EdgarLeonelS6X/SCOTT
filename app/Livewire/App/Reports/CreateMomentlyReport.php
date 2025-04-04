@@ -101,7 +101,6 @@ class CreateMomentlyReport extends Component
             ]);
 
             $this->dispatch('reportCreated');
-
         } catch (ValidationException $e) {
             $errorMessages = '<ul style="text-align: center;">';
 
@@ -156,7 +155,9 @@ class CreateMomentlyReport extends Component
     public function render()
     {
         return view('livewire.app.reports.create-momently-report', [
-            'channels' => Channel::where('status', '1')->get(),
+            'channels' => Channel::where('status', '1')
+                ->orderBy('number')
+                ->get(),
         ]);
     }
 }

@@ -27,18 +27,20 @@
                                     @click.away="editingName = false" @keydown.enter.prevent="editingName = false"
                                     placeholder="{{ __('Category name') }}" x-bind:disabled="isFixed" />
                             </div>
+                        </div>
+                        <div class="flex items-center gap-3">
                             <span
-                                class="ml-3 bg-primary-100 text-primary-800 text-sm font-medium py-1 px-2 rounded-full">
+                                class="ml-2 bg-primary-100 text-primary-800 text-sm font-medium py-1 px-2 rounded-full whitespace-nowrap">
                                 {{ __('Contains') }} {{ $this->getChannelCount($index) }}
                                 {{ $this->getChannelCount($index) === 1 ? __('channel') : __('channels') }}
                             </span>
+                            <button type="button" x-show="!isFixed"
+                                @click.stop="$wire.removeCategory({{ $index }})"
+                                class="inline-flex items-center text-red-500 hover:text-red-700 dark:hover:text-red-400 text-sm">
+                                <i class="fas fa-trash-alt mr-1"></i>
+                                <span class="hidden sm:inline">{{ __('Delete') }}</span>
+                            </button>
                         </div>
-                        <button type="button"
-                            class="flex items-center text-red-500 hover:text-red-700 dark:hover:text-red-400"
-                            x-show="!isFixed" @click.stop="$wire.removeCategory({{ $index }})">
-                            <i class="fas fa-trash-alt mr-1"></i>
-                            {{ __('Delete') }}
-                        </button>
                     </div>
                     <div x-show="open" class="mt-6 space-y-6">
                         @foreach ($category['channels'] as $channelIndex => $channel)
