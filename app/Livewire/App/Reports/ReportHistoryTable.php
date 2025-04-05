@@ -6,6 +6,8 @@ use Livewire\Component;
 use Livewire\WithPagination;
 use App\Models\Report;
 use App\Models\User;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\ReportsExport;
 
 class ReportHistoryTable extends Component
 {
@@ -23,7 +25,8 @@ class ReportHistoryTable extends Component
     public $currentStatusIndex = 0;
     public $userOptions = [];
     public $currentUserIndex = 0;
-
+    public $startDate;
+    public $endDate;
     protected $queryString = ['search', 'orderField', 'orderDirection'];
 
     public function mount()
@@ -96,6 +99,46 @@ class ReportHistoryTable extends Component
         $this->selectedUser = $this->userOptions[$this->currentUserIndex];
     }
 
+    public function exportToExcel()
+    {
+        $query = Report::query()
+            ->with([
+                'reportedBy',
+                'stages',
+                'reportDetails.channel',
+                'reportContentLosses' // Agregado
+            ])
+            ->where(function ($q) {
+                $q->where('category', 'like', "%{$this->search}%")
+                    ->orWhereHas('reportedBy', fn($query) =>
+                    $query->where('name', 'like', "%{$this->search}%"))
+                    ->orWhereHas('reportDetails.channel', fn($query) =>
+                    $query->where('name', 'like', "%{$this->search}%")
+                        ->orWhere('number', 'like', "%{$this->search}%"));
+            });
+
+        if ($this->statusFilter) {
+            $query->where('status', $this->statusFilter);
+        }
+
+        if ($this->typeFilter) {
+            $query->where('type', $this->typeFilter);
+        }
+
+        if ($this->selectedUser) {
+            $query->whereHas('reportedBy', fn($q) =>
+            $q->where('name', $this->selectedUser));
+        }
+
+        if ($this->startDate && $this->endDate) {
+            $query->whereBetween('created_at', [$this->startDate, $this->endDate]);
+        }
+
+        $reports = $query->orderBy($this->orderField, $this->orderDirection)->get();
+
+        return Excel::download(new ReportsExport($reports), 'reportes-filtrados.xlsx');
+    }
+
     public function render()
     {
         $query = Report::query()
@@ -123,6 +166,10 @@ class ReportHistoryTable extends Component
             $query->whereHas('reportedBy', function ($q) {
                 $q->where('name', $this->selectedUser);
             });
+        }
+
+        if ($this->startDate && $this->endDate) {
+            $query->whereBetween('created_at', [$this->startDate, $this->endDate]);
         }
 
         $query->orderBy($this->orderField, $this->orderDirection);

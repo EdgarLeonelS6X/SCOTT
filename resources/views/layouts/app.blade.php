@@ -61,6 +61,9 @@
         }
         window.close();
     </script>
+
+    <!-- Flatpickr  -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 </head>
 
 <body class="font-sans antialiased bg-gray-200 dark:bg-gray-900">
@@ -82,8 +85,10 @@
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/flowbite@3.1.1/dist/flowbite.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
     @livewireScripts
+
     @stack('js')
 
     @if (session('swal'))
