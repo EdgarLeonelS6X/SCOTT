@@ -20,13 +20,13 @@ class ReportHistoryTable extends Component
     public $selectedUser = null;
     public $typeFilter = null;
     public $reportTypes = ['Momentary', 'Hourly', 'Functions'];
-    public $currentTypeIndex = 0;
     public $statusOptions = ['Revision', 'Resolved', 'Reported'];
-    public $currentStatusIndex = 0;
     public $userOptions = [];
-    public $currentUserIndex = 0;
     public $startDate;
     public $endDate;
+    public $currentTypeIndex = -1;
+    public $currentStatusIndex = -1;
+    public $currentUserIndex = -1;
     protected $queryString = ['search', 'orderField', 'orderDirection'];
 
     public function mount()
@@ -73,20 +73,44 @@ class ReportHistoryTable extends Component
 
     public function toggleStatusFilter()
     {
-        $this->currentStatusIndex = ($this->currentStatusIndex + 1) % count($this->statusOptions);
-        $this->statusFilter = $this->statusOptions[$this->currentStatusIndex];
+        $total = count($this->statusOptions);
+        $this->currentStatusIndex = ($this->currentStatusIndex + 1) % ($total + 1);
+
+        $this->statusFilter = $this->currentStatusIndex === $total
+            ? null
+            : $this->statusOptions[$this->currentStatusIndex];
     }
 
     public function toggleTypeFilter()
     {
-        $this->currentTypeIndex = ($this->currentTypeIndex + 1) % count($this->reportTypes);
-        $this->typeFilter = $this->reportTypes[$this->currentTypeIndex];
+        $total = count($this->reportTypes);
+        $this->currentTypeIndex = ($this->currentTypeIndex + 1) % ($total + 1);
+
+        $this->typeFilter = $this->currentTypeIndex === $total
+            ? null
+            : $this->reportTypes[$this->currentTypeIndex];
     }
 
     public function resetFilters()
     {
-        $this->reset(['search', 'orderField', 'orderDirection', 'statusFilter', 'selectedUser', 'currentUserIndex', 'typeFilter', 'currentTypeIndex']);
+        $this->reset([
+            'search',
+            'orderField',
+            'orderDirection',
+            'statusFilter',
+            'selectedUser',
+            'typeFilter',
+            'startDate',
+            'endDate'
+        ]);
+
+        $this->currentTypeIndex = -1;
+        $this->currentStatusIndex = -1;
+        $this->currentUserIndex = -1;
+
         $this->resetPage();
+
+        $this->dispatch('clear-datepicker-range');
     }
 
     public function toggleUserFilter()
@@ -95,19 +119,17 @@ class ReportHistoryTable extends Component
             return;
         }
 
-        $this->currentUserIndex = ($this->currentUserIndex + 1) % count($this->userOptions);
-        $this->selectedUser = $this->userOptions[$this->currentUserIndex];
+        $total = count($this->userOptions);
+        $this->currentUserIndex = ($this->currentUserIndex + 1) % ($total + 1);
+
+        $this->selectedUser = $this->currentUserIndex === $total
+            ? null
+            : $this->userOptions[$this->currentUserIndex];
     }
 
-    public function exportToExcel()
+    protected function filteredQuery()
     {
         $query = Report::query()
-            ->with([
-                'reportedBy',
-                'stages',
-                'reportDetails.channel',
-                'reportContentLosses' // Agregado
-            ])
             ->where(function ($q) {
                 $q->where('category', 'like', "%{$this->search}%")
                     ->orWhereHas('reportedBy', fn($query) =>
@@ -115,7 +137,8 @@ class ReportHistoryTable extends Component
                     ->orWhereHas('reportDetails.channel', fn($query) =>
                     $query->where('name', 'like', "%{$this->search}%")
                         ->orWhere('number', 'like', "%{$this->search}%"));
-            });
+            })
+            ->with(['reportedBy', 'stages', 'reportDetails.channel', 'reportDetails.reportContentLosses']);
 
         if ($this->statusFilter) {
             $query->where('status', $this->statusFilter);
@@ -131,50 +154,31 @@ class ReportHistoryTable extends Component
         }
 
         if ($this->startDate && $this->endDate) {
-            $query->whereBetween('created_at', [$this->startDate, $this->endDate]);
+            $start = \Carbon\Carbon::createFromFormat('Y-m-d', $this->startDate)->startOfDay();
+            $end = \Carbon\Carbon::createFromFormat('Y-m-d', $this->endDate)->endOfDay();
+            $query->whereBetween('created_at', [$start, $end]);
         }
 
-        $reports = $query->orderBy($this->orderField, $this->orderDirection)->get();
+        return $query;
+    }
 
-        return Excel::download(new ReportsExport($reports), 'reportes-filtrados.xlsx');
+    public function exportToExcel()
+    {
+        $reports = $this->filteredQuery()
+            ->orderBy($this->orderField, $this->orderDirection)
+            ->get();
+
+        $date = now()->format('Y-m-d_H-i-s');
+        $filename = "Report_{$date}.xlsx";
+
+        return Excel::download(new ReportsExport($reports), $filename);
     }
 
     public function render()
     {
-        $query = Report::query()
-            ->where(function ($q) {
-                $q->where('category', 'like', "%{$this->search}%")
-                    ->orWhereHas('reportedBy', function ($query) {
-                        $query->where('name', 'like', "%{$this->search}%");
-                    })
-                    ->orWhereHas('reportDetails.channel', function ($query) {
-                        $query->where('name', 'like', "%{$this->search}%")
-                            ->orWhere('number', 'like', "%{$this->search}%");
-                    });
-            })
-            ->with(['reportedBy', 'stages', 'reportDetails.channel']);
-
-        if ($this->statusFilter) {
-            $query->where('status', $this->statusFilter);
-        }
-
-        if ($this->typeFilter) {
-            $query->where('type', $this->typeFilter);
-        }
-
-        if ($this->selectedUser) {
-            $query->whereHas('reportedBy', function ($q) {
-                $q->where('name', $this->selectedUser);
-            });
-        }
-
-        if ($this->startDate && $this->endDate) {
-            $query->whereBetween('created_at', [$this->startDate, $this->endDate]);
-        }
-
-        $query->orderBy($this->orderField, $this->orderDirection);
-
-        $reports = $query->paginate(10);
+        $reports = $this->filteredQuery()
+            ->orderBy($this->orderField, $this->orderDirection)
+            ->paginate(10);
 
         return view('livewire.app.reports.report-history-table', compact('reports'));
     }

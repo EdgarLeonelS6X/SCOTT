@@ -36,6 +36,11 @@ class Report extends Model
         return $this->belongsTo(User::class, 'attended_by');
     }
 
+    public function reviewedBy()
+    {
+        return $this->belongsTo(User::class, 'reviewed_by');
+    }
+
     public function stages()
     {
         return $this->hasManyThrough(Stage::class, ReportDetail::class, 'report_id', 'id', 'id', 'stage_id');
@@ -46,10 +51,10 @@ class Report extends Model
         return $this->hasManyThrough(
             ReportContentLoss::class,
             ReportDetail::class,
-            'report_id', // Foreign key en ReportDetail
-            'report_detail_id', // Foreign key en ReportContentLoss
-            'id', // Local key en Report
-            'id' // Local key en ReportDetail
+            'report_id',
+            'report_detail_id',
+            'id',
+            'id'
         );
     }
 }

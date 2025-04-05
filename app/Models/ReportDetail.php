@@ -31,4 +31,9 @@ class ReportDetail extends Model
     {
         return $this->belongsTo(Stage::class);
     }
+
+    public function reportContentLosses()
+    {
+        return $this->hasMany(ReportContentLoss::class);
+    }
 }

@@ -34,19 +34,27 @@
                     width: 60px;
                 }
             </style>
-            <div x-data="{ dateRange: @entangle('startDate').defer + ' to ' + @entangle('endDate').defer }" x-init="flatpickr($refs.input, {
+            <div x-data="{
+                dateRange: @entangle('startDate').defer + ' to ' + @entangle('endDate').defer,
+                flatpickrInstance: null
+            }" x-init="flatpickrInstance = flatpickr($refs.input, {
                 mode: 'range',
-                dateFormat: 'd-m-Y',
+                dateFormat: 'Y-m-d',
                 defaultDate: dateRange.split(' to '),
                 maxDate: 'today',
                 onChange: function(selectedDates, dateStr) {
-                    let [start, end] = dateStr.split(' - ');
+                    let [start, end] = dateStr.split(' to ');
                     $wire.set('startDate', start);
                     $wire.set('endDate', end);
                 }
-            })" class="flex flex-col gap-1 shadow-2xl">
-                <x-input x-ref="input" type="text" placeholder="{{ __('Select a range') }}"
-                    class="w-[225px] px-3 py-2 text-sm border border-gray-300 rounded-md dark:bg-gray-800 dark:border-gray-600 dark:text-white" />
+            })"
+                x-on:clear-datepicker-range.window="
+                    flatpickrInstance.clear();
+                    $refs.input.value = '';
+                "
+                class="flex flex-col gap-1">
+                <x-input id="datepicker-range" x-ref="input" type="text" placeholder="{{ __('Select a range') }}"
+                    class="w-[230px] px-3 py-2 text-sm border border-gray-300 rounded-md dark:bg-gray-800 dark:border-gray-600 dark:text-white" />
             </div>
             <div class="relative">
                 <button id="filterDropdownButton" data-dropdown-toggle="filterDropdown"
@@ -104,7 +112,7 @@
                             @if ($typeFilter)
                                 {{ $typeFilter }}
                             @else
-                                {{ __('Type') }}
+                                {{ __('All Types') }}
                             @endif
                             <i class="ml-1 fa-solid fa-sort"></i>
                         </span>
@@ -115,7 +123,7 @@
                             @if ($statusFilter)
                                 {{ $statusFilter }}
                             @else
-                                {{ __('Status') }}
+                                {{ __('All Status') }}
                             @endif
                             <i class="ml-1 fa-solid fa-sort"></i>
                         </span>
