@@ -40,40 +40,48 @@ class ReportsExport implements FromCollection, WithHeadings, ShouldAutoSize, Wit
             'Protocol',
             'Media',
             'Description',
-            'Detail Status',
             'Content Losses',
         ];
     }
 
     public function map($report): array
     {
-        $channels = $report->reportDetails
-            ->pluck('channel.name')
-            ->filter()
-            ->join(', ');
+        $channels = $report->reportDetails->map(function ($detail) {
+            $channelNumber = $detail->channel->number ?? 'No Number';
+            $channelName = $detail->channel->name ?? 'Unknown Channel';
+            return "{$channelNumber} {$channelName}";
+        })->join(', ');
 
         $protocols = $report->reportDetails->map(function ($detail) {
             $channelNumber = $detail->channel->number ?? 'No Number';
             $channelName = $detail->channel->name ?? 'Unknown Channel';
-            $protocol = $detail->protocol ?? 'N/A';
+            $protocol = $detail->protocol;
             return "{$channelNumber} {$channelName}: {$protocol}";
-        })->filter()->join("\n");
+        })->join("\n");
 
         $media = $report->reportDetails->map(function ($detail) {
             $channelNumber = $detail->channel->number ?? 'No Number';
             $channelName = $detail->channel->name ?? 'Unknown Channel';
-            $media = $detail->media ?? 'N/A';
+            $media = $detail->media;
             return "{$channelNumber} {$channelName}: {$media}";
-        })->filter()->join("\n");
+        })->join("\n");
 
-        $descriptions = $report->reportDetails->pluck('description')->filter()->join(' | ');
-        $statuses = $report->reportDetails->pluck('status')->filter()->join(', ');
+        $descriptions = $report->reportDetails->map(function ($detail) {
+            $channelNumber = $detail->channel->number ?? 'No Number';
+            $channelName = $detail->channel->name ?? 'Unknown Channel';
+            $description = $detail->description;
+            return "{$channelNumber} {$channelName}: {$description}";
+        })->join("\n");
 
         $losses = $report->reportDetails
             ->flatMap(function ($detail) {
                 $channelName = $detail->channel->name ?? 'Unknown Channel';
                 $channelNumber = $detail->channel->number ?? 'No Number';
                 $subcategory = $detail->subcategory ?? 'No Subcategory';
+
+                if ($detail->reportContentLosses->isEmpty()) {
+                    return ["Subcategory: {$subcategory}, Channel: {$channelNumber} {$channelName}: "];
+                }
 
                 return $detail->reportContentLosses->map(function ($loss) use ($channelName, $channelNumber, $subcategory) {
                     $start = \Carbon\Carbon::parse($loss->start_time)->format('Y/m/d h:i A');
@@ -96,7 +104,6 @@ class ReportsExport implements FromCollection, WithHeadings, ShouldAutoSize, Wit
             $protocols,
             $media,
             $descriptions,
-            $statuses,
             $losses,
         ];
     }
