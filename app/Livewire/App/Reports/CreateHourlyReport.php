@@ -239,7 +239,7 @@ class CreateHourlyReport extends Component
                 ->get(),
 
             'stingrayChannels' => Channel::where('status', '1')
-                ->where('category', 'Stingray')
+                ->where('category', 'Stingray Music')
                 ->orderBy('number')
                 ->get(),
         ]);

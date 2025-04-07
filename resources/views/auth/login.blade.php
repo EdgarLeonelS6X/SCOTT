@@ -9,8 +9,11 @@
                         {{ __('Sign in to your account') }}
                     </h1>
                     @session('status')
-                        <div class="mb-4 font-medium text-sm text-green-600 dark:text-green-400">
-                            {{ $value }}
+                        <div class="mb-1 font-medium text-sm text-green-600 dark:text-green-400">
+                            <p class="flex justify-center items-center text-sm text-green-700 dark:text-green-300">
+                                <i class="fa-solid fa-circle-check text-green-500 dark:text-green-400 text-lg mr-3"></i>
+                                {{ $value }}
+                            </p>
                         </div>
                     @endsession
                     @if (session('swal'))

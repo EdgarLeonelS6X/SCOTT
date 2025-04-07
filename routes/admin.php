@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\ChannelController;
 use App\Http\Controllers\Admin\StageController;
 

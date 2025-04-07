@@ -13,6 +13,12 @@ Route::get('/google-auth/redirect', [GoogleAuthController::class, 'redirectToGoo
 
 Route::get('/google-auth/callback', [GoogleAuthController::class, 'handleGoogleCallback'])->name('handleGoogleCallback');
 
+Route::get('/verification/status', function () {
+    return response()->json([
+        'verified' => \Illuminate\Support\Facades\Auth::user()?->email_verified_at !== null
+    ]);
+})->middleware(['auth'])->name('verification.status');
+
 Route::middleware([
     'auth:sanctum',
     config('jetstream.auth_session'),

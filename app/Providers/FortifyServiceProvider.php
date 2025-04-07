@@ -13,6 +13,10 @@ use Laravel\Fortify\Fortify;
 use App\Models\User;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Str;
+use Laravel\Fortify\Contracts\CreatesNewUsers;
+use App\Actions\Fortify\CreateNewUser;
+use Laravel\Fortify\Contracts\ResetsUserPasswords;
+use App\Actions\Fortify\ResetUserPassword;
 
 class FortifyServiceProvider extends ServiceProvider
 {
@@ -21,7 +25,8 @@ class FortifyServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $this->app->bind(ResetsUserPasswords::class, ResetUserPassword::class);
+        $this->app->singleton(CreatesNewUsers::class, CreateNewUser::class);
     }
 
     /**

@@ -16,6 +16,8 @@
                     <x-validation-errors class="mb-4 text-center" />
                     <form method="POST" action="{{ route('password.update') }}">
                         @csrf
+                        <input type="hidden" name="email" value="{{ $request->email }}">
+                        <input type="hidden" name="token" value="{{ $request->route('token') }}">
                         <div class="block">
                             <x-label for="email">
                                 <i class="fa-solid fa-envelope mr-1"></i>
@@ -42,7 +44,8 @@
                                 name="password_confirmation" required autocomplete="new-password"
                                 placeholder="••••••••" />
                         </div>
-                        <x-button class="w-full mt-8 font-bold">
+                        <x-button
+                            class="w-full mt-8 font-bold py-3.5 px-4 hover:shadow-2xl transition-all duration-200 transform hover:scale-[1.02]">
                             <i class="fa-solid fa-circle-check mr-2"></i>
                             {{ __('Reset password') }}
                         </x-button>
