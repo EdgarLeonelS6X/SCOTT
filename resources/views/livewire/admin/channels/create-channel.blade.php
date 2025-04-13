@@ -11,6 +11,15 @@ use App\Enums\ChannelOrigin;
         <i class="fa-solid fa-arrow-left mr-1.5"></i>
         {{ __('Go back') }}
     </a>
+    <div id="drag-overlay"
+        class="fixed inset-0 bg-black bg-opacity-50 text-white text-xl flex items-center justify-center z-50 hidden transition-opacity duration-300 ease-in-out">
+        <div class="text-center">
+            <i class="fa-solid fa-upload text-4xl mb-4 animate-bounce"></i>
+            <p>
+                {{ __('Drop your image here to upload it...') }}
+            </p>
+        </div>
+    </div>
 </x-slot>
 <div class="w-full bg-white rounded-lg shadow-2xl dark:border md:mt-0 xl:p-0 dark:bg-gray-800 dark:border-gray-700">
     <div class="p-6 space-y-4 md:space-y-6 sm:p-8">
@@ -130,28 +139,85 @@ use App\Enums\ChannelOrigin;
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {
-        const dropArea = document.getElementById('drop-area');
         const fileInput = document.getElementById('image-input');
+        const dropArea = document.getElementById('drop-area');
+        const overlay = document.getElementById('drag-overlay');
 
-        dropArea.addEventListener('dragover', (e) => {
-            e.preventDefault();
+        let dragCounter = 0;
+
+        const showOverlay = () => {
+            overlay.classList.remove('hidden');
             dropArea.classList.add('border-primary-500');
-        });
+        };
 
-        dropArea.addEventListener('dragleave', () => {
+        const hideOverlay = () => {
+            overlay.classList.add('hidden');
             dropArea.classList.remove('border-primary-500');
-        });
+        };
 
-        dropArea.addEventListener('drop', (e) => {
+        window.addEventListener('dragenter', (e) => {
             e.preventDefault();
-            dropArea.classList.remove('border-primary-500');
+            dragCounter++;
+            showOverlay();
+        });
 
-            if (e.dataTransfer.files.length) {
-                fileInput.files = e.dataTransfer.files;
-                fileInput.dispatchEvent(new Event('change'));
+        window.addEventListener('dragover', (e) => {
+            e.preventDefault();
+        });
+
+        window.addEventListener('dragleave', (e) => {
+            e.preventDefault();
+            dragCounter--;
+            if (dragCounter <= 0) {
+                hideOverlay();
+                dragCounter = 0;
             }
         });
 
-        dropArea.addEventListener('click', () => fileInput.click());
+        window.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dragCounter = 0;
+            hideOverlay();
+
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                const file = files[0];
+                if (file.type.startsWith('image/')) {
+                    const dataTransfer = new DataTransfer();
+                    dataTransfer.items.add(file);
+                    fileInput.files = dataTransfer.files;
+                    fileInput.dispatchEvent(new Event('change', {
+                        bubbles: true
+                    }));
+                } else {
+                    alert("Solo se permiten imágenes.");
+                }
+            }
+        });
+
+        dropArea.addEventListener('click', () => {
+            fileInput.click();
+        });
+
+        fileInput.addEventListener('click', () => {
+            setTimeout(() => {
+                const checkInputClosed = () => {
+                    if (!fileInput.value) {
+                        hideOverlay();
+                    }
+                };
+                window.addEventListener('focus', checkInputClosed, {
+                    once: true
+                });
+            }, 500);
+        });
+
+        fileInput.addEventListener('change', () => {
+            hideOverlay();
+        });
+
+        ['dragover', 'drop'].forEach(event => {
+            window.addEventListener(event, e => e.preventDefault());
+        });
     });
 </script>

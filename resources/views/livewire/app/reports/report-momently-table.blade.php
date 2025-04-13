@@ -136,7 +136,7 @@
                         </span>
                     </div>
                     <button wire:click="closeReportDetails"
-                        class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-white">
+                        class="text-gray-500 pt-1 dark:text-gray-400 hover:text-gray-700 dark:hover:text-white">
                         <i class="fa-solid fa-xmark text-xl"></i>
                     </button>
                 </div>
@@ -198,7 +198,7 @@
                 </div>
                 <div class="mt-6">
                     <div class="flex items-center">
-                        <i class="fa-solid fa-layer-group text-xl text-gray-800 dark:text-white mr-1.5"></i>
+                        <i class="fa-solid fa-layer-group text-xl text-gray-800 dark:text-white mr-3"></i>
                         <span class="text-lg font-semibold text-gray-800 dark:text-white mr-1.5">
                             {{ __('This report contains') }}
                         </span>

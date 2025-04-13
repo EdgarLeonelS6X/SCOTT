@@ -44,8 +44,7 @@
                                 name="password_confirmation" required autocomplete="new-password"
                                 placeholder="••••••••" />
                         </div>
-                        <x-button
-                            class="w-full mt-8 font-bold py-3.5 px-4 hover:shadow-2xl transition-all duration-200 transform hover:scale-[1.02]">
+                        <x-button class="w-full mt-8 font-bold py-3.5 px-4 shadow-2xl">
                             <i class="fa-solid fa-circle-check mr-2"></i>
                             {{ __('Reset password') }}
                         </x-button>

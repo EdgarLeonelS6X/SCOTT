@@ -23,11 +23,12 @@
                 {{ __('Go back') }}
             </a>
             <a href="#" title="{{ __('Play channel') }}"
-                onclick="event.preventDefault(); openMiniPlayer('{{ $channel->url }}');"
+                onclick="event.preventDefault(); fetchMiniPlayerUrl({{ $channel->id }});"
                 class="flex justify-center items-center text-white bg-primary-600 hover:bg-primary-500 focus:ring-4 focus:outline-none focus:ring-primary-300 dark:focus:ring-primary-800 font-medium rounded-lg text-sm px-5 py-2 text-center">
                 <i class="fa-solid fa-play mr-1.5"></i>
                 {{ __('Play') }}
             </a>
+
             <a href="{{ route('admin.channels.edit', $channel) }}"
                 class="flex justify-center items-center text-white bg-blue-600 hover:bg-blue-500 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2 text-center">
                 <i class="fa-solid fa-pen-to-square mr-1.5"></i>
@@ -44,25 +45,40 @@
         <div class="p-6 space-y-6 sm:p-8">
             <div class="flex justify-between items-center">
                 <div>
-                    <h1 class="text-2xl font-bold text-gray-900 dark:text-white">
-                        {{ $channel->number }} {{ $channel->name }}
+                    <h1 class="text-xl md:text-2xl font-bold text-gray-900 dark:text-white">
+                        <span class="text-primary-600">{{ $channel->number }}</span> {{ $channel->name }}
                     </h1>
-                    <div class="mt-2 flex space-x-2">
+                    <div class="mt-2 flex flex-wrap items-center gap-2">
                         <span
                             class="inline-flex items-center px-2 py-1 text-xs font-medium text-primary-800 bg-primary-200 rounded-full dark:bg-primary-800 dark:text-primary-200">
-                            <i class="fa-solid fa-layer-group mr-1"></i>
+                            @switch($channel->category)
+                                @case('Standard TV Channel')
+                                    <i class="fa-solid fa-tv mr-1.5"></i>
+                                @break
+
+                                @case('Stingray Music')
+                                    <i class="fa-solid fa-music mr-1.5"></i>
+                                @break
+
+                                @case('RESTART/CUTV')
+                                    <i class="fa-solid fa-repeat mr-1.5"></i>
+                                @break
+
+                                @default
+                                    <i class="fa-solid fa-layer-group mr-1.5"></i>
+                            @endswitch
                             {{ $channel->category }}
                         </span>
                         @if ($channel->status === 1)
                             <span
                                 class="inline-flex items-center px-2 py-1 text-xs font-medium text-green-800 bg-green-200 rounded-full dark:bg-green-800 dark:text-green-200">
-                                <i class="fa-solid fa-check-circle mr-1"></i>
+                                <i class="fa-solid fa-check-circle mr-1.5"></i>
                                 {{ __('Active') }}
                             </span>
                         @else
                             <span
                                 class="inline-flex items-center px-2 py-1 text-xs font-medium text-red-800 bg-red-200 rounded-full dark:bg-red-800 dark:text-red-200">
-                                <i class="fa-solid fa-times-circle mr-1"></i>
+                                <i class="fa-solid fa-times-circle mr-1.5"></i>
                                 {{ __('Inactive') }}
                             </span>
                         @endif
@@ -98,14 +114,6 @@
                             value="{{ $channel->origin }}" disabled />
                     </div>
                 </div>
-                <div>
-                    <x-label for="url">
-                        <i class="fa-solid fa-link mr-1"></i>
-                        {{ __('URL') }}
-                    </x-label>
-                    <x-input id="url" class="block mt-1 w-full" type="text" wire:model="url"
-                        value="{{ $channel->url }}" disabled />
-                </div>
             </div>
         </div>
     </div>
@@ -136,6 +144,25 @@
 </x-admin-layout>
 
 <script>
+    async function fetchMiniPlayerUrl(channelId) {
+        try {
+            const response = await fetch(`/admin/channels/${channelId}/secure-url`);
+            if (!response.ok) {
+                throw new Error("No autorizado o error del servidor.");
+            }
+
+            const data = await response.json();
+            openMiniPlayer(data.url);
+        } catch (error) {
+            console.error('Error al obtener la URL segura:', error);
+            Swal.fire({
+                icon: 'error',
+                title: '{{ __('Oops...') }}',
+                text: '{{ __('Could not load the player.') }}',
+            });
+        }
+    }
+
     function openMiniPlayer(url) {
         const youtubeRegex = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/)([\w-]{11})/;
         const match = url.match(youtubeRegex);
@@ -167,8 +194,7 @@
 
             const iframe = document.createElement('iframe');
             iframe.classList = 'w-full';
-            iframe.style.height =
-                'calc(100% - 40px)';
+            iframe.style.height = 'calc(100% - 40px)';
             iframe.frameBorder = 0;
             iframe.allowFullscreen = true;
             playerContainer.appendChild(iframe);

@@ -54,7 +54,7 @@
                 "
                 class="flex flex-col gap-1">
                 <x-input id="datepicker-range" x-ref="input" type="text" placeholder="{{ __('Select a range') }}"
-                    class="w-[230px] px-3 py-2 text-sm border border-gray-300 rounded-md dark:bg-gray-800 dark:border-gray-600 dark:text-white" />
+                    class="w-[240px] px-3 py-2 text-sm border border-gray-300 rounded-md dark:bg-gray-800 dark:border-gray-600 dark:text-white" />
             </div>
             <div class="relative">
                 <button id="filterDropdownButton" data-dropdown-toggle="filterDropdown"
@@ -131,8 +131,7 @@
                     <th class="py-3 px-4 text-left cursor-pointer" wire:click="setOrder('created_at')">
                         <i class="fa-solid fa-calendar mr-1"></i>
                         {{ __('Datetime') }}
-                        <button
-                            class="ml-1 text-gray-500 dark:text-white focus:outline-none transform transition-all hover:scale-110">
+                        <button class="ml-1 text-gray-500 dark:text-white">
                             @if ($orderField === 'created_at')
                                 <i
                                     class="fa-solid {{ $orderDirection === 'asc' ? 'fa-sort-up' : 'fa-sort-down' }}"></i>
@@ -165,7 +164,7 @@
             <tbody>
                 @if ($reports->isEmpty())
                     <tr>
-                        <td colspan="7" class="bg-white text-center py-6 pb-3">
+                        <td colspan="7" class="bg-white dark:bg-gray-800 text-center py-6 pb-3">
                             <div class="text-gray-500 dark:text-gray-300">
                                 <i class="fa-solid fa-circle-info mr-1"></i>
                                 {{ __('No reports found with the current filters.') }}

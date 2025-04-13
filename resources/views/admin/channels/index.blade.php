@@ -23,9 +23,6 @@
                 </svg>
                 <span class="sr-only">Info</span>
                 <div>
-                    <span class="font-medium">
-                        {{ __('This is an information alert!') }}
-                    </span>
                     {{ __('There are no channels registered in the database.') }}
                 </div>
             </div>

@@ -11,6 +11,15 @@ use App\Enums\ChannelOrigin;
         <i class="fa-solid fa-arrow-left mr-1.5"></i>
         {{ __('Go back') }}
     </a>
+    <div id="overlay"
+        class="fixed inset-0 bg-black bg-opacity-50 text-white text-xl flex items-center justify-center z-50 hidden transition-opacity duration-300 ease-in-out">
+        <div class="text-center">
+            <i class="fa-solid fa-upload text-4xl mb-4 animate-bounce"></i>
+            <p>
+                {{ __('Drop your image here to upload it...') }}
+            </p>
+        </div>
+    </div>
 </x-slot>
 <div class="w-full bg-white rounded-lg shadow-2xl dark:border md:mt-0 xl:p-0 dark:bg-gray-800 dark:border-gray-700">
     <div class="p-6 space-y-4 md:space-y-6 sm:p-8">
@@ -36,8 +45,8 @@ use App\Enums\ChannelOrigin;
                         class="flex flex-col justify-center items-center p-10 border border-dashed border-gray-300 rounded-lg">
                         @if ($image_url)
                             <img class="object-contain object-center w-60 h-60 rounded-lg"
-                             src="{{ $new_image ? $new_image->temporaryUrl() : ($image_url ? asset('storage/' . $image_url) : asset('img/no-image.png')) }}"
-                            alt="{{ __('Image preview') }}">
+                                src="{{ $new_image ? $new_image->temporaryUrl() : ($image_url ? asset('storage/' . $image_url) : asset('img/no-image.png')) }}"
+                                alt="{{ __('Image preview') }}">
                         @else
                             <p class="text-sm text-gray-400 dark:text-gray-300 text-center">
                                 <i class="fa-solid fa-cloud-arrow-up text-xl mb-2"></i><br>
@@ -134,24 +143,51 @@ use App\Enums\ChannelOrigin;
     document.addEventListener('DOMContentLoaded', () => {
         const dropArea = document.getElementById('drop-area');
         const fileInput = document.getElementById('image-input');
+        const overlay = document.getElementById('overlay');
+        let dragCounter = 0;
 
-        dropArea.addEventListener('dragover', (e) => {
+        const showOverlay = () => {
+            overlay.classList.remove('hidden');
+            overlay.classList.add('flex');
+        };
+
+        const hideOverlay = () => {
+            overlay.classList.remove('flex');
+            overlay.classList.add('hidden');
+        };
+
+        window.addEventListener('dragenter', (e) => {
             e.preventDefault();
-            dropArea.classList.add('border-primary-500');
+            dragCounter++;
+            showOverlay();
         });
 
-        dropArea.addEventListener('dragleave', () => {
-            dropArea.classList.remove('border-primary-500');
+        window.addEventListener('dragleave', (e) => {
+            e.preventDefault();
+            dragCounter--;
+            if (dragCounter === 0) {
+                hideOverlay();
+            }
         });
 
-        dropArea.addEventListener('drop', (e) => {
+        window.addEventListener('dragover', (e) => {
             e.preventDefault();
-            dropArea.classList.remove('border-primary-500');
+        });
+
+        window.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dragCounter = 0;
+            hideOverlay();
 
             if (e.dataTransfer.files.length) {
                 fileInput.files = e.dataTransfer.files;
                 fileInput.dispatchEvent(new Event('change'));
             }
+        });
+
+        fileInput.addEventListener('change', () => {
+            dragCounter = 0;
+            hideOverlay();
         });
 
         dropArea.addEventListener('click', () => fileInput.click());

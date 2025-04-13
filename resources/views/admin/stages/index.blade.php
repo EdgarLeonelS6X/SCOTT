@@ -100,7 +100,8 @@
                                                 id="delete-form-{{ $stage->id }}">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="button" @click.stop.prevent="confirmDelete({{ $stage->id }})"
+                                                <button type="button"
+                                                    @click.stop.prevent="confirmDelete({{ $stage->id }})"
                                                     title="{{ __('Delete stage') }}"
                                                     class="flex items-center w-full text-left py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">
                                                     <i class="fa-solid fa-trash-can mr-2"></i>
@@ -127,9 +128,6 @@
                 </svg>
                 <span class="sr-only">Info</span>
                 <div>
-                    <span class="font-medium">
-                        {{ __('This is an information alert!') }}
-                    </span>
                     {{ __('There are no stages registered in the database.') }}
                 </div>
             </div>

@@ -30,8 +30,7 @@
                         @endif
                         <form method="POST" action="{{ route('verification.send') }}">
                             @csrf
-                            <x-button
-                                class="w-full font-bold py-3.5 px-4 hover:shadow-2xl transition-all duration-200 transform hover:scale-[1.02]">
+                            <x-button class="w-full font-bold py-3.5 px-4 shadow-2xl">
                                 <i class="fa-solid fa-paper-plane mr-2"></i>
                                 {{ __('Resend verification email') }}
                             </x-button>
