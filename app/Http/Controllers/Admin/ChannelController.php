@@ -6,16 +6,18 @@ use App\Http\Controllers\Controller;
 use App\Models\Channel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
-
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class ChannelController extends Controller
 {
+    use AuthorizesRequests;
+
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $channels = Channel::orderBy("id","desc")->paginate(10);
+        $channels = Channel::orderBy("id", "desc")->paginate(10);
 
         return view("admin.channels.index", compact("channels"));
     }
@@ -25,6 +27,8 @@ class ChannelController extends Controller
      */
     public function create()
     {
+        $this->authorize('create', Channel::class);
+
         return view("admin.channels.create");
     }
 
@@ -49,6 +53,8 @@ class ChannelController extends Controller
      */
     public function edit(Channel $channel)
     {
+        $this->authorize('edit', $channel);
+
         return view("admin.channels.edit", compact("channel"));
     }
 
@@ -65,6 +71,8 @@ class ChannelController extends Controller
      */
     public function destroy(Channel $channel)
     {
+        $this->authorize('delete', $channel);
+
         if ($channel->image_url && Storage::disk('public')->exists($channel->image_url)) {
             Storage::disk('public')->delete($channel->image_url);
         }

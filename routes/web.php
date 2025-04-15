@@ -1,7 +1,6 @@
 <?php
 
 use App\Http\Controllers\GoogleAuthController;
-use App\Http\Controllers\HistoryController;
 use App\Http\Controllers\ReportController;
 use Illuminate\Support\Facades\Route;
 

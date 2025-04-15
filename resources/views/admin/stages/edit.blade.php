@@ -27,7 +27,6 @@
             <h1 class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
                 <i class="fa-solid fa-bars-staggered mr-1.5"></i>
                 {{ __('Update stage') }}
-
                 <p class="text-sm font-light text-gray-500 dark:text-gray-400">
                     {{ __('Update the data for this stage.') }}
                 </p>

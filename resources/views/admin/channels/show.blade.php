@@ -23,22 +23,25 @@
                 {{ __('Go back') }}
             </a>
             <a href="#" title="{{ __('Play channel') }}"
-                onclick="event.preventDefault(); fetchMiniPlayerUrl({{ $channel->id }});"
+                onclick="event.preventDefault(); openMiniPlayer('{{ $channel->url }}');"
                 class="flex justify-center items-center text-white bg-primary-600 hover:bg-primary-500 focus:ring-4 focus:outline-none focus:ring-primary-300 dark:focus:ring-primary-800 font-medium rounded-lg text-sm px-5 py-2 text-center">
                 <i class="fa-solid fa-play mr-1.5"></i>
                 {{ __('Play') }}
             </a>
-
-            <a href="{{ route('admin.channels.edit', $channel) }}"
-                class="flex justify-center items-center text-white bg-blue-600 hover:bg-blue-500 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2 text-center">
-                <i class="fa-solid fa-pen-to-square mr-1.5"></i>
-                {{ __('Edit') }}
-            </a>
-            <button onclick="confirmDelete()"
-                class="flex justify-center items-center text-white bg-red-600 hover:bg-red-500 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm px-5 py-2 text-center">
-                <i class="fa-solid fa-trash-can mr-1.5"></i>
-                {{ __('Delete') }}
-            </button>
+            @can('channels.edit')
+                <a href="{{ route('admin.channels.edit', $channel) }}"
+                    class="flex justify-center items-center text-white bg-blue-600 hover:bg-blue-500 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2 text-center">
+                    <i class="fa-solid fa-pen-to-square mr-1.5"></i>
+                    {{ __('Edit') }}
+                </a>
+            @endcan
+            @can('channels.delete')
+                <button onclick="confirmDelete()"
+                    class="flex justify-center items-center text-white bg-red-600 hover:bg-red-500 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm px-5 py-2 text-center">
+                    <i class="fa-solid fa-trash-can mr-1.5"></i>
+                    {{ __('Delete') }}
+                </button>
+            @endcan
         </div>
     </x-slot>
     <div class="w-full bg-white rounded-lg shadow-2xl dark:border dark:bg-gray-800 dark:border-gray-700">
@@ -144,25 +147,6 @@
 </x-admin-layout>
 
 <script>
-    async function fetchMiniPlayerUrl(channelId) {
-        try {
-            const response = await fetch(`/admin/channels/${channelId}/secure-url`);
-            if (!response.ok) {
-                throw new Error("No autorizado o error del servidor.");
-            }
-
-            const data = await response.json();
-            openMiniPlayer(data.url);
-        } catch (error) {
-            console.error('Error al obtener la URL segura:', error);
-            Swal.fire({
-                icon: 'error',
-                title: '{{ __('Oops...') }}',
-                text: '{{ __('Could not load the player.') }}',
-            });
-        }
-    }
-
     function openMiniPlayer(url) {
         const youtubeRegex = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/)([\w-]{11})/;
         const match = url.match(youtubeRegex);
@@ -194,7 +178,8 @@
 
             const iframe = document.createElement('iframe');
             iframe.classList = 'w-full';
-            iframe.style.height = 'calc(100% - 40px)';
+            iframe.style.height =
+                'calc(100% - 40px)';
             iframe.frameBorder = 0;
             iframe.allowFullscreen = true;
             playerContainer.appendChild(iframe);

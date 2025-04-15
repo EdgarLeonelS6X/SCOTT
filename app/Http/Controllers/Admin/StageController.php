@@ -5,9 +5,12 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Stage;
 use Illuminate\Http\Request;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class StageController extends Controller
 {
+    use AuthorizesRequests;
+
     /**
      * Display a listing of the resource.
      */
@@ -23,6 +26,8 @@ class StageController extends Controller
      */
     public function create()
     {
+        $this->authorize('create', Stage::class);
+
         return view("admin.stages.create");
     }
 
@@ -66,6 +71,8 @@ class StageController extends Controller
      */
     public function edit(Stage $stage)
     {
+        $this->authorize('edit', $stage);
+
         return view('admin.stages.edit', compact('stage'));
     }
 
@@ -101,6 +108,8 @@ class StageController extends Controller
      */
     public function destroy(Stage $stage)
     {
+        $this->authorize('delete', $stage);
+
         $stage->delete();
 
         session()->flash('swal', [

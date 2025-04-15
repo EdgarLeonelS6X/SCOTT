@@ -22,16 +22,20 @@
                 <i class="fa-solid fa-arrow-left mr-1.5"></i>
                 {{ __('Go back') }}
             </a>
-            <a href="{{ route('admin.stages.edit', $stage) }}"
-                class="flex justify-center items-center text-white bg-blue-600 hover:bg-blue-500 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2 text-center">
-                <i class="fa-solid fa-pen-to-square mr-1.5"></i>
-                {{ __('Edit') }}
-            </a>
-            <button onclick="confirmDelete()"
-                class="flex justify-center items-center text-white bg-red-600 hover:bg-red-500 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm px-5 py-2 text-center">
-                <i class="fa-solid fa-trash-can mr-1.5"></i>
-                {{ __('Delete') }}
-            </button>
+            @can('edit', $stage)
+                <a href="{{ route('admin.stages.edit', $stage) }}"
+                    class="flex justify-center items-center text-white bg-blue-600 hover:bg-blue-500 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2 text-center">
+                    <i class="fa-solid fa-pen-to-square mr-1.5"></i>
+                    {{ __('Edit') }}
+                </a>
+            @endcan
+            @can('delete', $stage)
+                <button onclick="confirmDelete()"
+                    class="flex justify-center items-center text-white bg-red-600 hover:bg-red-500 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm px-5 py-2 text-center">
+                    <i class="fa-solid fa-trash-can mr-1.5"></i>
+                    {{ __(key: 'Delete') }}
+                </button>
+            @endcan
         </div>
     </x-slot>
     <div class="w-full bg-white rounded-lg shadow-2xl dark:border md:mt-0 xl:p-0 dark:bg-gray-800 dark:border-gray-700">

@@ -9,10 +9,11 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Sanctum\HasApiTokens;
+use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
-    use HasApiTokens;
+    use HasApiTokens, HasRoles;
 
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory;
@@ -69,5 +70,22 @@ class User extends Authenticatable implements MustVerifyEmail
     public function reports()
     {
         return $this->hasMany(Report::class, 'reported_by');
+    }
+
+    protected static function booted()
+    {
+        static::created(function ($user) {
+            // Si no tiene rol, se asigna 'user'
+            if (!$user->roles()->exists()) {
+                $user->assignRole('user');
+            }
+        });
+    }
+
+    public function before(User $user, $ability)
+    {
+        if ($user->hasRole('admin')) {
+            return true;
+        }
     }
 }

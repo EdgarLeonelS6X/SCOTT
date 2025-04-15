@@ -11,13 +11,15 @@
 ]">
 
     @if ($stages->count())
-        <x-slot name="action">
-            <a href="{{ route('admin.stages.create') }}"
-                class="block text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800 shadow-xl">
-                <i class="fa-solid fa-plus mr-1"></i>
-                {{ __('Register new stage') }}
-            </a>
-        </x-slot>
+        @can('create', App\Models\Stage::class)
+            <x-slot name="action">
+                <a href="{{ route('admin.stages.create') }}"
+                    class="block text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800 shadow-xl">
+                    <i class="fa-solid fa-plus mr-1"></i>
+                    {{ __('Register new stage') }}
+                </a>
+            </x-slot>
+        @endcan
         <div class="bg-white dark:bg-gray-800 relative shadow-2xl sm:rounded-lg overflow-hidden">
             <div class="overflow-x-auto">
                 <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
@@ -86,29 +88,33 @@
                                                     {{ __('Show') }}
                                                 </a>
                                             </li>
-                                            <li class="w-full">
-                                                <a href="{{ route('admin.stages.edit', $stage) }}"
-                                                    title="{{ __('Edit stage') }}"
-                                                    class="flex items-center w-full py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
-                                                    <i class="fa-solid fa-pen-to-square mr-2"></i>
-                                                    {{ __('Edit') }}
-                                                </a>
-                                            </li>
+                                            @can('edit', $stage)
+                                                <li class="w-full">
+                                                    <a href="{{ route('admin.stages.edit', $stage) }}"
+                                                        title="{{ __('Edit stage') }}"
+                                                        class="flex items-center w-full py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+                                                        <i class="fa-solid fa-pen-to-square mr-2"></i>
+                                                        {{ __('Edit') }}
+                                                    </a>
+                                                </li>
+                                            @endcan
                                         </ul>
-                                        <div class="w-full py-1">
-                                            <form action="{{ route('admin.stages.destroy', $stage) }}" method="POST"
-                                                id="delete-form-{{ $stage->id }}">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="button"
-                                                    @click.stop.prevent="confirmDelete({{ $stage->id }})"
-                                                    title="{{ __('Delete stage') }}"
-                                                    class="flex items-center w-full text-left py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">
-                                                    <i class="fa-solid fa-trash-can mr-2"></i>
-                                                    {{ __('Delete') }}
-                                                </button>
-                                            </form>
-                                        </div>
+                                        @can('delete', $stage)
+                                            <div class="w-full py-1">
+                                                <form action="{{ route('admin.stages.destroy', $stage) }}" method="POST"
+                                                    id="delete-form-{{ $stage->id }}">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="button"
+                                                        @click.stop.prevent="confirmDelete({{ $stage->id }})"
+                                                        title="{{ __('Delete stage') }}"
+                                                        class="flex items-center w-full text-left py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">
+                                                        <i class="fa-solid fa-trash-can mr-2"></i>
+                                                        {{ __('Delete') }}
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        @endcan
                                     </div>
                                 </td>
                             </tr>

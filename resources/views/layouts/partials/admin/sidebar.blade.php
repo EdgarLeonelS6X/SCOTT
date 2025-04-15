@@ -7,6 +7,12 @@
             'active' => request()->routeIs('admin.dashboard'),
         ],
         [
+            'name' => __('Users'),
+            'icon' => 'fa-solid fa-user-group',
+            'route' => route('admin.users.index'),
+            'active' => request()->routeIs('admin.users.*'),
+        ],
+        [
             'name' => __('Channels'),
             'icon' => 'fa-solid fa-tv',
             'route' => route('admin.channels.index'),
