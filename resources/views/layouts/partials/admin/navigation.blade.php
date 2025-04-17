@@ -64,7 +64,7 @@
                                 <div class="text-sm text-center font-medium text-gray-900 dark:text-white">
                                     {{ Auth::user()->name }}
                                 </div>
-                                <div class="text-xs text-gray-500 dark:text-gray-400 truncate">
+                                <div class="text-xs text-center text-gray-500 dark:text-gray-400 truncate">
                                     {{ Auth::user()->email }}
                                 </div>
                             </div>

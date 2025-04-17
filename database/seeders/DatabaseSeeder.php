@@ -3,10 +3,9 @@
 namespace Database\Seeders;
 
 use App\Models\User;
+use App\Observers\UserObserver;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
-use Spatie\Permission\Models\Role;
-use Spatie\Permission\Models\Permission;
 
 class DatabaseSeeder extends Seeder
 {
@@ -15,20 +14,21 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // Ejecutar seeder de roles y permisos
         $this->call(RolesAndPermissionsSeeder::class);
 
-        // Crear usuario admin con correo verificado
+        User::flushEventListeners();
+
         $admin = User::firstOrCreate(
-            ['email' => 'admin@admin.com'],
+            ['email' => 'scott@stargroup.com.mx'],
             [
-                'name' => 'Admin',
-                'password' => Hash::make('password'), // cambia esto en producción
+                'name' => 'SCOTT',
+                'password' => Hash::make('12345678'),
                 'email_verified_at' => now(),
             ]
         );
 
-        // Asignar rol de admin
         $admin->assignRole('admin');
+
+        User::observe(UserObserver::class);
     }
 }

@@ -50,10 +50,49 @@ class UserController extends Controller
 
     public function updatePermissions(Request $request, User $user)
     {
-        $user->syncPermissions($request->input('permissions', []));
-        $user->syncRoles($request->input('role'));
+        $auth = Auth()->user();
 
-        return redirect()->route('admin.users.show', $user)->with('success', 'Permisos actualizados.');
+        // Nadie puede modificar al super admin (ID 1)
+        if ($user->id === 1 && $user->hasRole('admin')) {
+            session()->flash('swal', [
+                'icon' => 'info',
+                'title' => __('Action not allowed'),
+                'text' => __('You cannot change the role or permissions of the main admin account.'),
+            ]);
+            return redirect()->route('admin.users.show', $user);
+        }
+
+        // Solo admins pueden asignar roles y permisos
+        if (!$auth->hasRole('admin')) {
+            session()->flash('swal', [
+                'icon' => 'error',
+                'title' => __('Access Denied'),
+                'text' => __('You do not have permission to modify roles or permissions.'),
+            ]);
+            return redirect()->route('admin.users.show', $user);
+        }
+
+        // Evitar que se asigne el rol admin si no lo tiene el usuario actual
+        $requestedRole = $request->input('role');
+        if ($requestedRole === 'admin' && !$auth->hasRole('admin')) {
+            session()->flash('swal', [
+                'icon' => 'error',
+                'title' => __('Access Denied'),
+                'text' => __('Only admins can assign the admin role.'),
+            ]);
+            return redirect()->route('admin.users.show', $user);
+        }
+
+        $user->syncRoles($requestedRole);
+        $user->syncPermissions($request->input('permissions', []));
+
+        session()->flash('swal', [
+            'icon' => 'success',
+            'title' => __('Changes saved!'),
+            'text' => __('Roles and permissions were successfully updated.')
+        ]);
+
+        return redirect()->route('admin.users.show', $user);
     }
 
     /**
