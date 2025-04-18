@@ -16,4 +16,4 @@ Route::put('/users/{user}/permissions', [UserController::class, 'updatePermissio
 Route::resource('/channels', ChannelController::class)
     ->middleware(['auth', 'verified', 'can:viewAny,App\Models\Channel']);
 
-Route::resource('/stages', StageController::class)->middleware(['auth', 'verified']);
+Route::resource('/stages', StageController::class)->middleware(['auth', 'verified', 'can:viewAny,App\Models\Stage']);

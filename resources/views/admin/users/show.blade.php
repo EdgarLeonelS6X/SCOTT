@@ -124,6 +124,7 @@
 <script>
     const allPermissions = @json($permissions->pluck('name'));
     const userHasPermissions = @json($user->getPermissionNames());
+    const canEditPermissions = @json($canEditPermissions);
 
     const forbiddenByRole = {
         admin: ['roles.edit'],
@@ -136,39 +137,39 @@
 
     function applyPermissionsForRole(role) {
         const checkboxes = document.querySelectorAll('input[type="checkbox"][name="permissions[]"]');
+
+        if (!canEditPermissions) {
+            checkboxes.forEach(cb => cb.disabled = true);
+            return;
+        }
+
+        if (role === 'master') {
+            checkboxes.forEach(cb => {
+                cb.checked = true;
+                cb.disabled = true;
+            });
+            return;
+        }
+
         const forbidden = forbiddenByRole[role] || [];
 
-        checkboxes.forEach(checkbox => {
-            const perm = checkbox.value;
+        checkboxes.forEach(cb => {
+            const perm = cb.value;
 
-            if (isForbidden(role, perm)) {
-                checkbox.checked = false;
-                checkbox.disabled = true;
+            if (forbidden.includes(perm)) {
+                cb.checked = false;
+                cb.disabled = true;
             } else {
-                checkbox.checked = true;
-                checkbox.disabled = false;
+                cb.disabled = false;
             }
         });
     }
 
     document.addEventListener('DOMContentLoaded', () => {
         const roleSelect = document.querySelector('select[name="role"]');
-
         if (!roleSelect) return;
 
-        const initialRole = roleSelect.value;
-        const checkboxes = document.querySelectorAll('input[type="checkbox"][name="permissions[]"]');
-        const forbidden = forbiddenByRole[initialRole] || [];
-
-        checkboxes.forEach(checkbox => {
-            const perm = checkbox.value;
-            if (forbidden.includes(perm)) {
-                checkbox.checked = false;
-                checkbox.disabled = true;
-            } else {
-                checkbox.disabled = false;
-            }
-        });
+        applyPermissionsForRole(roleSelect.value);
 
         roleSelect.addEventListener('change', (e) => {
             const selectedRole = e.target.value;
