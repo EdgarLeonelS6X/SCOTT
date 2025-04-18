@@ -1,7 +1,7 @@
 <x-admin-layout :breadcrumbs="[
     ['name' => __('Dashboard'), 'icon' => 'fa-solid fa-house', 'route' => route('admin.dashboard')],
     ['name' => __('Users'), 'icon' => 'fa-solid fa-user-group', 'route' => route('admin.users.index')],
-    ['name' => $user->name, 'icon' => 'fa-solid fa-user'],
+    ['name' => $user->name, 'icon' => 'fa-solid fa-circle-info'],
 ]">
 
     @php
@@ -14,6 +14,17 @@
         $canEditRoles = $isAuthMaster && !$isSelf;
         $canEditPermissions = ($isAuthMaster && !$isSelf) || ($isAuthAdmin && $isTargetUser && !$isSelf);
     @endphp
+
+    @if (session('success'))
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                const roleSelect = document.querySelector('select[name="role"]');
+                if (roleSelect) {
+                    applyPermissionsForRole(roleSelect.value);
+                }
+            });
+        </script>
+    @endif
 
     <div class="w-full max-w-6xl mx-auto bg-white dark:bg-gray-800 shadow-xl rounded-xl p-6">
         <div class="flex flex-col sm:flex-row justify-between items-center gap-6 pb-4">
@@ -125,6 +136,7 @@
     const allPermissions = @json($permissions->pluck('name'));
     const userHasPermissions = @json($user->getPermissionNames());
     const canEditPermissions = @json($canEditPermissions);
+    const currentRole = @json(optional($user->roles->first())->name);
 
     const forbiddenByRole = {
         admin: ['roles.edit'],
@@ -172,8 +184,7 @@
         applyPermissionsForRole(roleSelect.value);
 
         roleSelect.addEventListener('change', (e) => {
-            const selectedRole = e.target.value;
-            applyPermissionsForRole(selectedRole);
+            applyPermissionsForRole(e.target.value);
         });
     });
 </script>

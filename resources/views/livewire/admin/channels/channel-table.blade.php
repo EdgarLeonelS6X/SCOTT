@@ -56,9 +56,16 @@
                         <i class="fa-solid fa-tv mr-1"></i>
                         {{ __('Channel') }}
                     </th>
-                    <th scope="col" class="px-4 py-3">
+                    <th class="py-3 px-4 text-left cursor-pointer" wire:click="toggleOriginFilter">
                         <i class="fa-solid fa-arrow-right-arrow-left mr-1"></i>
-                        {{ __('Origin') }}
+                        <span class="text-gray-500 dark:text-white">
+                            @if ($originFilter)
+                                {{ $originFilter }}
+                            @else
+                                {{ __('All Origins') }}
+                            @endif
+                            <i class="ml-1 fa-solid fa-sort"></i>
+                        </span>
                     </th>
                     <th scope="col" class="px-4 py-3">
                         <i class="fa-solid fa-list mr-1"></i>
@@ -87,7 +94,7 @@
                         <th scope="row"
                             class="px-4 py-2.5 font-bold text-gray-900 whitespace-nowrap dark:text-white">
                             {{ $channel->number }} {{ $channel->name }}
-                            </td>
+                        </th>
                         <td class="px-4 py-2.5">
                             {{ $channel->origin }}
                         </td>
