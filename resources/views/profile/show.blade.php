@@ -13,13 +13,15 @@
                 <x-section-border />
             @endif
 
-            @if (Laravel\Fortify\Features::enabled(Laravel\Fortify\Features::updatePasswords()))
-                <div class="mt-10 sm:mt-0">
-                    @livewire('profile.update-password-form')
-                </div>
+            @unless (auth()->user()->google_id)
+                @if (Laravel\Fortify\Features::enabled(Laravel\Fortify\Features::updatePasswords()))
+                    <div class="mt-10 sm:mt-0">
+                        @livewire('profile.update-password-form')
+                    </div>
 
-                <x-section-border />
-            @endif
+                    <x-section-border />
+                @endif
+            @endunless
 
             @if (Laravel\Fortify\Features::canManageTwoFactorAuthentication())
                 <div class="mt-10 sm:mt-0">
