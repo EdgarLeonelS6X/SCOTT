@@ -143,7 +143,7 @@
                 </div>
             </div>
             @if ($report->type === 'Momentary')
-                <div x-data="{ open: true }"
+                <div x-data="{ open: false }"
                     class="mt-6 border border-gray-300 dark:border-gray-700 rounded-xl overflow-hidden shadow-lg">
                     <button @click="open = !open"
                         class="text-lg font-semibold text-gray-800 dark:text-white cursor-pointer px-4 py-3 flex items-center justify-between w-full bg-white dark:bg-gray-800 border-b dark:border-gray-700">
