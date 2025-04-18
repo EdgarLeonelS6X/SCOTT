@@ -55,10 +55,12 @@ class CreateNewUser implements CreatesNewUsers
             throw ValidationException::withMessages(['errors' => $errors]);
         }
 
-        return User::create([
+        $user = User::create([
             'name' => $input['name'],
             'email' => $input['email'],
             'password' => Hash::make($input['password']),
         ]);
+
+        return $user;
     }
 }

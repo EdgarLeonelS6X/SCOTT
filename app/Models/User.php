@@ -75,7 +75,6 @@ class User extends Authenticatable implements MustVerifyEmail
     protected static function booted()
     {
         static::created(function ($user) {
-            // Si no tiene rol, se asigna 'user'
             if (!$user->roles()->exists()) {
                 $user->assignRole('user');
             }

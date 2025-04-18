@@ -17,6 +17,10 @@ use Laravel\Fortify\Contracts\CreatesNewUsers;
 use App\Actions\Fortify\CreateNewUser;
 use Laravel\Fortify\Contracts\ResetsUserPasswords;
 use App\Actions\Fortify\ResetUserPassword;
+use Laravel\Fortify\Contracts\UpdatesUserProfileInformation;
+use App\Actions\Fortify\UpdateUserProfileInformation;
+use Laravel\Fortify\Contracts\UpdatesUserPasswords;
+use App\Actions\Fortify\UpdateUserPassword;
 
 class FortifyServiceProvider extends ServiceProvider
 {
@@ -27,6 +31,8 @@ class FortifyServiceProvider extends ServiceProvider
     {
         $this->app->bind(ResetsUserPasswords::class, ResetUserPassword::class);
         $this->app->singleton(CreatesNewUsers::class, CreateNewUser::class);
+        $this->app->singleton(UpdatesUserProfileInformation::class, UpdateUserProfileInformation::class);
+        $this->app->singleton(UpdatesUserPasswords::class, UpdateUserPassword::class);
     }
 
     /**
