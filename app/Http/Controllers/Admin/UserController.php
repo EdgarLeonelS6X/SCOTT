@@ -41,6 +41,7 @@ class UserController extends Controller
 
         $auth = $request->user();
         $requestedPermissions = collect($data['permissions'] ?? []);
+
         $forbidden = [
             'admin' => ['roles.edit'],
             'user' => ['roles.edit', 'permissions.assign'],
@@ -59,13 +60,12 @@ class UserController extends Controller
                 'text' => __('Permissions updated successfully.'),
             ]);
         } elseif ($auth->hasRole('admin') && $user->hasRole('user')) {
-            // Bloquear solo los permisos prohibidos
             $blocked = collect($forbidden['user']);
-            $filteredPermissions = $requestedPermissions->reject(fn($perm) => $blocked->contains($perm));
+            $filtered = $requestedPermissions->reject(fn($perm) => $blocked->contains($perm));
 
-            $user->syncPermissions($filteredPermissions);
+            $user->syncPermissions($filtered);
 
-            if ($filteredPermissions->count() !== $requestedPermissions->count()) {
+            if ($filtered->count() !== $requestedPermissions->count()) {
                 session()->flash('swal', [
                     'icon' => 'warning',
                     'title' => __('Not allowed'),

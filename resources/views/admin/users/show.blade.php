@@ -134,62 +134,45 @@
         return forbiddenByRole[role]?.includes(permission);
     }
 
-    function applyRolePermissions(role) {
+    function applyPermissionsForRole(role) {
         const checkboxes = document.querySelectorAll('input[type="checkbox"][name="permissions[]"]');
         const forbidden = forbiddenByRole[role] || [];
 
         checkboxes.forEach(checkbox => {
             const perm = checkbox.value;
 
-            // Solo desactiva los prohibidos
-            checkbox.disabled = forbidden.includes(perm);
-
-            // Marcar todos excepto los explícitamente prohibidos
-            checkbox.checked = !isForbidden(role, perm);
-
-            // Desactivar si está prohibido
-            checkbox.disabled = isForbidden(role, perm);
-        });
-    }
-
-    function warnManualAssign(role) {
-        const forbidden = forbiddenByRole[role] || [];
-        const checkboxes = document.querySelectorAll('input[type="checkbox"][name="permissions[]"]');
-
-        checkboxes.forEach(checkbox => {
-            const perm = checkbox.value;
-
-            // Limpiar cualquier listener anterior
-            checkbox.replaceWith(checkbox.cloneNode(true));
-        });
-
-        // Re-asignar evento después del replaceWith
-        const refreshedCheckboxes = document.querySelectorAll('input[type="checkbox"][name="permissions[]"]');
-        refreshedCheckboxes.forEach(checkbox => {
-            const perm = checkbox.value;
-
-            if (!isForbidden(role, perm)) {
-                checkbox.addEventListener('change', () => {
-                    // Aquí no se hace nada a menos que esté prohibido
-                });
-            } else {
-                // Ya está desactivado, pero por si acaso
+            if (isForbidden(role, perm)) {
+                checkbox.checked = false;
                 checkbox.disabled = true;
+            } else {
+                checkbox.checked = true;
+                checkbox.disabled = false;
             }
         });
     }
 
     document.addEventListener('DOMContentLoaded', () => {
         const roleSelect = document.querySelector('select[name="role"]');
-        if (roleSelect) {
-            applyRolePermissions(roleSelect.value);
-            warnManualAssign(roleSelect.value);
 
-            roleSelect.addEventListener('change', (e) => {
-                const selectedRole = e.target.value;
-                applyRolePermissions(selectedRole);
-                warnManualAssign(selectedRole);
-            });
-        }
+        if (!roleSelect) return;
+
+        const initialRole = roleSelect.value;
+        const checkboxes = document.querySelectorAll('input[type="checkbox"][name="permissions[]"]');
+        const forbidden = forbiddenByRole[initialRole] || [];
+
+        checkboxes.forEach(checkbox => {
+            const perm = checkbox.value;
+            if (forbidden.includes(perm)) {
+                checkbox.checked = false;
+                checkbox.disabled = true;
+            } else {
+                checkbox.disabled = false;
+            }
+        });
+
+        roleSelect.addEventListener('change', (e) => {
+            const selectedRole = e.target.value;
+            applyPermissionsForRole(selectedRole);
+        });
     });
 </script>
