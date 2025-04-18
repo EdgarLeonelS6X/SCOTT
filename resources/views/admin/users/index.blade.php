@@ -37,8 +37,8 @@
                             class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-600 text-black dark:text-white cursor-pointer">
                             <td class="px-6 py-4 flex items-center space-x-4">
                                 <button class="flex text-sm rounded-full shadow-2xl cursor-default">
-                                    <img class="h-8 w-8 rounded-full object-cover"
-                                        src="{{ Auth::user()->profile_photo_url }}" alt="{{ Auth::user()->name }}" />
+                                    <img class="h-8 w-8 rounded-full object-cover" src="{{ $user->profile_photo_url }}"
+                                        alt="{{ $user->name }}" />
                                 </button>
                                 <span class="font-semibold text-gray-900 dark:text-white">{{ $user->name }}</span>
                             </td>
@@ -52,26 +52,34 @@
                                 @if ($role)
                                     @php
                                         $roleName = ucfirst($role);
-                                        $isAdmin = $role === 'admin';
-                                        $colors = $isAdmin
-                                            ? [
+
+                                        $roleStyles = match ($role) {
+                                            'master' => [
+                                                'bg' => 'bg-yellow-200',
+                                                'text' => 'text-yellow-900',
+                                                'dark_bg' => 'dark:bg-yellow-700',
+                                                'dark_text' => 'dark:text-yellow-100',
+                                                'icon' => 'fa-crown',
+                                            ],
+                                            'admin' => [
                                                 'bg' => 'bg-red-200',
                                                 'text' => 'text-red-800',
                                                 'dark_bg' => 'dark:bg-red-900',
                                                 'dark_text' => 'dark:text-red-200',
-                                                'icon' => 'fa-user-gear',
-                                            ]
-                                            : [
+                                                'icon' => 'fa-gear',
+                                            ],
+                                            default => [
                                                 'bg' => 'bg-blue-100',
                                                 'text' => 'text-blue-800',
                                                 'dark_bg' => 'dark:bg-blue-900',
                                                 'dark_text' => 'dark:text-blue-200',
                                                 'icon' => 'fa-user',
-                                            ];
+                                            ],
+                                        };
                                     @endphp
                                     <span
-                                        class="inline-flex items-center px-2 py-1 text-xs font-medium rounded-full {{ $colors['bg'] }} {{ $colors['text'] }} {{ $colors['dark_bg'] }} {{ $colors['dark_text'] }}">
-                                        <i class="fa-solid {{ $colors['icon'] }} mr-1 text-xs"></i>
+                                        class="inline-flex items-center px-2 py-1 text-xs font-medium rounded-full {{ $roleStyles['bg'] }} {{ $roleStyles['text'] }} {{ $roleStyles['dark_bg'] }} {{ $roleStyles['dark_text'] }}">
+                                        <i class="fa-solid {{ $roleStyles['icon'] }} mr-1 text-xs"></i>
                                         {{ $roleName }}
                                     </span>
                                 @else

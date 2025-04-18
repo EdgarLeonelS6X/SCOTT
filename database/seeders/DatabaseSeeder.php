@@ -18,7 +18,7 @@ class DatabaseSeeder extends Seeder
 
         User::flushEventListeners();
 
-        $admin = User::firstOrCreate(
+        $master = User::firstOrCreate(
             ['email' => 'scott@stargroup.com.mx'],
             [
                 'name' => 'SCOTT',
@@ -27,7 +27,7 @@ class DatabaseSeeder extends Seeder
             ]
         );
 
-        $admin->assignRole('admin');
+        $master->assignRole('master');
 
         User::observe(UserObserver::class);
     }
