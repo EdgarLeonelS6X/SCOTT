@@ -59,7 +59,7 @@ class ChannelTable extends Component
             $query->where('origin', $this->originFilter);
         }
 
-        $channels = $query->paginate(10);
+        $channels = $query->orderBy('number')->paginate(10);
 
         return view('livewire.admin.channels.channel-table', [
             'channels' => $channels,

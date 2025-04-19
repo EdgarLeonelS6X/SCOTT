@@ -101,7 +101,22 @@
                         <td class="px-4 py-2.5">
                             <span
                                 class="inline-flex items-center px-2 py-1 text-xs font-medium text-primary-800 bg-primary-200 rounded-full dark:bg-primary-800 dark:text-primary-200">
-                                <i class="fa-solid fa-layer-group mr-1"></i>
+                                @switch($channel->category)
+                                    @case('Standard TV Channel')
+                                        <i class="fa-solid fa-tv mr-1.5"></i>
+                                    @break
+
+                                    @case('Stingray Music')
+                                        <i class="fa-solid fa-music mr-1.5"></i>
+                                    @break
+
+                                    @case('RESTART/CUTV')
+                                        <i class="fa-solid fa-repeat mr-1.5"></i>
+                                    @break
+
+                                    @default
+                                        <i class="fa-solid fa-layer-group mr-1.5"></i>
+                                @endswitch
                                 {{ $channel->category }}
                             </span>
                         </td>
@@ -182,90 +197,90 @@
                             </div>
                         </td>
                     </tr>
-                @empty
-                    <tr>
-                        <td colspan="7" class="bg-white dark:bg-gray-800 pt-7 text-center">
-                            <i class="fa-solid fa-circle-info mr-1"></i>
-                            {{ __('There are no channels that match your search.') }}
-                        </td>
-                    </tr>
-                @endforelse
-            </tbody>
-        </table>
+                    @empty
+                        <tr>
+                            <td colspan="7" class="bg-white dark:bg-gray-800 pt-7 text-center">
+                                <i class="fa-solid fa-circle-info mr-1"></i>
+                                {{ __('There are no channels that match your search.') }}
+                            </td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+        <div class="p-4">
+            {{ $channels->links() }}
+        </div>
     </div>
-    <div class="p-4">
-        {{ $channels->links() }}
-    </div>
-</div>
-@push('js')
+    @push('js')
+        <script>
+            function confirmDelete(channelID) {
+                Swal.fire({
+                    title: "{{ __('Are you sure?') }}",
+                    text: "{{ __('You wont be able to revert this!') }}",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#3085d6",
+                    cancelButtonColor: "#d33",
+                    confirmButtonText: "{{ __('Yes, delete it!') }}",
+                    cancelButtonText: "{{ __('Cancel') }}"
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        document.getElementById('delete-form-' + channelID).submit();
+                    }
+                });
+            }
+        </script>
+    @endpush
+
     <script>
-        function confirmDelete(channelID) {
-            Swal.fire({
-                title: "{{ __('Are you sure?') }}",
-                text: "{{ __('You wont be able to revert this!') }}",
-                icon: "warning",
-                showCancelButton: true,
-                confirmButtonColor: "#3085d6",
-                cancelButtonColor: "#d33",
-                confirmButtonText: "{{ __('Yes, delete it!') }}",
-                cancelButtonText: "{{ __('Cancel') }}"
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    document.getElementById('delete-form-' + channelID).submit();
-                }
-            });
-        }
-    </script>
-@endpush
+        function openMiniPlayer(url) {
+            const youtubeRegex = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/)([\w-]{11})/;
+            const match = url.match(youtubeRegex);
 
-<script>
-    function openMiniPlayer(url) {
-        const youtubeRegex = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/)([\w-]{11})/;
-        const match = url.match(youtubeRegex);
+            if (match) {
+                const videoId = match[1];
+                url = `https://www.youtube.com/embed/${videoId}`;
+            }
 
-        if (match) {
-            const videoId = match[1];
-            url = `https://www.youtube.com/embed/${videoId}`;
-        }
+            let playerContainer = document.getElementById('miniPlayerContainer');
+            if (!playerContainer) {
+                playerContainer = document.createElement('div');
+                playerContainer.id = 'miniPlayerContainer';
+                playerContainer.classList =
+                    'fixed bottom-4 right-4 w-80 bg-white shadow-lg rounded-lg overflow-hidden z-50';
+                document.body.appendChild(playerContainer);
 
-        let playerContainer = document.getElementById('miniPlayerContainer');
-        if (!playerContainer) {
-            playerContainer = document.createElement('div');
-            playerContainer.id = 'miniPlayerContainer';
-            playerContainer.classList =
-                'fixed bottom-4 right-4 w-80 bg-white shadow-lg rounded-lg overflow-hidden z-50';
-            document.body.appendChild(playerContainer);
-
-            const controlBar = document.createElement('div');
-            controlBar.classList =
-                'w-full flex justify-between items-center bg-primary-600 dark:bg-primary-700 text-white p-2 shadow-2xl';
-            controlBar.style.height = '40px';
-            controlBar.innerHTML = `
+                const controlBar = document.createElement('div');
+                controlBar.classList =
+                    'w-full flex justify-between items-center bg-primary-600 dark:bg-primary-700 text-white p-2 shadow-2xl';
+                controlBar.style.height = '40px';
+                controlBar.innerHTML = `
                 <span>{{ __('Playing channel') }}</span>
                 <button onclick="closeMiniPlayer()" class="text-gray-300 hover:text-white">
                     <i class="fa-solid fa-times"></i>
                 </button>
             `;
-            playerContainer.appendChild(controlBar);
+                playerContainer.appendChild(controlBar);
 
-            const iframe = document.createElement('iframe');
-            iframe.classList = 'w-full';
-            iframe.style.height =
-                'calc(100% - 40px)';
-            iframe.frameBorder = 0;
-            iframe.allowFullscreen = true;
-            playerContainer.appendChild(iframe);
+                const iframe = document.createElement('iframe');
+                iframe.classList = 'w-full';
+                iframe.style.height =
+                    'calc(100% - 40px)';
+                iframe.frameBorder = 0;
+                iframe.allowFullscreen = true;
+                playerContainer.appendChild(iframe);
+            }
+
+            playerContainer.querySelector('iframe').src = url;
+            playerContainer.style.display = 'block';
         }
 
-        playerContainer.querySelector('iframe').src = url;
-        playerContainer.style.display = 'block';
-    }
-
-    function closeMiniPlayer() {
-        const playerContainer = document.getElementById('miniPlayerContainer');
-        if (playerContainer) {
-            playerContainer.style.display = 'none';
-            playerContainer.querySelector('iframe').src = '';
+        function closeMiniPlayer() {
+            const playerContainer = document.getElementById('miniPlayerContainer');
+            if (playerContainer) {
+                playerContainer.style.display = 'none';
+                playerContainer.querySelector('iframe').src = '';
+            }
         }
-    }
-</script>
+    </script>
