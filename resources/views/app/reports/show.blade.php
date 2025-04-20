@@ -45,6 +45,12 @@
                     @endif
                     <span class="text-sm font-medium text-gray-500 dark:text-gray-400">
                         {{ __('Folio') }} #{{ $report->id }}
+
+                        @if ($report->reported_by == auth()->id() && $report->id == auth()->user()->lastReport?->id)
+                            <a href="{{ route('reports.edit', ['report' => $report->id]) }}" title="Editar">
+                                <i class="fa-solid fa-pencil">Edit</i>
+                            </a>
+                        @endif
                     </span>
                 </div>
                 <a href="{{ route('reports.index') }}"

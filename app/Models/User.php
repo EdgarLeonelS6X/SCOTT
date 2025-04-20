@@ -87,4 +87,9 @@ class User extends Authenticatable implements MustVerifyEmail
             return true;
         }
     }
+
+    public function lastReport()
+    {
+        return $this->hasOne(Report::class, 'reported_by')->latestOfMany();
+    }
 }

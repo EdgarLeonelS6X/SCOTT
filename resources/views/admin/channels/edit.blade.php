@@ -11,7 +11,7 @@
     ],
     [
         'name' => __('Update channel'),
-        'icon' => 'fa-solid fa-pen-to-square',
+        'icon' => 'fa-solid fa-pencil',
     ],
 ]">
 
