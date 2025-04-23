@@ -86,7 +86,7 @@ class EditMomentlyReport extends Component
                 ]);
             }
 
-            $this->dispatch('swal', [
+            session()->flash('swal', [
                 'icon' => 'success',
                 'title' => __('Updated!'),
                 'text' => __('The momentary report was successfully updated.'),

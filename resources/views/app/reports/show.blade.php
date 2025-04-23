@@ -173,7 +173,7 @@
                         </span>
                     </button>
                     <div x-show="open" x-collapse
-                        class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6 p-6 bg-white dark:bg-gray-800">
+                        class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 p-6 bg-white dark:bg-gray-800">
                         @foreach ($report->reportDetails as $detail)
                             <div
                                 class="relative flex flex-col px-5 py-3 bg-white border border-gray-300 dark:bg-gray-800 dark:border-gray-700 rounded-xl shadow-2xl space-y-4">
@@ -201,10 +201,12 @@
                                 <div class="flex items-center gap-2 w-full">
                                     <div class="w-1/3 flex-shrink-0">
                                         <img src="{{ $detail->channel->image }}" alt="{{ $detail->channel->name }}"
+                                            title="{{ $detail->channel->number }} {{ $detail->channel->name }}"
                                             class="w-10 h-10 object-contain object-center shadow-sm">
                                     </div>
                                     <div class="w-2/3 flex flex-col justify-center text-end">
-                                        <p class="text-base font-semibold text-gray-900 dark:text-white leading-tight">
+                                        <p
+                                            class="text-base font-semibold text-gray-900 dark:text-white leading-tight truncate">
                                             {{ $detail->channel->number }} {{ $detail->channel->name }}
                                         </p>
                                         <p class="text-sm font-medium text-gray-500 dark:text-gray-400">
