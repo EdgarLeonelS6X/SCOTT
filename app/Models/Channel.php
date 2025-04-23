@@ -29,4 +29,9 @@ class Channel extends Model
     {
         return $this->hasMany(ReportDetail::class);
     }
+
+    public function stage()
+    {
+        return $this->belongsTo(Stage::class);
+    }
 }
