@@ -171,6 +171,7 @@ class EditMomentlyReport extends Component
         return view('livewire.app.reports.edit.edit-momently-report', [
             'channels' => Channel::where('status', '1')->orderBy('number')->get(),
             'stages' => $this->stages,
+            'report' => $this->report,
         ]);
     }
 }

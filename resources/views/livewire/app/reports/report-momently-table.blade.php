@@ -249,11 +249,12 @@
                                             <div class="w-1/3 flex-shrink-0">
                                                 <img src="{{ $detail->channel->image }}"
                                                     alt="{{ $detail->channel->name }}"
+                                                    title="{{ $detail->channel->number }} {{ $detail->channel->name }}"
                                                     class="w-10 h-10 object-contain object-center shadow-sm rounded-lg">
                                             </div>
                                             <div class="w-2/3 flex flex-col justify-center text-end">
                                                 <p
-                                                    class="text-base font-semibold text-gray-900 dark:text-white leading-tight">
+                                                    class="text-base font-semibold text-gray-900 dark:text-white leading-tight truncate">
                                                     {{ $detail->channel->number }} {{ $detail->channel->name }}
                                                 </p>
                                                 <p class="text-sm font-medium text-gray-500 dark:text-gray-400">

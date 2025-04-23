@@ -64,7 +64,6 @@ use App\Enums\ChannelReviewer;
                                     selectedChannelNumber: @entangle('selectedChannelNumber').defer,
                                     selectedChannelName: @entangle('selectedChannelName').defer,
                                     channels: {{ $channels->map(fn($c) => ['id' => $c->id, 'number' => $c->number, 'name' => $c->name, 'image' => $c->image])->toJson() }},
-                                
                                     clearSelection() {
                                         this.selectedChannelImage = '';
                                         this.selectedChannelNumber = '';
@@ -72,7 +71,6 @@ use App\Enums\ChannelReviewer;
                                         this.search = '';
                                         this.open = true;
                                     },
-                                
                                     get filteredChannels() {
                                         if (this.search === '') return this.channels;
                                 
@@ -84,7 +82,6 @@ use App\Enums\ChannelReviewer;
                                             ((c.number + ' ' + c.name).toLowerCase().includes(term))
                                         );
                                     },
-                                
                                 }" x-init="@if($selectedChannel = $channels->firstWhere('id', data_get($reportData['channels'][$channelIndex], 'channel_id')))
                                 selectedChannelImage = '{{ $selectedChannel->image }}';
                                 selectedChannelNumber = '{{ $selectedChannel->number }}';
@@ -220,7 +217,7 @@ use App\Enums\ChannelReviewer;
                         <i class="fas fa-file-lines mr-1.5"></i>
                         {{ __('Update report') }}
                     </button>
-                    <a href="{{ route('reports.show', $report) }}"
+                    <a href="{{ route('reports.show', $report ?? 0) }}"
                         class="py-2 px-4 flex items-center gap-2 border border-gray-300 text-gray-700 bg-white rounded-lg hover:border-primary-600 hover:text-primary-600 font-bold text-base dark:text-gray-300 dark:bg-gray-800 dark:border-gray-600 dark:hover:text-primary-400 dark:hover:bg-gray-700">
                         <i class="fa-solid fa-arrow-left"></i>
                         {{ __('Back to report') }}

@@ -44,7 +44,18 @@ class ReportController extends Controller
      */
     public function edit(Report $report)
     {
-        return view('app.reports.edit', compact('report'));
+        $lastReport = auth()->user()->reports()
+            ->latest('created_at')
+            ->first();
+
+        if (!$lastReport || $report->id !== $lastReport->id) {
+            abort(403);
+        }
+
+        return view('app.reports.edit', [
+            'report' => $report,
+            'isLastReport' => true
+        ]);
     }
 
     /**
