@@ -8,7 +8,7 @@
             color-scheme: dark;
         }
     </style>
-    <form wire:submit.prevent="saveReport" class="space-y-5">
+    <form wire:submit.prevent="updateReport" class="px-6 space-y-5 mb-4">
         @foreach ($categories as $index => $category)
             <div x-data="{
                 open: true,
@@ -113,7 +113,6 @@
                                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                             <i class="fa-solid fa-tv mr-1.5"></i> {{ __('Channel') }}
                                         </label>
-
                                         <div class="relative">
                                             <input type="text" x-model="search"
                                                 :placeholder="selectedChannelNumber ? selectedChannelNumber + ' ' +
@@ -121,18 +120,15 @@
                                                 @focus="open = true" @input="if (search === '') clearSelection()"
                                                 @click.away="open = false"
                                                 class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 pl-14 dark:bg-gray-700 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
-
                                             <div
                                                 class="absolute left-3 top-1/2 transform -translate-y-1/2 flex items-center space-x-2">
                                                 <img x-show="selectedChannelImage" :src="selectedChannelImage"
                                                     class="w-8 h-8 object-contain object-center transition-opacity duration-200"
                                                     x-cloak>
                                             </div>
-
                                             <i class="fa-solid fa-chevron-down absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 dark:text-gray-300 cursor-pointer transition-transform duration-200"
                                                 :class="open ? 'rotate-180' : ''" @click="open = !open"></i>
                                         </div>
-
                                         <div class="relative">
                                             <div x-show="open" x-cloak
                                                 class="absolute z-10 mt-1 w-full max-w-md bg-white border border-gray-300 rounded-lg shadow-2xl dark:bg-gray-700 dark:border-gray-600 transition-all duration-200 ease-in-out">
@@ -141,13 +137,13 @@
                                                     <template x-for="channel in filteredChannels"
                                                         :key="channel.id">
                                                         <li @click="
-                        $wire.set('categories.{{ $index }}.channels.{{ $channelIndex }}.channel_id', channel.id);
-                        selectedChannelImage = channel.image;
-                        selectedChannelNumber = channel.number;
-                        selectedChannelName = channel.name;
-                        search = selectedChannelNumber + ' ' + selectedChannelName;
-                        open = false;
-                    "
+                                                                $wire.set('categories.{{ $index }}.channels.{{ $channelIndex }}.channel_id', channel.id);
+                                                                selectedChannelImage = channel.image;
+                                                                selectedChannelNumber = channel.number;
+                                                                selectedChannelName = channel.name;
+                                                                search = selectedChannelNumber + ' ' + selectedChannelName;
+                                                                open = false;
+                                                            "
                                                             class="cursor-pointer px-4 py-2 flex items-center space-x-3 hover:bg-gray-100 dark:hover:bg-gray-600 transition-all duration-200 ease-in-out">
                                                             <img :src="channel.image"
                                                                 class="w-10 h-10 object-contain object-center">
@@ -241,27 +237,16 @@
                                 $catIndex = $index;
                                 $chanIndex = $channelIndex;
                             @endphp
-
-                            <div x-data="{
-                                lossPeriods: @js($category['channels'][$channelIndex]['loss_periods'] ?? []),
-                                updateWire() {
-                                    $wire.call('updateLossPeriods', {{ $catIndex }}, {{ $chanIndex }}, this.lossPeriods)
-                                }
-                            }" x-init="$watch('lossPeriods', value => {
-                                clearTimeout(window.lossTimer);
-                                window.lossTimer = setTimeout(() => {
-                                    $wire.set('categories.{{ $catIndex }}.channels.{{ $chanIndex }}.loss_periods', JSON.parse(JSON.stringify(value)))
-                                }, 300);
-                            })"
+                            <div x-data="lossPeriodsManager({{ $catIndex }}, {{ $chanIndex }}, @js($category['channels'][$channelIndex]['loss_periods'] ?? []))" x-init="init()"
                                 x-show="shouldShowField('{{ $category['name'] }}', 'periods') || lossPeriods.length"
                                 class="mt-4 space-y-6">
-                                <template x-for="(period, periodIndex) in lossPeriods" :key="periodIndex">
+                                <template x-for="(period, periodIndex) in lossPeriods" :key="period.uid">
                                     <div
                                         class="p-4 bg-gray-50 dark:bg-gray-800 rounded-xl shadow-md border border-gray-200 dark:border-gray-700">
                                         <div class="mb-4 flex justify-between items-center">
                                             <span class="text-gray-700 dark:text-gray-300 font-semibold"
                                                 x-text="'{{ __('Interval') }} ' + (periodIndex + 1)"></span>
-                                            <button type="button" @click="lossPeriods.splice(periodIndex, 1)"
+                                            <button type="button" @click="removePeriod(periodIndex)"
                                                 class="text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300 text-sm font-medium flex items-center space-x-1">
                                                 <i class="fas fa-trash-alt"></i>
                                                 <span>{{ __('Delete') }}</span>
@@ -277,9 +262,9 @@
                                                 <input type="datetime-local"
                                                     x-model="lossPeriods[periodIndex].start_time"
                                                     class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg 
-                            focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5
-                            dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white
-                            dark:focus:ring-primary-500 dark:focus:border-primary-500" />
+                                                    focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5
+                                                    dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white
+                                                    dark:focus:ring-primary-500 dark:focus:border-primary-500" />
                                             </div>
                                             <div>
                                                 <label
@@ -290,20 +275,19 @@
                                                 <input type="datetime-local"
                                                     x-model="lossPeriods[periodIndex].end_time"
                                                     class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg 
-                            focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5
-                            dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white
-                            dark:focus:ring-primary-500 dark:focus:border-primary-500" />
+                                                    focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5
+                                                    dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white
+                                                    dark:focus:ring-primary-500 dark:focus:border-primary-500" />
                                             </div>
                                         </div>
                                     </div>
                                 </template>
-                                <button type="button" @click="lossPeriods.push({ start_time: '', end_time: '' })"
+                                <button type="button" @click="addPeriod()"
                                     class="mt-4 flex items-center text-primary-600 hover:text-primary-800 dark:text-primary-400 dark:hover:text-primary-500 text-sm font-medium">
                                     <i class="fas fa-plus-circle mr-1"></i>
                                     <span>{{ __('Add interval') }}</span>
                                 </button>
                             </div>
-
                         </div>
                     @endforeach
                     <button type="button" wire:click="addChannel({{ $index }})"
@@ -319,22 +303,44 @@
                 <i class="fas fa-file-lines mr-1.5"></i>
                 {{ __('Generate report') }}
             </button>
-            <button data-modal-hide="create-functions-report-modal" type="button"
-                class="py-2 px-4 text-base font-bold text-gray-700 bg-white rounded-lg border border-gray-400 hover:border-primary-600 hover:text-primary-600 dark:text-gray-300 dark:bg-gray-800 dark:border-gray-600 dark:hover:text-primary-400 dark:hover:bg-gray-700">
-                <i class="fa-solid fa-xmark"></i>
-                {{ __('Discard') }}
-            </button>
+            <a href="{{ route('reports.show', $report ?? 0) }}"
+                class="py-2 px-4 flex items-center gap-2 border border-gray-300 text-gray-700 bg-white rounded-lg hover:border-primary-600 hover:text-primary-600 font-bold text-base dark:text-gray-300 dark:bg-gray-800 dark:border-gray-600 dark:hover:text-primary-400 dark:hover:bg-gray-700">
+                <i class="fa-solid fa-arrow-left"></i>
+                {{ __('Back to report') }}
+            </a>
         </div>
     </form>
 </div>
 
 <script>
-    function lossPeriodComponent(initialPeriods) {
+    function lossPeriodsManager(catIndex, chanIndex, initialPeriods) {
         return {
-            lossPeriods: JSON.parse(JSON.stringify(initialPeriods)),
+            lossPeriods: [],
+
+            init() {
+                this.lossPeriods = (initialPeriods || []).map(p => ({
+                    ...p,
+                    uid: p.uid ?? (Date.now() + Math.random())
+                }));
+                this.syncWithLivewire();
+            },
+
+            syncWithLivewire() {
+                this.$watch('lossPeriods', value => {
+                    clearTimeout(window['lossSync_' + catIndex + '_' + chanIndex]);
+                    window['lossSync_' + catIndex + '_' + chanIndex] = setTimeout(() => {
+                        const sanitized = value.map(({
+                            uid,
+                            ...rest
+                        }) => rest);
+                        $wire.call('updateLossPeriods', catIndex, chanIndex, sanitized);
+                    }, 300);
+                });
+            },
 
             addPeriod() {
                 this.lossPeriods.push({
+                    uid: Date.now() + Math.random(),
                     start_time: '',
                     end_time: ''
                 });
@@ -342,7 +348,7 @@
 
             removePeriod(index) {
                 this.lossPeriods.splice(index, 1);
-            },
+            }
         }
     }
 </script>

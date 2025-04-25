@@ -6,6 +6,7 @@ use Livewire\Component;
 use App\Models\Report;
 use App\Models\Stage;
 use App\Models\Channel;
+use Carbon\Carbon;
 
 class EditFunctionsReport extends Component
 {
@@ -36,8 +37,8 @@ class EditFunctionsReport extends Component
                 if ($name === 'CUTV') {
                     foreach ($detail->reportContentLosses()->get() as $loss) {
                         $losses[] = [
-                            'start_time' => \Carbon\Carbon::parse($loss->start_time)->format('Y-m-d\TH:i'),
-                            'end_time' => \Carbon\Carbon::parse($loss->end_time)->format('Y-m-d\TH:i'),
+                            'start_time' => Carbon::parse($loss->start_time)->format('Y-m-d\TH:i'),
+                            'end_time' => Carbon::parse($loss->end_time)->format('Y-m-d\TH:i'),
                         ];
                     }
                 }
