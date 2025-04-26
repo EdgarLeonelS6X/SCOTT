@@ -54,7 +54,7 @@
                 "
                 class="flex flex-col gap-1">
                 <x-input id="datepicker-range" x-ref="input" type="text" placeholder="{{ __('Select a range') }}"
-                    class="w-[260px] px-3 py-2 text-sm border border-gray-300 rounded-md dark:bg-gray-800 dark:border-gray-600 dark:text-white" />
+                    class="min-w-72 px-3 py-2 text-sm border border-gray-300 rounded-md dark:bg-gray-800 dark:border-gray-600 dark:text-white" />
             </div>
             <div class="relative">
                 <button id="filterDropdownButton" data-dropdown-toggle="filterDropdown"

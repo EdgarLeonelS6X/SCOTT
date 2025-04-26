@@ -4,10 +4,7 @@
             <x-logotipo></x-logotipo>
             <div
                 class="w-full bg-white rounded-lg shadow-2xl dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
-                <div class="p-6 space-y-4 md:space-y-6 sm:p-8">
-                    <h1 class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
-                        {{ __('Sign in to your account') }}
-                    </h1>
+                <div class="p-6 space-y-4 md:space-y-4 sm:p-8">
                     @session('status')
                         <div class="mb-1 font-medium text-sm text-green-600 dark:text-green-400">
                             <p class="flex justify-center items-center text-sm text-green-700 dark:text-green-300">
@@ -16,6 +13,9 @@
                             </p>
                         </div>
                     @endsession
+                    <h1 class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
+                        {{ __('Sign in to your account') }}
+                    </h1>
                     @if (session('swal'))
                         <script>
                             window.onload = function() {
