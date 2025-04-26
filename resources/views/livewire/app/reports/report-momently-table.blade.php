@@ -118,7 +118,7 @@
     </div>
     @if ($showModal && $selectedReport)
         <div class="fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-center items-center">
-            <div class="bg-white dark:bg-gray-900 p-6 rounded-2xl shadow-xl w-11/12 md:w-3/4 max-w-4xl">
+            <div class="bg-white dark:bg-gray-900 p-6 rounded-2xl shadow-2xl w-11/12 md:w-3/4 max-w-6xl">
                 <div class="flex justify-between items-center mb-8">
                     <div
                         class="flex items-center gap-4 bg-white dark:bg-gray-800 px-4 py-2 rounded-xl shadow-2xl border border-gray-200 dark:border-gray-700">
@@ -222,27 +222,28 @@
                                                 class="flex items-center justify-center w-full h-full rounded-full text-sm text-gray-500 dark:text-gray-300">
                                                 <i class="fa-solid fa-circle-info text-base"></i>
                                             </button>
-                                            <div x-show="show" x-transition:enter="transition ease-out duration-200"
-                                                x-transition:enter-start="opacity-0 translate-y-1"
-                                                x-transition:enter-end="opacity-100 translate-y-0"
-                                                x-transition:leave="transition ease-in duration-150"
-                                                x-transition:leave-start="opacity-100 translate-y-0"
-                                                x-transition:leave-end="opacity-0 translate-y-1"
-                                                @mouseenter="show = true" @mouseleave="show = false"
-                                                class="absolute z-30 w-64 mt-2 text-sm text-gray-600 bg-white border border-gray-200 rounded-lg shadow-lg dark:text-gray-300 dark:border-gray-600 dark:bg-gray-800"
-                                                style="right: -120px;">
-                                                <div
-                                                    class="px-3 py-2 bg-gray-100 border-b border-gray-200 rounded-t-lg dark:border-gray-600 dark:bg-gray-700 text-center">
-                                                    <h3 class="font-semibold text-gray-900 dark:text-white">
-                                                        {{ __('Description') }}
-                                                    </h3>
-                                                </div>
-                                                <div class="px-3 py-2 text-center">
-                                                    <p class="text-gray-700 dark:text-gray-300">
-                                                        {{ $detail->description }}</p>
-                                                </div>
-                                            </div>
                                         @endif
+                                        <div x-show="show" x-transition:enter="transition ease-out duration-200"
+                                            x-transition:enter-start="opacity-0 translate-y-1"
+                                            x-transition:enter-end="opacity-100 translate-y-0"
+                                            x-transition:leave="transition ease-in duration-150"
+                                            x-transition:leave-start="opacity-100 translate-y-0"
+                                            x-transition:leave-end="opacity-0 translate-y-1" @mouseenter="show = true"
+                                            @mouseleave="show = false"
+                                            class="absolute z-50 w-64 mt-2 text-sm text-gray-600 bg-white border border-gray-200 rounded-lg shadow-lg dark:text-gray-300 dark:border-gray-600 dark:bg-gray-800"
+                                            style="right: -120px;">
+                                            <div
+                                                class="px-3 py-2 bg-gray-100 border-b border-gray-200 rounded-t-lg dark:border-gray-600 dark:bg-gray-700 text-center">
+                                                <h3 class="font-semibold text-gray-900 dark:text-white">
+                                                    {{ __('Description') }}
+                                                </h3>
+                                            </div>
+                                            <div class="px-3 py-2 text-center">
+                                                <p class="text-gray-700 dark:text-gray-300">
+                                                    {{ $detail->description }}</p>
+                                            </div>
+                                        </div>
+
                                     </div>
                                     <div class="flex items-start">
                                         <div class="flex items-center gap-2 w-full">
