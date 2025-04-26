@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire\App\Reports;
+namespace App\Livewire\App\Reports\Create;
 
 use App\Mail\ReportFunctionsCreatedMail;
 use Livewire\Component;
@@ -300,7 +300,7 @@ class CreateFunctionsReport extends Component
 
     public function render()
     {
-        return view('livewire.app.reports.create-functions-report', [
+        return view('livewire.app.reports.create.create-functions-report', [
             'channelsByCategory' => $this->getChannelsByCategory(),
         ]);
     }

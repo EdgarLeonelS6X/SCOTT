@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire\App\Reports;
+namespace App\Livewire\App\Reports\Create;
 
 use App\Mail\ReportCreatedMail;
 use Livewire\Component;
@@ -154,9 +154,9 @@ class CreateMomentlyReport extends Component
 
     public function render()
     {
-        return view('livewire.app.reports.edit.edit-momently-report', [
+        return view('livewire.app.reports.create.create-momently-report', [
             'channels' => Channel::where('status', '1')->orderBy('number')->get(),
-            'stages' => Stage::all(), // <- AÑADE ESTO SI NO LO HICISTE EN mount()
+            'stages' => Stage::all(),
         ]);
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire\App\Reports;
+namespace App\Livewire\App\Reports\Create;
 
 use App\Mail\ReportGeneralCreatedMail;
 use Livewire\Component;
@@ -233,7 +233,7 @@ class CreateHourlyReport extends Component
             }
         }
 
-        return view('livewire.app.reports.create-hourly-report', [
+        return view('livewire.app.reports.create.create-hourly-report', [
             'channels' => Channel::where('status', '1')
                 ->orderBy('number')
                 ->get(),

@@ -48,7 +48,11 @@ class ReportController extends Controller
             ->latest('created_at')
             ->first();
 
-        if (!$lastReport || $report->id !== $lastReport->id) {
+        if (
+            !$lastReport ||
+            $report->id !== $lastReport->id ||
+            $report->type !== 'Momentary'
+        ) {
             abort(403);
         }
 
@@ -57,6 +61,7 @@ class ReportController extends Controller
             'isLastReport' => true
         ]);
     }
+
 
     /**
      * Update the specified resource in storage.

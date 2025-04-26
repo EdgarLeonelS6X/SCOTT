@@ -47,7 +47,10 @@
                         <span class="text-sm font-medium text-gray-600 dark:text-gray-300">
                             {{ __('Folio') }} #{{ $report->id }}
                         </span>
-                        @if ($report->reported_by == auth()->id() && $report->id == auth()->user()->lastReport?->id)
+                        @if (
+                            $report->reported_by == auth()->id() &&
+                                $report->id == auth()->user()->lastReport?->id &&
+                                $report->type === 'Momentary')
                             <a href="{{ route('reports.edit', ['report' => $report->id]) }}"
                                 class="inline-flex items-center gap-1 px-2 py-1 text-xs font-medium rounded-lg bg-purple-50 dark:bg-purple-900/30 text-purple-600 dark:text-purple-300 hover:bg-purple-100 dark:hover:bg-purple-800 group">
                                 <i

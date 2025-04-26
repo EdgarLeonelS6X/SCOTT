@@ -56,7 +56,7 @@
                         </button>
                     </div>
                     <div class="p-4 md:p-5 space-y-4">
-                        @livewire('app.reports.create-functions-report')
+                        @livewire('app.reports.create.create-functions-report')
                     </div>
                 </div>
             </div>
@@ -84,7 +84,7 @@
                     </button>
                 </div>
                 <div class="p-4 md:p-5 space-y-4">
-                    @livewire('app.reports.create-momently-report')
+                    @livewire('app.reports.create.create-momently-report')
                 </div>
             </div>
         </div>
@@ -110,7 +110,7 @@
                     </button>
                 </div>
                 <div class="p-4 md:p-5 space-y-4">
-                    @livewire('app.reports.create-hourly-report')
+                    @livewire('app.reports.create.create-hourly-report')
                 </div>
             </div>
         </div>
