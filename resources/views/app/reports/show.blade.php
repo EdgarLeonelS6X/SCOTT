@@ -49,7 +49,7 @@
                         </span>
                         @if ($report->reported_by == auth()->id() && $report->id == auth()->user()->lastReport?->id)
                             <a href="{{ route('reports.edit', ['report' => $report->id]) }}"
-                                class="inline-flex items-center gap-1 px-2 py-1 text-xs font-medium rounded-lg bg-purple-50 dark:bg-purple-900 text-purple-600 dark:text-purple-300 hover:bg-purple-100 dark:hover:bg-purple-800">
+                                class="inline-flex items-center gap-1 px-2 py-1 text-xs font-medium rounded-lg bg-primary-50 dark:bg-primary-900 text-primary-600 dark:text-primary-300 hover:bg-primary-100 dark:hover:bg-primary-800">
                                 <i class="fa-solid fa-pencil-alt text-xs"></i>
                                 <span class="hidden sm:inline">
                                     {{ __('Edit this report') }}
