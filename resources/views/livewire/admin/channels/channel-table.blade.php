@@ -67,9 +67,16 @@
                             <i class="ml-1 fa-solid fa-sort"></i>
                         </span>
                     </th>
-                    <th scope="col" class="px-4 py-3">
+                    <th class="py-3 px-4 text-left cursor-pointer" wire:click="toggleCategoryFilter">
                         <i class="fa-solid fa-list mr-1"></i>
-                        {{ __('Category') }}
+                        <span class="text-gray-500 dark:text-white">
+                            @if ($categoryFilter)
+                                {{ $categoryFilter }}
+                            @else
+                                {{ __('All Categories') }}
+                            @endif
+                            <i class="ml-1 fa-solid fa-sort"></i>
+                        </span>
                     </th>
                     <th scope="col" class="px-4 py-3">
                         <i class="fa-solid fa-toggle-on mr-1"></i>

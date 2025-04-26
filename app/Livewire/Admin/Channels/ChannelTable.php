@@ -6,6 +6,7 @@ use Livewire\Component;
 use Livewire\WithPagination;
 use App\Models\Channel;
 use App\Enums\ChannelOrigin;
+use App\Enums\ChannelCategory;
 
 class ChannelTable extends Component
 {
@@ -14,7 +15,8 @@ class ChannelTable extends Component
     public $search = '';
     public $showInactive = false;
     public $originFilter = null;
-    protected $queryString = ['search', 'showInactive', 'originFilter'];
+    public $categoryFilter = null;
+    protected $queryString = ['search', 'showInactive', 'originFilter', 'categoryFilter'];
 
     public function updatingSearch()
     {
@@ -40,6 +42,20 @@ class ChannelTable extends Component
         $this->resetPage();
     }
 
+    public function toggleCategoryFilter()
+    {
+        $categories = collect(ChannelCategory::cases())->map(fn($case) => $case->value)->all();
+
+        if ($this->categoryFilter === null) {
+            $this->categoryFilter = $categories[0];
+        } else {
+            $currentIndex = array_search($this->categoryFilter, $categories);
+            $this->categoryFilter = $categories[$currentIndex + 1] ?? null;
+        }
+
+        $this->resetPage();
+    }
+
     public function render()
     {
         $query = Channel::query();
@@ -57,6 +73,10 @@ class ChannelTable extends Component
 
         if ($this->originFilter) {
             $query->where('origin', $this->originFilter);
+        }
+
+        if ($this->categoryFilter) {
+            $query->where('category', $this->categoryFilter);
         }
 
         $channels = $query->orderBy('number')->paginate(10);
