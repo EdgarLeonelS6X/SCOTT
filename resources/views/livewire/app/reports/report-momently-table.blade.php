@@ -249,7 +249,6 @@
                                                     {{ $detail->description }}</p>
                                             </div>
                                         </div>
-
                                     </div>
                                     <div class="flex items-start">
                                         <div class="flex items-center gap-2 w-full">

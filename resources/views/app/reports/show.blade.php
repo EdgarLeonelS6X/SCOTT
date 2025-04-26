@@ -47,9 +47,12 @@
                         <span class="text-sm font-medium text-gray-600 dark:text-gray-300">
                             {{ __('Folio') }} #{{ $report->id }}
                         </span>
-                        @if ($report->reported_by == auth()->id() && $report->id == auth()->user()->lastReport?->id)
+                        @if (
+                            $report->status === 'Revision' &&
+                                $report->reported_by == auth()->id() &&
+                                $report->id == auth()->user()->lastReport?->id)
                             <a href="{{ route('reports.edit', ['report' => $report->id]) }}"
-                                class="inline-flex items-center gap-1 px-2 py-1 text-xs font-medium rounded-lg bg-primary-50 dark:bg-primary-900 text-primary-600 dark:text-primary-300 hover:bg-primary-100 dark:hover:bg-primary-800">
+                                class="ml-2 inline-flex items-center gap-1 px-2 py-1 text-xs font-medium rounded-lg bg-primary-50 dark:bg-primary-900 text-primary-600 dark:text-primary-300 hover:bg-primary-100 dark:hover:bg-primary-800">
                                 <i class="fa-solid fa-pencil-alt text-xs"></i>
                                 <span class="hidden sm:inline">
                                     {{ __('Edit this report') }}
@@ -176,26 +179,46 @@
                         @foreach ($report->reportDetails as $detail)
                             <div
                                 class="relative flex flex-col px-5 py-3 bg-white border border-gray-300 dark:bg-gray-800 dark:border-gray-700 rounded-xl shadow-2xl space-y-4">
-                                <div class="absolute -top-3 -right-3 z-20">
+                                <div class="absolute -top-3 -right-3 z-[100]" x-data="{ showPopover: false }">
                                     @if ($detail->description)
-                                        <button data-popover-target="popover-{{ $detail->id }}" type="button"
-                                            class="flex items-center justify-center w-6 h-6 rounded-full text-sm text-gray-500 dark:text-gray-300">
+                                        <button @mouseenter="showPopover = true" @mouseleave="showPopover = false"
+                                            type="button"
+                                            class="flex items-center justify-center w-6 h-6 rounded-full text-sm text-gray-500 dark:text-gray-300 hover:text-blue-500 transition-colors">
                                             <i class="fa-solid fa-circle-info text-base"></i>
                                         </button>
+                                        <div x-show="showPopover" x-transition:enter="transition ease-out duration-200"
+                                            x-transition:enter-start="opacity-0 translate-y-1"
+                                            x-transition:enter-end="opacity-100 translate-y-0"
+                                            x-transition:leave="transition ease-in duration-150"
+                                            x-transition:leave-start="opacity-100 translate-y-0"
+                                            x-transition:leave-end="opacity-0 translate-y-1"
+                                            @mouseenter="showPopover = true" @mouseleave="showPopover = false"
+                                            class="absolute z-[9999] w-64 mt-2 text-sm text-gray-600 bg-white border border-gray-200 rounded-lg shadow-xl dark:text-gray-300 dark:border-gray-600 dark:bg-gray-800"
+                                            style="right: 0;" x-cloak x-ref="popover" x-init="$watch('showPopover', value => {
+                                                if (value) {
+                                                    const popover = $refs.popover;
+                                                    const popoverRect = popover.getBoundingClientRect();
+                                                    const viewportWidth = window.innerWidth;
+                                            
+                                                    // Ajustar si se sale por la derecha
+                                                    if (popoverRect.right > viewportWidth) {
+                                                        popover.style.right = 'auto';
+                                                        popover.style.left = '0';
+                                                    }
+                                                }
+                                            })">
+                                            <div
+                                                class="px-3 py-2 bg-gray-100 border-b border-gray-200 rounded-t-lg dark:border-gray-600 dark:bg-gray-700 text-center">
+                                                <h3 class="font-semibold text-gray-900 dark:text-white">
+                                                    {{ __('Description') }}
+                                                </h3>
+                                            </div>
+                                            <div class="px-3 py-2 text-center">
+                                                <p class="text-gray-700 dark:text-gray-300">{{ $detail->description }}
+                                                </p>
+                                            </div>
+                                        </div>
                                     @endif
-                                </div>
-                                <div data-popover id="popover-{{ $detail->id }}" role="tooltip"
-                                    class="absolute z-30 invisible inline-block w-64 text-sm text-gray-600 transition-opacity duration-300 bg-white border border-gray-200 rounded-lg shadow-lg opacity-0 dark:text-gray-300 dark:border-gray-600 dark:bg-gray-800"
-                                    style="top: -10px; right: -270px;">
-                                    <div
-                                        class="px-3 py-2 bg-gray-100 border-b border-gray-200 rounded-t-lg dark:border-gray-600 dark:bg-gray-700 text-center">
-                                        <h3 class="font-semibold text-gray-900 dark:text-white">
-                                            {{ __('Description') }}
-                                        </h3>
-                                    </div>
-                                    <div class="px-3 py-2 text-center">
-                                        <p>{{ $detail->description }}</p>
-                                    </div>
                                 </div>
                                 <div class="flex items-center gap-2 w-full">
                                     <div class="w-1/3 flex-shrink-0">

@@ -41,6 +41,11 @@
                         {{ __('Show only inactive channels') }}
                     </label>
                 </div>
+                <button wire:click="resetFilters"
+                    class="flex items-center gap-2 py-2 px-4 text-sm font-medium text-gray-700 border rounded-lg border-gray-200 hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
+                    <i class="fa-solid fa-rotate-left"></i>
+                    {{ __('Reset table') }}
+                </button>
             </div>
         </div>
     </div>
@@ -48,15 +53,16 @@
         <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
             <thead class="text-xs dark:text-white uppercase dark:bg-gray-600 shadow-2xl">
                 <tr>
-                    <th scope="col" class="px-4 py-3">
+                    <th scope="col" class="px-4 py-3 min-w-[50px] max-w-[50px]">
                         <i class="fa-solid fa-image mr-1"></i>
                         {{ __('Image') }}
                     </th>
-                    <th scope="col" class="px-4 py-3">
+                    <th scope="col" class="px-4 py-3 min-w-[250px] max-w-[250px]">
                         <i class="fa-solid fa-tv mr-1"></i>
                         {{ __('Channel') }}
                     </th>
-                    <th class="py-3 px-4 text-left cursor-pointer" wire:click="toggleOriginFilter">
+                    <th class="py-3 px-4 text-left cursor-pointer min-w-[150px] max-w-[150px]"
+                        wire:click="toggleOriginFilter">
                         <i class="fa-solid fa-arrow-right-arrow-left mr-1"></i>
                         <span class="text-gray-500 dark:text-white">
                             @if ($originFilter)
@@ -67,7 +73,8 @@
                             <i class="ml-1 fa-solid fa-sort"></i>
                         </span>
                     </th>
-                    <th class="py-3 px-4 text-left cursor-pointer" wire:click="toggleCategoryFilter">
+                    <th class="py-3 px-4 text-left cursor-pointer min-w-[150px] max-w-[150px]"
+                        wire:click="toggleCategoryFilter">
                         <i class="fa-solid fa-list mr-1"></i>
                         <span class="text-gray-500 dark:text-white">
                             @if ($categoryFilter)

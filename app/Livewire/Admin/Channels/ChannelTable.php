@@ -56,14 +56,29 @@ class ChannelTable extends Component
         $this->resetPage();
     }
 
+    public function resetFilters()
+    {
+        $this->resetPage();
+        $this->search = '';
+        $this->showInactive = false;
+        $this->originFilter = null;
+        $this->categoryFilter = null;
+    }
+
     public function render()
     {
         $query = Channel::query();
 
         if ($this->search) {
-            $query->where(function ($q) {
-                $q->where('name', 'like', '%' . $this->search . '%')
-                    ->orWhere('number', 'like', '%' . $this->search . '%');
+            $searchTerms = explode(' ', $this->search);
+
+            $query->where(function ($q) use ($searchTerms) {
+                foreach ($searchTerms as $term) {
+                    $q->where(function ($subQuery) use ($term) {
+                        $subQuery->where('name', 'like', '%' . $term . '%')
+                            ->orWhere('number', 'like', '%' . $term . '%');
+                    });
+                }
             });
         }
 
