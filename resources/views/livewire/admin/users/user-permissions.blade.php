@@ -66,6 +66,7 @@
                             <div class="flex justify-end pt-2">
                                 <button type="submit" {{ !$canSave ? 'disabled' : '' }}
                                     class="text-xs px-4 py-2 bg-primary-600 text-white rounded-md hover:bg-primary-700 transition font-semibold disabled:opacity-50 disabled:cursor-not-allowed">
+                                    <i class="fa-solid fa-floppy-disk mr-1"></i>
                                     {{ __('Save') }}
                                 </button>
                             </div>
