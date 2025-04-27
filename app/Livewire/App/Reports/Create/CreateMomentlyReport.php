@@ -2,7 +2,7 @@
 
 namespace App\Livewire\App\Reports\Create;
 
-use App\Mail\ReportCreatedMail;
+use App\Mail\Reports\ReportCreatedMail;
 use Livewire\Component;
 use App\Models\Report;
 use App\Models\ReportDetail;
@@ -66,6 +66,20 @@ class CreateMomentlyReport extends Component
                 if ($existingChannel) {
                     throw ValidationException::withMessages([
                         'reportData.channels' => __('The channel is currently under review and cannot be added.')
+                    ]);
+                }
+            }
+
+            $channelIds = array_column($this->reportData['channels'], 'channel_id');
+
+            $channelCounts = array_count_values($channelIds);
+
+            foreach ($channelCounts as $channelId => $count) {
+                if ($count > 1) {
+                    throw ValidationException::withMessages([
+                        'reportData.channels' => __('The channel ":channel" cannot be selected more than once.', [
+                            'channel' => Channel::find($channelId)?->number ?? $channelId
+                        ])
                     ]);
                 }
             }

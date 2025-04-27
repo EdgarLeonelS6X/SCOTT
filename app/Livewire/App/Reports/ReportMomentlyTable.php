@@ -3,7 +3,7 @@
 namespace App\Livewire\App\Reports;
 
 use App\Models\Report;
-use App\Mail\ReportResolvedMail;
+use App\Mail\Reports\ReportResolvedMail;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Carbon\Carbon;
@@ -39,7 +39,7 @@ class ReportMomentlyTable extends Component
 
     public function openReportDetails($reportId)
     {
-        $this->selectedReport = Report::with(['reportDetails.channel', 'reportedBy'])->find($reportId);
+        $this->selectedReport = Report::with(['reportDetails.channel', 'reportedBy'])->where('id', $reportId)->first();
         $this->showModal = true;
     }
 
@@ -82,7 +82,7 @@ class ReportMomentlyTable extends Component
 
             if ($this->selectedReport->reportedBy) {
                 Mail::to($this->selectedReport->reportedBy->email)
-                    ->send(new ReportResolvedMail($this->selectedReport));
+                    ->send(new ReportResolvedMail($this->selectedReport->load(['reportDetails.channel', 'reportedBy'])));
             }
 
             $this->showModal = false;

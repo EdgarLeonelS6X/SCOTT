@@ -1,31 +1,35 @@
 <?php
 
-namespace App\Mail;
+namespace App\Mail\Reports;
 
+use App\Models\Report;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
-use App\Models\Report;
 
-class ReportFunctionsCreatedMail extends Mailable
+class ReportResolvedMail extends Mailable
 {
     use Queueable, SerializesModels;
 
     public $report;
-    public $categories;
+    public $channels;
     public $reportedBy;
+    public $resolvedBy;
+    public $attendedBy;
 
     /**
      * Create a new message instance.
      */
-    public function __construct(Report $report, array $categories)
+    public function __construct(Report $report)
     {
         $this->report = $report;
-        $this->categories = $categories;
+        $this->channels = $report->reportDetails;
         $this->reportedBy = $report->reportedBy;
+        $this->resolvedBy = $report->reviewed_by;
+        $this->attendedBy = $report->attendedBy;
     }
 
     /**
@@ -34,7 +38,7 @@ class ReportFunctionsCreatedMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: __('🛠️ New Functions Report Created'),
+            subject: __('✅ Report Resolved Notification'),
         );
     }
 
@@ -44,12 +48,14 @@ class ReportFunctionsCreatedMail extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'emails.report-functions-created',
+            view: 'emails.reports.report-resolved',
             with: [
                 'report' => $this->report,
-                'categories' => $this->categories,
+                'channels' => $this->channels,
                 'reportedBy' => $this->reportedBy,
-            ],
+                'resolvedBy' => $this->resolvedBy,
+                'attendedBy' => $this->attendedBy,
+            ]
         );
     }
 

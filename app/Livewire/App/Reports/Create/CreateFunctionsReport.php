@@ -2,7 +2,7 @@
 
 namespace App\Livewire\App\Reports\Create;
 
-use App\Mail\ReportFunctionsCreatedMail;
+use App\Mail\Reports\ReportFunctionsCreatedMail;
 use Livewire\Component;
 use App\Models\Report;
 use App\Models\ReportDetail;

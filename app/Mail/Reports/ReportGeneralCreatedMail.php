@@ -1,52 +1,50 @@
 <?php
 
-namespace App\Mail;
+namespace App\Mail\Reports;
 
 use App\Models\Report;
-use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
-use Illuminate\Mail\Mailables\Content;
-use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class ReportCreatedMail extends Mailable
+class ReportGeneralCreatedMail extends Mailable
 {
     use Queueable, SerializesModels;
 
     public $report;
+    public $categories;
     public $reportedBy;
 
     /**
      * Create a new message instance.
-     *
-     * @param  Report  $report
      */
-    public function __construct(Report $report)
+    public function __construct(Report $report, $categories)
     {
         $this->report = $report;
+        $this->categories = $categories;
         $this->reportedBy = $report->reportedBy;
     }
 
     /**
      * Get the message envelope.
      */
-    public function envelope(): Envelope
+    public function envelope()
     {
-        return new Envelope(
-            subject: __('⚠️ New Report Created'),
+        return new \Illuminate\Mail\Mailables\Envelope(
+            subject: __('🕓 New Hourly Report Created'),
         );
     }
 
     /**
      * Get the message content definition.
      */
-    public function content(): Content
+    public function content()
     {
-        return new Content(
-            view: 'emails.report-created',
+        return new \Illuminate\Mail\Mailables\Content(
+            view: 'emails.reports.report-general-created',
             with: [
                 'report' => $this->report,
+                'categories' => $this->categories,
                 'reportedBy' => $this->reportedBy,
             ]
         );
@@ -54,10 +52,8 @@ class ReportCreatedMail extends Mailable
 
     /**
      * Get the attachments for the message.
-     *
-     * @return array<int, \Illuminate\Mail\Mailables\Attachment>
      */
-    public function attachments(): array
+    public function attachments()
     {
         return [];
     }
