@@ -91,15 +91,11 @@
                                     @endphp
                                     <div x-data="{
                                         open: false,
-                                        search: '{{ $selectedChannel ? $selectedChannel['number'] . ' ' . $selectedChannel['name'] : '' }}',
-                                        selectedChannelImage: @entangle('selectedChannelImage').defer,
-                                        selectedChannelNumber: @entangle('selectedChannelNumber').defer,
-                                        selectedChannelName: @entangle('selectedChannelName').defer,
+                                        search: '',
+                                        selectedChannel: null,
                                         channels: {{ $channelsList->toJson() }},
                                         clearSelection() {
-                                            this.selectedChannelImage = '';
-                                            this.selectedChannelNumber = '';
-                                            this.selectedChannelName = '';
+                                            this.selectedChannel = null;
                                             this.search = '';
                                             this.open = true;
                                         },
@@ -116,25 +112,28 @@
                                             );
                                         }
                                     }" x-init="@if($selectedChannel)
-                                    selectedChannelImage = '{{ $selectedChannel['image'] }}';
-                                    selectedChannelNumber = '{{ $selectedChannel['number'] }}';
-                                    selectedChannelName = '{{ $selectedChannel['name'] }}';
+                                    selectedChannel = {
+                                        id: '{{ $selectedChannel['id'] ?? '' }}',
+                                        number: '{{ $selectedChannel['number'] ?? '' }}',
+                                        name: '{{ $selectedChannel['name'] ?? '' }}',
+                                        image: '{{ $selectedChannel['image'] ?? '' }}'
+                                    };
                                     @endif">
                                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                             <i class="fa-solid fa-tv mr-1.5"></i> {{ __('Channel') }}
                                         </label>
                                         <div class="relative">
                                             <input type="text" x-model="search"
-                                                :placeholder="selectedChannelNumber ? selectedChannelNumber + ' ' +
-                                                    selectedChannelName : '{{ __('Search channel...') }}'"
-                                                @focus="open = true" @input="if (search === '') clearSelection()"
-                                                @click.away="open = false"
+                                                :placeholder="selectedChannel ? selectedChannel.number + ' ' + selectedChannel.name :
+                                                    '{{ __('Search channel...') }}'"
+                                                @focus="open = true" @input="open = true" @click.away="open = false"
                                                 class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 pl-14 dark:bg-gray-700 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
                                             <div
                                                 class="absolute left-3 top-1/2 transform -translate-y-1/2 flex items-center space-x-2">
-                                                <img x-show="selectedChannelImage" :src="selectedChannelImage"
-                                                    class="w-8 h-8 object-contain object-center transition-opacity duration-200"
-                                                    x-cloak>
+                                                <template x-if="selectedChannel">
+                                                    <img :src="selectedChannel.image"
+                                                        class="w-8 h-8 object-contain object-center transition-opacity duration-200">
+                                                </template>
                                             </div>
                                             <i class="fa-solid fa-chevron-down absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 dark:text-gray-300 cursor-pointer transition-transform duration-200"
                                                 :class="open ? 'rotate-180' : ''" @click="open = !open"></i>
@@ -146,12 +145,11 @@
                                                     class="max-h-60 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-100 dark:scrollbar-thumb-gray-600 dark:scrollbar-track-gray-700">
                                                     <template x-for="channel in filteredChannels"
                                                         :key="channel.id">
-                                                        <li @click="
+                                                        <li <li
+                                                            @click="
                                                                 $wire.set('categories.{{ $index }}.channels.{{ $channelIndex }}.channel_id', channel.id);
-                                                                selectedChannelImage = channel.image;
-                                                                selectedChannelNumber = channel.number;
-                                                                selectedChannelName = channel.name;
-                                                                search = selectedChannelNumber + ' ' + selectedChannelName;
+                                                                selectedChannel = channel;
+                                                                search = channel.number + ' ' + channel.name;
                                                                 open = false;
                                                             "
                                                             class="cursor-pointer px-4 py-2 flex items-center space-x-3 hover:bg-gray-100 dark:hover:bg-gray-600 transition-all duration-200 ease-in-out">

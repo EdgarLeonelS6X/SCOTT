@@ -80,10 +80,10 @@
                                     @endphp
                                     <div x-data="{
                                         open: false,
-                                        search: '{{ $selectedChannel ? $selectedChannel['number'] . ' ' . $selectedChannel['name'] : '' }}',
-                                        selectedChannelImage: @entangle('selectedChannelImage').defer,
-                                        selectedChannelNumber: @entangle('selectedChannelNumber').defer,
-                                        selectedChannelName: @entangle('selectedChannelName').defer,
+                                        search: '',
+                                        selectedChannelImage: '',
+                                        selectedChannelNumber: '',
+                                        selectedChannelName: '',
                                         channels: {{ $channelsList->toJson() }},
                                         clearSelection() {
                                             this.selectedChannelImage = '';
@@ -104,11 +104,9 @@
                                                 .toLowerCase().includes(term)
                                             );
                                         }
-                                    }" x-init="@if($selectedChannel)
-                                    selectedChannelImage = '{{ $selectedChannel['image'] }}';
-                                    selectedChannelNumber = '{{ $selectedChannel['number'] }}';
-                                    selectedChannelName = '{{ $selectedChannel['name'] }}';
-                                    @endif">
+                                    }" x-init="selectedChannelImage = '{{ $selectedChannel['image'] ?? '' }}';
+                                    selectedChannelNumber = '{{ $selectedChannel['number'] ?? '' }}';
+                                    selectedChannelName = '{{ $selectedChannel['name'] ?? '' }}';">
                                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                             <i class="fa-solid fa-tv mr-1.5"></i> {{ __('Channel') }}
                                         </label>
