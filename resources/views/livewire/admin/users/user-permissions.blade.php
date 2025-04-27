@@ -3,7 +3,7 @@
         <div class="flex items-center gap-4">
             <img class="h-20 w-20 rounded-full object-cover shadow-md" src="{{ $user->profile_photo_url }}"
                 alt="{{ $user->name }}" />
-            <div>
+            <div class="space-y-1">
                 <h1 class="text-3xl font-bold text-gray-900 dark:text-white">
                     {{ $user->name }}
                 </h1>
@@ -11,6 +11,41 @@
                     <i class="fa-solid fa-envelope mr-1"></i>
                     {{ $user->email }}
                 </p>
+                <div x-data="{ open: false }" @preferences-saved.window="open = false" class="relative">
+                    <button @click="open = !open" type="button"
+                        class="flex items-center text-xs text-primary-600 hover:text-primary-700 transition font-medium">
+                        <i class="fa-solid fa-reply-all mr-1"></i>
+                        <span>{{ __('Report mail preferences') }}</span>
+                        <i :class="open ? 'fa-chevron-up' : 'fa-chevron-down'"
+                            class="fa-solid ml-2 transition-transform duration-300"></i>
+                    </button>
+                    <div x-show="open" x-transition.origin.top.left @click.outside="open = false"
+                        class="mt-2 bg-white dark:bg-gray-700 shadow-lg rounded-lg p-4 space-y-4 border dark:border-gray-600 absolute z-10 w-72">
+                        <form wire:submit.prevent="saveReportPreferences" class="space-y-3">
+                            @php
+                                $reportMailsList = [
+                                    'report_created' => 'Reporte Creado',
+                                    'report_updated' => 'Reporte Actualizado',
+                                    'report_resolved' => 'Reporte Resuelto',
+                                    'report_functions_created' => 'Funciones de Reporte',
+                                    'report_general_created' => 'Reporte General',
+                                ];
+                            @endphp
+                            @foreach ($reportMailsList as $key => $label)
+                                <x-label class="flex items-center gap-3 text-sm text-gray-700 dark:text-gray-300">
+                                    <x-checkbox type="checkbox" wire:model.defer="reportMails.{{ $key }}" />
+                                    <span>{{ $label }}</span>
+                                </x-label>
+                            @endforeach
+                            <div class="flex justify-end pt-2">
+                                <button type="submit"
+                                    class="text-xs px-4 py-2 bg-primary-600 text-white rounded-md hover:bg-primary-700 transition font-semibold">
+                                    {{ __('Save') }}
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="text-sm text-right">

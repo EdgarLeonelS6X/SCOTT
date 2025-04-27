@@ -17,10 +17,28 @@ class UserPermissions extends Component
     public $allPermissions;
     public $canEditRoles;
     public $canEditPermissions;
+    public $reportMails = [];
 
     public function mount(User $user)
     {
         $this->user = $user;
+
+        $defaultPreferences = [
+            'report_created' => false,
+            'report_updated' => false,
+            'report_resolved' => false,
+            'report_functions_created' => false,
+            'report_general_created' => false,
+        ];
+
+        // Decodificar las preferencias del usuario, si existen
+        $userPreferences = is_string($user->report_mail_preferences)
+            ? json_decode($user->report_mail_preferences, true)
+            : $user->report_mail_preferences;
+
+        // Mezclar las preferencias por defecto con las del usuario
+        $this->reportMails = array_merge($defaultPreferences, $userPreferences);
+
         $this->allRoles = Role::all();
         $this->allPermissions = Permission::all();
 
@@ -46,6 +64,34 @@ class UserPermissions extends Component
             $this->canEditRoles = false;
             $this->canEditPermissions = false;
         }
+    }
+
+    public function saveReportPreferences()
+    {
+        $reportMailOptions = [
+            'report_created',
+            'report_updated',
+            'report_resolved',
+            'report_functions_created',
+            'report_general_created',
+        ];
+
+        $finalPreferences = [];
+
+        foreach ($reportMailOptions as $option) {
+            $finalPreferences[$option] = $this->reportMails[$option] ?? false;
+        }
+
+        $this->user->report_mail_preferences = $finalPreferences;
+        $this->user->save();
+
+        $this->dispatch('preferences-saved');
+
+        $this->dispatch('swal', [
+            'icon' => 'success',
+            'title' => __('Preferences Updated'),
+            'text' => __('Mail preferences saved successfully.'),
+        ]);
     }
 
     public function updatedRole($value)
