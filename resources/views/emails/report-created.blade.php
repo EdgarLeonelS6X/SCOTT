@@ -17,7 +17,7 @@
         }
 
         .container {
-            max-width: 600px;
+            max-width: 800px;
             margin: 30px auto;
             background: #222;
             padding: 25px;
@@ -76,6 +76,7 @@
             padding: 12px;
             text-align: left;
             font-size: 14px;
+            white-space: nowrap;
         }
 
         th {
@@ -117,16 +118,30 @@
             padding-bottom: 10px;
         }
 
-        .footer-title {
-            margin: 5px 0 2px 0;
-            font-size: 18px;
-            font-weight: bold;
-        }
-
         .footer-subtitle {
             margin: 0;
             font-size: 14px;
             opacity: 0.8;
+        }
+
+        @media only screen and (max-width: 600px) {
+
+            .channels table th,
+            .channels table td {
+                text-align: center;
+                padding: 8px;
+            }
+
+            .channels .channel-name {
+                display: none;
+            }
+
+            .channels .stage-protocol .protocol {
+                display: block;
+                margin-top: 4px;
+                font-size: 13px;
+                color: #aaa;
+            }
         }
     </style>
 </head>
@@ -215,19 +230,25 @@
                         {{ __('Channel') }}
                     </th>
                     <th>
-                        {{ __('Stage') }}
+                        {{ __('Stage and Protocol') }}
                     </th>
                     <th>
-                        {{ __('Media') }}
+                        {{ __('Problem') }}
                     </th>
                 </tr>
-                @foreach ($report->reportDetails as $detail)
+                @foreach ($report->reportDetails->sortBy('channel.number') as $detail)
                     <tr>
                         <td>
-                            {{ $detail->channel->number }} {{ $detail->channel->name }}
+                            {{ $detail->channel->number }}
+                            <span class="channel-name">
+                                {{ $detail->channel->name }}
+                            </span>
                         </td>
-                        <td>
+                        <td class="stage-protocol">
                             {{ $detail->stage->name }}
+                            <span class="protocol">
+                                ({{ $detail->protocol }})
+                            </span>
                         </td>
                         <td>
                             {{ $detail->media }}
@@ -237,11 +258,8 @@
             </table>
         </div>
         <div class="footer">
-            <h3 class="footer-title">
-                SCOTT
-            </h3>
             <p class="footer-subtitle">
-                {{ __('OTT Communications System') }}
+                {{ __('SCOTT • OTT Communications System') }}
             </p>
         </div>
     </div>
