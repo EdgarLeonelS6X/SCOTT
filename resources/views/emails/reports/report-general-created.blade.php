@@ -4,9 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>
-        {{ __('New Hourly Report Created') }}
-    </title>
+    <title>{{ __('New Hourly Report Created') }}</title>
     <style>
         body {
             font-family: 'Arial', Helvetica, sans-serif;
@@ -17,7 +15,7 @@
         }
 
         .container {
-            max-width: 600px;
+            max-width: 800px;
             margin: 30px auto;
             background: #222;
             padding: 25px;
@@ -39,7 +37,7 @@
         }
 
         .details,
-        .categories {
+        .channels {
             background: #1a1a1a;
             padding: 20px;
             border-radius: 10px;
@@ -48,7 +46,7 @@
         }
 
         .details h3,
-        .categories h3 {
+        .channels h3 {
             margin-top: 0;
             color: #f1f1f1;
             font-size: 16px;
@@ -76,6 +74,7 @@
             padding: 12px;
             text-align: left;
             font-size: 14px;
+            white-space: nowrap;
         }
 
         th {
@@ -117,16 +116,30 @@
             padding-bottom: 10px;
         }
 
-        .footer-title {
-            margin: 5px 0 2px 0;
-            font-size: 18px;
-            font-weight: bold;
-        }
-
         .footer-subtitle {
             margin: 0;
             font-size: 14px;
             opacity: 0.8;
+        }
+
+        @media only screen and (max-width: 600px) {
+
+            .channels table th,
+            .channels table td {
+                text-align: center;
+                padding: 8px;
+            }
+
+            .channels .channel-name {
+                display: none;
+            }
+
+            .channels .stage-protocol .protocol {
+                display: block;
+                margin-top: 4px;
+                font-size: 13px;
+                color: #aaa;
+            }
         }
     </style>
 </head>
@@ -134,116 +147,80 @@
 <body>
     <div class="container">
         <div class="header">
-            <h2>
-                {{ __('New Hourly Report Created') }}
-            </h2>
+            <h2>{{ __('New Hourly Report Created') }}</h2>
         </div>
+
         <div class="details">
-            <h3>
-                📌 {{ __('Report Details') }}
-            </h3>
+            <h3>📌 {{ __('Report Details') }}</h3>
             <table>
                 <tr>
-                    <th>
-                        {{ __('Folio') }}
-                    </th>
+                    <th>{{ __('Folio') }}</th>
+                    <td>{{ $report->id }}</td>
+                </tr>
+                <tr>
+                    <th>{{ __('Type') }}</th>
                     <td>
-                        {{ $report->id }}
+                        <span class="badge badge-type">{{ ucfirst($report->type) }}</span>
                     </td>
                 </tr>
                 <tr>
-                    <th>
-                        {{ __('Type') }}
-                    </th>
+                    <th>{{ __('Status') }}</th>
                     <td>
-                        <span class="badge badge-type">
-                            {{ ucfirst($report->type) }}
-                        </span>
+                        <span class="badge badge-status">{{ ucfirst($report->status) }}</span>
                     </td>
                 </tr>
                 <tr>
-                    <th>
-                        {{ __('Status') }}
-                    </th>
-                    <td>
-                        <span class="badge badge-status">
-                            {{ ucfirst($report->status) }}
-                        </span>
-                    </td>
+                    <th>{{ __('Reported By') }}</th>
+                    <td>{{ $reportedBy->name }} ({{ $reportedBy->email }})</td>
                 </tr>
                 <tr>
-                    <th>
-                        {{ __('Reported By') }}
-                    </th>
-                    <td>
-                        {{ $reportedBy->name }} ({{ $reportedBy->email }})
-                    </td>
-                </tr>
-                <tr>
-                    <th>
-                        {{ __('Created At') }}
-                    </th>
-                    <td>
-                        {{ $report->created_at->format('d/m/Y H:i') }}
-                    </td>
+                    <th>{{ __('Created At') }}</th>
+                    <td>{{ $report->created_at->format('d/m/Y H:i') }}</td>
                 </tr>
             </table>
         </div>
+
         @foreach ($categories as $category)
-            <div class="categories">
-                <h3>
-                    📡 {{ $category['name'] }}
-                </h3>
+            <div class="channels">
+                <h3>📡 {{ $category['name'] }}</h3>
                 <table>
-                    <tr>
-                        <th>
-                            {{ __('Channel') }}
-                        </th>
-                        <th>
-                            {{ __('Stage') }}
-                        </th>
-                        <th>
-                            {{ __('Media') }}
-                        </th>
-                    </tr>
-                    @if (count($category['channels']) > 0)
-                        @foreach ($category['channels'] as $channel)
+                    <thead>
+                        <tr>
+                            <th style="width: 33.33%;">{{ __('Channel') }}</th>
+                            <th style="width: 33.33%;">{{ __('Stage and Protocol') }}</th>
+                            <th style="width: 33.33%;">{{ __('Problem') }}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (!empty($category['channels']))
+                            @foreach (collect($category['channels'])->sortBy('number') as $channel)
+                                <tr>
+                                    <td>
+                                        {{ $channel['number'] }}
+                                        <span class="channel-name">{{ $channel['name'] }}</span>
+                                    </td>
+                                    <td class="stage-protocol">
+                                        {{ $channel['stage'] }}
+                                        <span class="protocol">({{ $channel['protocol'] ?? '-' }})</span>
+                                    </td>
+                                    <td>{{ $channel['media'] }}</td>
+                                </tr>
+                            @endforeach
+                        @else
                             <tr>
-                                <td>
-                                    {{ $channel['number'] }} {{ $channel['name'] }}
-                                </td>
-                                <td>
-                                    {{ $channel['stage'] }}
-                                </td>
-                                <td>
-                                    {{ $channel['media'] }}
+                                <td colspan="3"
+                                    style="text-align: center; font-weight: bold; color: #057A55; background: #252525;">
+                                    {{ __('All channels on this category are working properly.') }}
                                 </td>
                             </tr>
-                        @endforeach
-                    @else
-                        <tr>
-                            <td colspan="3"
-                                style="
-                                text-align: center;
-                                font-weight: bold;
-                                color: #057A55;
-                                background: #252525;
-                                padding: 12px;
-                            ">
-                                {{ __('All channels on this CDN are working properly.') }}
-                            </td>
-                        </tr>
-                    @endif
+                        @endif
+                    </tbody>
                 </table>
             </div>
         @endforeach
+
         <div class="footer">
-            <h3 class="footer-title">
-                SCOTT
-            </h3>
-            <p class="footer-subtitle">
-                {{ __('OTT Communications System') }}
-            </p>
+            <p class="footer-subtitle">{{ __('SCOTT • OTT Communications System') }}</p>
         </div>
     </div>
 </body>

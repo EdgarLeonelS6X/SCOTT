@@ -88,6 +88,8 @@ class CreateFunctionsReport extends Component
     {
         return [
             'channel_id' => '',
+            'number' => '',
+            'name' => '',
             'stage' => '',
             'protocol' => '',
             'media' => '',
@@ -207,6 +209,12 @@ class CreateFunctionsReport extends Component
                     }
 
                     $this->validate($rules, $messages);
+
+                    $channelModel = Channel::find($channel['channel_id']);
+                    if ($channelModel) {
+                        $this->categories[$categoryIndex]['channels'][$channelIndex]['number'] = $channelModel->number;
+                        $this->categories[$categoryIndex]['channels'][$channelIndex]['name'] = $channelModel->name;
+                    }
                 }
             }
 
@@ -297,7 +305,6 @@ class CreateFunctionsReport extends Component
             ]);
         }
     }
-
     public function render()
     {
         return view('livewire.app.reports.create.create-functions-report', [

@@ -4,9 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>
-        {{ __('Report Resolved Notification') }}
-    </title>
+    <title>{{ __('New Functions Report Created') }}</title>
     <style>
         body {
             font-family: 'Arial', Helvetica, sans-serif;
@@ -17,7 +15,7 @@
         }
 
         .container {
-            max-width: 600px;
+            max-width: 800px;
             margin: 30px auto;
             background: #222;
             padding: 25px;
@@ -39,7 +37,7 @@
         }
 
         .details,
-        .categories {
+        .channels {
             background: #1a1a1a;
             padding: 20px;
             border-radius: 10px;
@@ -48,7 +46,7 @@
         }
 
         .details h3,
-        .categories h3 {
+        .channels h3 {
             margin-top: 0;
             color: #f1f1f1;
             font-size: 16px;
@@ -76,6 +74,7 @@
             padding: 12px;
             text-align: left;
             font-size: 14px;
+            white-space: nowrap;
         }
 
         th {
@@ -104,7 +103,7 @@
         }
 
         .badge-type {
-            background: #057A55;
+            background: #1C64F2;
             color: #fff;
         }
 
@@ -117,16 +116,30 @@
             padding-bottom: 10px;
         }
 
-        .footer-title {
-            margin: 5px 0 2px 0;
-            font-size: 18px;
-            font-weight: bold;
-        }
-
         .footer-subtitle {
             margin: 0;
             font-size: 14px;
             opacity: 0.8;
+        }
+
+        @media only screen and (max-width: 600px) {
+
+            .channels table th,
+            .channels table td {
+                text-align: center;
+                padding: 8px;
+            }
+
+            .channels .channel-name {
+                display: none;
+            }
+
+            .channels .stage-protocol .protocol {
+                display: block;
+                margin-top: 4px;
+                font-size: 13px;
+                color: #aaa;
+            }
         }
     </style>
 </head>
@@ -134,116 +147,104 @@
 <body>
     <div class="container">
         <div class="header">
-            <h2>
-                {{ __('Report Resolved Notification') }}
-            </h2>
+            <h2>{{ __('New Functions Report Created') }}</h2>
         </div>
+
         <div class="details">
-            <h3>
-                📌 {{ __('Report Details') }}
-            </h3>
+            <h3>📌 {{ __('Report Details') }}</h3>
             <table>
                 <tr>
-                    <th>
-                        {{ __('Folio') }}
-                    </th>
-                    <td>
-                        {{ $report->id }}
-                    </td>
+                    <th>{{ __('Folio') }}</th>
+                    <td>{{ $report->id }}</td>
                 </tr>
                 <tr>
-                    <th>
-                        {{ __('Type') }}
-                    </th>
-                    <td>
-                        <span class="badge badge-type">
-                            {{ ucfirst($report->type) }}
-                        </span>
-                    </td>
+                    <th>{{ __('Type') }}</th>
+                    <td><span class="badge badge-type">{{ ucfirst($report->type) }}</span></td>
                 </tr>
                 <tr>
-                    <th>
-                        {{ __('Status') }}
-                    </th>
-                    <td>
-                        <span class="badge badge-status">
-                            {{ ucfirst($report->status) }}
-                        </span>
-                    </td>
+                    <th>{{ __('Status') }}</th>
+                    <td><span class="badge badge-status">{{ ucfirst($report->status) }}</span></td>
                 </tr>
                 <tr>
-                    <th>
-                        {{ __('Reported By') }}
-                    </th>
-                    <td>
-                        {{ $reportedBy->name }} ({{ $reportedBy->email }})
-                    </td>
+                    <th>{{ __('Reported By') }}</th>
+                    <td>{{ $reportedBy->name }} ({{ $reportedBy->email }})</td>
                 </tr>
                 <tr>
-                    <th>
-                        {{ __('Created At') }}
-                    </th>
-                    <td>
-                        {{ $report->created_at->format('d/m/Y H:i') }}
-                    </td>
+                    <th>{{ __('Created At') }}</th>
+                    <td>{{ $report->created_at->format('d/m/Y H:i') }}</td>
                 </tr>
             </table>
         </div>
+
         @foreach ($categories as $category)
-            <div class="categories">
-                <h3>
-                    📡 {{ $category['name'] }}
-                </h3>
-                <table>
-                    <tr>
-                        <th>
-                            {{ __('Channel') }}
-                        </th>
-                        <th>
-                            {{ __('Stage') }}
-                        </th>
-                        <th>
-                            {{ __('Media') }}
-                        </th>
-                    </tr>
-                    @if (count($category['channels']) > 0)
-                        @foreach ($category['channels'] as $channel)
+            <div class="channels">
+                <h3>📡 {{ $category['name'] }}</h3>
+
+                @if (!empty($category['channels']))
+                    @foreach (collect($category['channels'])->filter(fn($channel) => isset($channel['number']))->sortBy('number') as $channel)
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th style="width: 33%;">{{ __('Channel') }}</th>
+                                    <th style="width: 33%;">{{ __('Stage and Protocol') }}</th>
+                                    <th style="width: 33%;">{{ __('Media') }}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        {{ $channel['number'] }}
+                                        <span class="channel-name">{{ $channel['name'] }}</span>
+                                    </td>
+                                    <td class="stage-protocol">
+                                        @php
+                                            $stage = \App\Models\Stage::find($channel['stage']);
+                                        @endphp
+                                        {{ $stage ? $stage->name : '-' }}
+                                        <span class="protocol">({{ $channel['protocol'] ?? '-' }})</span>
+                                    </td>
+                                    <td>{{ !empty($channel['media']) ? $channel['media'] : __('Not applicable') }}</td>
+                                </tr>
+
+                                @if ($category['name'] == 'CUTV' && !empty($channel['loss_periods']))
+                                    @foreach ($channel['loss_periods'] as $period)
+                                        @php
+                                            $start = \Carbon\Carbon::parse($period['start_time']);
+                                            $end = \Carbon\Carbon::parse($period['end_time']);
+                                            $diff = $start->diff($end);
+                                            $days = $diff->format('%a');
+                                            $hours = $diff->format('%H');
+                                            $minutes = $diff->format('%I');
+
+                                            $duration = ($days > 0 ? "{$days}d " : '') . "{$hours}h {$minutes}m";
+                                        @endphp
+                                        <tr>
+                                            <td>{{ $start->format('d/m/Y H:i') }}</td>
+                                            <td>{{ $end->format('d/m/Y H:i') }}</td>
+                                            <td>{{ $duration }}</td>
+                                        </tr>
+                                    @endforeach
+                                @endif
+                            </tbody>
+                        </table>
+                    @endforeach
+                @else
+                    <table>
+                        <tbody>
                             <tr>
-                                <td>
-                                    {{ $channel['number'] }} {{ $channel['name'] }}
-                                </td>
-                                <td>
-                                    {{ $channel['stage'] }}
-                                </td>
-                                <td>
-                                    {{ $channel['media'] }}
+                                <td colspan="3"
+                                    style="text-align: center; font-weight: bold; color: #057A55; background: #252525;">
+                                    {{ __('All channels on this function are working properly.') }}
                                 </td>
                             </tr>
-                        @endforeach
-                    @else
-                        <tr>
-                            <td colspan="3"
-                                style="
-                        text-align: center;
-                        font-weight: bold;
-                        color: #057A55;
-                        background: #252525;
-                        padding: 12px;
-                            ">
-                                {{ __('All channels on this function are working properly.') }}
-                            </td>
-                        </tr>
-                    @endif
-                </table>
+                        </tbody>
+                    </table>
+                @endif
             </div>
         @endforeach
+
         <div class="footer">
-            <h3 class="footer-title">
-                SCOTT
-            </h3>
-            <p class="footer-subtitle">
-                {{ __('OTT Communications System') }}
-            </p>
+            <p class="footer-subtitle">{{ __('SCOTT • OTT Communications System') }}</p>
         </div>
     </div>
 </body>

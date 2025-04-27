@@ -4,9 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>
-        {{ __('Report Resolved') }}
-    </title>
+    <title>{{ __('Report Resolved Notification') }}</title>
     <style>
         body {
             font-family: 'Arial', Helvetica, sans-serif;
@@ -17,7 +15,7 @@
         }
 
         .container {
-            max-width: 600px;
+            max-width: 800px;
             margin: 30px auto;
             background: #222;
             padding: 25px;
@@ -76,6 +74,7 @@
             padding: 12px;
             text-align: left;
             font-size: 14px;
+            white-space: nowrap;
         }
 
         th {
@@ -103,6 +102,11 @@
             color: #fff;
         }
 
+        .badge-pending {
+            background: #D8DE6A;
+            color: #fff;
+        }
+
         .badge-type {
             background: #E02424;
             color: #fff;
@@ -117,16 +121,30 @@
             padding-bottom: 10px;
         }
 
-        .footer-title {
-            margin: 5px 0 2px 0;
-            font-size: 18px;
-            font-weight: bold;
-        }
-
         .footer-subtitle {
             margin: 0;
             font-size: 14px;
             opacity: 0.8;
+        }
+
+        @media only screen and (max-width: 600px) {
+
+            .channels table th,
+            .channels table td {
+                text-align: center;
+                padding: 8px;
+            }
+
+            .channels .channel-name {
+                display: none;
+            }
+
+            .channels .stage-protocol .protocol {
+                display: block;
+                margin-top: 4px;
+                font-size: 13px;
+                color: #aaa;
+            }
         }
     </style>
 </head>
@@ -134,95 +152,54 @@
 <body>
     <div class="container">
         <div class="header">
-            <h2>
-                {{ __('Report Resolved Notification') }}
-            </h2>
+            <h2>{{ __('Report Resolved Notification') }}</h2>
         </div>
+
         <div class="details">
-            <h3>
-                📌 {{ __('Report Details') }}
-            </h3>
+            <h3>📌 {{ __('Report Details') }}</h3>
             <table>
                 <tr>
-                    <th>
-                        {{ __('Folio') }}
-                    </th>
+                    <th>{{ __('Folio') }}</th>
+                    <td>{{ $report->id }}</td>
+                </tr>
+                <tr>
+                    <th>{{ __('Category') }}</th>
+                    <td>{{ $report->category }}</td>
+                </tr>
+                <tr>
+                    <th>{{ __('Type') }}</th>
                     <td>
-                        {{ $report->id }}
+                        <span class="badge badge-type">{{ ucfirst($report->type) }}</span>
                     </td>
                 </tr>
                 <tr>
-                    <th>
-                        {{ __('Category') }}
-                    </th>
+                    <th>{{ __('Status') }}</th>
                     <td>
-                        {{ $report->category }}
+                        <span class="badge badge-resolved">{{ ucfirst($report->status) }}</span>
                     </td>
                 </tr>
                 <tr>
-                    <th>
-                        {{ __('Type') }}
-                    </th>
-                    <td>
-                        <span class="badge badge-type">
-                            {{ ucfirst($report->type) }}
-                        </span>
-                    </td>
+                    <th>{{ __('Reviewed By') }}</th>
+                    <td>{{ $report->reviewed_by }}</td>
                 </tr>
                 <tr>
-                    <th>
-                        {{ __('Status') }}
-                    </th>
-                    <td>
-                        <span class="badge {{ $report->status === 'Resolved' ? 'badge-resolved' : 'badge-pending' }}">
-                            {{ ucfirst($report->status) }}
-                        </span>
-                    </td>
+                    <th>{{ __('Reported By') }}</th>
+                    <td>{{ $reportedBy->name }} ({{ $reportedBy->email }})</td>
                 </tr>
                 <tr>
-                    <th>
-                        {{ __('Reviewed By') }}
-                    </th>
-                    <td>
-                        {{ $report->reviewed_by }}
-                    </td>
+                    <th>{{ __('Attended By') }}</th>
+                    <td>{{ $attendedBy->name }} ({{ $attendedBy->email }})</td>
                 </tr>
                 <tr>
-                    <th>
-                        {{ __('Reported By') }}
-                    </th>
-                    <td>
-                        {{ $reportedBy->name }} ({{ $reportedBy->email }})
-                    </td>
+                    <th>{{ __('Created At') }}</th>
+                    <td>{{ $report->created_at->format('d/m/Y H:i') }}</td>
                 </tr>
                 <tr>
-                    <th>
-                        {{ __('Attended By') }}
-                    </th>
-                    <td>
-                        {{ $attendedBy->name }} ({{ $attendedBy->email }})
-                    </td>
+                    <th>{{ __('Resolved At') }}</th>
+                    <td>{{ $report->updated_at->format('d/m/Y H:i') }}</td>
                 </tr>
                 <tr>
-                    <th>
-                        {{ __('Created At') }}
-                    </th>
-                    <td>
-                        {{ $report->created_at->format('d/m/Y H:i') }}
-                    </td>
-                </tr>
-                <tr>
-                    <th>
-                        {{ __('Resolved At') }}
-                    </th>
-                    <td>
-                        {{ $report->updated_at->format('d/m/Y H:i') }}
-                    </td>
-                </tr>
-                <tr>
-                    <th>
-                        {{ __('Duration') }}
-                    </th>
+                    <th>{{ __('Duration') }}</th>
                     <td>
                         @php
                             $createdAt = \Carbon\Carbon::parse($report->created_at);
@@ -243,44 +220,33 @@
                 </tr>
             </table>
         </div>
+
         <div class="channels">
-            <h3>
-                📡 {{ __('Channels Involved') }}
-            </h3>
+            <h3>📡 {{ __('Channels Involved') }}</h3>
             <table>
                 <tr>
-                    <th>
-                        {{ __('Channel') }}
-                    </th>
-                    <th>
-                        {{ __('Stage') }}
-                    </th>
-                    <th>
-                        {{ __('Media') }}
-                    </th>
+                    <th>{{ __('Channel') }}</th>
+                    <th>{{ __('Stage and Protocol') }}</th>
+                    <th>{{ __('Problem') }}</th>
                 </tr>
-                @foreach ($channels as $detail)
+                @foreach ($channels->sortBy('channel.number') as $detail)
                     <tr>
                         <td>
-                            {{ $detail->channel->number }} {{ $detail->channel->name }}
+                            {{ $detail->channel->number }}
+                            <span class="channel-name">{{ $detail->channel->name }}</span>
                         </td>
-                        <td>
+                        <td class="stage-protocol">
                             {{ $detail->stage->name }}
+                            <span class="protocol">({{ $detail->protocol }})</span>
                         </td>
-                        <td>
-                            {{ $detail->media }}
-                        </td>
+                        <td>{{ $detail->media }}</td>
                     </tr>
                 @endforeach
             </table>
         </div>
+
         <div class="footer">
-            <h3 class="footer-title">
-                SCOTT
-            </h3>
-            <p class="footer-subtitle">
-                {{ __('OTT Communications System') }}
-            </p>
+            <p class="footer-subtitle">{{ __('SCOTT • OTT Communications System') }}</p>
         </div>
     </div>
 </body>

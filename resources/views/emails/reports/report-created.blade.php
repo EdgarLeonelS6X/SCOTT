@@ -150,7 +150,7 @@
     <div class="container">
         <div class="header">
             <h2>
-                {{ __('New Report Created Notification') }}
+                {{ __('New Report Created') }}
             </h2>
         </div>
         <div class="details">

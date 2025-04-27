@@ -119,10 +119,6 @@ class CreateHourlyReport extends Component
             $categories = [];
 
             foreach ($this->categories as $category) {
-                if (empty($category['channels'])) {
-                    continue;
-                }
-
                 $categoryData = [
                     'name' => $category['name'],
                     'channels' => [],
@@ -151,13 +147,12 @@ class CreateHourlyReport extends Component
                         'number' => $channelData->number ?? 'N/A',
                         'name' => $channelData->name ?? 'Unknown',
                         'stage' => $stageData->name ?? 'Unknown',
+                        'protocol' => $reportDetail->protocol,
                         'media' => $reportDetail->media,
                     ];
                 }
 
-                if (!empty($categoryData['channels'])) {
-                    $categories[] = $categoryData;
-                }
+                $categories[] = $categoryData;
             }
 
             Mail::to(Auth::user()->email)->send(new ReportGeneralCreatedMail($report, $categories));
