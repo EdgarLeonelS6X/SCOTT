@@ -2,12 +2,15 @@
 
 namespace App\Livewire\App\Reports\Edit;
 
+use App\Mail\Reports\ReportUpdatedMail;
 use App\Models\Report;
 use App\Models\ReportDetail;
 use App\Models\Stage;
 use App\Models\Channel;
 use Livewire\Component;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Auth;
 
 class EditMomentlyReport extends Component
 {
@@ -85,6 +88,8 @@ class EditMomentlyReport extends Component
                     'status' => __('Revision'),
                 ]);
             }
+
+            Mail::to(Auth::user()->email)->send(new ReportUpdatedMail($this->report));
 
             session()->flash('swal', [
                 'icon' => 'success',
