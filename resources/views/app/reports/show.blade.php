@@ -89,6 +89,10 @@
                                 {{ $report->created_at->format('d/m/Y h:i A') }}
                                 @if ($report->updated_at && $report->updated_at != $report->created_at)
                                     - {{ $report->updated_at->format('d/m/Y h:i A') }}
+                                    <br>
+                                    <small>
+                                        ({{ __('Last updated') }}: {{ $report->updated_at->diffForHumans() }})
+                                    </small>
                                 @endif
                             </p>
                         </div>
