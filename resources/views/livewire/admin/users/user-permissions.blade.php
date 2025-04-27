@@ -11,9 +11,35 @@
                     <i class="fa-solid fa-envelope mr-1"></i>
                     {{ $user->email }}
                 </p>
-                <div x-data="{ open: false }" @preferences-saved.window="open = false" class="relative">
-                    <button @click="open = !open" type="button"
-                        class="flex items-center text-xs text-primary-600 hover:text-primary-700 transition font-medium">
+                @php
+                    $auth = auth()->user();
+                    $isAuthMaster = $auth->hasRole('master');
+                    $isAuthAdmin = $auth->hasRole('admin');
+                    $isAuthUser = $auth->hasRole('user');
+
+                    $isTargetMaster = $user->hasRole('master');
+                    $isTargetAdmin = $user->hasRole('admin');
+                    $isTargetUser = $user->hasRole('user');
+
+                    $isSelf = $auth->id === $user->id;
+                    $isFirstMaster = $user->id === 1;
+
+                    $canSave =
+                        ($isFirstMaster && $isSelf) ||
+                        (!$isFirstMaster &&
+                            ($isAuthMaster ||
+                                ($isAuthAdmin && $isTargetUser && !$isSelf) ||
+                                ($isAuthAdmin && $isSelf) ||
+                                ($isAuthUser && $isSelf)));
+                @endphp
+                <div x-data="{ open: false, canSave: {{ $canSave ? 'true' : 'false' }} }" @preferences-saved.window="open = false" class="relative">
+                    <button @click="canSave && (open = !open)"
+                        :class="{
+                            'opacity-50': !canSave,
+                            'hover:text-primary-700': canSave
+                        }"
+                        :disabled="!canSave" type="button"
+                        class="flex items-center text-xs text-primary-600 transition font-medium">
                         <i class="fa-solid fa-reply-all mr-1"></i>
                         <span>{{ __('Report mail preferences') }}</span>
                         <i :class="open ? 'fa-chevron-up' : 'fa-chevron-down'"
@@ -24,11 +50,11 @@
                         <form wire:submit.prevent="saveReportPreferences" class="space-y-3">
                             @php
                                 $reportMailsList = [
-                                    'report_created' => 'Reporte Creado',
-                                    'report_updated' => 'Reporte Actualizado',
-                                    'report_resolved' => 'Reporte Resuelto',
-                                    'report_functions_created' => 'Funciones de Reporte',
-                                    'report_general_created' => 'Reporte General',
+                                    'report_created' => __('Report Created'),
+                                    'report_updated' => __('Report Updated'),
+                                    'report_resolved' => __('Report Resolved'),
+                                    'report_functions_created' => __('Report Functions Created'),
+                                    'report_general_created' => __('General Report Created'),
                                 ];
                             @endphp
                             @foreach ($reportMailsList as $key => $label)
@@ -38,8 +64,8 @@
                                 </x-label>
                             @endforeach
                             <div class="flex justify-end pt-2">
-                                <button type="submit"
-                                    class="text-xs px-4 py-2 bg-primary-600 text-white rounded-md hover:bg-primary-700 transition font-semibold">
+                                <button type="submit" {{ !$canSave ? 'disabled' : '' }}
+                                    class="text-xs px-4 py-2 bg-primary-600 text-white rounded-md hover:bg-primary-700 transition font-semibold disabled:opacity-50 disabled:cursor-not-allowed">
                                     {{ __('Save') }}
                                 </button>
                             </div>

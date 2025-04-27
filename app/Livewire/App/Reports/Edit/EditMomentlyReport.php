@@ -11,6 +11,7 @@ use Livewire\Component;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Auth;
+use App\Models\User;
 
 class EditMomentlyReport extends Component
 {
@@ -89,7 +90,11 @@ class EditMomentlyReport extends Component
                 ]);
             }
 
-            Mail::to(Auth::user()->email)->send(new ReportUpdatedMail($this->report));
+            $emails = User::whereJsonContains('report_mail_preferences->report_updated', true)
+                ->pluck('email')
+                ->toArray();
+
+            Mail::to($emails)->send(new ReportUpdatedMail($this->report));
 
             session()->flash('swal', [
                 'icon' => 'success',

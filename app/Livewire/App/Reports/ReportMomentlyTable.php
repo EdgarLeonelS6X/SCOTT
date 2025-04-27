@@ -8,6 +8,7 @@ use Livewire\Component;
 use Livewire\WithPagination;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Mail;
+use App\Models\User;
 
 class ReportMomentlyTable extends Component
 {
@@ -80,10 +81,13 @@ class ReportMomentlyTable extends Component
                 'text' => __('The report and channels have been marked as resolved.'),
             ]);
 
-            if ($this->selectedReport->reportedBy) {
-                Mail::to($this->selectedReport->reportedBy->email)
-                    ->send(new ReportResolvedMail($this->selectedReport->load(['reportDetails.channel', 'reportedBy'])));
-            }
+            $emails = User::whereJsonContains('report_mail_preferences->report_resolved', true)
+                ->pluck('email')
+                ->toArray();
+
+            Mail::to($emails)->send(new ReportResolvedMail(
+                $this->selectedReport->load(['reportDetails.channel', 'reportedBy'])
+            ));
 
             $this->showModal = false;
         }

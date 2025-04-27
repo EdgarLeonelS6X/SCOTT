@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Mail;
 use Carbon\Carbon;
+use App\Models\User;
 
 class CreateFunctionsReport extends Component
 {
@@ -254,7 +255,11 @@ class CreateFunctionsReport extends Component
                 }
             }
 
-            Mail::to(Auth::user()->email)->send(new ReportFunctionsCreatedMail($report, $this->categories));
+            $emails = User::whereJsonContains('report_mail_preferences->report_functions_created', true)
+                ->pluck('email')
+                ->toArray();
+
+            Mail::to($emails)->send(new ReportFunctionsCreatedMail($report, $this->categories));
 
             $this->dispatch('swal', [
                 'icon' => 'success',

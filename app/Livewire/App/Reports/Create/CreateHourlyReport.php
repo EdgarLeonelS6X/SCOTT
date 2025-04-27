@@ -11,6 +11,7 @@ use App\Models\Channel;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Mail;
+use App\Models\User;
 
 class CreateHourlyReport extends Component
 {
@@ -155,7 +156,11 @@ class CreateHourlyReport extends Component
                 $categories[] = $categoryData;
             }
 
-            Mail::to(Auth::user()->email)->send(new ReportGeneralCreatedMail($report, $categories));
+            $emails = User::whereJsonContains('report_mail_preferences->report_general_created', true)
+                ->pluck('email')
+                ->toArray();
+
+            Mail::to($emails)->send(new ReportGeneralCreatedMail($report, $categories));
 
             $this->dispatch('swal', [
                 'icon' => 'success',

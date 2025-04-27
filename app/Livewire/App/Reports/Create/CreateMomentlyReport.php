@@ -11,6 +11,7 @@ use App\Models\Channel;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Mail;
+use App\Models\User;
 
 class CreateMomentlyReport extends Component
 {
@@ -106,7 +107,11 @@ class CreateMomentlyReport extends Component
                 ]);
             }
 
-            Mail::to(Auth::user()->email)->send(new ReportCreatedMail($report));
+            $emails = User::whereJsonContains('report_mail_preferences->report_created', true)
+                ->pluck('email')
+                ->toArray();
+
+            Mail::to($emails)->send(new ReportCreatedMail($report));
 
             $this->dispatch('swal', [
                 'icon' => 'success',

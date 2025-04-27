@@ -31,12 +31,14 @@ class UserPermissions extends Component
             'report_general_created' => false,
         ];
 
-        // Decodificar las preferencias del usuario, si existen
         $userPreferences = is_string($user->report_mail_preferences)
             ? json_decode($user->report_mail_preferences, true)
             : $user->report_mail_preferences;
 
-        // Mezclar las preferencias por defecto con las del usuario
+        if (!is_array($userPreferences)) {
+            $userPreferences = [];
+        }
+
         $this->reportMails = array_merge($defaultPreferences, $userPreferences);
 
         $this->allRoles = Role::all();
@@ -68,6 +70,36 @@ class UserPermissions extends Component
 
     public function saveReportPreferences()
     {
+        $auth = auth()->user();
+
+        $isAuthMaster = $auth->hasRole('master');
+        $isAuthAdmin = $auth->hasRole('admin');
+        $isAuthUser = $auth->hasRole('user');
+
+        $isTargetMaster = $this->user->hasRole('master');
+        $isTargetAdmin = $this->user->hasRole('admin');
+        $isTargetUser = $this->user->hasRole('user');
+
+        $isSelf = $auth->id === $this->user->id;
+        $isFirstMaster = $this->user->id === 1;
+
+        $canEditPreferences =
+            ($isFirstMaster && $isSelf) ||
+            (!$isFirstMaster && (
+                ($isAuthMaster) ||
+                ($isAuthAdmin && ($isTargetUser || $isSelf)) ||
+                ($isAuthUser && $isSelf)
+            ));
+
+        if (!$canEditPreferences) {
+            $this->dispatch('swal', [
+                'icon' => 'error',
+                'title' => __('Access Denied'),
+                'text' => __('You are not authorized to update these preferences.'),
+            ]);
+            return;
+        }
+
         $reportMailOptions = [
             'report_created',
             'report_updated',
