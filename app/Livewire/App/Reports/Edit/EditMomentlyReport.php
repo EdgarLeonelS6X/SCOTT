@@ -71,10 +71,10 @@ class EditMomentlyReport extends Component
         try {
             $this->validateReportData();
 
-            $this->report->update([
-                'category' => $this->reportData['category'],
-                'reviewed_by' => $this->reportData['reviewed_by'],
-            ]);
+            $this->report->category = $this->reportData['category'];
+            $this->report->reviewed_by = $this->reportData['reviewed_by'];
+            $this->report->updated_at = now();
+            $this->report->save();
 
             $this->report->reportDetails()->delete();
 

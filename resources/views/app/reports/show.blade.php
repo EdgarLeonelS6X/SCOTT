@@ -87,11 +87,17 @@
                             </p>
                             <p class="text-xs text-gray-200 dark:text-gray-300 opacity-80">
                                 {{ $report->created_at->format('d/m/Y h:i A') }}
-                                @if ($report->updated_at && $report->updated_at != $report->created_at)
+                                @if ($report->updated_at && $report->updated_at->gt($report->created_at))
                                     - {{ $report->updated_at->format('d/m/Y h:i A') }}
                                     <br>
                                     <small>
-                                        ({{ __('Last updated') }}: {{ $report->updated_at->diffForHumans() }})
+                                        ({{ __('Last updated') }}: {{ $report->updated_at->diffForHumans() }} -
+                                        {{ $report->created_at->diffForHumans($report->updated_at) }})
+                                    </small>
+                                @elseif (!$report->updated_at)
+                                    <br>
+                                    <small>
+                                        ({{ __('Not updated yet') }})
                                     </small>
                                 @endif
                             </p>
@@ -182,48 +188,45 @@
                         class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 p-6 bg-white dark:bg-gray-800">
                         @foreach ($report->reportDetails as $detail)
                             <div
-                                class="relative flex flex-col px-5 py-3 bg-white border border-gray-300 dark:bg-gray-800 dark:border-gray-700 rounded-xl shadow-2xl space-y-4">
-                                <div class="absolute -top-3 -right-3 z-[100]" x-data="{ showPopover: false }">
-                                    @if ($detail->description)
-                                        <button @mouseenter="showPopover = true" @mouseleave="showPopover = false"
+                                class="relative overflow-visible flex flex-col px-5 py-3 bg-white border border-gray-300 dark:bg-gray-800 dark:border-gray-700 rounded-xl space-y-4">
+                                @if ($detail->description)
+                                    <div x-data="{ openModal: false }" class="absolute -top-3 -right-3 h-6 w-6"
+                                        :class="{ 'z-[60]': openModal, 'z-50': !openModal }">
+                                        <button @click.stop="openModal = true; $event.stopImmediatePropagation()"
                                             type="button"
-                                            class="flex items-center justify-center w-6 h-6 rounded-full text-sm text-gray-500 dark:text-gray-300 hover:text-blue-500 transition-colors">
+                                            class="flex items-center justify-center w-full h-full rounded-full text-sm text-gray-500 dark:text-gray-300">
                                             <i class="fa-solid fa-circle-info text-base"></i>
                                         </button>
-                                        <div x-show="showPopover" x-transition:enter="transition ease-out duration-200"
-                                            x-transition:enter-start="opacity-0 translate-y-1"
-                                            x-transition:enter-end="opacity-100 translate-y-0"
-                                            x-transition:leave="transition ease-in duration-150"
-                                            x-transition:leave-start="opacity-100 translate-y-0"
-                                            x-transition:leave-end="opacity-0 translate-y-1"
-                                            @mouseenter="showPopover = true" @mouseleave="showPopover = false"
-                                            class="absolute z-[9999] w-64 mt-2 text-sm text-gray-600 bg-white border border-gray-200 rounded-lg shadow-xl dark:text-gray-300 dark:border-gray-600 dark:bg-gray-800"
-                                            style="right: 0;" x-cloak x-ref="popover" x-init="$watch('showPopover', value => {
-                                                if (value) {
-                                                    const popover = $refs.popover;
-                                                    const popoverRect = popover.getBoundingClientRect();
-                                                    const viewportWidth = window.innerWidth;
-                                            
-                                                    // Ajustar si se sale por la derecha
-                                                    if (popoverRect.right > viewportWidth) {
-                                                        popover.style.right = 'auto';
-                                                        popover.style.left = '0';
-                                                    }
-                                                }
-                                            })">
-                                            <div
-                                                class="px-3 py-2 bg-gray-100 border-b border-gray-200 rounded-t-lg dark:border-gray-600 dark:bg-gray-700 text-center">
-                                                <h3 class="font-semibold text-gray-900 dark:text-white">
+                                        <div x-show="openModal" x-transition:enter="ease-out duration-200"
+                                            x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
+                                            x-transition:leave="ease-in duration-150"
+                                            x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
+                                            class="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 p-4"
+                                            x-cloak>
+                                            <div @click.away="openModal = false; $event.stopPropagation()"
+                                                x-show="openModal" x-transition:enter="ease-out duration-200"
+                                                x-transition:enter-start="opacity-0 scale-95"
+                                                x-transition:enter-end="opacity-100 scale-100"
+                                                x-transition:leave="ease-in duration-150"
+                                                x-transition:leave-start="opacity-100 scale-100"
+                                                x-transition:leave-end="opacity-0 scale-95"
+                                                class="bg-white dark:bg-gray-800 rounded-lg shadow-2xl w-full max-w-sm p-6 relative">
+                                                <button @click.stop="openModal = false"
+                                                    class="absolute top-2 right-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200">
+                                                    <i class="fa-solid fa-xmark text-lg"></i>
+                                                </button>
+                                                <h2
+                                                    class="text-lg font-semibold text-gray-900 dark:text-white text-center mb-4">
                                                     {{ __('Description') }}
-                                                </h3>
-                                            </div>
-                                            <div class="px-3 py-2 text-center">
-                                                <p class="text-gray-700 dark:text-gray-300">{{ $detail->description }}
+                                                </h2>
+                                                <p
+                                                    class="text-gray-700 dark:text-gray-300 text-sm text-center break-words">
+                                                    {{ $detail->description }}
                                                 </p>
                                             </div>
                                         </div>
-                                    @endif
-                                </div>
+                                    </div>
+                                @endif
                                 <div class="flex items-center gap-2 w-full">
                                     <div class="w-1/3 flex-shrink-0">
                                         <img src="{{ $detail->channel->image }}" alt="{{ $detail->channel->name }}"
@@ -313,110 +316,136 @@
                                 @foreach ($report->reportDetails->where('subcategory', $fixedCategory) as $detail)
                                     <div
                                         class="relative flex flex-col px-5 py-3 bg-white border border-gray-300 dark:bg-gray-800 dark:border-gray-700 rounded-xl shadow-2xl space-y-4">
-                                        <div class="absolute -top-3 -right-3 z-20 h-6 w-6">
+                                        <div
+                                            class="relative overflow-visible flex flex-col px-5 py-3 bg-white border border-gray-300 dark:bg-gray-800 dark:border-gray-700 rounded-xl space-y-4">
                                             @if ($detail->description)
-                                                <button data-popover-target="popover-{{ $detail->id }}"
-                                                    type="button"
-                                                    class="flex items-center justify-center w-full h-full rounded-full text-sm text-gray-500 dark:text-gray-300">
-                                                    <i class="fa-solid fa-circle-info text-base"></i>
-                                                </button>
+                                                <div x-data="{ openModal: false }" class="absolute -top-3 -right-3 h-6 w-6"
+                                                    :class="{ 'z-[60]': openModal, 'z-50': !openModal }">
+                                                    <button
+                                                        @click.stop="openModal = true; $event.stopImmediatePropagation()"
+                                                        type="button"
+                                                        class="flex items-center justify-center w-full h-full rounded-full text-sm text-gray-500 dark:text-gray-300">
+                                                        <i class="fa-solid fa-circle-info text-base"></i>
+                                                    </button>
+                                                    <div x-show="openModal" x-transition:enter="ease-out duration-200"
+                                                        x-transition:enter-start="opacity-0"
+                                                        x-transition:enter-end="opacity-100"
+                                                        x-transition:leave="ease-in duration-150"
+                                                        x-transition:leave-start="opacity-100"
+                                                        x-transition:leave-end="opacity-0"
+                                                        class="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 p-4"
+                                                        x-cloak>
+                                                        <div @click.away="openModal = false; $event.stopPropagation()"
+                                                            x-show="openModal"
+                                                            x-transition:enter="ease-out duration-200"
+                                                            x-transition:enter-start="opacity-0 scale-95"
+                                                            x-transition:enter-end="opacity-100 scale-100"
+                                                            x-transition:leave="ease-in duration-150"
+                                                            x-transition:leave-start="opacity-100 scale-100"
+                                                            x-transition:leave-end="opacity-0 scale-95"
+                                                            class="bg-white dark:bg-gray-800 rounded-lg shadow-2xl w-full max-w-sm p-6 relative">
+                                                            <button @click.stop="openModal = false"
+                                                                class="absolute top-2 right-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200">
+                                                                <i class="fa-solid fa-xmark text-lg"></i>
+                                                            </button>
+                                                            <h2
+                                                                class="text-lg font-semibold text-gray-900 dark:text-white text-center mb-4">
+                                                                {{ __('Description') }}
+                                                            </h2>
+                                                            <p
+                                                                class="text-gray-700 dark:text-gray-300 text-sm text-center break-words">
+                                                                {{ $detail->description }}
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            @endif
+                                            <div class="flex items-start">
+                                                <div class="flex items-center gap-2 w-full">
+                                                    <div class="w-1/3 flex-shrink-0">
+                                                        <img src="{{ $detail->channel->image }}"
+                                                            title="{{ $detail->channel->number }} {{ $detail->channel->name }}"
+                                                            alt="{{ $detail->channel->name }}"
+                                                            class="w-10 h-10 object-contain object-center shadow-sm">
+                                                    </div>
+                                                    <div class="w-2/3 flex flex-col justify-center text-end">
+                                                        <p
+                                                            class="text-base font-semibold text-gray-900 dark:text-white leading-tight truncate">
+                                                            {{ $detail->channel->number }}
+                                                            {{ $detail->channel->name }}
+                                                        </p>
+                                                        <p
+                                                            class="text-sm font-medium text-gray-500 dark:text-gray-400">
+                                                            {{ $detail->stage->name }}
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div
+                                                class="flex justify-around items-center gap-3 px-5 py-3 bg-gray-100 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg">
+                                                <div class="flex flex-col items-center tooltip"
+                                                    title="{{ $detail->media === 'VIDEO' || $detail->media === 'AUDIO/VIDEO' ? __('The channel does not have video') : __('The channel has video') }}">
+                                                    <i
+                                                        class="fa-solid {{ $detail->media === 'VIDEO' || $detail->media === 'AUDIO/VIDEO' ? 'fa-video-slash text-red-500' : 'fa-video text-green-500' }} text-xl"></i>
+                                                    <span
+                                                        class="text-[10px] mt-1 text-gray-500 dark:text-gray-300">VIDEO</span>
+                                                </div>
+                                                <div class="flex flex-col items-center tooltip"
+                                                    title="{{ $detail->media === 'AUDIO' || $detail->media === 'AUDIO/VIDEO' ? __('The channel does not have audio') : __('The channel has audio') }}">
+                                                    <i
+                                                        class="fa-solid {{ $detail->media === 'AUDIO' || $detail->media === 'AUDIO/VIDEO' ? 'fa-volume-xmark text-red-500' : 'fa-volume-up text-green-500' }} text-xl"></i>
+                                                    <span
+                                                        class="text-[10px] mt-1 text-gray-500 dark:text-gray-300">AUDIO</span>
+                                                </div>
+                                                <div class="flex flex-col items-center tooltip"
+                                                    title="{{ $detail->protocol === 'DASH' || $detail->protocol === 'DASH/HLS' ? __('Not working on Web Client (DASH)') : __('Working on Web Client (DASH)') }}">
+                                                    <i
+                                                        class="fa-solid fa-computer {{ $detail->protocol === 'DASH' || $detail->protocol === 'DASH/HLS' ? 'text-red-500' : 'text-green-500' }} text-xl"></i>
+                                                    <span
+                                                        class="text-[10px] mt-1 text-gray-500 dark:text-gray-300">DASH</span>
+                                                </div>
+                                                <div class="flex flex-col items-center tooltip"
+                                                    title="{{ $detail->protocol === 'HLS' || $detail->protocol === 'DASH/HLS' ? __('Not working on Set Up Box (HLS)') : __('Working on Set Up Box (HLS)') }}">
+                                                    <i
+                                                        class="fa-solid fa-tv {{ $detail->protocol === 'HLS' || $detail->protocol === 'DASH/HLS' ? 'text-red-500' : 'text-green-500' }} text-xl"></i>
+                                                    <span
+                                                        class="text-[10px] mt-1 text-gray-500 dark:text-gray-300">HLS</span>
+                                                </div>
+                                            </div>
+                                            @if ($fixedCategory === 'CUTV' && $detail->reportContentLosses->isNotEmpty())
+                                                <div x-data="{ showLosses: false }" class="mt-5 w-full text-center">
+                                                    <div class="flex justify-center">
+                                                        <button @click="showLosses = !showLosses"
+                                                            class="text-[11px] text-primary-600 dark:text-primary-400 font-medium flex justify-center items-center gap-1 hover:underline">
+                                                            <i class="fa-solid fa-clock text-xs"></i>
+                                                            {{ __('View content loss intervals') }}
+                                                            <i :class="showLosses ? 'fa-chevron-up' : 'fa-chevron-down'"
+                                                                class="fa-solid ml-1 text-xs transition-transform duration-200"></i>
+                                                        </button>
+                                                    </div>
+                                                    <div x-show="showLosses" x-collapse
+                                                        class="mt-3 space-y-2 text-[11px] text-gray-600 dark:text-gray-300">
+                                                        @foreach ($detail->reportContentLosses as $loss)
+                                                            @php
+                                                                $start = \Carbon\Carbon::parse($loss->start_time);
+                                                                $end = \Carbon\Carbon::parse($loss->end_time);
+                                                            @endphp
+                                                            <div
+                                                                class="px-3 py-2 bg-gray-100 dark:bg-gray-700 rounded-md hover:bg-gray-200 dark:hover:bg-gray-600">
+                                                                @if ($start->format('Y-m-d') === $end->format('Y-m-d'))
+                                                                    <div>{{ $start->translatedFormat('d M Y') }} |
+                                                                        {{ $start->format('H:i') }} →
+                                                                        {{ $end->format('H:i') }}</div>
+                                                                @else
+                                                                    <div>{{ $start->translatedFormat('d M Y H:i') }} →
+                                                                        {{ $end->translatedFormat('d M Y H:i') }}</div>
+                                                                @endif
+                                                            </div>
+                                                        @endforeach
+                                                    </div>
+                                                </div>
                                             @endif
                                         </div>
-                                        <div data-popover id="popover-{{ $detail->id }}" role="tooltip"
-                                            class="absolute z-30 invisible inline-block w-64 text-sm text-gray-600 transition-opacity duration-300 bg-white border border-gray-200 rounded-lg shadow-lg opacity-0 dark:text-gray-300 dark:border-gray-600 dark:bg-gray-800"
-                                            style="top: -10px; right: -270px;">
-                                            <div
-                                                class="px-3 py-2 bg-gray-100 border-b border-gray-200 rounded-t-lg dark:border-gray-600 dark:bg-gray-700 text-center">
-                                                <h3 class="font-semibold text-gray-900 dark:text-white">
-                                                    {{ __('Description') }}</h3>
-                                            </div>
-                                            <div class="px-3 py-2 text-center">
-                                                <p>{{ $detail->description }}</p>
-                                            </div>
-                                        </div>
-                                        <div class="flex items-start">
-                                            <div class="flex items-center gap-2 w-full">
-                                                <div class="w-1/3 flex-shrink-0">
-                                                    <img src="{{ $detail->channel->image }}"
-                                                        alt="{{ $detail->channel->name }}"
-                                                        class="w-10 h-10 object-contain object-center shadow-sm">
-                                                </div>
-                                                <div class="w-2/3 flex flex-col justify-center text-end">
-                                                    <p
-                                                        class="text-base font-semibold text-gray-900 dark:text-white leading-tight">
-                                                        {{ $detail->channel->number }} {{ $detail->channel->name }}
-                                                    </p>
-                                                    <p class="text-sm font-medium text-gray-500 dark:text-gray-400">
-                                                        {{ $detail->stage->name }}
-                                                    </p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div
-                                            class="flex justify-around items-center gap-3 px-5 py-3 bg-gray-100 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg">
-                                            <div class="flex flex-col items-center tooltip"
-                                                title="{{ $detail->media === 'VIDEO' || $detail->media === 'AUDIO/VIDEO' ? __('The channel does not have video') : __('The channel has video') }}">
-                                                <i
-                                                    class="fa-solid {{ $detail->media === 'VIDEO' || $detail->media === 'AUDIO/VIDEO' ? 'fa-video-slash text-red-500' : 'fa-video text-green-500' }} text-xl"></i>
-                                                <span
-                                                    class="text-[10px] mt-1 text-gray-500 dark:text-gray-300">VIDEO</span>
-                                            </div>
-                                            <div class="flex flex-col items-center tooltip"
-                                                title="{{ $detail->media === 'AUDIO' || $detail->media === 'AUDIO/VIDEO' ? __('The channel does not have audio') : __('The channel has audio') }}">
-                                                <i
-                                                    class="fa-solid {{ $detail->media === 'AUDIO' || $detail->media === 'AUDIO/VIDEO' ? 'fa-volume-xmark text-red-500' : 'fa-volume-up text-green-500' }} text-xl"></i>
-                                                <span
-                                                    class="text-[10px] mt-1 text-gray-500 dark:text-gray-300">AUDIO</span>
-                                            </div>
-                                            <div class="flex flex-col items-center tooltip"
-                                                title="{{ $detail->protocol === 'DASH' || $detail->protocol === 'DASH/HLS' ? __('Not working on Web Client (DASH)') : __('Working on Web Client (DASH)') }}">
-                                                <i
-                                                    class="fa-solid fa-computer {{ $detail->protocol === 'DASH' || $detail->protocol === 'DASH/HLS' ? 'text-red-500' : 'text-green-500' }} text-xl"></i>
-                                                <span
-                                                    class="text-[10px] mt-1 text-gray-500 dark:text-gray-300">DASH</span>
-                                            </div>
-                                            <div class="flex flex-col items-center tooltip"
-                                                title="{{ $detail->protocol === 'HLS' || $detail->protocol === 'DASH/HLS' ? __('Not working on Set Up Box (HLS)') : __('Working on Set Up Box (HLS)') }}">
-                                                <i
-                                                    class="fa-solid fa-tv {{ $detail->protocol === 'HLS' || $detail->protocol === 'DASH/HLS' ? 'text-red-500' : 'text-green-500' }} text-xl"></i>
-                                                <span
-                                                    class="text-[10px] mt-1 text-gray-500 dark:text-gray-300">HLS</span>
-                                            </div>
-                                        </div>
-                                        @if ($fixedCategory === 'CUTV' && $detail->reportContentLosses->isNotEmpty())
-                                            <div x-data="{ showLosses: false }" class="mt-5 w-full text-center">
-                                                <div class="flex justify-center">
-                                                    <button @click="showLosses = !showLosses"
-                                                        class="text-[11px] text-primary-600 dark:text-primary-400 font-medium flex justify-center items-center gap-1 hover:underline">
-                                                        <i class="fa-solid fa-clock text-xs"></i>
-                                                        {{ __('View content loss intervals') }}
-                                                        <i :class="showLosses ? 'fa-chevron-up' : 'fa-chevron-down'"
-                                                            class="fa-solid ml-1 text-xs transition-transform duration-200"></i>
-                                                    </button>
-                                                </div>
-                                                <div x-show="showLosses" x-collapse
-                                                    class="mt-3 space-y-2 text-[11px] text-gray-600 dark:text-gray-300">
-                                                    @foreach ($detail->reportContentLosses as $loss)
-                                                        @php
-                                                            $start = \Carbon\Carbon::parse($loss->start_time);
-                                                            $end = \Carbon\Carbon::parse($loss->end_time);
-                                                        @endphp
-                                                        <div
-                                                            class="px-3 py-2 bg-gray-100 dark:bg-gray-700 rounded-md hover:bg-gray-200 dark:hover:bg-gray-600">
-                                                            @if ($start->format('Y-m-d') === $end->format('Y-m-d'))
-                                                                <div>{{ $start->translatedFormat('d M Y') }} |
-                                                                    {{ $start->format('H:i') }} →
-                                                                    {{ $end->format('H:i') }}</div>
-                                                            @else
-                                                                <div>{{ $start->translatedFormat('d M Y H:i') }} →
-                                                                    {{ $end->translatedFormat('d M Y H:i') }}</div>
-                                                            @endif
-                                                        </div>
-                                                    @endforeach
-                                                </div>
-                                            </div>
-                                        @endif
-                                    </div>
                                 @endforeach
                             @else
                                 <div

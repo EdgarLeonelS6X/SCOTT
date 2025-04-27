@@ -226,7 +226,8 @@
                         {{ $report->updated_at->format('d/m/Y H:i') }}
                         <br>
                         <small style="color: #aaa;">
-                            ({{ __('Last updated') }}: {{ $report->updated_at->diffForHumans() }})
+                            ({{ __('Last updated') }}: {{ $report->updated_at->diffForHumans() }} -
+                            {{ $report->created_at->diffForHumans($report->updated_at) }})
                         </small>
                     </td>
                 </tr>
