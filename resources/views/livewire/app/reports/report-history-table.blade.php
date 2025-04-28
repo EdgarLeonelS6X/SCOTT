@@ -101,7 +101,7 @@
                         <i class="fa-solid fa-flag mr-1"></i>
                         {{ __('Folio') }}
                     </th>
-                    <th class="py-3 px-4 text-left w-36 min-w-[300px] max-w-[300px]">
+                    <th class="py-3 px-4 text-left w-36 min-w-[360px] max-w-[360px]">
                         <i class="fa-solid fa-folder mr-1"></i>
                         {{ __('Report') }}
                     </th>
@@ -178,7 +178,8 @@
                             <td class="px-4 py-3 text-sm font-bold">
                                 {{ $report->id }}
                             </td>
-                            <td class="px-4 py-3 text-sm font-bold">
+                            <td title="{{ $report->category }}"
+                                class="px-4 py-3 text-sm font-bold leading-tight truncate">
                                 {{ $report->category }}
                             </td>
                             <td class="py-3 px-4">
