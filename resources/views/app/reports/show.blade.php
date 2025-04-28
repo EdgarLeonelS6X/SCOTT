@@ -186,7 +186,7 @@
                     </button>
                     <div x-show="open" x-collapse
                         class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 p-6 bg-white dark:bg-gray-800">
-                        @foreach ($report->reportDetails as $detail)
+                        @foreach ($report->reportDetails->sortBy(fn($detail) => $detail->channel->number) as $detail)
                             <div
                                 class="relative overflow-visible flex flex-col px-5 py-3 bg-white border border-gray-300 dark:bg-gray-800 dark:border-gray-700 rounded-xl space-y-4">
                                 @if ($detail->description)
@@ -316,7 +316,7 @@
                         <div x-show="open" x-collapse
                             class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 p-6 bg-white dark:bg-gray-800">
                             @if (in_array($fixedCategory, $allCategories))
-                                @foreach ($report->reportDetails->where('subcategory', $fixedCategory) as $detail)
+                                @foreach ($report->reportDetails->where('subcategory', $fixedCategory)->sortBy(fn($detail) => $detail->channel->number) as $detail)
                                     <div
                                         class="relative flex flex-col px-5 py-3 bg-white border border-gray-300 dark:bg-gray-800 dark:border-gray-700 rounded-xl shadow-2xl space-y-4">
                                         @if ($detail->description)

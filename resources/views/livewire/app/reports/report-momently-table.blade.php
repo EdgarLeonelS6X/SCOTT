@@ -73,7 +73,7 @@
                                 </td>
                                 <td class="px-4 py-3">
                                     <div class="flex items-center space-x-3">
-                                        @foreach ($report->reportDetails->take(3) as $detail)
+                                        @foreach ($report->reportDetails->sortBy(fn($detail) => $detail->channel->number)->take(3) as $detail)
                                             <div class="relative w-8 h-8 overflow-hidden">
                                                 <img class="w-full h-full object-contain object-center"
                                                     src="{{ $detail->channel->image }}"
@@ -212,7 +212,7 @@
                         @if (isset($selectedReport) && $selectedReport->reportDetails->count() > 4) max-h-56 overflow-auto @else overflow-hidden @endif"
                         style="scrollbar-width: none">
                         @if (isset($selectedReport) && $selectedReport)
-                            @foreach ($selectedReport->reportDetails as $detail)
+                            @foreach ($selectedReport->reportDetails->sortBy(fn($detail) => $detail->channel->number) as $detail)
                                 <div
                                     class="relative overflow-visible flex flex-col px-5 py-3 bg-white border border-gray-300 dark:bg-gray-800 dark:border-gray-700 rounded-xl space-y-4">
                                     @if ($detail->description)
