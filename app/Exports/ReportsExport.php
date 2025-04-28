@@ -147,10 +147,18 @@ class ReportsExport implements FromCollection, WithHeadings, ShouldAutoSize, Wit
                         $start = \Carbon\Carbon::parse($loss->start_time);
                         $end = \Carbon\Carbon::parse($loss->end_time);
                         $diff = $start->diff($end);
-                        $days = $diff->format('%a');
-                        $hours = $diff->format('%H');
-                        $minutes = $diff->format('%I');
-                        $duration = ($days > 0 ? "{$days}d " : '') . "{$hours}h {$minutes}m";
+                        $days = (int)$diff->format('%a');
+                        $hours = (int)$diff->format('%H');
+                        $minutes = (int)$diff->format('%I');
+
+                        $duration = '';
+                        if ($days > 0) {
+                            $duration .= "{$days}d ";
+                        }
+                        if ($hours > 0 || $days > 0) {
+                            $duration .= "{$hours}h ";
+                        }
+                        $duration .= "{$minutes}m";
 
                         return "Subcategory: {$subcategory}, Channel: {$channelNumber} {$channelName}, Start: {$start->format('d/m/Y H:i')}, End: {$end->format('d/m/Y H:i')}, Duration: {$duration}";
                     });

@@ -100,8 +100,11 @@ class ReportMomentlyTable extends Component
             ->where(function ($query) {
                 $query->where('category', 'like', '%' . $this->search . '%')
                     ->orWhereHas('reportDetails.channel', function ($channelQuery) {
-                        $channelQuery->where('name', 'like', '%' . $this->search . '%')
-                            ->orWhere('number', 'like', '%' . $this->search . '%');
+                        $channelQuery->where(function ($q) {
+                            $q->where('name', 'like', '%' . $this->search . '%')
+                                ->orWhere('number', 'like', '%' . $this->search . '%')
+                                ->orWhereRaw("CONCAT(number, ' ', name) LIKE ?", ['%' . $this->search . '%']);
+                        });
                     });
             })
             ->with(['reportDetails.channel', 'reportedBy', 'attendedBy'])
