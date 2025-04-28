@@ -1,5 +1,5 @@
-<div class="w-full md:w-2/3 pl-6" wire:key="reports-table">
-    <div class="bg-white dark:bg-gray-800 relative shadow-2xl sm:rounded-lg overflow-hidden">
+<div class="w-full md:w-2/3 pt-6 sm:pt-0 sm:pl-6" wire:key="reports-table">
+    <div class="bg-white dark:bg-gray-800 relative shadow-2xl rounded-lg overflow-hidden">
         <div class="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 p-4">
             <div class="w-full md:w-1/2">
                 <form class="flex items-center">
@@ -7,7 +7,7 @@
                     <div class="relative w-full">
                         <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
                             <svg aria-hidden="true" class="w-5 h-5 text-gray-500 dark:text-gray-400" fill="currentColor"
-                                viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                                 <path fill-rule="evenodd"
                                     d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
                                     clip-rule="evenodd" />
@@ -15,7 +15,7 @@
                         </div>
                         <input type="text" id="simple-search" wire:model.live="search"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full pl-10 p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                            placeholder="{{ __('Search') }}" required="" autofocus>
+                            placeholder="{{ __('Search') }}" required autofocus>
                     </div>
                 </form>
             </div>
@@ -36,30 +36,26 @@
                     </span>
                 </div>
             @else
-                <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-                    <thead class="text-xs dark:text-white uppercase dark:bg-gray-600 shadow-2xl">
+                <table class="w-full min-w-[640px] text-sm text-left text-gray-500 dark:text-gray-400">
+                    <thead class="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-gray-600 dark:text-white">
                         <tr>
-                            <th class="py-3 px-4 text-left">
-                                <i class="fa-solid fa-folder mr-1"></i>
-                                {{ __('Report') }}
+                            <th class="py-3 px-4 text-left whitespace-nowrap">
+                                <i class="fa-solid fa-folder mr-1"></i> {{ __('Report') }}
                             </th>
-                            <th class="py-3 px-4 text-left">
-                                <i class="fa-solid fa-layer-group mr-1"></i>
-                                {{ __('Channels') }}
+                            <th class="py-3 px-4 text-left whitespace-nowrap">
+                                <i class="fa-solid fa-layer-group mr-1"></i> {{ __('Channels') }}
                             </th>
-                            <th class="py-3 px-4 text-left">
-                                <i class="fa-solid fa-circle-check mr-1"></i>
-                                {{ __('Status') }}
+                            <th class="py-3 px-4 text-left whitespace-nowrap">
+                                <i class="fa-solid fa-circle-check mr-1"></i> {{ __('Status') }}
                             </th>
-                            <th wire:click="toggleOrder" class="py-3 px-4 text-left flex items-center cursor-pointer">
-                                <i class="fa-solid fa-calendar mr-1"></i>
-                                {{ __('Reported') }}
+                            <th wire:click="toggleOrder"
+                                class="py-3 px-4 text-left flex items-center cursor-pointer whitespace-nowrap">
+                                <i class="fa-solid fa-calendar mr-1"></i> {{ __('Reported') }}
                                 <i class="fa-solid {{ $order === 'asc' ? 'fa-sort-up' : 'fa-sort-down' }} ml-1"></i>
                             </th>
-                            <th scope="col" class="px-4 py-3">
+                            <th class="px-4 py-3 text-center">
                                 <span class="sr-only">
-                                    <i class="fa-solid fa-sliders-h mr-1"></i>
-                                    {{ __('Options') }}
+                                    <i class="fa-solid fa-sliders-h mr-1"></i> {{ __('Options') }}
                                 </span>
                             </th>
                         </tr>
@@ -68,10 +64,10 @@
                         @foreach ($reports as $report)
                             <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-600 text-black dark:text-white cursor-pointer"
                                 wire:click="openReportDetails({{ $report->id }})">
-                                <td class="py-3 px-4 font-bold">
+                                <td class="py-3 px-4 font-bold whitespace-nowrap">
                                     {{ $report->category }}
                                 </td>
-                                <td class="px-4 py-3">
+                                <td class="px-4 py-3 whitespace-nowrap">
                                     <div class="flex items-center space-x-3">
                                         @foreach ($report->reportDetails->sortBy(fn($detail) => $detail->channel->number)->take(3) as $detail)
                                             <div class="relative w-8 h-8 overflow-hidden">
@@ -89,21 +85,19 @@
                                         @endif
                                     </div>
                                 </td>
-                                <td class="py-3 px-4">
+                                <td class="py-3 px-4 whitespace-nowrap">
                                     <span
                                         class="inline-flex items-center px-2 py-1 text-sm font-medium text-yellow-800 bg-yellow-200 dark:bg-yellow-800 dark:text-yellow-200 rounded-full">
-                                        <i class="fa-solid fa-magnifying-glass mr-1.5"></i>
-                                        {{ $report->status }}
+                                        <i class="fa-solid fa-magnifying-glass mr-1.5"></i> {{ $report->status }}
                                     </span>
                                 </td>
-                                <td class="py-3 px-4">
+                                <td class="py-3 px-4 whitespace-nowrap">
                                     <span
-                                        class="inline-flex items-center px-2 py-1 text-sm font-medium text-blue-800 bg-blue-200 rounded-full dark:bg-blue-800 dark:text-blue-200">
-                                        <i class="fa-solid fa-clock mr-1.5"></i>
-                                        {{ $report->formatted_date }}
+                                        class="inline-flex items-center px-2 py-1 text-sm font-medium text-blue-800 bg-blue-200 dark:bg-blue-800 dark:text-blue-200 rounded-full">
+                                        <i class="fa-solid fa-clock mr-1.5"></i> {{ $report->formatted_date }}
                                     </span>
                                 </td>
-                                <td class="py-3 px-4 text-center">
+                                <td class="py-3 px-4 text-center whitespace-nowrap">
                                     <i class="fa-solid fa-chevron-right text-gray-600 dark:text-gray-300"></i>
                                 </td>
                             </tr>
@@ -117,9 +111,11 @@
         </div>
     </div>
     @if ($showModal && $selectedReport)
-        <div class="fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-center items-center">
-            <div class="bg-white dark:bg-gray-900 p-6 rounded-2xl shadow-2xl w-11/12 md:w-3/4 max-w-6xl">
-                <div class="flex justify-between items-center mb-8">
+        <div
+            class="fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-center items-start md:items-center overflow-y-auto">
+            <div
+                class="bg-white dark:bg-gray-900 p-4 sm:p-6 rounded-2xl shadow-2xl w-11/12 md:w-4/5 lg:w-3/4 max-w-6xl mt-8 md:mt-0">
+                <div class="flex flex-wrap justify-between items-center gap-4 mb-6 overflow-x-auto whitespace-nowrap">
                     <div
                         class="flex items-center gap-4 bg-white dark:bg-gray-800 px-4 py-2 rounded-xl shadow-2xl border border-gray-200 dark:border-gray-700">
                         <i class="fa-solid fa-file-alt text-gray-800 dark:text-gray-100 text-2xl"></i>
@@ -136,7 +132,7 @@
                         </span>
                     </div>
                     <button wire:click="closeReportDetails"
-                        class="text-gray-500 pt-1 dark:text-gray-400 hover:text-gray-700 dark:hover:text-white">
+                        class="hidden sm:block text-gray-500 pt-1 dark:text-gray-400 hover:text-gray-700 dark:hover:text-white">
                         <i class="fa-solid fa-xmark text-xl"></i>
                     </button>
                 </div>
@@ -145,7 +141,7 @@
                             bg-gradient-to-br from-pink-500 via-orange-400 to-red-500
                             dark:from-blue-900 dark:via-indigo-800 dark:to-purple-900
                             text-white dark:text-gray-100 ring-1 ring-white/20 dark:ring-gray-700 hover:shadow-[0_8px_25px_rgba(0,0,0,0.3)]">
-                    <div class="flex justify-between items-center gap-6">
+                    <div class="flex flex-wrap justify-between items-center gap-6">
                         <div class="flex items-center gap-4 flex-1">
                             <img src="{{ $selectedReport->reportedBy->profile_photo_url }}"
                                 alt="{{ $selectedReport->reportedBy->name }}"
@@ -162,9 +158,9 @@
                                 </p>
                             </div>
                         </div>
-                        <div class="flex gap-4">
+                        <div class="flex gap-4 flex-wrap justify-end">
                             <div
-                                class="flex items-center gap-3 bg-white/20 dark:bg-gray-800 px-4 py-3 rounded-lg shadow-md">
+                                class="flex items-center gap-3 bg-white/20 dark:bg-gray-800 px-4 py-3 rounded-lg shadow-md w-full sm:w-auto mb-4 sm:mb-0">
                                 <div
                                     class="flex items-center justify-center w-10 h-10 bg-white text-gray-700 dark:bg-gray-700 dark:text-gray-300 rounded-full shadow-md">
                                     <i class="fa-solid fa-magnifying-glass text-lg"></i>
@@ -179,7 +175,7 @@
                                 </div>
                             </div>
                             <div
-                                class="flex items-center gap-3 bg-white/20 dark:bg-gray-800 px-4 py-3 rounded-lg shadow-md">
+                                class="flex items-center gap-3 bg-white/20 dark:bg-gray-800 px-4 py-3 rounded-lg shadow-md w-full sm:w-auto">
                                 <div
                                     class="flex items-center justify-center w-10 h-10 bg-white text-gray-700 dark:bg-gray-700 dark:text-gray-300 rounded-full shadow-md">
                                     <i class="fa-solid fa-gear text-lg"></i>
@@ -208,13 +204,13 @@
                             {{ isset($selectedReport) && $selectedReport->reportDetails->count() === 1 ? __('channel') : __('channels') }}
                         </span>
                     </div>
-                    <div class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-2 mt-4
-                        @if (isset($selectedReport) && $selectedReport->reportDetails->count() > 4) max-h-56 overflow-auto @else overflow-hidden @endif"
+                    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-6 p-2 mt-4
+                        @if (isset($selectedReport) && $selectedReport->reportDetails->count() > 4) max-h-80 md:max-h-56 overflow-auto @else overflow-hidden @endif"
                         style="scrollbar-width: none">
                         @if (isset($selectedReport) && $selectedReport)
                             @foreach ($selectedReport->reportDetails->sortBy(fn($detail) => $detail->channel->number) as $detail)
                                 <div
-                                    class="relative overflow-visible flex flex-col px-5 py-3 bg-white border border-gray-300 dark:bg-gray-800 dark:border-gray-700 rounded-xl space-y-4">
+                                    class="relative overflow-visible flex flex-col px-4 py-3 sm:px-5 sm:py-4 bg-white border border-gray-300 dark:bg-gray-800 dark:border-gray-700 rounded-xl space-y-3 text-sm">
                                     @if ($detail->description)
                                         <div x-data="{ openModal: false }" class="absolute -top-3 -right-3 h-6 w-6"
                                             :class="{ 'z-[60]': openModal, 'z-50': !openModal }">
@@ -313,14 +309,14 @@
                         @endif
                     </div>
                 </div>
-                <div class="flex justify-end mt-4 space-x-4">
+                <div class="flex flex-col sm:flex-row justify-end mt-4 gap-4">
                     <button wire:click.prevent="markAsSolved()"
                         class="py-2 px-4 bg-primary-600 hover:bg-primary-700 text-white rounded-lg shadow font-bold text-base">
                         <i class="fa-solid fa-circle-check mr-1"></i>
                         {{ __('Mark as solved') }}
                     </button>
                     <button wire:click="closeReportDetails"
-                        class="flex items-center gap-2 py-2 px-4 text-base font-bold text-gray-700 bg-white rounded-lg border border-gray-400 hover:border-primary-600 hover:text-primary-600 focus:ring-4 focus:ring-primary-200 dark:text-gray-300 dark:bg-gray-800 dark:border-gray-600 dark:hover:text-primary-400 dark:hover:bg-gray-700">
+                        class="flex justify-center items-center gap-2 py-2 px-4 text-base font-bold text-gray-700 bg-white rounded-lg border border-gray-400 hover:border-primary-600 hover:text-primary-600 focus:ring-4 focus:ring-primary-200 dark:text-gray-300 dark:bg-gray-800 dark:border-gray-600 dark:hover:text-primary-400 dark:hover:bg-gray-700">
                         <i class="fa-solid fa-xmark"></i>
                         {{ __('Discard') }}
                     </button>

@@ -58,7 +58,7 @@
                                 :value="old('email')" required autocomplete="username"
                                 placeholder="{{ __('name@stargroup.com.mx') }}" />
                         </div>
-                        <div class="grid grid-cols-2 gap-2 mt-4">
+                        <div class="grid grid-cols-1 mt-4 sm:grid-cols-2 gap-4">
                             <div>
                                 <x-label for="password">
                                     <i class="fa-solid fa-key mr-1"></i>
