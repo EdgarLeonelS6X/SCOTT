@@ -22,13 +22,14 @@
                     };
                     return visibilityRules[category]?.includes(field) ?? false;
                 }
-            }" class="p-6 border bg-white dark:bg-gray-800 rounded-2xl shadow-2xl">
+            }" c<div
+                class="p-4 md:p-6 border bg-white dark:bg-gray-800 rounded-2xl shadow-2xl mb-5">
                 <div class="flex items-center justify-between cursor-pointer" @click="open = !open">
                     <div class="flex items-center">
                         <button type="button" class="text-primary-600" @click="open = !open">
                             <i :class="open ? 'fas fa-chevron-down' : 'fas fa-chevron-right'" class="mr-3"></i>
                         </button>
-                        <div class="dark:text-white text-lg font-semibold relative">
+                        <div class="dark:text-white text-base sm:text-lg font-semibold relative">
                             <h3
                                 class="cursor-pointer px-3 py-2 rounded-full shadow-md flex items-center gap-2 transition 
                                    bg-gray-50 border dark:bg-gray-700 dark:border-white">
@@ -58,16 +59,16 @@
                             <div
                                 :class="{
                                     'w-full': ['EPG', 'PC'].includes('{{ $category['name'] }}'),
-                                    'grid grid-cols-2 gap-6': !['EPG', 'PC', 'RESTART', 'CUTV'].includes(
+                                    'grid gap-6 grid-cols-1 md:grid-cols-2': !['EPG', 'PC', 'RESTART', 'CUTV'].includes(
                                         '{{ $category['name'] }}'),
                                     '': ['RESTART', 'CUTV'].includes(
                                         '{{ $category['name'] }}')
                                 }">
                                 <div
                                     :class="{
-                                        'grid grid-cols-3 gap-6': ['EPG', 'PC'].includes(
+                                        'grid gap-6 grid-cols-1 md:grid-cols-3': ['EPG', 'PC'].includes(
                                             '{{ $category['name'] }}'),
-                                        'grid grid-cols-2 gap-6': ['RESTART', 'CUTV'].includes(
+                                        'grid gap-6 grid-cols-1 md:grid-cols-2': ['RESTART', 'CUTV'].includes(
                                             '{{ $category['name'] }}')
                                     }">
                                     @php
@@ -305,7 +306,7 @@
                 </div>
             </div>
         @endforeach
-        <div class="flex justify-end gap-4">
+        <div class="flex flex-col md:flex-row justify-end gap-4 mt-6">
             <button type="submit" class="py-2 px-4 bg-primary-600 text-white rounded-lg shadow font-bold">
                 <i class="fas fa-file-lines mr-1.5"></i>
                 {{ __('Generate report') }}

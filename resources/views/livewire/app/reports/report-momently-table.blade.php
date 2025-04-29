@@ -117,7 +117,7 @@
                 class="bg-white dark:bg-gray-900 p-4 sm:p-6 rounded-2xl shadow-2xl w-11/12 md:w-4/5 lg:w-3/4 max-w-6xl mt-8 md:mt-0">
                 <div class="flex flex-wrap justify-between items-center gap-4 mb-6 overflow-x-auto whitespace-nowrap">
                     <div
-                        class="flex items-center gap-4 bg-white dark:bg-gray-800 px-4 py-2 rounded-xl shadow-2xl border border-gray-200 dark:border-gray-700">
+                        class="flex items-center gap-4 bg-white dark:bg-gray-800 px-4 py-2 rounded-xl shadow-2xl border border-gray-200 dark:border-gray-700 w-full sm:w-auto">
                         <i class="fa-solid fa-file-alt text-gray-800 dark:text-gray-100 text-2xl"></i>
                         <span class="text-xl font-semibold text-gray-900 dark:text-white leading-tight">
                             {{ $selectedReport->category }}
@@ -160,7 +160,7 @@
                         </div>
                         <div class="flex gap-4 flex-wrap justify-end">
                             <div
-                                class="flex items-center gap-3 bg-white/20 dark:bg-gray-800 px-4 py-3 rounded-lg shadow-md w-full sm:w-auto mb-4 sm:mb-0">
+                                class="flex items-center gap-3 bg-white/20 dark:bg-gray-800 px-4 py-3 rounded-lg shadow-md w-full sm:w-auto mb-4 sm:mb-0 ">
                                 <div
                                     class="flex items-center justify-center w-10 h-10 bg-white text-gray-700 dark:bg-gray-700 dark:text-gray-300 rounded-full shadow-md">
                                     <i class="fa-solid fa-magnifying-glass text-lg"></i>

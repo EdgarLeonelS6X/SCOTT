@@ -1,12 +1,12 @@
 <x-app-layout>
     <div class="flex flex-col md:flex-row p-6 bg-gray-200 dark:bg-gray-900">
         <div
-            class="w-full md:w-1/3 p-6 bg-gradient-to-r from-purple-400 via-pink-400 to-red-400 rounded-lg shadow-2xl flex flex-col items-center space-y-6 h-[380px] sm:h-[350px] overflow-y-auto">
-            <div class="w-full flex justify-between items-center mb-4">
+            class="w-full md:w-1/3 p-4 sm:p-6 bg-gradient-to-r from-purple-400 via-pink-400 to-red-400 rounded-lg shadow-2xl flex flex-col items-center space-y-4 sm:space-y-6 max-h-[90vh] overflow-y-auto">
+            <div class="w-full flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4 space-y-4 sm:space-y-0">
                 <img src="{{ Auth::user()->profile_photo_url }}" alt="{{ __('User profile picture') }}"
-                    class="w-16 h-16 rounded-full shadow-2xl object-center object-cover">
-                <div class="text-right text-white ml-auto">
-                    <p class="text-xl font-semibold">
+                    class="w-20 h-20 sm:w-16 sm:h-16 rounded-full shadow-2xl object-center object-cover mx-auto sm:mx-0">
+                <div class="text-center sm:text-right text-white">
+                    <p class="text-lg sm:text-xl font-semibold">
                         {{ Auth()->user()->name }}
                     </p>
                     <span id="clock"
@@ -16,18 +16,21 @@
                     </span>
                 </div>
             </div>
+
             <button type="button" data-modal-target="create-momently-report-modal"
                 data-modal-toggle="create-momently-report-modal"
                 class="w-full bg-red-600 text-white rounded-lg py-3 flex items-center justify-center shadow-md hover:shadow-2xl transform transition-all hover:scale-105 font-bold text-base">
                 <i class="fas fa-triangle-exclamation mr-2"></i>
                 {{ __('Report channel issues') }}
             </button>
+
             <button type="button" data-modal-target="create-hourly-report-modal"
                 data-modal-toggle="create-hourly-report-modal"
                 class="w-full bg-green-600 text-white rounded-lg py-3 flex items-center justify-center font-semibold shadow-md hover:shadow-2xl transform transition-all hover:scale-105">
                 <i class="fas fa-clock mr-2"></i>
                 {{ __('Hourly general report') }}
             </button>
+
             <button type="button" data-modal-target="create-functions-report-modal"
                 data-modal-toggle="create-functions-report-modal"
                 class="w-full bg-blue-600 text-white rounded-lg py-3 flex items-center justify-center font-semibold shadow-md hover:shadow-2xl transform transition-all hover:scale-105">
