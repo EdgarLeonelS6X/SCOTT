@@ -15,7 +15,7 @@
                 <p class="text-gray-600 dark:text-gray-400 text-base">
                     {{ __("The page you're looking for doesn't exist or has been moved.") }}
                 </p>
-                <div class="flex justify-center gap-4 w-full sm:w-auto">
+                <div class="flex flex-col md:flex-row justify-end gap-4 mt-6">
                     <a href="{{ url()->previous() }}"
                         class="inline-flex items-center justify-center gap-2 text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 dark:focus:ring-primary-800 font-medium rounded-md text-sm px-5 py-2.5 flex-1 sm:flex-none">
                         <i class="fas fa-arrow-left"></i>
