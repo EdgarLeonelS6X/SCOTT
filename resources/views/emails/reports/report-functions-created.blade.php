@@ -185,9 +185,9 @@
                         <table>
                             <thead>
                                 <tr>
-                                    <th style="width: 33%;">{{ __('Channel') }}</th>
-                                    <th style="width: 33%;">{{ __('Stage and Protocol') }}</th>
-                                    <th style="width: 33%;">{{ __('Media') }}</th>
+                                    <th style="width: 35%;">{{ __('Channel') }}</th>
+                                    <th style="width: 35%;">{{ __('Stage and Protocol') }}</th>
+                                    <th style="width: 30%;">{{ __('Media') }}</th>
                                 </tr>
                             </thead>
                             <tbody>

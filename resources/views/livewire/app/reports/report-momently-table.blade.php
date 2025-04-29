@@ -64,7 +64,8 @@
                         @foreach ($reports as $report)
                             <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-600 text-black dark:text-white cursor-pointer"
                                 wire:click="openReportDetails({{ $report->id }})">
-                                <td class="py-3 px-4 font-bold whitespace-nowrap">
+                                <td
+                                    class="py-3 px-4 font-bold leading-tight truncate whitespace-nowrap overflow-hidden text-ellipsis max-w-[8rem] sm:max-w-xs">
                                     {{ $report->category }}
                                 </td>
                                 <td class="px-4 py-3 whitespace-nowrap">

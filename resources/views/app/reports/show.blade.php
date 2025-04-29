@@ -22,7 +22,8 @@
                     class="flex flex-col sm:flex-row items-start sm:items-center gap-4 bg-white dark:bg-gray-800 px-4 py-3 rounded-xl shadow-2xl border border-gray-200 dark:border-gray-700 w-full sm:w-auto">
                     <div class="flex items-center gap-3">
                         <i class="fa-solid fa-file-alt text-gray-800 dark:text-gray-100 text-2xl"></i>
-                        <span class="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white leading-tight">
+                        <span
+                            class="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white leading-tight truncate max-w-[150px] sm:max-w-2xl overflow-hidden whitespace-nowrap">
                             {{ $report->category }}
                         </span>
                     </div>
@@ -166,20 +167,31 @@
                 <div x-data="{ open: false }"
                     class="mt-6 border border-gray-300 dark:border-gray-700 rounded-xl overflow-hidden shadow-lg">
                     <button @click="open = !open"
-                        class="text-lg font-semibold text-gray-800 dark:text-white cursor-pointer px-4 py-3 flex items-center justify-between w-full bg-white dark:bg-gray-800 border-b dark:border-gray-700">
-                        <div class="flex items-center gap-2">
+                        class="text-base sm:text-lg font-semibold text-gray-800 dark:text-white cursor-pointer px-4 py-3 flex flex-col sm:flex-row sm:items-center sm:justify-between w-full bg-white dark:bg-gray-800 border-b dark:border-gray-700 space-y-2 sm:space-y-0">
+
+                        <!-- Icono + categoría -->
+                        <div
+                            class="flex flex-col sm:flex-row items-center justify-center sm:justify-start gap-2 w-full sm:w-auto text-center sm:text-left">
                             <i :class="open ? 'fa-chevron-up' : 'fa-chevron-down'"
                                 class="fa-solid text-gray-800 dark:text-white"></i>
+
                             <span
-                                class="bg-gray-50 dark:bg-gray-700 border dark:border-white rounded-full px-4 py-2 text-sm font-semibold text-gray-900 dark:text-white flex items-center gap-2">
-                                <i class="fa-solid fa-layer-group"></i> {{ $report->category }}
+                                class="bg-gray-50 dark:bg-gray-700 border dark:border-white rounded-full px-4 py-2 text-sm font-semibold text-gray-900 dark:text-white flex items-center gap-2 max-w-full sm:max-w-xs w-full sm:w-auto overflow-hidden justify-center sm:justify-start text-center sm:text-left">
+                                <i class="fa-solid fa-layer-group"></i>
+                                <span class="truncate block w-full" title="{{ $report->category }}">
+                                    {{ $report->category }}
+                                </span>
                             </span>
                         </div>
-                        <span class="bg-primary-100 text-primary-800 text-sm font-medium py-1 px-3 rounded-full">
+
+                        <!-- Contador -->
+                        <span
+                            class="bg-primary-100 text-primary-800 text-sm font-medium py-1 px-3 rounded-full text-center sm:text-left w-full sm:w-auto">
                             {{ $report->reportDetails->count() }}
                             {{ $report->reportDetails->count() === 1 ? __('channel') : __('channels') }}
                         </span>
                     </button>
+
                     <div x-show="open" x-collapse
                         class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 p-6 bg-white dark:bg-gray-800">
                         @foreach ($report->reportDetails->sortBy(fn($detail) => $detail->channel->number) as $detail)
@@ -288,16 +300,21 @@
                     <div x-data="{ open: false }"
                         class="mt-6 border border-gray-300 dark:border-gray-700 rounded-lg shadow-2xl">
                         <h3 @click="open = !open"
-                            class="text-lg font-semibold text-gray-800 dark:text-white cursor-pointer px-4 py-3 flex items-center justify-between border-b dark:border-gray-700">
-                            <div class="flex items-center gap-2">
+                            class="text-base sm:text-lg font-semibold text-gray-800 dark:text-white cursor-pointer px-4 py-3 flex flex-col sm:flex-row sm:items-center sm:justify-between border-b dark:border-gray-700 space-y-2 sm:space-y-0">
+                            <div
+                                class="flex flex-col sm:flex-row items-center justify-center sm:justify-start gap-2 w-full sm:w-auto">
                                 <i :class="open ? 'fa-chevron-up' : 'fa-chevron-down'"
                                     class="fa-solid text-gray-800 dark:text-white"></i>
                                 <span
-                                    class="bg-gray-50 dark:bg-gray-700 border dark:border-white rounded-full px-4 py-2 text-sm font-semibold text-gray-900 dark:text-white flex items-center gap-2">
-                                    <i class="fa-solid fa-layer-group"></i> {{ $fixedCategory }}
+                                    class="bg-gray-50 dark:bg-gray-700 border dark:border-white rounded-full px-4 py-2 text-sm font-semibold text-gray-900 dark:text-white flex items-center gap-2 max-w-full sm:max-w-xs w-fit overflow-hidden">
+                                    <i class="fa-solid fa-layer-group"></i>
+                                    <span class="truncate" title="{{ $fixedCategory }}">
+                                        {{ $fixedCategory }}
+                                    </span>
                                 </span>
                             </div>
-                            <span class="bg-primary-100 text-primary-800 text-sm font-medium py-1 px-3 rounded-full">
+                            <span
+                                class="bg-primary-100 text-primary-800 text-sm font-medium py-1 px-3 rounded-full text-center sm:text-left w-full sm:w-auto">
                                 @if (in_array($fixedCategory, $allCategories) &&
                                         $report->reportDetails->where('subcategory', $fixedCategory)->count() > 0)
                                     {{ $report->reportDetails->where('subcategory', $fixedCategory)->count() }}
@@ -311,7 +328,7 @@
                         </h3>
                         <div x-show="open" x-collapse
                             class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 p-6 bg-white dark:bg-gray-800">
-                            @if (in_array($fixedCategory, $allCategories))
+                            @if ($report->reportDetails->where('subcategory', $fixedCategory)->count() > 0)
                                 @foreach ($report->reportDetails->where('subcategory', $fixedCategory)->sortBy(fn($detail) => $detail->channel->number) as $detail)
                                     <div
                                         class="relative flex flex-col px-5 py-3 bg-white border border-gray-300 dark:bg-gray-800 dark:border-gray-700 rounded-xl shadow-2xl space-y-4">
@@ -472,7 +489,8 @@
                                     class="col-span-full flex flex-col items-center p-6 bg-green-50 border border-green-300 dark:border-green-700 dark:bg-gray-700 rounded-lg shadow-2xl">
                                     <i
                                         class="fa-solid fa-circle-check text-green-500 dark:text-green-400 text-3xl mb-3"></i>
-                                    <span class="block text-base font-semibold text-gray-900 dark:text-white">
+                                    <span
+                                        class="block text-center text-base font-semibold text-gray-900 dark:text-white">
                                         {{ __('No issues reported in this category') }}
                                     </span>
                                 </div>

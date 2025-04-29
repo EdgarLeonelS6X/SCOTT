@@ -158,7 +158,7 @@
                                 {{ $report->id }}
                             </td>
                             <td title="{{ $report->category }}"
-                                class="px-2 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm font-bold leading-tight truncate max-w-[8rem] sm:max-w-none">
+                                class="px-2 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm font-bold leading-tight truncate whitespace-nowrap overflow-hidden text-ellipsis max-w-[8rem] sm:max-w-xs">
                                 {{ $report->category }}
                             </td>
                             <td class="px-2 sm:px-4 py-2 sm:py-3">
