@@ -17,75 +17,69 @@
 
     <div class="px-6 mx-auto h-auto">
         <div class="w-full bg-white dark:bg-gray-800 p-6 rounded-lg shadow-2xl mx-auto mb-4">
-            <div class="flex justify-between items-center mb-6">
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
                 <div
-                    class="flex items-center gap-4 bg-white dark:bg-gray-800 px-4 py-2 rounded-xl shadow-2xl border border-gray-200 dark:border-gray-700">
-                    <i class="fa-solid fa-file-alt text-gray-800 dark:text-gray-100 text-2xl"></i>
-                    <span class="text-xl font-semibold text-gray-900 dark:text-white leading-tight">
-                        {{ $report->category }}
-                    </span>
-                    @if ($report->type === 'Momentary')
-                        <span
-                            class="text-xs font-medium text-white bg-red-500 dark:bg-red-600 px-3 py-1 rounded-lg shadow-2xl">
-                            <i class="fa-solid fa-triangle-exclamation mr-1"></i>
-                            {{ $report->type }}
+                    class="flex flex-col sm:flex-row items-start sm:items-center gap-4 bg-white dark:bg-gray-800 px-4 py-3 rounded-xl shadow-2xl border border-gray-200 dark:border-gray-700 w-full sm:w-auto">
+                    <div class="flex items-center gap-3">
+                        <i class="fa-solid fa-file-alt text-gray-800 dark:text-gray-100 text-2xl"></i>
+                        <span class="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white leading-tight">
+                            {{ $report->category }}
                         </span>
-                    @elseif ($report->type === 'Hourly')
-                        <span
-                            class="text-xs font-medium text-white bg-green-500 dark:bg-green-600 px-3 py-1 rounded-lg shadow-2xl">
-                            <i class="fa-solid fa-clock mr-1"></i>
-                            {{ $report->type }}
-                        </span>
-                    @else
-                        <span
-                            class="text-xs font-medium text-white bg-blue-500 dark:bg-blue-600 px-3 py-1 rounded-lg shadow-2xl">
-                            <i class="fa-solid fa-forward mr-1"></i>
-                            {{ $report->type }}
-                        </span>
-                    @endif
-                    <div class="flex items-center gap-2">
-                        <span class="text-sm font-medium text-gray-600 dark:text-gray-300">
-                            {{ __('Folio') }} #{{ $report->id }}
-                        </span>
-                        @if (
-                            $report->status === 'Revision' &&
-                                $report->reported_by == auth()->id() &&
-                                $report->id == auth()->user()->lastReport?->id)
-                            <a href="{{ route('reports.edit', ['report' => $report->id]) }}"
-                                class="ml-2 inline-flex items-center gap-1 px-2 py-1 text-xs font-medium rounded-lg bg-primary-50 dark:bg-primary-900 text-primary-600 dark:text-primary-300 hover:bg-primary-100 dark:hover:bg-primary-800">
-                                <i class="fa-solid fa-pencil-alt text-xs"></i>
-                                <span class="hidden sm:inline">
-                                    {{ __('Edit this report') }}
+                    </div>
+                    <div
+                        class="flex flex-col sm:flex-row sm:items-center justify-between sm:justify-end gap-2 w-full sm:w-auto">
+                        <div class="flex flex-wrap justify-between sm:justify-start items-center gap-2">
+                            @if ($report->type === 'Momentary')
+                                <span
+                                    class="text-xs font-medium text-white bg-red-500 dark:bg-red-600 px-3 py-1 rounded-lg shadow-2xl">
+                                    <i class="fa-solid fa-triangle-exclamation mr-1"></i> {{ $report->type }}
                                 </span>
-                            </a>
-                        @endif
+                            @elseif ($report->type === 'Hourly')
+                                <span
+                                    class="text-xs font-medium text-white bg-green-500 dark:bg-green-600 px-3 py-1 rounded-lg shadow-2xl">
+                                    <i class="fa-solid fa-clock mr-1"></i> {{ $report->type }}
+                                </span>
+                            @else
+                                <span
+                                    class="text-xs font-medium text-white bg-blue-500 dark:bg-blue-600 px-3 py-1 rounded-lg shadow-2xl">
+                                    <i class="fa-solid fa-forward mr-1"></i> {{ $report->type }}
+                                </span>
+                            @endif
+                            <span class="text-sm font-medium text-gray-600 dark:text-gray-300">
+                                {{ __('Folio') }} #{{ $report->id }}
+                            </span>
+                            @if (
+                                $report->status === 'Revision' &&
+                                    $report->reported_by == auth()->id() &&
+                                    $report->id == auth()->user()->lastReport?->id)
+                                <a href="{{ route('reports.edit', ['report' => $report->id]) }}"
+                                    class="inline-flex items-center gap-1 px-2 py-1 text-xs font-medium rounded-lg bg-primary-50 dark:bg-primary-900 text-primary-600 dark:text-primary-300 hover:bg-primary-100 dark:hover:bg-primary-800">
+                                    <i class="fa-solid fa-pencil-alt text-xs"></i>
+                                    <span>{{ __('Edit') }}</span>
+                                </a>
+                            @endif
+                        </div>
                     </div>
                 </div>
                 <a href="{{ route('reports.index') }}"
-                    class="flex items-center gap-2 px-4 py-2 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg border border-gray-300 dark:border-gray-600 hover:bg-gray-200 dark:hover:bg-gray-600 shadow-2xl">
+                    class="flex items-center gap-2 px-4 py-2 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg border border-gray-300 dark:border-gray-600 hover:bg-gray-200 dark:hover:bg-gray-600 shadow-2xl w-full sm:w-auto justify-center sm:justify-start">
                     <i class="fa-solid fa-arrow-left"></i>
-                    <span class="text-sm font-medium">
-                        {{ __('Go back') }}
-                    </span>
+                    <span class="text-sm font-medium">{{ __('Go back') }}</span>
                 </a>
             </div>
             <div
                 class="p-5 rounded-xl shadow-md transition-transform hover:scale-[1.02]
-                    bg-gradient-to-br from-pink-500 via-orange-400 to-red-500
-                    dark:from-blue-900 dark:via-indigo-800 dark:to-purple-900
-                    text-white dark:text-gray-100 ring-1 ring-white/20 dark:ring-gray-700 hover:shadow-[0_8px_25px_rgba(0,0,0,0.3)]">
-                <div class="flex justify-between items-center gap-6">
-                    <div class="flex items-center gap-4 flex-1">
+                bg-gradient-to-br from-pink-500 via-orange-400 to-red-500
+                dark:from-blue-900 dark:via-indigo-800 dark:to-purple-900
+                text-white dark:text-gray-100 ring-1 ring-white/20 dark:ring-gray-700 hover:shadow-[0_8px_25px_rgba(0,0,0,0.3)]">
+                <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6">
+                    <div class="flex items-center gap-4 w-full">
                         <img src="{{ $report->reportedBy->profile_photo_url }}" alt="{{ $report->reportedBy->name }}"
                             class="w-12 h-12 rounded-full shadow-2xl">
                         <div>
-                            <h4 class="text-sm font-semibold text-white dark:text-gray-300">
-                                {{ __('Reported by') }}
-                            </h4>
-                            <p class="text-base font-bold text-white dark:text-gray-100">
-                                {{ $report->reportedBy->name }}
-                            </p>
-                            <p class="text-xs text-gray-200 dark:text-gray-300 opacity-80">
+                            <h4 class="text-sm font-semibold">{{ __('Reported by') }}</h4>
+                            <p class="text-base font-bold">{{ $report->reportedBy->name }}</p>
+                            <p class="text-xs opacity-80">
                                 {{ $report->created_at->format('d/m/Y h:i A') }}
                                 @if ($report->updated_at && $report->updated_at->gt($report->created_at))
                                     - {{ $report->updated_at->format('d/m/Y h:i A') }}
@@ -94,18 +88,16 @@
                                         ({{ __('Last updated') }}: {{ $report->updated_at->diffForHumans() }} -
                                         {{ $report->created_at->diffForHumans($report->updated_at) }})
                                     </small>
-                                @elseif (!$report->updated_at)
+                                @else
                                     <br>
-                                    <small>
-                                        ({{ __('Not updated yet') }})
-                                    </small>
+                                    <small>({{ __('Not updated yet') }})</small>
                                 @endif
                             </p>
                         </div>
                     </div>
-                    <div class="flex gap-4">
+                    <div class="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
                         <div
-                            class="flex items-center gap-3 bg-white/20 dark:bg-gray-800 px-4 py-3 rounded-lg shadow-md">
+                            class="flex items-center gap-3 bg-white/20 dark:bg-gray-800 px-4 py-3 rounded-lg shadow-md w-full sm:w-auto">
                             <div
                                 class="flex items-center justify-center w-10 h-10 bg-white text-gray-700 dark:bg-gray-700 dark:text-gray-300 rounded-full shadow-md">
                                 @if ($report->type === 'Momentary')
@@ -118,26 +110,20 @@
                                 @endif
                             </div>
                             <div>
-                                <h4 class="text-sm text-white dark:text-gray-300">
-                                    {{ __('Status') }}
-                                </h4>
-                                <p class="text-sm font-bold uppercase">
-                                    {{ $report->status }}
-                                </p>
+                                <h4 class="text-sm">{{ __('Status') }}</h4>
+                                <p class="text-sm font-bold uppercase">{{ $report->status }}</p>
                             </div>
                         </div>
                         @if ($report->type === 'Momentary')
                             <div
-                                class="flex items-center gap-3 bg-white/20 dark:bg-gray-800 px-4 py-3 rounded-lg shadow-md">
+                                class="flex items-center gap-3 bg-white/20 dark:bg-gray-800 px-4 py-3 rounded-lg shadow-md w-full sm:w-auto">
                                 <div
                                     class="flex items-center justify-center w-10 h-10 bg-white text-gray-700 dark:bg-gray-700 dark:text-gray-300 rounded-full shadow-md">
                                     <i class="fa-solid fa-gear text-lg"></i>
                                 </div>
                                 <div>
-                                    <h4 class="text-sm text-white dark:text-gray-300">
-                                        {{ __('Under review by') }}
-                                    </h4>
-                                    <p class="text-sm font-bold text-white dark:text-gray-100">
+                                    <h4 class="text-sm">{{ __('Under review by') }}</h4>
+                                    <p class="text-sm font-bold">
                                         {{ $report->reviewed_by }}
                                         @if ($report->duration)
                                             - {{ __('Resolved in') }}

@@ -1,114 +1,96 @@
-<div class="bg-white dark:bg-gray-800 relative shadow-2xl sm:rounded-lg overflow-hidden mb-6">
-    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 p-4 bg-white dark:bg-gray-800">
-        <div class="w-full md:w-1/3">
-            <form class="relative">
-                <label for="simple-search" class="sr-only">Search</label>
-                <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                    <i class="fa-solid fa-magnifying-glass text-gray-400"></i>
-                </div>
-                <input type="text" id="simple-search" wire:model.live="search"
-                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full pl-10 p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                    placeholder="{{ __('Search') }}" autofocus>
-            </form>
-        </div>
-        <div class="w-full md:w-auto flex flex-col md:flex-row items-stretch md:items-center justify-end gap-3">
-            <style>
-                .flatpickr-month {
-                    display: flex;
-                    justify-content: space-between;
-                    align-items: center;
-                    padding: 0 10px;
-                }
-
-                .flatpickr-current-month .cur-month {
-                    margin-right: auto;
-                    font-weight: 600;
-                    font-size: 14px;
-                }
-
-                .flatpickr-current-month .numInputWrapper {
-                    margin-left: auto;
-                }
-
-                .flatpickr-current-month input.cur-year {
-                    width: 60px;
-                }
-            </style>
-            <div x-data="{
-                dateRange: @entangle('startDate').defer + ' to ' + @entangle('endDate').defer,
-                flatpickrInstance: null
-            }" x-init="flatpickrInstance = flatpickr($refs.input, {
-                mode: 'range',
-                dateFormat: 'Y-m-d',
-                defaultDate: dateRange.split(' to '),
-                maxDate: 'today',
-                onChange: function(selectedDates, dateStr) {
-                    let [start, end] = dateStr.split(' to ');
-                    $wire.set('startDate', start);
-                    $wire.set('endDate', end);
-                }
-            })"
-                x-on:clear-datepicker-range.window="
-                    flatpickrInstance.clear();
-                    $refs.input.value = '';
-                "
-                class="flex flex-col gap-1">
-                <x-input id="datepicker-range" x-ref="input" type="text" placeholder="{{ __('Select a range') }}"
-                    class="min-w-72 px-3 py-2 text-sm border border-gray-300 rounded-md dark:bg-gray-800 dark:border-gray-600 dark:text-white" />
+<div class="bg-white dark:bg-gray-800 relative shadow-2xl rounded-lg overflow-hidden mb-6">
+    <div class="flex flex-col gap-4 md:flex-row md:items-center justify-between p-4 bg-white dark:bg-gray-800">
+        <div class="flex flex-col gap-3 w-full">
+            <div class="w-full">
+                <form class="relative">
+                    <label for="simple-search" class="sr-only">Search</label>
+                    <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                        <i class="fa-solid fa-magnifying-glass text-gray-400"></i>
+                    </div>
+                    <input type="text" id="simple-search" wire:model.live="search"
+                        class="w-full pl-10 p-2 text-sm rounded-md border border-gray-300 focus:ring-2 focus:ring-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500"
+                        placeholder="{{ __('Search') }}" autofocus>
+                </form>
             </div>
-            <div class="relative">
-                <button id="filterDropdownButton" data-dropdown-toggle="filterDropdown"
-                    class="flex items-center gap-2 py-2 px-4 text-sm font-medium text-gray-900 bg-white border border-gray-300 rounded-md hover:bg-gray-100 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700">
-                    <i class="fa-solid fa-filter"></i>
-                    {{ __('Filter') }}
-                    <i class="fa-solid fa-chevron-down text-xs"></i>
-                </button>
-                <div id="filterDropdown"
-                    class="z-10 hidden absolute right-0 mt-2 w-72 p-4 bg-white border border-gray-200 rounded-lg shadow-lg dark:bg-gray-700 dark:border-gray-600">
-                    <label class="flex items-center space-x-2">
-                        <input id="resolved-filter" type="checkbox" wire:click="toggleStatusFilter('Resolved')"
-                            class="w-4 h-4 text-purple-600 bg-gray-100 border-gray-300 rounded focus:ring-purple-500">
-                        <span class="text-sm text-gray-800 dark:text-gray-200">
-                            {{ __('Show only resolved reports') }}
+            <div class="flex flex-wrap gap-3 justify-start sm:justify-end">
+                <div x-data="{
+                    dateRange: @entangle('startDate').defer + ' to ' + @entangle('endDate').defer,
+                    flatpickrInstance: null
+                }" x-init="flatpickrInstance = flatpickr($refs.input, {
+                    mode: 'range',
+                    dateFormat: 'Y-m-d',
+                    defaultDate: dateRange.split(' to '),
+                    maxDate: 'today',
+                    onChange: function(selectedDates, dateStr) {
+                        let [start, end] = dateStr.split(' to ');
+                        $wire.set('startDate', start);
+                        $wire.set('endDate', end);
+                    }
+                })"
+                    x-on:clear-datepicker-range.window="
+                flatpickrInstance.clear();
+                $refs.input.value = '';
+            "
+                    class="w-full sm:w-auto">
+                    <x-input id="datepicker-range" x-ref="input" type="text"
+                        placeholder="{{ __('Select a range') }}"
+                        class="min-w-[16rem] w-full sm:w-auto px-3 py-2 text-sm border border-gray-300 rounded-md dark:bg-gray-800 dark:border-gray-600 dark:text-white" />
+                </div>
+                <div class="relative w-full sm:w-auto">
+                    <button id="filterDropdownButton" data-dropdown-toggle="filterDropdown"
+                        class="flex items-center justify-center w-full sm:w-auto gap-2 py-2 px-4 text-sm font-medium text-gray-900 bg-white border border-gray-300 rounded-md hover:bg-gray-100 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700">
+                        <span class="flex items-center gap-1">
+                            <i class="fa-solid fa-filter"></i> {{ __('Filter') }}
                         </span>
-                    </label>
-                    <label class="flex items-center space-x-2 mt-3">
-                        <input id="revision-filter" type="checkbox" wire:click="toggleStatusFilter('Revision')"
-                            class="w-4 h-4 text-purple-600 bg-gray-100 border-gray-300 rounded focus:ring-purple-500">
-                        <span class="text-sm text-gray-800 dark:text-gray-200">
-                            {{ __('Show only revision reports') }}
-                        </span>
-                    </label>
+                        <i class="fa-solid fa-chevron-down text-xs"></i>
+                    </button>
+                    <div id="filterDropdown"
+                        class="hidden absolute right-0 mt-2 w-72 p-4 bg-white border border-gray-200 rounded-lg shadow-lg dark:bg-gray-700 dark:border-gray-600 z-20">
+                        <label class="flex items-center space-x-2">
+                            <input id="resolved-filter" type="checkbox" wire:click="toggleStatusFilter('Resolved')"
+                                class="w-4 h-4 text-purple-600 bg-gray-100 border-gray-300 rounded focus:ring-purple-500">
+                            <span class="text-sm text-gray-800 dark:text-gray-200">
+                                {{ __('Show only resolved reports') }}
+                            </span>
+                        </label>
+                        <label class="flex items-center space-x-2 mt-3">
+                            <input id="revision-filter" type="checkbox" wire:click="toggleStatusFilter('Revision')"
+                                class="w-4 h-4 text-purple-600 bg-gray-100 border-gray-300 rounded focus:ring-purple-500">
+                            <span class="text-sm text-gray-800 dark:text-gray-200">
+                                {{ __('Show only revision reports') }}
+                            </span>
+                        </label>
+                    </div>
+                </div>
+                <div class="flex gap-3 w-full sm:w-auto flex-wrap">
+                    <button wire:click="exportToExcel"
+                        class="flex items-center justify-center gap-2 py-2 px-4 w-full sm:w-auto text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-100 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700">
+                        <i class="fa-solid fa-arrow-up-from-bracket"></i> {{ __('Export to Excel') }}
+                    </button>
+                    <button wire:click="resetFilters"
+                        class="flex items-center justify-center gap-2 py-2 px-4 w-full sm:w-auto text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-100 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700">
+                        <i class="fa-solid fa-rotate-left"></i> {{ __('Reset table') }}
+                    </button>
                 </div>
             </div>
-            <button wire:click="exportToExcel"
-                class="flex items-center gap-2 py-2 px-4 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-100 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700">
-                <i class="fa-solid fa-arrow-up-from-bracket"></i>
-                {{ __('Export to Excel') }}
-            </button>
-            <button wire:click="resetFilters"
-                class="flex items-center gap-2 py-2 px-4 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-100 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700">
-                <i class="fa-solid fa-rotate-left"></i>
-                {{ __('Reset table') }}
-            </button>
         </div>
     </div>
     <div class="overflow-x-auto">
         <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
             <thead class="text-xs dark:text-white uppercase dark:bg-gray-600 shadow-2xl">
                 <tr>
-                    <th class="py-3 px-4 text-left">
+                    <th class="py-3 px-2 text-left whitespace-nowrap">
                         <i class="fa-solid fa-flag mr-1"></i>
                         {{ __('Folio') }}
                     </th>
-                    <th class="py-3 px-4 text-left w-36 min-w-[360px] max-w-[360px]">
+                    <th class="py-3 px-2 text-left w-48 min-w-[200px] sm:min-w-[300px] md:min-w-[360px]">
                         <i class="fa-solid fa-folder mr-1"></i>
                         {{ __('Report') }}
                     </th>
-                    <th class="py-3 px-4 text-left w-36 min-w-[150px] max-w-[150px] cursor-pointer"
+                    <th class="py-3 px-2 text-left w-28 min-w-[150px] sm:min-w-[150px] cursor-pointer"
                         wire:click="toggleTypeFilter">
                         <i class="fa-solid fa-list mr-1"></i>
-                        <span class="text-gray-500 dark:text-white">
+                        <span class="text-gray-500 dark:text-white truncate">
                             @if ($typeFilter)
                                 {{ $typeFilter }}
                             @else
@@ -117,9 +99,10 @@
                             <i class="ml-1 fa-solid fa-sort"></i>
                         </span>
                     </th>
-                    <th class="py-3 px-4 text-left cursor-pointer" wire:click="toggleStatusFilter">
+                    <th class="py-3 px-2 text-left w-28 min-w-[150px] sm:min-w-[150px] cursor-pointer"
+                        wire:click="toggleStatusFilter">
                         <i class="fa-solid fa-circle-check mr-1"></i>
-                        <span class="text-gray-500 dark:text-white">
+                        <span class="text-gray-500 dark:text-white truncate">
                             @if ($statusFilter)
                                 {{ $statusFilter }}
                             @else
@@ -128,7 +111,8 @@
                             <i class="ml-1 fa-solid fa-sort"></i>
                         </span>
                     </th>
-                    <th class="py-3 px-4 text-left cursor-pointer" wire:click="setOrder('created_at')">
+                    <th class="py-3 px-2 text-left cursor-pointer whitespace-nowrap"
+                        wire:click="setOrder('created_at')">
                         <i class="fa-solid fa-calendar mr-1"></i>
                         {{ __('Datetime') }}
                         <button class="ml-1 text-gray-500 dark:text-white">
@@ -140,11 +124,10 @@
                             @endif
                         </button>
                     </th>
-                    <th class="py-3 px-4 text-left min-w-[325px] max-w-[325px] cursor-pointer"
+                    <th class="py-3 px-2 text-left min-w-[260px] sm:min-w-[260px] md:min-w-[325px] cursor-pointer"
                         wire:click="toggleUserFilter">
                         <i class="fa-solid fa-user mr-1"></i>
-                        {{ __('Reported By') }}
-                        <span class="text-gray-500 dark:text-white">
+                        <span class="text-gray-500 dark:text-white truncate">
                             @if ($selectedUser)
                                 {{ $selectedUser }}
                             @else
@@ -153,7 +136,7 @@
                             <i class="ml-1 fa-solid fa-sort"></i>
                         </span>
                     </th>
-                    <th scope="col" class="py-3 px-4">
+                    <th class="py-3 px-2 text-center">
                         <span class="sr-only">
                             <i class="fa-solid fa-sliders-h mr-1"></i>
                             {{ __('Options') }}
@@ -175,68 +158,70 @@
                     @foreach ($reports as $report)
                         <tr onclick="window.location='{{ route('reports.show', $report->id) }}'"
                             class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-600 text-black dark:text-white cursor-pointer">
-                            <td class="px-4 py-3 text-sm font-bold">
+                            <td class="px-2 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm font-bold whitespace-nowrap">
                                 {{ $report->id }}
                             </td>
                             <td title="{{ $report->category }}"
-                                class="px-4 py-3 text-sm font-bold leading-tight truncate">
+                                class="px-2 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm font-bold leading-tight truncate max-w-[8rem] sm:max-w-none">
                                 {{ $report->category }}
                             </td>
-                            <td class="py-3 px-4">
+                            <td class="px-2 sm:px-4 py-2 sm:py-3">
                                 @if ($report->type === 'Momentary')
                                     <span
-                                        class="inline-flex items-center px-2 py-1 text-sm font-medium rounded-full text-red-800 bg-red-200 dark:bg-red-800 dark:text-red-200">
-                                        <i class="fa-solid fa-triangle-exclamation mr-1.5"></i>
+                                        class="inline-flex items-center px-2 py-1 text-xs sm:text-sm font-medium rounded-full text-red-800 bg-red-200 dark:bg-red-800 dark:text-red-200 whitespace-nowrap">
+                                        <i class="fa-solid fa-triangle-exclamation mr-1"></i>
                                         {{ __($report->type) }}
                                     </span>
                                 @elseif ($report->type === 'Hourly')
                                     <span
-                                        class="inline-flex items-center px-2 py-1 text-sm font-medium rounded-full text-green-800 bg-green-200 dark:bg-green-800 dark:text-green-200">
-                                        <i class="fa-solid fa-clock mr-1.5"></i>
+                                        class="inline-flex items-center px-2 py-1 text-xs sm:text-sm font-medium rounded-full text-green-800 bg-green-200 dark:bg-green-800 dark:text-green-200 whitespace-nowrap">
+                                        <i class="fa-solid fa-clock mr-1"></i>
                                         {{ __($report->type) }}
                                     </span>
                                 @else
                                     <span
-                                        class="inline-flex items-center px-2 py-1 text-sm font-medium rounded-full text-blue-800 bg-blue-200 dark:bg-blue-800 dark:text-blue-200">
-                                        <i class="fa-solid fa-forward mr-1.5"></i>
+                                        class="inline-flex items-center px-2 py-1 text-xs sm:text-sm font-medium rounded-full text-blue-800 bg-blue-200 dark:bg-blue-800 dark:text-blue-200 whitespace-nowrap">
+                                        <i class="fa-solid fa-forward mr-1"></i>
                                         {{ __($report->type) }}
                                     </span>
                                 @endif
                             </td>
-                            <td class="py-3 px-4">
+                            <td class="px-2 sm:px-4 py-2 sm:py-3">
                                 @if ($report->type === 'Momentary')
                                     <span
-                                        class="inline-flex items-center px-2 py-1 text-sm font-medium rounded-full
-                                {{ $report->status === 'Resolved' ? 'text-green-800 bg-green-200 dark:bg-green-800 dark:text-green-200' : 'text-yellow-800 bg-yellow-200 dark:bg-yellow-800 dark:text-yellow-200' }}">
+                                        class="inline-flex items-center px-2 py-1 text-xs sm:text-sm font-medium rounded-full
+                                         {{ $report->status === 'Resolved' ? 'text-green-800 bg-green-200 dark:bg-green-800 dark:text-green-200' : 'text-yellow-800 bg-yellow-200 dark:bg-yellow-800 dark:text-yellow-200' }} whitespace-nowrap">
                                         @if ($report->status === 'Resolved')
-                                            <i class="fa-solid fa-circle-check mr-1.5"></i>
+                                            <i class="fa-solid fa-circle-check mr-1"></i>
                                         @elseif ($report->status === 'Revision')
-                                            <i class="fa-solid fa-magnifying-glass mr-1.5"></i>
+                                            <i class="fa-solid fa-magnifying-glass mr-1"></i>
                                         @endif
                                         {{ __($report->status) }}
                                     </span>
                                 @else
                                     <span
-                                        class="inline-flex items-center px-2 py-1 text-sm font-medium rounded-full text-gray-800 bg-gray-200 dark:bg-gray-700 dark:text-gray-200">
-                                        <i class="fa-solid fa-folder mr-1.5"></i>
+                                        class="inline-flex items-center px-2 py-1 text-xs sm:text-sm font-medium rounded-full text-gray-800 bg-gray-200 dark:bg-gray-700 dark:text-gray-200 whitespace-nowrap">
+                                        <i class="fa-solid fa-folder mr-1"></i>
                                         {{ __($report->status) }}
                                     </span>
                                 @endif
                             </td>
-                            <td class="py-3 px-4">
+                            <td class="px-2 sm:px-4 py-2 sm:py-3">
                                 <span
-                                    class="inline-flex items-center px-2 py-1 text-sm font-medium text-blue-800 bg-blue-200 dark:bg-blue-800 dark:text-blue-200 rounded-full">
-                                    <i class="fa-solid fa-clock mr-1.5"></i>
+                                    class="inline-flex items-center px-2 py-1 text-xs sm:text-sm font-medium text-blue-800 bg-blue-200 dark:bg-blue-800 dark:text-blue-200 rounded-full whitespace-nowrap">
+                                    <i class="fa-solid fa-clock mr-1"></i>
                                     {{ $report->created_at->format('d/m/Y h:i A') }}
                                 </span>
                             </td>
-                            <td class="px-4 py-3 flex items-center">
+                            <td class="px-2 sm:px-4 py-2 sm:py-3 flex items-center">
                                 <img src="{{ $report->reportedBy->profile_photo_url }}"
                                     alt="{{ $report->reportedBy->name }}"
-                                    class="w-8 h-8 rounded-full mr-2 shadow-2xl">
-                                {{ $report->reportedBy->name }}
+                                    class="w-6 h-6 sm:w-8 sm:h-8 rounded-full mr-2 shadow-2xl">
+                                <span class="text-xs sm:text-sm truncate max-w-[8rem] sm:max-w-none">
+                                    {{ $report->reportedBy->name }}
+                                </span>
                             </td>
-                            <td class="py-3 px-4 text-center">
+                            <td class="px-2 sm:px-4 py-2 sm:py-3 text-center">
                                 <i class="fa-solid fa-chevron-right text-gray-600 dark:text-gray-300"></i>
                             </td>
                         </tr>
