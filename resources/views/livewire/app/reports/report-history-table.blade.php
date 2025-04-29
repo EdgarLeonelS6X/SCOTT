@@ -1,78 +1,74 @@
-<div class="bg-white dark:bg-gray-800 relative shadow-2xl rounded-lg overflow-hidden mb-6">
-    <div class="flex flex-col gap-4 md:flex-row md:items-center justify-between p-4 bg-white dark:bg-gray-800">
-        <div class="flex flex-col gap-3 w-full">
-            <div class="w-full">
-                <form class="relative">
-                    <label for="simple-search" class="sr-only">Search</label>
-                    <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                        <i class="fa-solid fa-magnifying-glass text-gray-400"></i>
-                    </div>
-                    <input type="text" id="simple-search" wire:model.live="search"
-                        class="w-full pl-10 p-2 text-sm rounded-md border border-gray-300 focus:ring-2 focus:ring-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500"
-                        placeholder="{{ __('Search') }}" autofocus>
-                </form>
-            </div>
-            <div class="flex flex-wrap gap-3 justify-start sm:justify-end">
-                <div x-data="{
-                    dateRange: @entangle('startDate').defer + ' to ' + @entangle('endDate').defer,
-                    flatpickrInstance: null
-                }" x-init="flatpickrInstance = flatpickr($refs.input, {
-                    mode: 'range',
-                    dateFormat: 'Y-m-d',
-                    defaultDate: dateRange.split(' to '),
-                    maxDate: 'today',
-                    onChange: function(selectedDates, dateStr) {
-                        let [start, end] = dateStr.split(' to ');
-                        $wire.set('startDate', start);
-                        $wire.set('endDate', end);
-                    }
-                })"
-                    x-on:clear-datepicker-range.window="
-                flatpickrInstance.clear();
-                $refs.input.value = '';
-            "
-                    class="w-full sm:w-auto">
-                    <x-input id="datepicker-range" x-ref="input" type="text"
-                        placeholder="{{ __('Select a range') }}"
-                        class="min-w-[16rem] w-full sm:w-auto px-3 py-2 text-sm border border-gray-300 rounded-md dark:bg-gray-800 dark:border-gray-600 dark:text-white" />
+<div class="bg-white dark:bg-gray-800 relative shadow-2xl sm:rounded-lg overflow-hidden mb-6">
+    <div class="flex flex-col gap-4 p-4 bg-white dark:bg-gray-800 md:flex-row md:items-center md:justify-between">
+        <div class="w-full md:w-1/3">
+            <form class="relative">
+                <label for="simple-search" class="sr-only">Search</label>
+                <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                    <i class="fa-solid fa-magnifying-glass text-gray-400"></i>
                 </div>
-                <div class="relative w-full sm:w-auto">
-                    <button id="filterDropdownButton" data-dropdown-toggle="filterDropdown"
-                        class="flex items-center justify-center w-full sm:w-auto gap-2 py-2 px-4 text-sm font-medium text-gray-900 bg-white border border-gray-300 rounded-md hover:bg-gray-100 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700">
-                        <span class="flex items-center gap-1">
-                            <i class="fa-solid fa-filter"></i> {{ __('Filter') }}
+                <input type="text" id="simple-search" wire:model.live="search"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full pl-10 p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                    placeholder="{{ __('Search') }}" autofocus>
+            </form>
+        </div>
+        <div
+            class="w-full md:w-auto flex flex-col sm:flex-row sm:flex-wrap items-stretch lg:items-center justify-start md:justify-end gap-3">
+            <div x-data="{
+                dateRange: @entangle('startDate').defer + ' to ' + @entangle('endDate').defer,
+                flatpickrInstance: null
+            }" x-init="flatpickrInstance = flatpickr($refs.input, {
+                mode: 'range',
+                dateFormat: 'Y-m-d',
+                defaultDate: dateRange.split(' to '),
+                maxDate: 'today',
+                onChange: function(selectedDates, dateStr) {
+                    let [start, end] = dateStr.split(' to ');
+                    $wire.set('startDate', start);
+                    $wire.set('endDate', end);
+                }
+            })"
+                x-on:clear-datepicker-range.window="
+            flatpickrInstance.clear();
+            $refs.input.value = '';
+        "
+                class="w-full sm:w-auto">
+                <x-input id="datepicker-range" x-ref="input" type="text" placeholder="{{ __('Select a range') }}"
+                    class="min-w-[16rem] w-full px-3 py-2 text-sm border border-gray-300 rounded-md dark:bg-gray-800 dark:border-gray-600 dark:text-white" />
+            </div>
+            <div class="relative w-full sm:w-auto">
+                <button id="filterDropdownButton" data-dropdown-toggle="filterDropdown"
+                    class="w-full sm:w-auto flex justify-center items-center gap-2 py-2 px-4 text-sm font-medium text-gray-900 bg-white border border-gray-300 rounded-md hover:bg-gray-100 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700">
+                    <i class="fa-solid fa-filter"></i> {{ __('Filter') }}
+                    <i class="fa-solid fa-chevron-down text-xs"></i>
+                </button>
+                <div id="filterDropdown"
+                    class="hidden absolute right-0 mt-2 w-72 p-4 bg-white border border-gray-200 rounded-lg shadow-lg dark:bg-gray-700 dark:border-gray-600 z-20">
+                    <label class="flex items-center space-x-2">
+                        <input type="checkbox" wire:click="toggleStatusFilter('Resolved')"
+                            class="w-4 h-4 text-purple-600 bg-gray-100 border-gray-300 rounded focus:ring-purple-500">
+                        <span class="text-sm text-gray-800 dark:text-gray-200">
+                            {{ __('Show only resolved reports') }}
                         </span>
-                        <i class="fa-solid fa-chevron-down text-xs"></i>
-                    </button>
-                    <div id="filterDropdown"
-                        class="hidden absolute right-0 mt-2 w-72 p-4 bg-white border border-gray-200 rounded-lg shadow-lg dark:bg-gray-700 dark:border-gray-600 z-20">
-                        <label class="flex items-center space-x-2">
-                            <input id="resolved-filter" type="checkbox" wire:click="toggleStatusFilter('Resolved')"
-                                class="w-4 h-4 text-purple-600 bg-gray-100 border-gray-300 rounded focus:ring-purple-500">
-                            <span class="text-sm text-gray-800 dark:text-gray-200">
-                                {{ __('Show only resolved reports') }}
-                            </span>
-                        </label>
-                        <label class="flex items-center space-x-2 mt-3">
-                            <input id="revision-filter" type="checkbox" wire:click="toggleStatusFilter('Revision')"
-                                class="w-4 h-4 text-purple-600 bg-gray-100 border-gray-300 rounded focus:ring-purple-500">
-                            <span class="text-sm text-gray-800 dark:text-gray-200">
-                                {{ __('Show only revision reports') }}
-                            </span>
-                        </label>
-                    </div>
-                </div>
-                <div class="flex gap-3 w-full sm:w-auto flex-wrap">
-                    <button wire:click="exportToExcel"
-                        class="flex items-center justify-center gap-2 py-2 px-4 w-full sm:w-auto text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-100 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700">
-                        <i class="fa-solid fa-arrow-up-from-bracket"></i> {{ __('Export to Excel') }}
-                    </button>
-                    <button wire:click="resetFilters"
-                        class="flex items-center justify-center gap-2 py-2 px-4 w-full sm:w-auto text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-100 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700">
-                        <i class="fa-solid fa-rotate-left"></i> {{ __('Reset table') }}
-                    </button>
+                    </label>
+                    <label class="flex items-center space-x-2 mt-3">
+                        <input type="checkbox" wire:click="toggleStatusFilter('Revision')"
+                            class="w-4 h-4 text-purple-600 bg-gray-100 border-gray-300 rounded focus:ring-purple-500">
+                        <span class="text-sm text-gray-800 dark:text-gray-200">
+                            {{ __('Show only revision reports') }}
+                        </span>
+                    </label>
                 </div>
             </div>
+            <button wire:click="exportToExcel"
+                class="w-full sm:w-auto flex items-center justify-center gap-2 py-2 px-4 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-100 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700">
+                <i class="fa-solid fa-arrow-up-from-bracket"></i>
+                {{ __('Export to Excel') }}
+            </button>
+            <button wire:click="resetFilters"
+                class="w-full sm:w-auto flex items-center justify-center gap-2 py-2 px-4 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-100 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700">
+                <i class="fa-solid fa-rotate-left"></i>
+                {{ __('Reset table') }}
+            </button>
         </div>
     </div>
     <div class="overflow-x-auto">
@@ -124,7 +120,7 @@
                             @endif
                         </button>
                     </th>
-                    <th class="py-3 px-2 text-left min-w-[260px] sm:min-w-[260px] md:min-w-[325px] cursor-pointer"
+                    <th class="py-3 px-2 text-left min-w-[270px] sm:min-w-[270px] md:min-w-[325px] cursor-pointer"
                         wire:click="toggleUserFilter">
                         <i class="fa-solid fa-user mr-1"></i>
                         <span class="text-gray-500 dark:text-white truncate">
