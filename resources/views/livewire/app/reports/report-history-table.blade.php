@@ -1,4 +1,4 @@
-<div class="bg-white dark:bg-gray-800 relative shadow-2xl sm:rounded-lg overflow-hidden mb-6">
+<div class="bg-white dark:bg-gray-800 relative shadow-2xl rounded-lg overflow-hidden mb-6">
     <div class="flex flex-col gap-4 p-4 bg-white dark:bg-gray-800 md:flex-row md:items-center md:justify-between">
         <div class="w-full md:w-1/3">
             <form class="relative">
