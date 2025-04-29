@@ -16,7 +16,7 @@
 ]">
 
     <x-slot name="action">
-        <div class="hidden sm:flex space-x-2">
+        <div class="hidden lg:flex space-x-2">
             <a href="{{ route('admin.channels.index') }}"
                 class="flex w-full sm:w-auto justify-center items-center text-white bg-gray-600 hover:bg-gray-500 focus:ring-4 focus:outline-none focus:ring-gray-300 dark:focus:ring-gray-800 font-medium rounded-lg text-sm px-4 py-2 text-center">
                 <i class="fa-solid fa-arrow-left mr-1.5"></i>
@@ -46,12 +46,13 @@
     </x-slot>
     <div class="w-full bg-white rounded-lg shadow-2xl dark:border dark:bg-gray-800 dark:border-gray-700">
         <div class="p-6 space-y-6 sm:p-8">
-            <div class="flex justify-between items-center">
-                <div>
+            <div
+                class="flex flex-col md:flex-row items-center md:items-center justify-between text-center md:text-left gap-4">
+                <div class="order-1 md:order-none flex flex-col items-center md:items-start">
                     <h1 class="text-xl md:text-2xl font-bold text-gray-900 dark:text-white">
                         <span class="text-primary-600">{{ $channel->number }}</span> {{ $channel->name }}
                     </h1>
-                    <div class="mt-2 flex flex-wrap items-center gap-2">
+                    <div class="mt-2 flex flex-wrap justify-center md:justify-start items-center gap-2">
                         <span
                             class="inline-flex items-center px-2 py-1 text-xs font-medium text-primary-800 bg-primary-200 rounded-full dark:bg-primary-800 dark:text-primary-200">
                             @switch($channel->category)
@@ -87,9 +88,13 @@
                         @endif
                     </div>
                 </div>
-                <img src="{{ $channel->image_url ? asset('storage/' . $channel->image_url) : asset('img/no-image.png') }}"
-                    alt="{{ $channel->name }}" class="w-16 h-16 object-center object-contain rounded-md">
+                <div class="order-0 md:order-none">
+                    <img src="{{ $channel->image_url ? asset('storage/' . $channel->image_url) : asset('img/no-image.png') }}"
+                        alt="{{ $channel->name }}"
+                        class="w-20 h-20 object-center object-contain rounded-md mx-auto md:mx-0">
+                </div>
             </div>
+
             <div class="space-y-4">
                 <div>
                     <x-label for="name">
@@ -99,7 +104,7 @@
                     <x-input id="name" class="block mt-1 w-full" type="text" wire:model="name"
                         value="{{ $channel->name }}" disabled />
                 </div>
-                <div class="grid grid-cols-2 gap-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                         <x-label for="number">
                             <i class="fa-solid fa-hashtag mr-1"></i>
@@ -120,7 +125,7 @@
             </div>
         </div>
     </div>
-    <div class="sm:hidden mt-6 space-y-5">
+    <div class="lg:hidden mt-6 space-y-5">
         <a href="{{ route('admin.channels.index') }}"
             class="flex justify-center items-center w-full text-white bg-gray-600 hover:bg-gray-500 focus:ring-4 focus:outline-none focus:ring-gray-300 dark:focus:ring-gray-800 font-medium rounded-lg text-sm px-4 py-2">
             <i class="fa-solid fa-arrow-left mr-1.5"></i>

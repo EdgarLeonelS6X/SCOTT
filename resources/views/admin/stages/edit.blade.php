@@ -10,14 +10,14 @@
         'route' => route('admin.stages.index'),
     ],
     [
-        'name' => __('Update stage'),
+        'name' => __('Update'),
         'icon' => 'fa-solid fa-pencil',
     ],
 ]">
 
     <x-slot name="action">
         <a href="{{ route('admin.stages.index') }}"
-            class="flex justify-center items-center text-white bg-gray-600 hover:bg-gray-500 focus:ring-4 focus:outline-none focus:ring-gray-300 dark:focus:ring-gray-800 font-medium rounded-lg text-sm px-5 py-2 text-center">
+            class="hidden sm:flex justify-center items-center text-white bg-gray-600 hover:bg-gray-500 focus:ring-4 focus:outline-none focus:ring-gray-300 dark:focus:ring-gray-800 font-medium rounded-lg text-sm px-5 py-2 text-center">
             <i class="fa-solid fa-arrow-left mr-1.5"></i>
             {{ __('Go back') }}
         </a>
@@ -34,7 +34,7 @@
             <form action="{{ route('admin.stages.update', $stage) }}" method="POST">
                 @method('PUT')
                 @csrf
-                <div class="grid grid-cols-2 gap-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                         <x-label for="name">
                             <i class="fa-solid fa-bars-staggered mr-1"></i>
@@ -53,8 +53,8 @@
                             class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                             name="status" required>
                             <option disabled>{{ __('Select status') }}</option>
-                            <option value="1" @selected(old('status', $stage->status) === '1')>{{ __('Active') }}</option>
-                            <option value="0" @selected(old('status', $stage->status) === '0')>{{ __('Inactive') }}</option>
+                            <option value="1" @selected(old('status', $stage->status) == '1')>{{ __('Active') }}</option>
+                            <option value="0" @selected(old('status', $stage->status) == '0')>{{ __('Inactive') }}</option>
                         </select>
                     </div>
                 </div>

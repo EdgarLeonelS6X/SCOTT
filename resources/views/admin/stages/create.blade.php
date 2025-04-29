@@ -10,14 +10,14 @@
         'route' => route('admin.stages.index'),
     ],
     [
-        'name' => __('Register new stage'),
+        'name' => __('New'),
         'icon' => 'fa-solid fa-plus',
     ],
 ]">
 
     <x-slot name="action">
         <a href="{{ route('admin.stages.index') }}"
-            class="flex justify-center items-center text-white bg-gray-600 hover:bg-gray-500 focus:ring-4 focus:outline-none focus:ring-gray-300 dark:focus:ring-gray-800 font-medium rounded-lg text-sm px-5 py-2 text-center">
+            class="hidden sm:flex justify-center items-center text-white bg-gray-600 hover:bg-gray-500 focus:ring-4 focus:outline-none focus:ring-gray-300 dark:focus:ring-gray-800 font-medium rounded-lg text-sm px-5 py-2 text-center">
             <i class="fa-solid fa-arrow-left mr-1.5"></i>
             {{ __('Go back') }}
         </a>
@@ -34,7 +34,7 @@
             </h1>
             <form action="{{ route('admin.stages.store') }}" method="POST">
                 @csrf
-                <div class="grid grid-cols-2 gap-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                         <x-label for="name">
                             <i class="fa-solid fa-bars-staggered mr-1"></i>
