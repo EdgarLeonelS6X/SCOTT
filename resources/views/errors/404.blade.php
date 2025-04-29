@@ -1,5 +1,5 @@
 <x-app-layout>
-    <div class="bg-gray-200 dark:bg-gray-900 flex items-center justify-center md:pt-4 px-4">
+    <div class="bg-gray-200 dark:bg-gray-900 flex items-center justify-center pt-4 px-4">
         <div class="bg-white dark:bg-gray-800 shadow-2xl rounded-lg p-10 max-w-xl w-full text-center">
             <div class="flex flex-col items-center gap-6">
                 <i class="fas fa-search text-primary-600 dark:text-primary-400 text-6xl"></i>

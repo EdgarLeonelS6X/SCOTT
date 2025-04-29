@@ -7,7 +7,7 @@ use App\Enums\ChannelOrigin;
 
 <x-slot name="action">
     <a href="{{ route('admin.channels.index') }}"
-        class="flex justify-center items-center text-white bg-gray-600 hover:bg-gray-500 focus:ring-4 focus:outline-none focus:ring-gray-300 dark:focus:ring-gray-800 font-medium rounded-lg text-sm px-5 py-2 text-center">
+        class="hidden md:block sm:flex justify-center items-center text-white bg-gray-600 hover:bg-gray-500 focus:ring-4 focus:outline-none focus:ring-gray-300 dark:focus:ring-gray-800 font-medium rounded-lg text-sm px-5 py-2 text-center">
         <i class="fa-solid fa-arrow-left mr-1.5"></i>
         {{ __('Go back') }}
     </a>
@@ -31,7 +31,7 @@ use App\Enums\ChannelOrigin;
                 {{ __('Update the data for this channel.') }}
             </p>
         </h1>
-        <form wire:submit.prevent="update">
+        <form wire:submit.prevent="update" class="space-y-6">
             @csrf
             <div class="mt-6 md:mt-0">
                 <x-label for="image-input" class="block mb-3 font-semibold">
@@ -68,7 +68,7 @@ use App\Enums\ChannelOrigin;
                 <x-input id="name" class="block mt-1 w-full" type="text" wire:model="name" :value="old('name')"
                     required autocomplete="name" placeholder="{{ __('Channel name') }}" />
             </div>
-            <div class="grid grid-cols-2 gap-6 mt-6">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 <div>
                     <x-label for="number">
                         <i class="fa-solid fa-hashtag mr-1"></i>
@@ -86,7 +86,7 @@ use App\Enums\ChannelOrigin;
                         required autocomplete="url" placeholder="{{ __('Channel URL') }}" />
                 </div>
             </div>
-            <div class="grid grid-cols-2 gap-6 mt-6">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 <div>
                     <x-label for="category">
                         <i class="fa-solid fa-list mr-1"></i>
@@ -130,7 +130,7 @@ use App\Enums\ChannelOrigin;
                 </select>
             </div>
             <div class="flex justify-end">
-                <x-button class="flex justify-center items-center mt-8 font-bold shadow">
+                <x-button class="flex justify-center items-center font-bold shadow">
                     <i class="fa-solid fa-floppy-disk mr-2"></i>
                     {{ __('Update channel') }}
                 </x-button>

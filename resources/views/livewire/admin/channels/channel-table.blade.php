@@ -1,19 +1,19 @@
-<div class="bg-white dark:bg-gray-800 relative shadow-2xl sm:rounded-lg overflow-hidden">
-    <div class="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 p-4">
+<div class="bg-white dark:bg-gray-800 relative shadow-2xl rounded-lg overflow-hidden">
+    <div class="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 p-2 sm:p-4">
         <div class="w-full md:w-1/2">
             <form class="flex items-center">
                 <label for="simple-search" class="sr-only">Search</label>
                 <div class="relative w-full">
                     <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
                         <svg aria-hidden="true" class="w-5 h-5 text-gray-500 dark:text-gray-400" fill="currentColor"
-                            viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                            viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                             <path fill-rule="evenodd"
                                 d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
                                 clip-rule="evenodd" />
                         </svg>
                     </div>
                     <input type="text" wire:model.live="search" id="simple-search"
-                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full pl-10 p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-xs sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full pl-10 p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                         placeholder="{{ __('Search') }}" required="" autofocus>
                 </div>
             </form>
@@ -22,14 +22,14 @@
             class="w-full md:w-auto flex flex-col md:flex-row space-y-2 md:space-y-0 items-stretch md:items-center justify-end md:space-x-3 flex-shrink-0">
             @can('create', App\Models\Channel::class)
                 <a href="{{ route('admin.channels.create') }}"
-                    class="block text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800 shadow-xl">
+                    class="block w-full sm:w-auto text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-xs sm:text-sm px-5 py-2 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800 shadow-xl text-center">
                     <i class="fa-solid fa-plus mr-1"></i>
                     {{ __('Register new channel') }}
                 </a>
             @endcan
-            <div class="flex items-center space-x-3 w-full md:w-auto">
+            <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-3 w-full sm:w-auto">
                 <button id="filterDropdownButton" data-dropdown-toggle="filterDropdown"
-                    class="w-full md:w-auto flex items-center justify-center py-2 px-4 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
+                    class="w-full sm:w-full md:w-auto flex items-center justify-center py-2 px-4 text-xs sm:text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
                     type="button">
                     <i class="fa-solid fa-filter mr-1.5"></i>
                     {{ __('Filter') }}
@@ -42,7 +42,7 @@
                     </label>
                 </div>
                 <button wire:click="resetFilters"
-                    class="flex items-center gap-2 py-2 px-4 text-sm font-medium text-gray-700 border rounded-lg border-gray-200 hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
+                    class="w-full sm:w-full md:w-auto flex justify-center items-center gap-2 py-2 px-4 text-xs sm:text-sm font-medium text-gray-700 border rounded-lg border-gray-200 hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
                     <i class="fa-solid fa-rotate-left"></i>
                     {{ __('Reset table') }}
                 </button>
@@ -53,7 +53,7 @@
         <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
             <thead class="text-xs dark:text-white uppercase dark:bg-gray-600 shadow-2xl">
                 <tr>
-                    <th scope="col" class="px-4 py-3 min-w-[50px] max-w-[50px]">
+                    <th scope="col" class="px-4 py-3 min-w-[100px] max-w-[100px]">
                         <i class="fa-solid fa-image mr-1"></i>
                         {{ __('Image') }}
                     </th>
@@ -73,7 +73,7 @@
                             <i class="ml-1 fa-solid fa-sort"></i>
                         </span>
                     </th>
-                    <th class="py-3 px-4 text-left cursor-pointer min-w-[150px] max-w-[150px]"
+                    <th class="py-3 px-4 text-left cursor-pointer min-w-[250px] max-w-[250px]"
                         wire:click="toggleCategoryFilter">
                         <i class="fa-solid fa-list mr-1"></i>
                         <span class="text-gray-500 dark:text-white">
@@ -85,7 +85,7 @@
                             <i class="ml-1 fa-solid fa-sort"></i>
                         </span>
                     </th>
-                    <th scope="col" class="px-4 py-3">
+                    <th scope="col" class="px-4 py-3 min-w-[100px]">
                         <i class="fa-solid fa-toggle-on mr-1"></i>
                         {{ __('Status') }}
                     </th>
@@ -213,7 +213,7 @@
                     </tr>
                     @empty
                         <tr>
-                            <td colspan="7" class="bg-white dark:bg-gray-800 pt-7 text-center">
+                            <td colspan="7" class="bg-white dark:bg-gray-800 py-6 text-center">
                                 <i class="fa-solid fa-circle-info mr-1"></i>
                                 {{ __('There are no channels that match your search.') }}
                             </td>
@@ -222,7 +222,7 @@
                 </tbody>
             </table>
         </div>
-        <div class="p-4">
+        <div class="p-2 sm:p-4">
             {{ $channels->links() }}
         </div>
     </div>

@@ -10,7 +10,7 @@
         'route' => route('admin.channels.index'),
     ],
     [
-        'name' => __('Register new channel'),
+        'name' => __('New'),
         'icon' => 'fa-solid fa-plus',
     ],
 ]">

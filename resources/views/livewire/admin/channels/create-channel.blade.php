@@ -7,7 +7,7 @@ use App\Enums\ChannelOrigin;
 
 <x-slot name="action">
     <a href="{{ route('admin.channels.index') }}"
-        class="flex justify-center items-center text-white bg-gray-600 hover:bg-gray-500 focus:ring-4 focus:outline-none focus:ring-gray-300 dark:focus:ring-gray-800 font-medium rounded-lg text-sm px-5 py-2 text-center">
+        class="hidden md:block sm:flex justify-center items-center text-white bg-gray-600 hover:bg-gray-500 focus:ring-4 focus:outline-none focus:ring-gray-300 dark:focus:ring-gray-800 font-medium rounded-lg text-sm px-5 py-2 text-center">
         <i class="fa-solid fa-arrow-left mr-1.5"></i>
         {{ __('Go back') }}
     </a>
@@ -22,7 +22,7 @@ use App\Enums\ChannelOrigin;
     </div>
 </x-slot>
 <div class="w-full bg-white rounded-lg shadow-2xl dark:border md:mt-0 xl:p-0 dark:bg-gray-800 dark:border-gray-700">
-    <div class="p-6 space-y-4 md:space-y-6 sm:p-8">
+    <div class="p-6 space-y-6 sm:p-8">
         <h1 class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
             <i class="fa-solid fa-tv mr-1.5"></i>
             {{ __('Register new channel') }}
@@ -30,9 +30,9 @@ use App\Enums\ChannelOrigin;
                 {{ __('Enter the data for the new channel.') }}
             </p>
         </h1>
-        <form wire:submit.prevent="store">
+        <form wire:submit.prevent="store" class="space-y-6">
             @csrf
-            <div class="mt-6 md:mt-0">
+            <div>
                 <x-label for="image-input" class="block mb-3 font-semibold">
                     <i class="fa-solid fa-image mr-1"></i>
                     {{ __('Channel image') }}
@@ -58,7 +58,7 @@ use App\Enums\ChannelOrigin;
                     </div>
                 </figure>
             </div>
-            <div class="mt-6">
+            <div>
                 <x-label for="name">
                     <i class="fa-solid fa-tv mr-1"></i>
                     {{ __('Name') }}
@@ -66,7 +66,7 @@ use App\Enums\ChannelOrigin;
                 <x-input id="name" class="block mt-1 w-full" type="text" wire:model="name" :value="old('name')"
                     required autocomplete="name" placeholder="{{ __('Channel name') }}" />
             </div>
-            <div class="grid grid-cols-2 gap-6 mt-6">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 <div>
                     <x-label for="number">
                         <i class="fa-solid fa-hashtag mr-1"></i>
@@ -84,7 +84,7 @@ use App\Enums\ChannelOrigin;
                         required autocomplete="url" placeholder="{{ __('Channel URL') }}" />
                 </div>
             </div>
-            <div class="grid grid-cols-2 gap-6 mt-6">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 <div>
                     <x-label for="category">
                         <i class="fa-solid fa-list mr-1"></i>
@@ -114,7 +114,7 @@ use App\Enums\ChannelOrigin;
                     </select>
                 </div>
             </div>
-            <div class="mt-6">
+            <div>
                 <x-label for="status">
                     <i class="fa-solid fa-toggle-on mr-1"></i>
                     {{ __('Status') }}
@@ -128,7 +128,7 @@ use App\Enums\ChannelOrigin;
                 </select>
             </div>
             <div class="flex justify-end">
-                <x-button class="flex justify-center items-center mt-8 font-bold shadow">
+                <x-button class="flex justify-center items-center font-bold shadow">
                     <i class="fa-solid fa-floppy-disk mr-2"></i>
                     {{ __('Register new channel') }}
                 </x-button>
@@ -136,6 +136,7 @@ use App\Enums\ChannelOrigin;
         </form>
     </div>
 </div>
+
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {

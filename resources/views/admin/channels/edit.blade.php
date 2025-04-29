@@ -10,7 +10,7 @@
         'route' => route('admin.channels.index'),
     ],
     [
-        'name' => __('Update channel'),
+        'name' => __('Update'),
         'icon' => 'fa-solid fa-pencil',
     ],
 ]">
