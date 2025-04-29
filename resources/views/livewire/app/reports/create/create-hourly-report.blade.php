@@ -9,37 +9,52 @@
                 editingName: false,
                 isFixed: @json($isFixed),
             }">
-                <div class="p-6 border bg-white dark:bg-gray-800 rounded-2xl shadow-2xl mb-5">
+                <div class="p-4 md:p-6 border bg-white dark:bg-gray-800 rounded-2xl shadow-2xl mb-5">
                     <div class="flex items-center justify-between cursor-pointer" @click="if (!editingName) open = !open">
-                        <div class="flex items-center w-full">
-                            <i :class="open ? 'fas fa-chevron-down' : 'fas fa-chevron-right'"
-                                class="text-primary-600 mr-3"></i>
-                            <div class="dark:text-white text-lg font-semibold relative">
-                                <h3 x-show="!editingName" title="{{ __('Click here to edit the category name') }}"
-                                    @click.stop="if (!isFixed) editingName = true"
-                                    class="cursor-pointer px-3 py-2 rounded-full shadow-md flex items-center gap-2 transition bg-gray-50 border dark:bg-gray-700 dark:border-white">
-                                    <i class="fa-solid fa-pen text-gray-800 dark:text-gray-200 transition duration-200"
-                                        x-show="!isFixed">...</i>
-                                    <span x-text="$wire.categories[{{ $index }}].name"></span>
-                                </h3>
-                                <x-input type="text" x-show="editingName" x-ref="categoryInput"
-                                    wire:model.defer="categories.{{ $index }}.name" @click.stop
-                                    @click.away="editingName = false" @keydown.enter.prevent="editingName = false"
-                                    placeholder="{{ __('Category name') }}" x-bind:disabled="isFixed" />
+                        <div :class="isFixed ? 'flex items-center gap-2 w-full' : 'flex flex-col w-full gap-2'">
+                            <div
+                                :class="isFixed ? 'flex items-center gap-2 w-full' :
+                                    'flex items-center gap-2 max-w-[270px] md:max-w-lg'">
+                                <button type="button" class="text-primary-600" @click.stop="open = !open">
+                                    <i :class="open ? 'fas fa-chevron-down' : 'fas fa-chevron-right'"></i>
+                                </button>
+                                <div
+                                    class="flex flex-col dark:text-white text-base sm:text-lg font-semibold relative w-full">
+                                    <h3 x-show="!editingName" title="{{ __('Click here to edit the category name') }}"
+                                        @click.stop="if (!isFixed) editingName = true"
+                                        class="cursor-pointer px-3 py-2 rounded-full shadow-md flex items-center gap-2 transition bg-gray-50 border dark:bg-gray-700 dark:border-white w-full max-w-[270px] md:max-w-lg truncate">
+                                        <i class="fa-solid fa-pen text-gray-800 dark:text-gray-200"
+                                            x-show="!isFixed">...</i>
+                                        <span x-text="$wire.categories[{{ $index }}].name"></span>
+                                    </h3>
+                                    <x-input type="text" x-show="editingName" x-ref="categoryInput"
+                                        wire:model.defer="categories.{{ $index }}.name" @click.stop
+                                        @click.away="editingName = false" @keydown.enter.prevent="editingName = false"
+                                        placeholder="{{ __('Category name') }}" x-bind:disabled="isFixed"
+                                        class="w-full" />
+                                </div>
+                                <template x-if="isFixed">
+                                    <span
+                                        class="bg-primary-100 text-primary-800 text-sm font-medium py-1 px-3 rounded-full whitespace-nowrap">
+                                        {{ __('Contains') }} {{ $this->getChannelCount($index) }}
+                                        {{ $this->getChannelCount($index) === 1 ? __('channel') : __('channels') }}
+                                    </span>
+                                </template>
                             </div>
-                        </div>
-                        <div class="flex items-center gap-3">
-                            <span
-                                class="ml-2 bg-primary-100 text-primary-800 text-sm font-medium py-1 px-2 rounded-full whitespace-nowrap">
-                                {{ __('Contains') }} {{ $this->getChannelCount($index) }}
-                                {{ $this->getChannelCount($index) === 1 ? __('channel') : __('channels') }}
-                            </span>
-                            <button type="button" x-show="!isFixed"
-                                @click.stop="$wire.removeCategory({{ $index }})"
-                                class="inline-flex items-center text-red-500 hover:text-red-700 dark:hover:text-red-400 text-sm">
-                                <i class="fas fa-trash-alt mr-1"></i>
-                                <span class="hidden sm:inline">{{ __('Delete') }}</span>
-                            </button>
+                            <template x-if="!isFixed">
+                                <div class="flex items-center justify-between w-full mt-2">
+                                    <span
+                                        class="bg-primary-100 text-primary-800 text-sm font-medium py-1 px-3 rounded-full whitespace-nowrap">
+                                        {{ __('Contains') }} {{ $this->getChannelCount($index) }}
+                                        {{ $this->getChannelCount($index) === 1 ? __('channel') : __('channels') }}
+                                    </span>
+                                    <button type="button" @click.stop="$wire.removeCategory({{ $index }})"
+                                        class="inline-flex items-center text-red-500 hover:text-red-700 dark:hover:text-red-400 text-sm">
+                                        <i class="fas fa-trash-alt mr-1"></i>
+                                        <span class="hidden sm:inline">{{ __('Delete') }}</span>
+                                    </button>
+                                </div>
+                            </template>
                         </div>
                     </div>
                     <div x-show="open" class="mt-6 space-y-6">
@@ -202,7 +217,7 @@
                                             @endforeach
                                         </select>
                                     </div>
-                                    <div class="col-span-2">
+                                    <div class="col-span-1 md:col-span-2">
                                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                             <i class="fa-solid fa-comment mr-1.5"></i>
                                             {{ __('Description (Optional)') }}
@@ -227,7 +242,7 @@
             <i class="fas fa-plus-circle mr-1"></i>
             {{ __('Add a new category') }}
         </button>
-        <div class="flex justify-end gap-4">
+        <div class="flex flex-col md:flex-row justify-end gap-4 mt-6">
             <button type="submit"
                 class="py-2 px-4 bg-primary-600 hover:bg-primary-700 text-white rounded-lg shadow font-bold text-base">
                 <i class="fas fa-file-lines mr-1.5"></i>

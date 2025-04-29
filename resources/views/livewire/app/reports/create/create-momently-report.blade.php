@@ -15,30 +15,26 @@ use App\Enums\ChannelReviewer;
             <div class="p-4 md:p-6 border bg-white dark:bg-gray-800 rounded-2xl shadow-2xl">
                 <div class="flex flex-wrap items-center justify-between cursor-pointer"
                     @click="if (!editingName) open = !open">
-                    <div class="flex items-center flex-wrap gap-3">
-                        <button type="button" class="text-primary-600" @click.stop="open = !open">
+                    <div class="flex items-center gap-3 min-w-0">
+                        <button type="button" class="text-primary-600 flex-shrink-0" @click.stop="open = !open">
                             <i :class="open ? 'fas fa-chevron-down' : 'fas fa-chevron-right'"></i>
                         </button>
-                        <div class="dark:text-white text-lg font-semibold relative">
+                        <div class="dark:text-white text-lg font-semibold relative min-w-0">
                             <h3 title="{{ __('Click here to edit the category name') }}" x-show="!editingName"
-                                @click.stop="editingName = true; 
-                         if (firstEdit) { categoryName = ''; firstEdit = false; }"
-                                class="cursor-pointer px-3 py-2 rounded-full shadow-md flex items-center gap-2 transition bg-gray-50 border dark:bg-gray-700 dark:border-white w-full max-w-[270px] md:max-w-lg truncate">
+                                @click.stop="editingName = true; if (firstEdit) { categoryName = ''; firstEdit = false; }"
+                                class="cursor-pointer px-3 py-2 rounded-full shadow-md flex items-center gap-2 transition bg-gray-50 border dark:bg-gray-700 dark:border-white truncate max-w-[280px] md:max-w-md">
                                 <i class="fa-solid fa-pen text-gray-800 dark:text-gray-200"></i>
-                                <span x-text="categoryName"></span>
+                                <span class="truncate" x-text="categoryName"></span>
                             </h3>
                             <x-input x-show="editingName" x-model="categoryName" @click.stop
-                                @click.away="editingName = false; 
-                         if (categoryName.trim() === '') { categoryName = ''; } 
-                         $wire.set('reportData.category', categoryName);"
-                                @keydown.enter.prevent="editingName = false; 
-                                    if (categoryName.trim() === '') { categoryName = ''; } 
-                                    $wire.set('reportData.category', categoryName);"
-                                placeholder="{{ __('Category name') }}" autofocus />
+                                @click.away="editingName = false; if (categoryName.trim() === '') { categoryName = ''; } $wire.set('reportData.category', categoryName);"
+                                @keydown.enter.prevent="editingName = false; if (categoryName.trim() === '') { categoryName = ''; } $wire.set('reportData.category', categoryName);"
+                                placeholder="{{ __('Category name') }}" autofocus
+                                class="max-w-[240px] md:max-w-md truncate" />
                         </div>
                     </div>
                     <div class="flex items-center gap-3 transition-all duration-300"
-                        :class="(categoryName.length > 15 || editingName) ? 'mt-4 sm:mt-0' : 'mt-0'">
+                        :class="(categoryName.length > 8 || editingName) ? 'mt-4 sm:mt-0' : 'mt-0'">
                         <span class="bg-primary-100 text-primary-800 text-sm font-medium py-1 px-3 rounded-full">
                             {{ __('Contains') }} {{ $this->getChannelCount(0) }}
                             {{ $this->getChannelCount(0) === 1 ? __('channel') : __('channels') }}

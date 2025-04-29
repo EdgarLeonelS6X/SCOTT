@@ -68,7 +68,7 @@
         <div class="relative w-full max-w-7xl max-h-full">
             <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
                 <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
-                    <h3 class="text-xl font-medium text-gray-900 dark:text-white">
+                    <h3 class="text-xl font-medium text-gray-900 dark:text-white truncate">
                         <i class="fas fa-triangle-exclamation mr-2 text-red-600"></i>
                         {{ __('Report channel with faults at the moment') }}
                     </h3>
