@@ -10,7 +10,7 @@
         'route' => route('reports.index'),
     ],
     [
-        'name' => $report->category . ' (' . $report->created_at->format('d/m/Y h:i A') . ')',
+        'name' => __('Report'),
         'icon' => 'fa-solid fa-pencil',
     ],
 ]">

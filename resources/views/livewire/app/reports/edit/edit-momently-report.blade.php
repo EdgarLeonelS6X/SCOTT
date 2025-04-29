@@ -11,19 +11,19 @@ use App\Enums\ChannelReviewer;
             editingName: false,
             categoryName: @entangle('reportData.category').defer,
         }" x-init="categoryName = '{{ $reportData['category'] ?? '' }}'">
-            <div class="p-6 border bg-white dark:bg-gray-800 rounded-2xl shadow-2xl">
-                <div class="flex items-center justify-between cursor-pointer" @click="if (!editingName) open = !open">
-                    <div class="flex items-center">
+            <div class="p-4 md:p-6 border bg-white dark:bg-gray-800 rounded-2xl shadow-2xl">
+                <div class="flex flex-wrap items-center justify-between cursor-pointer"
+                    @click="if (!editingName) open = !open">
+                    <div class="flex items-center gap-3 min-w-0">
                         <button type="button" class="text-primary-600 mr-3" @click.stop="open = !open">
                             <i :class="open ? 'fas fa-chevron-down' : 'fas fa-chevron-right'"></i>
                         </button>
-                        <div class="dark:text-white text-lg font-semibold relative">
+                        <div class="dark:text-white text-lg font-semibold relative min-w-0">
                             <h3 title="{{ __('Click here to edit the category name') }}" x-show="!editingName"
-                                @click.stop="editingName = true"
-                                class="cursor-pointer px-3 py-2 rounded-full shadow-md flex items-center gap-2 transition bg-gray-50 border dark:bg-gray-700 dark:border-white">
-                                <i
-                                    class="fa-solid fa-pen text-gray-800 dark:text-gray-200 transition duration-200">...</i>
-                                <span x-text="categoryName"></span>
+                                @click.stop="editingName = true; if (firstEdit) { categoryName = ''; firstEdit = false; }"
+                                class="cursor-pointer px-3 py-2 rounded-full shadow-md flex items-center gap-2 transition bg-gray-50 border dark:bg-gray-700 dark:border-white truncate max-w-[280px] md:max-w-md">
+                                <i class="fa-solid fa-pen text-gray-800 dark:text-gray-200"></i>
+                                <span class="truncate" x-text="categoryName"></span>
                             </h3>
                             <x-input x-show="editingName" x-model="categoryName" @click.stop
                                 @click.away="editingName = false; 
@@ -35,8 +35,9 @@ use App\Enums\ChannelReviewer;
                                 placeholder="{{ __('Category name') }}" autofocus />
                         </div>
                     </div>
-                    <div class="flex items-center gap-3">
-                        <span class="ml-4 bg-primary-100 text-primary-800 text-sm font-medium py-1 px-2 rounded-full">
+                    <div class="flex items-center gap-3 transition-all duration-300"
+                        :class="(categoryName.length > 8 || editingName) ? 'mt-4 sm:mt-0' : 'mt-0'">
+                        <span class="bg-primary-100 text-primary-800 text-sm font-medium py-1 px-3 rounded-full">
                             {{ __('Contains') }} {{ $this->getChannelCount(0) }}
                             {{ $this->getChannelCount(0) === 1 ? __('channel') : __('channels') }}
                         </span>
@@ -45,8 +46,8 @@ use App\Enums\ChannelReviewer;
                 <div x-show="open" class="mt-6 space-y-6">
                     @foreach ($reportData['channels'] as $channelIndex => $channel)
                         <div wire:key="channel-{{ $channelIndex }}"
-                            class="p-6 bg-gray-50 border dark:bg-gray-700 rounded-xl shadow-2xl">
-                            <div class="flex justify-between items-center mb-4">
+                            class="p-4 md:p-6 bg-gray-50 border dark:bg-gray-700 rounded-xl shadow-2xl">
+                            <div class="flex flex-wrap justify-between items-center mb-4 gap-4">
                                 <h4 class="text-md font-semibold text-gray-800 dark:text-white">
                                     {{ __('Channel') }} {{ $loop->iteration }}
                                 </h4>
@@ -178,7 +179,7 @@ use App\Enums\ChannelReviewer;
                                         @endforeach
                                     </select>
                                 </div>
-                                <div class="col-span-2">
+                                <div class="col-span-1 md:col-span-2">
                                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                         <i class="fa-solid fa-comment mr-1.5"></i>
                                         {{ __('Description (Optional)') }}
@@ -211,14 +212,14 @@ use App\Enums\ChannelReviewer;
                         @endforeach
                     </select>
                 </div>
-                <div class="flex justify-end gap-4">
+                <div class="flex flex-col md:flex-row justify-end gap-4 mt-6">
                     <button type="submit"
                         class="py-2 px-4 bg-primary-600 hover:bg-primary-700 text-white rounded-lg shadow font-bold text-base">
                         <i class="fas fa-file-lines mr-1.5"></i>
                         {{ __('Update report') }}
                     </button>
                     <a href="{{ route('reports.show', $report ?? 0) }}"
-                        class="py-2 px-4 flex items-center gap-2 border border-gray-300 text-gray-700 bg-white rounded-lg hover:border-primary-600 hover:text-primary-600 font-bold text-base dark:text-gray-300 dark:bg-gray-800 dark:border-gray-600 dark:hover:text-primary-400 dark:hover:bg-gray-700">
+                        class="py-2 px-4 flex justify-center items-center gap-2 border border-gray-300 text-gray-700 bg-white rounded-lg hover:border-primary-600 hover:text-primary-600 font-bold text-base dark:text-gray-300 dark:bg-gray-800 dark:border-gray-600 dark:hover:text-primary-400 dark:hover:bg-gray-700">
                         <i class="fa-solid fa-arrow-left"></i>
                         {{ __('Back to report') }}
                     </a>
