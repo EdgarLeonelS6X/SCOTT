@@ -107,7 +107,7 @@
                             <i class="ml-1 fa-solid fa-sort"></i>
                         </span>
                     </th>
-                    <th class="py-3 px-2 text-left cursor-pointer whitespace-nowrap"
+                    <th class="py-3 px-2 text-left cursor-pointer whitespace-nowrap min-w-[150px] sm:min-w-[150px]"
                         wire:click="setOrder('created_at')">
                         <i class="fa-solid fa-calendar mr-1"></i>
                         {{ __('Datetime') }}

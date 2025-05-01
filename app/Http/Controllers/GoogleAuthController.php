@@ -17,7 +17,7 @@ class GoogleAuthController extends Controller
     public function handleGoogleCallback()
     {
         try {
-            $user_google = Socialite::driver('google')->stateless()->user();
+            $user_google = Socialite::driver('google')->user();
             $email = $user_google->email;
 
             if (!str_ends_with($email, '@stargroup.com.mx')) {
