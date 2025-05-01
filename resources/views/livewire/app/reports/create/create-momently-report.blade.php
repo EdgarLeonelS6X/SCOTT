@@ -23,7 +23,7 @@ use App\Enums\ChannelReviewer;
                             <h3 title="{{ __('Click here to edit the category name') }}" x-show="!editingName"
                                 @click.stop="editingName = true; if (firstEdit) { categoryName = ''; firstEdit = false; }"
                                 class="cursor-pointer px-3 py-2 rounded-full shadow-md flex items-center gap-2 transition bg-gray-50 border dark:bg-gray-700 dark:border-white truncate max-w-[280px] md:max-w-md">
-                                <i class="fa-solid fa-pen text-gray-800 dark:text-gray-200"></i>
+                                <i class="fa-solid fa-pen text-gray-800 dark:text-gray-200">...</i>
                                 <span class="truncate" x-text="categoryName"></span>
                             </h3>
                             <x-input x-show="editingName" x-model="categoryName" @click.stop

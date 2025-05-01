@@ -13,7 +13,7 @@
                     <div class="flex items-center justify-between cursor-pointer" @click="if (!editingName) open = !open">
                         <div :class="isFixed ? 'flex items-center gap-2 w-full' : 'flex flex-col w-full gap-2'">
                             <div
-                                :class="isFixed ? 'flex items-center gap-2' :
+                                :class="isFixed ? 'flex items-center justify-between gap-2 w-full' :
                                     'flex items-center gap-2 max-w-[270px] md:max-w-lg'">
                                 <button type="button" class="text-primary-600" @click.stop="open = !open">
                                     <i :class="open ? 'fas fa-chevron-down' : 'fas fa-chevron-right'"></i>
@@ -21,10 +21,12 @@
                                 <div class="flex flex-col dark:text-white text-base sm:text-lg font-semibold relative">
                                     <h3 x-show="!editingName" title="{{ __('Click here to edit the category name') }}"
                                         @click.stop="if (!isFixed) editingName = true"
-                                        class="cursor-pointer px-3 py-2 rounded-full shadow-md inline-flex items-center gap-2 transition bg-gray-50 border dark:bg-gray-700 dark:border-white truncate max-w-[280px] md:max-w-md">
+                                        class="cursor-pointer px-3 py-2 rounded-full shadow-md inline-flex items-center gap-2 transition bg-gray-50 border dark:bg-gray-700 dark:border-white max-w-[280px] md:max-w-md">
                                         <i class="fa-solid fa-pen text-gray-800 dark:text-gray-200"
                                             x-show="!isFixed">...</i>
-                                        <span x-text="$wire.categories[{{ $index }}].name"></span>
+                                        <span class="truncate max-w-[220px] sm:max-w-[240px] md:max-w-md"
+                                            x-text="$wire.categories[{{ $index }}].name">
+                                        </span>
                                     </h3>
                                     <x-input type="text" x-show="editingName" x-ref="categoryInput"
                                         wire:model.defer="categories.{{ $index }}.name" @click.stop
@@ -33,11 +35,13 @@
                                         class="w-full" />
                                 </div>
                                 <template x-if="isFixed">
-                                    <span
-                                        class="bg-primary-100 text-primary-800 text-sm font-medium py-1 px-3 rounded-full whitespace-nowrap">
-                                        {{ __('Contains') }} {{ $this->getChannelCount($index) }}
-                                        {{ $this->getChannelCount($index) === 1 ? __('channel') : __('channels') }}
-                                    </span>
+                                    <div class="ml-auto">
+                                        <span
+                                            class="bg-primary-100 text-primary-800 text-sm font-medium py-1 px-3 rounded-full whitespace-nowrap">
+                                            {{ __('Contains') }} {{ $this->getChannelCount($index) }}
+                                            {{ $this->getChannelCount($index) === 1 ? __('channel') : __('channels') }}
+                                        </span>
+                                    </div>
                                 </template>
                             </div>
                             <template x-if="!isFixed">
