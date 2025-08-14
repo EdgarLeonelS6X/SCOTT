@@ -28,7 +28,7 @@
     <!-- Dark Mode -->
     <script>
         if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia(
-                '(prefers-color-scheme: dark)').matches)) {
+            '(prefers-color-scheme: dark)').matches)) {
             document.documentElement.classList.add('dark');
         } else {
             document.documentElement.classList.remove('dark')
@@ -60,8 +60,7 @@
 
 <body class="font-sans antialiased bg-gray-200 dark:bg-gray-900" x-data="{
     sidebarOpen: false
-}"
-    :class="{
+}" :class="{
         'overflow-y-hidden': sidebarOpen
     }">
 

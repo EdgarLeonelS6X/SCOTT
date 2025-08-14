@@ -21,12 +21,13 @@
                     @endunless
                     <div class="relative group">
                         <div class="p-3 rounded-xl shadow-sm transition-all duration-150
-                                {{ $isCurrentUser
+                                        {{ $isCurrentUser
             ? 'bg-primary-600 text-white rounded-br-none'
             : 'bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 rounded-bl-none'
-                                }}">
+                                        }}">
                             <div class="flex items-center gap-1 mb-1">
-                                <span class="text-[11px] font-semibold opacity-70 {{ $isCurrentUser ? 'text-right' : 'text-left' }}">
+                                <span
+                                    class="text-[11px] font-semibold opacity-70 {{ $isCurrentUser ? 'text-right' : 'text-left' }}">
                                     {{ $comment->user->name ?? __('Unknown') }}
                                 </span>
                                 <span class="text-[10px] opacity-50">
@@ -70,7 +71,6 @@
         @endforelse
     </div>
 
-    {{-- Input para nuevo comentario --}}
     <form wire:submit.prevent="addComment"
         class="flex items-center gap-2 p-4 border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900">
         <input type="text" wire:model.defer="body"

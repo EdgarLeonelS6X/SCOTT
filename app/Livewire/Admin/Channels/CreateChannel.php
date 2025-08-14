@@ -17,6 +17,7 @@ class CreateChannel extends Component
     public $url;
     public $category = '';
     public $status = '';
+    public $profiles = [];
 
     public function boot()
     {
@@ -48,6 +49,10 @@ class CreateChannel extends Component
             'name' => 'required|string',
             'url' => 'nullable|url',
             'category' => 'required|string',
+            'profiles' => 'nullable|array',
+            'profiles.high' => 'nullable|string',
+            'profiles.medium' => 'nullable|string',
+            'profiles.low' => 'nullable|string',
             'status' => 'required|string',
         ], [], [
             'image_url' => __('channel image'),
@@ -71,6 +76,7 @@ class CreateChannel extends Component
             'url' => $this->url,
             'category' => $this->category,
             'status' => $this->status,
+            'profiles' => $this->profiles ?: null
         ]);
 
         session()->flash('swal', [

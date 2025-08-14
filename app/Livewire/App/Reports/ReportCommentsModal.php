@@ -41,7 +41,8 @@ class ReportCommentsModal extends Component
     public function editComment($id)
     {
         $comment = Comment::findOrFail($id);
-        if ($comment->user_id !== auth()->id()) return;
+        if ($comment->user_id !== auth()->id())
+            return;
         $this->editingId = $id;
         $this->editBody = $comment->body;
     }
@@ -50,7 +51,8 @@ class ReportCommentsModal extends Component
     {
         $this->validateOnly('editBody');
         $comment = Comment::findOrFail($id);
-        if ($comment->user_id !== auth()->id()) return;
+        if ($comment->user_id !== auth()->id())
+            return;
         $comment->body = $this->editBody;
         $comment->save();
         $this->editingId = null;
@@ -68,7 +70,8 @@ class ReportCommentsModal extends Component
     public function deleteComment($id)
     {
         $comment = Comment::findOrFail($id);
-        if ($comment->user_id !== auth()->id()) return;
+        if ($comment->user_id !== auth()->id())
+            return;
         $comment->delete();
         broadcast(new CommentAdded($comment))->toOthers();
         $this->dispatch('refreshComments');

@@ -15,7 +15,12 @@ class Channel extends Model
         "name",
         "url",
         "category",
+        "profiles",
         "status",
+    ];
+
+    protected $casts = [
+        'profiles' => 'array',
     ];
 
     protected function image(): Attribute

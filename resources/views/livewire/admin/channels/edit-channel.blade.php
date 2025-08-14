@@ -65,8 +65,8 @@ use App\Enums\ChannelOrigin;
                     <i class="fa-solid fa-tv mr-1"></i>
                     {{ __('Name') }}
                 </x-label>
-                <x-input id="name" class="block mt-1 w-full" type="text" wire:model="name" :value="old('name')"
-                    required autocomplete="name" placeholder="{{ __('Channel name') }}" />
+                <x-input id="name" class="block mt-1 w-full" type="text" wire:model="name" :value="old('name')" required
+                    autocomplete="name" placeholder="{{ __('Channel name') }}" />
             </div>
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 <div>
@@ -75,7 +75,8 @@ use App\Enums\ChannelOrigin;
                         {{ __('Number') }}
                     </x-label>
                     <x-input id="number" class="block mt-1 w-full" type="number" wire:model="number"
-                        :value="old('number')" required autocomplete="number" placeholder="{{ __('Channel number') }}" />
+                        :value="old('number')" required autocomplete="number"
+                        placeholder="{{ __('Channel number') }}" />
                 </div>
                 <div>
                     <x-label for="url">
@@ -115,6 +116,32 @@ use App\Enums\ChannelOrigin;
                         @endforeach
                     </select>
                 </div>
+            </div>
+            <div class="mt-6">
+                <x-label>
+                    <i class="fa-solid fa-sliders mr-1"></i>
+                    {{ __('Profiles (Mbps)') }}
+                </x-label>
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-2">
+                    <div>
+                        <x-label for="profile_high" class="text-sm">{{ __('High') }}</x-label>
+                        <x-input id="profile_high" type="number" step="0.1" min="0" wire:model="profiles.high"
+                            placeholder="{{ __('ex. 6') }}" />
+                    </div>
+                    <div>
+                        <x-label for="profile_medium" class="text-sm">{{ __('Medium') }}</x-label>
+                        <x-input id="profile_medium" type="number" step="0.1" min="0" wire:model="profiles.medium"
+                            placeholder="{{ __('ex. 3') }}" />
+                    </div>
+                    <div>
+                        <x-label for="profile_low" class="text-sm">{{ __('Low') }}</x-label>
+                        <x-input id="profile_low" type="number" step="0.1" min="0" wire:model="profiles.low"
+                            placeholder="{{ __('ex. 1.5') }}" required />
+                    </div>
+                </div>
+                <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                    {{ __('Leave blank if this channel does not have that profile.') }}
+                </p>
             </div>
             <div class="mt-6">
                 <x-label for="status">

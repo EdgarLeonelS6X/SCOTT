@@ -20,6 +20,7 @@ class EditChannel extends Component
     public $status;
     public $image_url;
     public $new_image;
+    public $profiles = [];
 
     public function boot()
     {
@@ -52,6 +53,7 @@ class EditChannel extends Component
         $this->category = $channel->category;
         $this->status = $channel->status;
         $this->image_url = $channel->image_url;
+        $this->profiles = $channel->profiles ?? [];
     }
 
     public function update()
@@ -64,6 +66,10 @@ class EditChannel extends Component
             'category' => 'required|string',
             'status' => 'required|numeric',
             'new_image' => 'nullable|image',
+            'profiles' => 'nullable|array',
+            'profiles.high' => 'nullable|string',
+            'profiles.medium' => 'nullable|string',
+            'profiles.low' => 'nullable|string',
         ], [], [
             'number' => __('channel number'),
             'origin' => __('channel origin'),
@@ -91,6 +97,7 @@ class EditChannel extends Component
             'category' => $this->category,
             'status' => $this->status,
             'image_url' => $this->image_url,
+            'profiles' => $this->profiles ?: null
         ]);
 
         session()->flash('swal', [

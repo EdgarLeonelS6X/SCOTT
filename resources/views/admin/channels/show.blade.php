@@ -122,6 +122,26 @@
                             value="{{ $channel->origin }}" disabled />
                     </div>
                 </div>
+                <div class="mt-4">
+                    <x-label>
+                        <i class="fa-solid fa-sliders mr-1"></i>
+                        {{ __('Profiles (Mbps)') }}
+                    </x-label>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-2">
+                        <div>
+                            <x-label class="text-sm">{{ __('High') }}</x-label>
+                            <x-input type="number" step="0.1" min="0" value="{{ $channel->profiles['high'] ?? '' }}" disabled />
+                        </div>
+                        <div>
+                            <x-label class="text-sm">{{ __('Medium') }}</x-label>
+                            <x-input type="number" step="0.1" min="0" value="{{ $channel->profiles['medium'] ?? '' }}" disabled />
+                        </div>
+                        <div>
+                            <x-label class="text-sm">{{ __('Low') }}</x-label>
+                            <x-input type="number" step="0.1" min="0" value="{{ $channel->profiles['low'] ?? '' }}" disabled />
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
