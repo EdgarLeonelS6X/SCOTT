@@ -2,7 +2,8 @@
     <div class="flex flex-col md:flex-row p-6 bg-gray-200 dark:bg-gray-900">
         <div
             class="w-full md:w-1/3 p-4 sm:p-6 bg-gradient-to-r from-purple-400 via-pink-400 to-red-400 rounded-lg shadow-2xl flex flex-col items-center space-y-4 sm:space-y-6 max-h-[90vh] overflow-y-auto">
-            <div class="w-full flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4 space-y-4 sm:space-y-0">
+            <div
+                class="w-full flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4 space-y-4 sm:space-y-0">
                 <img src="{{ Auth::user()->profile_photo_url }}" alt="{{ __('User profile picture') }}"
                     class="w-20 h-20 sm:w-16 sm:h-16 rounded-full shadow-2xl object-center object-cover mx-auto sm:mx-0">
                 <div class="text-center sm:text-right text-white">
@@ -36,6 +37,18 @@
                 class="w-full bg-blue-600 text-white rounded-lg py-3 flex items-center justify-center font-semibold shadow-md hover:shadow-2xl transform transition-all hover:scale-105">
                 <i class="fas fa-forward mr-2"></i>
                 {{ __('Function report') }}
+            </button>
+
+            <button type="button"
+                class="w-full bg-primary-600 text-white rounded-lg py-3 flex items-center justify-center font-semibold shadow-md hover:shadow-2xl transform transition-all hover:scale-105">
+                <i class="fas fa-forward mr-2"></i>
+                {{ __('Chromecast report') }}
+            </button>
+
+            <button type="button"
+                class="w-full bg-yellow-400 text-white rounded-lg py-3 flex items-center justify-center font-semibold shadow-md hover:shadow-2xl transform transition-all hover:scale-105">
+                <i class="fas fa-forward mr-2"></i>
+                {{ __('Profile report') }}
             </button>
         </div>
         <div id="create-functions-report-modal" tabindex="-1"
