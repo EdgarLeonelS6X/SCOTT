@@ -34,6 +34,7 @@ class ReportCommentsModal extends Component
         ]);
 
         $this->body = '';
+        event(new CommentAdded($comment));
         broadcast(new CommentAdded($comment))->toOthers();
         $this->dispatch('refreshComments');
     }
@@ -57,6 +58,7 @@ class ReportCommentsModal extends Component
         $comment->save();
         $this->editingId = null;
         $this->editBody = '';
+        event(new CommentAdded($comment));
         broadcast(new CommentAdded($comment))->toOthers();
         $this->dispatch('refreshComments');
     }
@@ -73,6 +75,7 @@ class ReportCommentsModal extends Component
         if ($comment->user_id !== auth()->id())
             return;
         $comment->delete();
+        event(new CommentAdded($comment));
         broadcast(new CommentAdded($comment))->toOthers();
         $this->dispatch('refreshComments');
     }

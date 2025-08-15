@@ -1,4 +1,5 @@
-<div class="w-full max-w-full md:w-[370px] h-[70vh] md:h-[90vh] flex flex-col bg-white dark:bg-gray-900 rounded-xl shadow-xl"
+<div id="comments-livewire"
+    class="w-full max-w-full md:w-[370px] h-[70vh] md:h-[90vh] flex flex-col bg-white dark:bg-gray-900 rounded-xl shadow-xl"
     wire:ignore.self>
     {{-- Título --}}
     <div class="p-4 border-b border-gray-200 dark:border-gray-700 flex items-center gap-2">
@@ -21,10 +22,10 @@
                     @endunless
                     <div class="relative group">
                         <div class="p-3 rounded-xl shadow-sm transition-all duration-150
-                                        {{ $isCurrentUser
+                                                                                                    {{ $isCurrentUser
             ? 'bg-primary-600 text-white rounded-br-none'
             : 'bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 rounded-bl-none'
-                                        }}">
+                                                                                                    }}">
                             <div class="flex items-center gap-1 mb-1">
                                 <span
                                     class="text-[11px] font-semibold opacity-70 {{ $isCurrentUser ? 'text-right' : 'text-left' }}">
@@ -100,11 +101,17 @@
                 }
             });
 
-            // Escuchar evento de tiempo real
+            // Escuchar evento de tiempo real y disparar un evento global
             window.Echo && window.Echo.private('report.{{ $reportId }}')
                 .listen('CommentAdded', (e) => {
-                    Livewire.dispatch('refreshComments');
+                    console.log('Evento CommentAdded recibido:', e);
+                    window.dispatchEvent(new CustomEvent('refresh-comments-livewire'));
                 });
+
+            // Escuchar el evento global y refrescar el componente Livewire
+            window.addEventListener('refresh-comments-livewire', () => {
+                window.Livewire.find('comments-livewire')?.$refresh();
+            });
         });
     </script>
 @endpush
