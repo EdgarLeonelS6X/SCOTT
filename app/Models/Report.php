@@ -64,4 +64,9 @@ class Report extends Model
     {
         return $this->hasMany(Comment::class);
     }
+
+    public function chromecast()
+    {
+        return $this->hasOne(Chromecast::class);
+    }
 }

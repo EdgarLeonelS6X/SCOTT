@@ -29,3 +29,5 @@ Route::middleware([
 });
 
 Route::resource('/reports', ReportController::class)->middleware('auth');
+
+Broadcast::routes();
