@@ -40,8 +40,13 @@ class CreateProfileReport extends Component
     {
         return [
             'channel_id' => '',
+            'high' => '',
+            'medium' => '',
+            'low' => '',
             'profiles' => [
                 ['name' => 'HIGH', 'value' => ''],
+                ['name' => 'MEDIUM', 'value' => ''],
+                ['name' => 'LOW', 'value' => ''],
             ],
         ];
     }
@@ -65,7 +70,6 @@ class CreateProfileReport extends Component
         try {
             $this->validateReportData();
 
-            // Validar duplicados
             $channelIds = array_column($this->reportData['channels'], 'channel_id');
             $channelCounts = array_count_values($channelIds);
 
@@ -79,29 +83,26 @@ class CreateProfileReport extends Component
                 }
             }
 
-            // Crear el reporte principal
             $report = Report::create([
                 'title' => $this->reportData['title'],
-                'type' => 'Profiles',
+                'type' => __('Functions'),
+                'category' => __('Speed Profiles'),
                 'duration' => null,
                 'reported_by' => Auth::user()->id,
                 'reviewed_by' => $this->reportData['reviewed_by'],
-                'attended_by' => null,
-                'status' => '',
+                'status' => __('Reported'),
             ]);
 
-            // Guardar cada canal con sus perfiles
             foreach ($this->reportData['channels'] as $channel) {
-                // Mapear perfiles a columnas high/medium/low
                 $profiles = collect($channel['profiles'])->pluck('value', 'name')->toArray();
 
                 ChannelTest::create([
                     'report_id' => $report->id,
                     'channel_id' => $channel['channel_id'],
                     'user_id' => Auth::user()->id,
-                    'high' => $profiles['HIGH'] ?? null,
-                    'medium' => $profiles['MEDIUM'] ?? null,
-                    'low' => $profiles['LOW'] ?? null,
+                    'high' => $channel['high'] ?? ($profiles['HIGH'] ?? null),
+                    'medium' => $channel['medium'] ?? ($profiles['MEDIUM'] ?? null),
+                    'low' => $channel['low'] ?? ($profiles['LOW'] ?? null),
                 ]);
             }
 
@@ -134,12 +135,8 @@ class CreateProfileReport extends Component
     protected function validateReportData()
     {
         $this->validate([
-            'reportData.title' => 'required|string|max:255',
-            'reportData.reviewed_by' => 'required|string|max:255',
             'reportData.channels' => 'required|array|min:1',
         ], [], [
-            'reportData.title' => __('title'),
-            'reportData.reviewed_by' => __('reviewed by'),
             'reportData.channels' => __('channels')
         ]);
 
@@ -163,23 +160,21 @@ class CreateProfileReport extends Component
     }
 
     public function render()
-    {
-        return view('livewire.app.reports.create.create-profile-report', [
-            'channels' => Channel::where('status', '1')
-                ->orderBy('number')
-                ->get()
-                ->map(fn($c) => [
-                    'id' => $c->id,
-                    'number' => $c->number,
-                    'name' => $c->name,
-                    'image' => $c->image,
-                    'profiles' => [
-                        'high' => $c->high ?? null,
-                        'medium' => $c->medium ?? null,
-                        'low' => $c->low ?? null,
-                    ]
-                ]),
+{
+    return view('livewire.app.reports.create.create-profile-report', [
+        'channels' => Channel::where('status', '1')
+            ->orderBy('number')
+            ->get()
+            ->map(fn($c) => [
+                'id' => $c->id,
+                'number' => $c->number,
+                'name' => $c->name,
+                'image' => $c->image,
+                'profiles' => is_string($c->profiles)
+                    ? (json_decode($c->profiles, true) ?? ['high' => null, 'medium' => null, 'low' => null])
+                    : ($c->profiles ?? ['high' => null, 'medium' => null, 'low' => null]),
+            ]),
+    ]);
+}
 
-        ]);
-    }
 }

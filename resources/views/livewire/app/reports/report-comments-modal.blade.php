@@ -1,5 +1,4 @@
-<div id="comments-livewire"
-    class="w-full max-w-full md:w-[370px] h-[70vh] md:h-[90vh] flex flex-col bg-white dark:bg-gray-900 rounded-xl shadow-xl"
+<div class="w-full max-w-full md:w-[500px] h-[70vh] md:h-[90vh] flex flex-col bg-white dark:bg-gray-900 rounded-xl shadow-xl"
     wire:ignore.self>
     {{-- Título --}}
     <div class="p-4 border-b border-gray-200 dark:border-gray-700 flex items-center gap-2">
@@ -8,7 +7,7 @@
     </div>
 
     {{-- Zona de comentarios tipo chat --}}
-    <div id="chat-container" class="flex-1 overflow-y-auto px-2 py-2 space-y-2 flex flex-col"
+    <div id="chat-container" class="flex-1 overflow-y-hidden px-2 py-2 space-y-2 flex flex-col"
         style="scroll-behavior: smooth;">
         @forelse ($comments as $comment)
             @php
@@ -22,13 +21,12 @@
                     @endunless
                     <div class="relative group">
                         <div class="p-3 rounded-xl shadow-sm transition-all duration-150
-                                                                                                    {{ $isCurrentUser
+                                {{ $isCurrentUser
             ? 'bg-primary-600 text-white rounded-br-none'
             : 'bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 rounded-bl-none'
-                                                                                                    }}">
+                                }}">
                             <div class="flex items-center gap-1 mb-1">
-                                <span
-                                    class="text-[11px] font-semibold opacity-70 {{ $isCurrentUser ? 'text-right' : 'text-left' }}">
+                                <span class="text-[11px] font-semibold opacity-70 {{ $isCurrentUser ? 'text-right' : 'text-left' }}">
                                     {{ $comment->user->name ?? __('Unknown') }}
                                 </span>
                                 <span class="text-[10px] opacity-50">
@@ -36,17 +34,30 @@
                                 </span>
                             </div>
                             @if($editingId === $comment->id)
-                                <form wire:submit.prevent="updateComment({{ $comment->id }})" class="flex gap-2">
-                                    <input type="text" wire:model.defer="editBody"
-                                        class="flex-1 px-2 py-1 rounded border text-sm" />
-                                    <button type="submit" class="text-primary-600 font-bold">✔</button>
-                                    <button type="button" wire:click="cancelEdit" class="text-gray-400">✖</button>
-                                </form>
-                            @else
-                                <div class="text-sm break-words leading-snug">
+    <form wire:submit.prevent="updateComment({{ $comment->id }})" class="flex items-center gap-1">
+        <input type="text" wire:model.defer="editBody"
+            class="flex-1 px-2 py-1 rounded-md border
+                   border-gray-300 dark:border-gray-600
+                   bg-white dark:bg-gray-700
+                   text-gray-800 dark:text-gray-200
+                   placeholder-gray-400 dark:placeholder-gray-500
+                   focus:outline-none focus:ring-1 focus:ring-primary-500
+                   text-xs shadow-sm transition-colors duration-200"
+            placeholder="{{ __('Edit your comment...') }}" />
+        <button type="submit"
+            class="px-1.5 py-0.5 text-[10px] rounded bg-green-500 hover:bg-green-600 text-white">
+            ✔
+        </button>
+        <button type="button" wire:click="cancelEdit"
+            class="px-1.5 py-0.5 text-[10px] rounded bg-red-500 hover:bg-red-600 text-white">
+            ✖
+        </button>
+    </form>
+@else
+    <div class="text-sm break-words leading-snug">
                                     {{ $comment->body }}
                                 </div>
-                            @endif
+@endif
                         </div>
                         @if($isCurrentUser)
                             <div class="absolute -top-2 right-0 flex gap-1 opacity-0 group-hover:opacity-100 transition">
@@ -72,6 +83,7 @@
         @endforelse
     </div>
 
+    {{-- Input para nuevo comentario --}}
     <form wire:submit.prevent="addComment"
         class="flex items-center gap-2 p-4 border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900">
         <input type="text" wire:model.defer="body"
@@ -101,17 +113,11 @@
                 }
             });
 
-            // Escuchar evento de tiempo real y disparar un evento global
+            // Escuchar evento de tiempo real
             window.Echo && window.Echo.private('report.{{ $reportId }}')
                 .listen('CommentAdded', (e) => {
-                    console.log('Evento CommentAdded recibido:', e);
-                    window.dispatchEvent(new CustomEvent('refresh-comments-livewire'));
+                    Livewire.dispatch('refreshComments');
                 });
-
-            // Escuchar el evento global y refrescar el componente Livewire
-            window.addEventListener('refresh-comments-livewire', () => {
-                window.Livewire.find('comments-livewire')?.$refresh();
-            });
         });
     </script>
 @endpush

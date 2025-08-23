@@ -4,9 +4,9 @@ namespace App\Enums;
 
 enum ChannelIssues: string
 {
-    case CORRECT = 'CORRECT';
-    case PAUSE = 'PAUSE';
-    case LONG_LOAD_TIME = 'LONG LOAD TIME';
-    case DO_NOT_SHOW_CONTENT = 'I NOT SHOW CONTENT';
-    case ISSUE = 'ISSUE';
+    case CORRECTO = 'CORRECTO';
+    case PAUSADO = 'PAUSADO';
+    case TIEMPO_CARGA_LARGO = 'TIEMPO CARGA LARGO';
+    case NO_MOSTRAR_CONTENIDO = 'NO MOSTRAR CONTENIDO';
+    case PROBLEMA = 'PROBLEMA';
 }

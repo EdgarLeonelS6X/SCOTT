@@ -11,6 +11,7 @@ class Report extends Model
     protected $fillable = [
         'type',
         'category',
+        'title',
         'duration',
         'reported_by',
         'reviewed_by',
@@ -68,5 +69,10 @@ class Report extends Model
     public function chromecast()
     {
         return $this->hasOne(Chromecast::class);
+    }
+
+    public function channelTests()
+    {
+        return $this->hasMany(ChannelTest::class);
     }
 }
