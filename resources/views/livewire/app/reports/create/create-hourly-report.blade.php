@@ -112,9 +112,9 @@
                                         },
                                         get filteredChannels() {
                                             if (this.search === '') return this.channels;
-                                    
+
                                             const term = this.search.toLowerCase();
-                                    
+
                                             return this.channels.filter(c =>
                                                 c.name.toLowerCase().includes(term) ||
                                                 c.number.toString().includes(term) ||
@@ -161,7 +161,7 @@
                                                             "
                                                             class="cursor-pointer px-4 py-2 flex items-center space-x-3 hover:bg-gray-100 dark:hover:bg-gray-600 transition-all duration-200 ease-in-out">
                                                             <img :src="channel.image"
-                                                                class="w-10 h-10 object-contain object-center">
+                                                                class="w-8 h-8 object-contain">
                                                             <span
                                                                 class="text-sm font-medium text-gray-900 dark:text-gray-300"
                                                                 x-text="channel.number + ' ' + channel.name"></span>
