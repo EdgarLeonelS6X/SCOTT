@@ -160,21 +160,23 @@ class CreateProfileReport extends Component
     }
 
     public function render()
-{
-    return view('livewire.app.reports.create.create-profile-report', [
-        'channels' => Channel::where('status', '1')
-            ->orderBy('number')
-            ->get()
-            ->map(fn($c) => [
-                'id' => $c->id,
-                'number' => $c->number,
-                'name' => $c->name,
-                'image' => $c->image,
-                'profiles' => is_string($c->profiles)
-                    ? (json_decode($c->profiles, true) ?? ['high' => null, 'medium' => null, 'low' => null])
-                    : ($c->profiles ?? ['high' => null, 'medium' => null, 'low' => null]),
-            ]),
-    ]);
-}
+    {
+        return view('livewire.app.reports.create.create-profile-report', [
+            'channels' => Channel::where('status', '1')
+                ->whereNotNull('profiles')
+                ->where('profiles', '!=', '[]')
+                ->orderBy('number')
+                ->get()
+                ->map(fn($c) => [
+                    'id' => $c->id,
+                    'number' => $c->number,
+                    'name' => $c->name,
+                    'image' => $c->image,
+                    'profiles' => is_string($c->profiles)
+                        ? (json_decode($c->profiles, true) ?? ['high' => null, 'medium' => null, 'low' => null])
+                        : ($c->profiles ?? ['high' => null, 'medium' => null, 'low' => null]),
+                ]),
+        ]);
+    }
 
 }
