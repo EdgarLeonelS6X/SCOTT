@@ -1,19 +1,19 @@
 <x-app-layout :breadcrumbs="[
-    [
-        'name' => __('Dashboard'),
-        'icon' => 'fa-solid fa-wrench',
-        'route' => route('dashboard'),
-    ],
-    [
-        'name' => __('Reports'),
-        'icon' => 'fa-solid fa-paste',
-        'route' => route('reports.index'),
-    ],
-    [
-        'name' => __('Report'),
-        'icon' => 'fa-solid fa-pencil',
-    ],
-]">
+        [
+            'name' => __('Home'),
+            'icon' => 'fa-solid fa-house',
+            'route' => route('dashboard'),
+        ],
+        [
+            'name' => __('Reports'),
+            'icon' => 'fa-solid fa-paste',
+            'route' => route('reports.index'),
+        ],
+        [
+            'name' => __('Report'),
+            'icon' => 'fa-solid fa-pencil',
+        ],
+    ]">
 
     @php
         $component = match (strtolower($report->type)) {

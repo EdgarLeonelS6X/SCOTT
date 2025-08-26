@@ -1,7 +1,7 @@
 <x-app-layout :breadcrumbs="[
     [
-        'name' => __('Dashboard'),
-        'icon' => 'fa-solid fa-wrench',
+        'name' => __('Home'),
+        'icon' => 'fa-solid fa-house',
         'route' => route('dashboard'),
     ],
     [
@@ -111,7 +111,7 @@
                             class="flex items-center gap-3 bg-white/20 dark:bg-gray-800 px-4 py-3 rounded-lg shadow-md w-full sm:w-auto">
                             <div
                                 class="flex items-center justify-center w-10 h-10 bg-white text-gray-700 dark:bg-gray-700 dark:text-gray-300 rounded-full shadow-md">
-                                @if ($report->type === 'Momentary' OR $report->type === 'Momentáneo')
+                                @if ($report->type === 'Momentary')
                                     <i
                                         class="fa-solid {{ $report->status === 'Resolved' ? 'fa-circle-check text-green-600 dark:text-green-400' : 'fa-magnifying-glass text-yellow-600 dark:text-yellow-400' }} text-lg"></i>
                                 @elseif ($report->type === 'Hourly')
