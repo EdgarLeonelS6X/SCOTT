@@ -17,7 +17,7 @@ class CreateChromecastReport extends Component
         $this->reportData = [
             'reviewed_by' => '',
             'chromecast' => [
-                'status' => true, // toggle por defecto activado
+                'status' => true,
                 'description' => '',
             ],
         ];
@@ -25,7 +25,6 @@ class CreateChromecastReport extends Component
 
     public function saveReport()
     {
-        // Validación
         $this->validate([
             'reportData.chromecast.description' => 'nullable|string|max:2000',
         ]);

@@ -1,7 +1,7 @@
 <x-app-layout :breadcrumbs="[
     [
         'name' => __('Dashboard'),
-        'icon' => 'fa-solid fa-house',
+        'icon' => 'fa-solid fa-wrench',
         'route' => route('dashboard'),
     ],
     [

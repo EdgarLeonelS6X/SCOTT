@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\Utils\LanguageController;
 use App\Http\Controllers\GoogleAuthController;
 use App\Http\Controllers\ReportController;
 use Illuminate\Support\Facades\Route;
@@ -29,5 +30,8 @@ Route::middleware([
 });
 
 Route::resource('/reports', ReportController::class)->middleware('auth');
+
+Route::post('/language/switch', [LanguageController::class, 'switchLanguage'])
+    ->name('language.switch');
 
 Broadcast::routes();

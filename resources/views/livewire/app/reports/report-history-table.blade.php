@@ -162,7 +162,7 @@
                                 {{ $report->category }}
                             </td>
                             <td class="px-2 sm:px-4 py-2 sm:py-3">
-                                @if ($report->type === 'Momentary')
+                                @if ($report->type === 'Momentary' OR $report->type === 'Momentáneo')
                                     <span
                                         class="inline-flex items-center px-2 py-1 text-xs sm:text-sm font-medium rounded-full text-red-800 bg-red-200 dark:bg-red-800 dark:text-red-200 whitespace-nowrap">
                                         <i class="fa-solid fa-triangle-exclamation mr-1"></i>

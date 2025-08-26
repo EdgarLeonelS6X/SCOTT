@@ -88,11 +88,11 @@
 
             </div>
 
-            <div class="p-4 rounded-lg">
+            <main class="p-4 rounded-lg">
 
                 {{ $slot }}
 
-            </div>
+            </main>
         </div>
     </div>
 

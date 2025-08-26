@@ -27,7 +27,7 @@
     }" class="relative" style="width: 320px;">
             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">
                 <i class="fa-solid fa-tv mr-1.5 mb-3"></i>
-                {{ __('Selector de canal') }}
+                {{ __('Select channel') }}
             </label>
 
             <div class="relative">
@@ -59,15 +59,15 @@
         <div>
             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">
                 <i class="fa-solid fa-clock mr-1.5"></i>
-                {{ __('Selector de tiempo') }}
+                {{ __('Select time range') }}
             </label>
             <select wire:model.live="preset"
                 class="mt-2 bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
-                <option value="1h">Última hora</option>
-                <option value="6h">Últimas 6 horas</option>
-                <option value="12h">Últimas 12 horas</option>
-                <option value="24h">Último día</option>
-                <option value="7d">Última semana</option>
+                <option value="1h">{{ __('Last hour') }}</option>
+                <option value="6h">{{ __('Last 6 hours') }}</option>
+                <option value="12h">{{ __('Last 12 hours') }}</option>
+                <option value="24h">{{ __('Last day') }}</option>
+                <option value="7d">{{ __('Last week') }}</option>
             </select>
         </div>
     </div>
@@ -75,7 +75,7 @@
     <iframe wire:key="{{ $this->iframeKey }}" src="{{ $this->grafanaUrl }}" width="1000" height="300" frameborder="0"
         loading="lazy" referrerpolicy="no-referrer" class="w-full rounded border"></iframe>
 
-    <div class="text-xs text-gray-500">
-        URL actual: <code class="break-all">{{ $this->grafanaUrl }}</code>
-    </div>
+    <!-- <div class="text-xs text-gray-500">
+        {{ __('Current URL') }}: <code class="break-all">{{ $this->grafanaUrl }}</code>
+    </div> -->
 </div>

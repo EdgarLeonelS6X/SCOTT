@@ -1,5 +1,5 @@
 <x-app-layout>
-    <div class="flex flex-col md:flex-row p-6 bg-gray-200 dark:bg-gray-900">
+    <div class="flex flex-col md:flex-row py-3 px-3 bg-gray-200 dark:bg-gray-900">
         <div
             class="w-full md:w-1/3 p-4 sm:p-6 bg-gradient-to-r from-purple-400 via-pink-400 to-red-400 rounded-lg shadow-2xl flex flex-col items-center space-y-4 sm:space-y-6 max-h-[90vh] overflow-y-auto">
             <div
