@@ -22,12 +22,11 @@
                 <i class="fa-solid fa-arrow-left mr-1.5"></i>
                 {{ __('Go back') }}
             </a>
-            <a href="#" title="{{ __('Play channel') }}"
-                onclick="event.preventDefault(); openMiniPlayer('{{ $channel->url }}');"
-                class="flex w-full sm:w-auto justify-center items-center text-white bg-primary-600 hover:bg-primary-500 focus:ring-4 focus:outline-none focus:ring-primary-300 dark:focus:ring-primary-800 font-medium rounded-lg text-sm px-4 py-2 text-center">
-                <i class="fa-solid fa-play mr-1.5"></i>
-                {{ __('Play') }}
-            </a>
+            <button onclick="downloadM3U('{{ $channel->url }}', '{{ $channel->number }}', '{{ $channel->name }}')"
+                class="flex w-full sm:w-auto justify-center items-center text-white bg-yellow-600 hover:bg-yellow-500 focus:ring-4 focus:outline-none focus:ring-yellow-300 dark:focus:ring-yellow-800 font-medium rounded-lg text-sm px-4 py-2 text-center">
+                <i class="fa-solid fa-video mr-1.5"></i>
+                {{ __('Open in VLC') }}
+            </button>
             @can('channels.edit')
                 <a href="{{ route('admin.channels.edit', $channel) }}"
                     class="flex w-full sm:w-auto justify-center items-center text-white bg-blue-600 hover:bg-blue-500 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-4 py-2 text-center">
@@ -151,12 +150,11 @@
             <i class="fa-solid fa-arrow-left mr-1.5"></i>
             {{ __('Go back') }}
         </a>
-        <a href="#" title="{{ __('Play channel') }}"
-            onclick="event.preventDefault(); openMiniPlayer('{{ $channel->url }}');"
-            class="flex justify-center items-center w-full text-white bg-primary-600 hover:bg-primary-500 focus:ring-4 focus:outline-none focus:ring-primary-300 dark:focus:ring-primary-800 font-medium rounded-lg text-sm px-4 py-2">
-            <i class="fa-solid fa-play mr-1.5"></i>
-            {{ __('Play') }}
-        </a>
+        <button onclick="downloadM3U('{{ $channel->url }}', '{{ $channel->number }}', '{{ $channel->name }}')"
+            class="flex justify-center items-center w-full text-white bg-yellow-600 hover:bg-yellow-500 focus:ring-4 focus:outline-none focus:ring-yellow-300 dark:focus:ring-yellow-800 font-medium rounded-lg text-sm px-4 py-2">
+            <i class="fa-solid fa-video mr-1.5"></i>
+            {{ __('Open in VLC') }}
+        </button>
         @can('channels.edit')
             <a href="{{ route('admin.channels.edit', $channel) }}"
                 class="flex justify-center items-center w-full text-white bg-blue-600 hover:bg-blue-500 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-4 py-2">
@@ -199,53 +197,20 @@
 </x-admin-layout>
 
 <script>
-    function openMiniPlayer(url) {
-        const youtubeRegex = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/)([\w-]{11})/;
-        const match = url.match(youtubeRegex);
-
-        if (match) {
-            const videoId = match[1];
-            url = `https://www.youtube.com/embed/${videoId}`;
-        }
-
-        let playerContainer = document.getElementById('miniPlayerContainer');
-        if (!playerContainer) {
-            playerContainer = document.createElement('div');
-            playerContainer.id = 'miniPlayerContainer';
-            playerContainer.classList =
-                'fixed bottom-4 right-4 w-80 bg-white shadow-lg rounded-lg overflow-hidden z-50';
-            document.body.appendChild(playerContainer);
-
-            const controlBar = document.createElement('div');
-            controlBar.classList =
-                'w-full flex justify-between items-center bg-primary-600 dark:bg-primary-700 text-white p-2 shadow-2xl';
-            controlBar.style.height = '40px';
-            controlBar.innerHTML = `
-                <span>{{ __('Playing channel') }}</span>
-                <button onclick="closeMiniPlayer()" class="text-gray-300 hover:text-white">
-                    <i class="fa-solid fa-times"></i>
-                </button>
-            `;
-            playerContainer.appendChild(controlBar);
-
-            const iframe = document.createElement('iframe');
-            iframe.classList = 'w-full';
-            iframe.style.height =
-                'calc(100% - 40px)';
-            iframe.frameBorder = 0;
-            iframe.allowFullscreen = true;
-            playerContainer.appendChild(iframe);
-        }
-
-        playerContainer.querySelector('iframe').src = url;
-        playerContainer.style.display = 'block';
-    }
-
-    function closeMiniPlayer() {
-        const playerContainer = document.getElementById('miniPlayerContainer');
-        if (playerContainer) {
-            playerContainer.style.display = 'none';
-            playerContainer.querySelector('iframe').src = '';
-        }
+    function downloadM3U(url, number, name) {
+        const content = url + "\n";
+        let cleanName = (number ? number + '_' : '') + (name ? name : 'canal');
+        cleanName = cleanName.replace(/[^a-zA-Z0-9-_]/g, '_');
+        const filename = cleanName + '.m3u';
+        const blob = new Blob([content], { type: "audio/x-mpegurl" });
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        setTimeout(() => {
+            URL.revokeObjectURL(a.href);
+            document.body.removeChild(a);
+        }, 100);
     }
 </script>

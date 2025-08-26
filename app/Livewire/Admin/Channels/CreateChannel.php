@@ -47,7 +47,7 @@ class CreateChannel extends Component
             'number' => 'required|integer|unique:channels,number',
             'origin' => 'nullable|string',
             'name' => 'required|string',
-            'url' => 'nullable|url',
+            'url' => 'nullable',
             'category' => 'required|string',
             'profiles' => 'nullable|array',
             'profiles.high' => 'nullable|string',

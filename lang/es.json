@@ -536,5 +536,10 @@
     "stage": "etapa",
     "protocol": "protocolo",
     "media": "medio audiovisual",
-    "Video profile test report created successfully.": "Reporte de prueba de perfil de video creado con éxito."
+    "Video profile test report created successfully.": "Reporte de prueba de perfil de video creado con éxito.",
+    "The report and channels have been marked as resolved.": "El informe y los canales han sido marcados como resueltos.",
+    "Open in VLC": "Abrir en VLC",
+    "Auto-refresh 5s": "Actualización automática cada 5s",
+    "Monitoring panel": "Panel de monitoreo",
+    "The selected time range will update the Grafana panel.": "El rango de tiempo seleccionado actualizará el panel de Grafana."
 }

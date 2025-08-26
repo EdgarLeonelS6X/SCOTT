@@ -6,21 +6,31 @@ use Livewire\Component;
 use App\Models\Channel;
 use Carbon\Carbon;
 
+
+use Livewire\Attributes\On;
+
+
 class GrafanaPanel extends Component
 {
     public $channels = [];
     public $selectedChannel = null;
-
     public $mode = 'relative';
-
     public $preset = '1h';
-
     public $absoluteFrom = null;
     public $absoluteTo   = null;
+    public $theme = 'dark';
+    public $iframeRefreshKey = 0;
 
     public function mount()
     {
         $this->channels = Channel::orderBy('number', 'asc')->get();
+    }
+
+    #[On('setTheme')]
+    public function setTheme($theme)
+    {
+        $this->theme = $theme;
+        $this->iframeRefreshKey++;
     }
 
     public function render()
@@ -38,7 +48,7 @@ class GrafanaPanel extends Component
             "orgId"     => 1,
             "timezone"  => "browser",
             "refresh"   => "5s",
-            "theme"     => "dark",
+            "theme"     => $this->theme,
             "panelId"   => 1,
             "from"      => $from,
             "to"        => $to,
@@ -56,7 +66,7 @@ class GrafanaPanel extends Component
 
     public function getIframeKeyProperty()
     {
-        return 'grafana-' . substr(md5($this->grafanaUrl), 0, 12);
+        return 'grafana-' . substr(md5($this->grafanaUrl), 0, 12) . '-' . $this->iframeRefreshKey;
     }
 
     public function updatedPreset()

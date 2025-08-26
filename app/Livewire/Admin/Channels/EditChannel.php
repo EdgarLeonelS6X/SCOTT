@@ -62,7 +62,7 @@ class EditChannel extends Component
             'number' => 'required|integer|unique:channels,number,' . $this->channel->id,
             'origin' => 'nullable|string',
             'name' => 'required|string',
-            'url' => 'nullable|url',
+            'url' => 'nullable',
             'category' => 'required|string',
             'status' => 'required|numeric',
             'new_image' => 'nullable|image',
