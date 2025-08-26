@@ -93,7 +93,7 @@
                 <template x-if="selectedChannel">
                     <div class="p-4 bg-primary-50 dark:bg-primary-900 rounded-lg flex items-center gap-4 shadow-inner">
                         <img :src="selectedChannel.image"
-                            class="w-12 h-12 object-contain rounded border border-gray-200 dark:border-gray-700">
+                            class="w-12 h-12 object-contain rounded">
                         <div>
                             <div class="text-lg font-bold text-primary-700 dark:text-primary-200"
                                 x-text="selectedChannel.number + ' ' + selectedChannel.name"></div>
