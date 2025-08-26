@@ -25,7 +25,7 @@
             <button onclick="downloadM3U('{{ $channel->url }}', '{{ $channel->number }}', '{{ $channel->name }}')"
                 class="flex w-full sm:w-auto justify-center items-center text-white bg-yellow-600 hover:bg-yellow-500 focus:ring-4 focus:outline-none focus:ring-yellow-300 dark:focus:ring-yellow-800 font-medium rounded-lg text-sm px-4 py-2 text-center">
                 <i class="fa-solid fa-video mr-1.5"></i>
-                {{ __('Open in VLC') }}
+                {{ __('Multicast') }}
             </button>
             @can('channels.edit')
                 <a href="{{ route('admin.channels.edit', $channel) }}"

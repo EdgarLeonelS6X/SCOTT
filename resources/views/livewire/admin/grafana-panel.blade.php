@@ -84,23 +84,11 @@
                         <button type="button" x-show="selectedChannel && selectedChannel.url"
                             @click="window.downloadM3U(selectedChannel.url, selectedChannel.number, selectedChannel.name)"
                             class="flex justify-center items-center w-full md:w-auto text-white bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 focus:ring-4 focus:outline-none focus:ring-yellow-300 dark:focus:ring-yellow-800 font-semibold rounded-lg text-base px-4 py-3 shadow transition">
-                            <i class="fa-solid fa-download mr-2"></i>
-                            {{ __('Download') }}
+                            <i class="fa-solid fa-video mr-2"></i>
+                            {{ __('Multicast') }}
                         </button>
                     </div>
                 </div>
-
-                <template x-if="selectedChannel">
-                    <div class="p-4 bg-primary-50 dark:bg-primary-900 rounded-lg flex items-center gap-4 shadow-inner">
-                        <img :src="selectedChannel.image"
-                            class="w-12 h-12 object-contain rounded">
-                        <div>
-                            <div class="text-lg font-bold text-primary-700 dark:text-primary-200"
-                                x-text="selectedChannel.number + ' ' + selectedChannel.name"></div>
-                            <div class="text-xs text-gray-500 dark:text-gray-400" x-text="selectedChannel.url"></div>
-                        </div>
-                    </div>
-                </template>
             </div>
 
             <div class="flex flex-col gap-4">
@@ -110,6 +98,10 @@
                 </label>
                 <select wire:model.live="preset"
                     class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 block w-full p-3 dark:bg-gray-700 dark:text-white transition-all">
+                    <option value="5m">{{ __('Last 5 minutes') }}</option>
+                    <option value="15m">{{ __('Last 15 minutes') }}</option>
+                    <option value="30m">{{ __('Last 30 minutes') }}</option>
+                    <option value="45m">{{ __('Last 45 minutes') }}</option>
                     <option value="1h">{{ __('Last hour') }}</option>
                     <option value="6h">{{ __('Last 6 hours') }}</option>
                     <option value="12h">{{ __('Last 12 hours') }}</option>

@@ -166,11 +166,11 @@
                                 class="absolute z-50 w-44 bg-white rounded divide-y divide-gray-300 shadow-2xl dark:bg-gray-700 dark:divide-gray-600">
                                 <ul class="flex flex-col items-start py-1 text-sm text-gray-700 dark:text-gray-200">
                                     <li class="w-full">
-                                        <a href="#" title="{{ __('Open in VLC') }}"
+                                        <a href="#" title="{{ __('Open Multicast') }}"
                                             @click.prevent.stop="downloadM3U('{{ $channel->url }}', '{{ $channel->number }}', '{{ $channel->name }}'); openDropdown = null"
                                             class="flex items-center w-full py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
-                                            <i class="fa-solid fa-download mr-2"></i>
-                                            {{ __('VLC') }}
+                                            <i class="fa-solid fa-video mr-2"></i>
+                                            {{ __('Multicast') }}
                                         </a>
                                     </li>
                                     <li class="w-full">

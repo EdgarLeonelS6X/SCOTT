@@ -470,6 +470,10 @@
     "Comments": "Comentarios",
     "Add a comment": "Agregar un comentario",
     "Select time range": "Seleccione un rango de tiempo",
+    "Last 5 minutes": "Últimos 5 minutos",
+    "Last 15 minutes": "Últimos 15 minutos",
+    "Last 30 minutes": "Últimos 30 minutos",
+    "Last 45 minutes": "Últimos 45 minutos",
     "Last hour": "Última hora",
     "Last 6 hours": "Últimas 6 horas",
     "Last 12 hours": "Últimas 12 horas",
@@ -538,11 +542,14 @@
     "media": "medio audiovisual",
     "Video profile test report created successfully.": "Reporte de prueba de perfil de video creado con éxito.",
     "The report and channels have been marked as resolved.": "El informe y los canales han sido marcados como resueltos.",
-    "Open in VLC": "Abrir en VLC",
     "Auto-refresh 5s": "Actualización automática cada 5s",
     "Monitoring panel": "Panel de monitoreo",
     "The selected time range will update the Grafana panel.": "El rango de tiempo seleccionado actualizará el panel de Grafana.",
     "No comments yet.": "No hay comentarios aún.",
     "Add a comment...": "Agregar un comentario...",
-    "Edit your comment...": "Editar tu comentario..."
+    "Edit your comment...": "Editar tu comentario...",
+    "Open Multicast": "Abrir la Multicast",
+    "Show channel information": "Mostrar información del canal",
+    "Edit channel": "Editar canal",
+    "Delete channel": "Eliminar canal"
 }
