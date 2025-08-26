@@ -541,5 +541,8 @@
     "Open in VLC": "Abrir en VLC",
     "Auto-refresh 5s": "Actualización automática cada 5s",
     "Monitoring panel": "Panel de monitoreo",
-    "The selected time range will update the Grafana panel.": "El rango de tiempo seleccionado actualizará el panel de Grafana."
+    "The selected time range will update the Grafana panel.": "El rango de tiempo seleccionado actualizará el panel de Grafana.",
+    "No comments yet.": "No hay comentarios aún.",
+    "Add a comment...": "Agregar un comentario...",
+    "Edit your comment...": "Editar tu comentario..."
 }

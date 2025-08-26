@@ -1,12 +1,10 @@
 <div class="w-full max-w-full md:w-[500px] h-[70vh] md:h-[90vh] flex flex-col bg-white dark:bg-gray-900 rounded-xl shadow-xl"
     wire:ignore.self>
-    {{-- Título --}}
     <div class="p-4 border-b border-gray-200 dark:border-gray-700 flex items-center gap-2">
         <i class="fa-regular fa-comments"></i>
         <h3 class="text-lg font-semibold text-gray-800 dark:text-white">{{ __('Comments') }}</h3>
     </div>
 
-    {{-- Zona de comentarios tipo chat --}}
     <div id="chat-container" class="flex-1 overflow-y-hidden px-2 py-2 space-y-2 flex flex-col"
         style="scroll-behavior: smooth;">
         @forelse ($comments as $comment)
@@ -83,7 +81,6 @@
         @endforelse
     </div>
 
-    {{-- Input para nuevo comentario --}}
     <form wire:submit.prevent="addComment"
         class="flex items-center gap-2 p-4 border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900">
         <input type="text" wire:model.defer="body"
@@ -113,7 +110,6 @@
                 }
             });
 
-            // Escuchar evento de tiempo real
             window.Echo && window.Echo.private('report.{{ $reportId }}')
                 .listen('CommentAdded', (e) => {
                     Livewire.dispatch('refreshComments');
