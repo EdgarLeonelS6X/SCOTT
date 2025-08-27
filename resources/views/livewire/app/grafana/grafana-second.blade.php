@@ -59,29 +59,27 @@
                             <img x-show="selectedChannel" :src="selectedChannel.image"
                                 class="absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 object-contain rounded bg-white dark:bg-gray-700">
                             <input type="text" x-model="search" @focus="open = true" @click="open = true; search = ''"
-                                @input="open = true" @click.away="open = false" placeholder="{{ __('Search channel...') }}"
+                                @input="open = true" @click.away="open = false"
+                                placeholder="{{ __('Search channel...') }}"
                                 class="w-full pl-12 pr-2 py-2 rounded-md bg-gray-50 border border-gray-300 dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-primary-500 text-sm transition-all h-10"
                                 autocomplete="off">
                             <div x-show="open"
                                 class="absolute z-20 mt-1 w-full bg-white border border-gray-300 rounded-lg shadow-2xl dark:bg-gray-700 dark:border-gray-600">
-                                <ul class="max-h-48 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 dark:scrollbar-thumb-gray-600">
+                                <ul
+                                    class="max-h-48 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 dark:scrollbar-thumb-gray-600">
                                     <template x-for="channel in filteredChannels" :key="channel.id">
                                         <li @click="selectChannel(channel)"
                                             class="cursor-pointer px-3 py-1.5 flex items-center gap-2 hover:bg-gray-200 dark:hover:bg-gray-600 rounded transition">
-                                            <img :src="channel.image" class="w-6 h-6 object-contain rounded border-gray-200 dark:border-gray-700">
-                                            <span class="text-sm font-medium text-gray-900 dark:text-gray-200 truncate max-w-[280px] block" x-text="channel.number + ' ' + channel.name" :title="channel.number + ' ' + channel.name"></span>
+                                            <img :src="channel.image"
+                                                class="w-6 h-6 object-contain rounded border-gray-200 dark:border-gray-700">
+                                            <span
+                                                class="text-sm font-medium text-gray-900 dark:text-gray-200 truncate max-w-[280px] block"
+                                                x-text="channel.number + ' ' + channel.name"
+                                                :title="channel.number + ' ' + channel.name"></span>
                                         </li>
                                     </template>
                                 </ul>
                             </div>
-                        </div>
-                        <div class="flex items-center">
-                            <button type="button" x-show="selectedChannel && selectedChannel.url"
-                                @click="window.downloadM3U(selectedChannel.url, selectedChannel.number, selectedChannel.name)"
-                                class="flex justify-center items-center text-white bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 focus:ring-2 focus:outline-none focus:ring-primary-300 dark:focus:ring-primary-800 font-semibold rounded-md text-sm px-3 h-10 shadow transition">
-                                <i class="fa-solid fa-video mr-2"></i>
-                                {{ __('Multicast') }}
-                            </button>
                         </div>
                     </div>
                 </div>
@@ -116,24 +114,6 @@
 </div>
 
 <script>
-    window.downloadM3U = function (url, number, name) {
-        if (!url) return;
-        const m3u = "#EXTM3U\n#EXTINF:-1," + (number ? number + ' ' : '') + (name ?? 'Canal') + "\n" + url + "\n";
-        let cleanName = (number ? number + '_' : '') + (name ? name : 'canal');
-        cleanName = cleanName.replace(/[^a-zA-Z0-9-_]/g, '_');
-        const filename = cleanName + '.m3u';
-        const blob = new Blob([m3u], { type: "audio/x-mpegurl" });
-        const a = document.createElement('a');
-        a.href = URL.createObjectURL(blob);
-        a.download = filename;
-        document.body.appendChild(a);
-        a.click();
-        setTimeout(() => {
-            URL.revokeObjectURL(a.href);
-            document.body.removeChild(a);
-        }, 100);
-    }
-
     function syncGrafanaThemeToLivewire() {
         const theme = localStorage.getItem('color-theme') === 'dark' ? 'dark' : 'light';
         if (window.Livewire) {
@@ -150,7 +130,7 @@
     });
     document.addEventListener('DOMContentLoaded', syncGrafanaThemeToLivewire);
 
-    document.addEventListener('click', function(e) {
+    document.addEventListener('click', function (e) {
         if (e.target.closest('#theme-toggle')) {
             setTimeout(syncGrafanaThemeToLivewire, 100);
         }

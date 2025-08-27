@@ -279,7 +279,6 @@
                     </div>
                 </div>
             @endif
-            {{-- Chromecast Functions: Solo mostrar description --}}
             @if ($report->type === 'Functions' && $report->category === 'Chromecast')
                 <div class="mt-6 border border-gray-300 dark:border-gray-700 rounded-lg shadow-2xl p-6 bg-white dark:bg-gray-800">
                     <h3 class="text-base sm:text-lg font-semibold text-gray-800 dark:text-white mb-4 flex items-center gap-2">
@@ -302,7 +301,6 @@
                         </div>
                     @endif
                 </div>
-            {{-- Speed Profiles Functions --}}
             @elseif ($report->type === 'Functions' && $report->category === 'Speed Profiles')
             <div class="mt-6 border border-gray-300 dark:border-gray-700 rounded-lg shadow-2xl p-6 bg-white dark:bg-gray-800">
                 <h3 class="text-base sm:text-lg font-semibold text-gray-800 dark:text-white mb-4 flex items-center gap-2">
@@ -314,15 +312,15 @@
                     <table class="min-w-full text-xs sm:text-sm text-center border border-gray-300 dark:border-gray-700 rounded-full">
                         <thead>
                             <tr class="bg-gray-100 dark:bg-gray-700">
-                                <th class="px-3 py-2 border">{{ __('Canal') }}</th>
+                                <th class="px-3 py-2 border">{{ __('Channel') }}</th>
                                 <th class="px-3 py-2 border bg-green-200 dark:bg-green-800">
-                                    {{ __('Alto') }}<br><span class="text-[10px]">(10 mbps)</span>
+                                    {{ __('High') }}<br><span class="text-[10px]">(10 Mbps)</span>
                                 </th>
                                 <th class="px-3 py-2 border bg-yellow-200 dark:bg-yellow-800">
-                                    {{ __('Medio') }}<br><span class="text-[10px]">(2.5–3.5 mbps)</span>
+                                    {{ __('Medium') }}<br><span class="text-[10px]">(2.5 - 3.5 Mbps)</span>
                                 </th>
                                 <th class="px-3 py-2 border bg-orange-200 dark:bg-orange-800">
-                                    {{ __('Bajo') }}<br><span class="text-[10px]">(1.5–2.5 mbps)</span>
+                                    {{ __('Low') }}<br><span class="text-[10px]">(1.5 - 2.5 Mbps)</span>
                                 </th>
                             </tr>
                         </thead>
@@ -431,7 +429,7 @@
                                     @if (in_array($fixedCategory, $allCategories) &&
                                             $report->reportDetails->where('subcategory', $fixedCategory)->count() > 0)
                                         {{ $report->reportDetails->where('subcategory', $fixedCategory)->count() }}
-                                        {{ $report->reportDetails->where('subcategory', $fixedCategory)->count() === 1 ? __('channel') : __('channels') }}
+                                        {{ $report->reportDetails->where('subcategory', $fixedCategory)->count() === 1 ? __('Channel') : __('Channels') }}
                                     @else
                                         <span class="text-gray-500 dark:text-gray-400 italic">
                                             {{ __('All clear in this category') }}

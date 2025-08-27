@@ -47,7 +47,7 @@ class GrafanaSecond extends Component
             "timezone"  => "browser",
             "refresh"   => "5s",
             "theme"     => $this->theme,
-            "panelId"   => 1,
+            "panelId"   => 2,
             "from"      => $from,
             "to"        => $to,
             "__feature.dashboardSceneSolo" => "true",
