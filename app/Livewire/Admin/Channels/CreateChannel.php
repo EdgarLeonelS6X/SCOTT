@@ -44,7 +44,7 @@ class CreateChannel extends Component
     {
         $this->validate([
             'image_url' => 'required|unique:channels,image_url',
-            'number' => 'required|integer|unique:channels,number',
+            'number' => 'required|integer',
             'origin' => 'nullable|string',
             'name' => 'required|string',
             'url' => 'nullable',
