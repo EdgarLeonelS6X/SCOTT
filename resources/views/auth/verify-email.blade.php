@@ -4,7 +4,7 @@
             <x-logotipo></x-logotipo>
             <div
                 class="w-full bg-white rounded-lg shadow-2xl dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
-                <div class="p-6 space-y-4 md:space-y-6 sm:p-8">
+                <div class="p-6 space-y-4 py-6">
                     <h1 class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
                         {{ __('Verify your email address') }}
                         <div class="mb-4 mt-2 font-normal text-sm text-gray-600 dark:text-gray-400">
@@ -23,7 +23,7 @@
                                     <h3 class="text-sm font-semibold text-green-800 dark:text-green-100">
                                         {{ __('Verification sent!') }}</h3>
                                     <p class="text-sm text-green-700 dark:text-green-300 mt-1">
-                                        {{ __('We have sent a new verification link to your email address. Please check your inbox.') }}
+                                        {{ __('We have sent a new verification link') }}
                                     </p>
                                 </div>
                             </div>

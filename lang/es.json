@@ -560,5 +560,19 @@
     "Working on Web Client (DASH)": "Funciona en el cliente web (DASH)",
     "Not working on Set Up Box (HLS)": "No funciona en el Set Up Box (HLS)",
     "Working on Set Up Box (HLS)": "Funciona en el Set Up Box (HLS)",
-    "description": "descripción"
+    "description": "descripción",
+    "No info": "Sin información",
+    "Your registration contains the following errors:": "Tu registro contiene los siguientes errores:",
+    "Only emails with the @stargroup.com.mx domain are allowed.": "Solo se permiten correos electrónicos con el dominio @stargroup.com.mx.",
+    "Edit profile": "Editar perfil",
+    "Verify your email address": "Verifica tu dirección de correo",
+    "Before continuing, please verify your email address by clicking on the link we emailed to you. If you didn't receive the email, we can send another.": "Antes de continuar, verifica tu dirección de correo electrónico haciendo clic en el enlace que te enviamos por correo. Si no recibiste el correo, podemos enviar otro.",
+    "Resend verification email": "Reenviar correo de verificación",
+    "Other options": "Otras opciones",
+    "Log out": "Cerrar sesión",
+    "Verification sent!": "¡Verificación enviada!",
+    "We have sent a new verification link": "Hemos enviado un nuevo enlace de verificación.",
+    "Reset link sent!": "¡Enlace de restablecimiento enviado!",
+    "Reset your password": "Restablece tu contraseña",
+    "Reset password": "Restablecer contraseña"
 }

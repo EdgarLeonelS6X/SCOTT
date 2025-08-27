@@ -121,26 +121,35 @@
                             value="{{ $channel->origin }}" disabled />
                     </div>
                 </div>
-                <div class="mt-4">
-                    <x-label>
-                        <i class="fa-solid fa-sliders mr-1"></i>
-                        {{ __('Profiles (Mbps)') }}
-                    </x-label>
-                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-2">
-                        <div>
-                            <x-label class="text-sm">{{ __('High') }}</x-label>
-                            <x-input type="number" step="0.1" min="0" value="{{ $channel->profiles['high'] ?? '' }}" disabled />
-                        </div>
-                        <div>
-                            <x-label class="text-sm">{{ __('Medium') }}</x-label>
-                            <x-input type="number" step="0.1" min="0" value="{{ $channel->profiles['medium'] ?? '' }}" disabled />
-                        </div>
-                        <div>
-                            <x-label class="text-sm">{{ __('Low') }}</x-label>
-                            <x-input type="number" step="0.1" min="0" value="{{ $channel->profiles['low'] ?? '' }}" disabled />
+                    <div class="mt-4">
+                        <x-label>
+                            <i class="fa-solid fa-sliders mr-1"></i>
+                            {{ __('Profiles (Mbps)') }}
+                        </x-label>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-2">
+                            <div>
+                                <x-label class="text-sm">{{ __('High') }}</x-label>
+                                <x-input type="number" step="0.1" min="0"
+                                    value="{{ !empty($channel->profiles['high']) ? $channel->profiles['high'] : '' }}"
+                                    placeholder="{{ empty($channel->profiles['high']) ? __('No info') : '' }}"
+                                    disabled />
+                            </div>
+                            <div>
+                                <x-label class="text-sm">{{ __('Medium') }}</x-label>
+                                <x-input type="number" step="0.1" min="0"
+                                    value="{{ !empty($channel->profiles['medium']) ? $channel->profiles['medium'] : '' }}"
+                                    placeholder="{{ empty($channel->profiles['medium']) ? __('No info') : '' }}"
+                                    disabled />
+                            </div>
+                            <div>
+                                <x-label class="text-sm">{{ __('Low') }}</x-label>
+                                <x-input type="number" step="0.1" min="0"
+                                    value="{{ !empty($channel->profiles['low']) ? $channel->profiles['low'] : '' }}"
+                                    placeholder="{{ empty($channel->profiles['low']) ? __('No info') : '' }}"
+                                    disabled />
+                            </div>
                         </div>
                     </div>
-                </div>
             </div>
         </div>
     </div>

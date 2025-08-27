@@ -26,7 +26,7 @@
     <!-- Dark Mode -->
     <script>
         if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia(
-                '(prefers-color-scheme: dark)').matches)) {
+            '(prefers-color-scheme: dark)').matches)) {
             document.documentElement.classList.add('dark');
         } else {
             document.documentElement.classList.remove('dark')
@@ -43,6 +43,18 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     @livewireScripts
+
+    @if (session('swal'))
+        <script>
+            window.onload = functio n() {
+                Swal.fire({
+                    icon: '{{ session('swal')['icon'] }}',
+                    title: '{{ session('swal')['title'] }}',
+                    text: '{{ session('swal')['text'] ?? '' }}'
+                });
+            };
+        </script>
+    @endif
 
     @if (session('swal'))
         <script>

@@ -7,8 +7,8 @@
             <div
                 class="w-full bg-white rounded-lg shadow-2xl dark:border md:mt-0 sm:max-w-4xl xl:p-0 dark:bg-gray-800 dark:border-gray-700">
                 <div class="p-6 space-y-4 md:space-y-6 sm:p-8">
-                    <a class="cursor-pointer flex items-center justify-center w-full text-gray-700 bg-transparent border 
-                            border-gray-400 hover:bg-gray-100 hover:text-gray-900 focus:ring-4 focus:outline-none 
+                    <a class="cursor-pointer flex items-center justify-center w-full text-gray-700 bg-transparent border
+                            border-gray-400 hover:bg-gray-100 hover:text-gray-900 focus:ring-4 focus:outline-none
                             focus:ring-gray-300 font-bold rounded-lg text-base px-5 py-2.5 text-center me-2 mb-2 shadow
                             dark:text-white dark:bg-transparent dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:text-white dark:focus:ring-gray-500"
                         onclick="openGooglePopup()">
@@ -27,17 +27,6 @@
                             {{ $value }}
                         </div>
                     @endsession
-                    @if (session('swal'))
-                        <script>
-                            window.onload = function() {
-                                Swal.fire({
-                                    icon: '{{ session('swal')['icon'] }}',
-                                    title: '{{ session('swal')['title'] }}',
-                                    text: '{{ session('swal')['text'] }}'
-                                });
-                            };
-                        </script>
-                    @endif
                     <form method="POST" action="{{ route('register') }}">
                         @csrf
                         <div>
@@ -102,9 +91,9 @@
     window.addEventListener("message", function(event) {
         if (event.data.error) {
             Swal.fire({
-                icon: 'error',
-                title: 'Oops!',
-                text: event.data.error
+                    icon: '{{ session('swal')['icon'] ?? '' }}',
+                    title: '{{ session('swal')['title'] ?? '' }}',
+                    text: '{{ session('swal')['text'] ?? '' }}'
             });
         } else if (event.data.success) {
             location.reload();

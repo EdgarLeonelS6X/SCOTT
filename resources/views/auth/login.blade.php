@@ -4,11 +4,11 @@
             <x-logotipo></x-logotipo>
             <div
                 class="w-full bg-white rounded-lg shadow-2xl dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
-                <div class="p-6 space-y-4 md:space-y-4 sm:p-8">
+                <div class="p-6 space-y-4">
                     @session('status')
-                        <div class="mb-1 font-medium text-sm text-green-600 dark:text-green-400">
-                            <p class="flex justify-center items-center text-sm text-green-700 dark:text-green-300">
-                                <i class="fa-solid fa-circle-check text-green-500 dark:text-green-400 text-lg mr-3"></i>
+                        <div class="font-medium text-sm text-green-600 dark:text-green-400">
+                            <p class="flex justify-center items-center text-xs text-green-700 dark:text-green-300">
+                                <i class="fa-solid fa-circle-check text-green-500 dark:text-green-400 text-sm mr-3"></i>
                                 {{ $value }}
                             </p>
                         </div>
@@ -46,22 +46,15 @@
                             <x-input id="password" class="block mt-1 w-full" type="password" name="password" required
                                 autocomplete="current-password" placeholder="••••••••" />
                         </div>
-                        <div class="flex items-center justify-between mt-4">
-                            <div class="flex items-start">
-                                <div class="flex items-center h-5">
-                                    <x-checkbox id="remember_me" name="remember" />
-                                </div>
-                                <div class="ml-3 text-sm">
-                                    <label for="remember_me" class="flex items-center">
-                                        <span class="text-sm text-gray-500 dark:text-gray-400">
-                                            {{ __('Remember me') }}
-                                        </span>
-                                    </label>
-                                </div>
+                        <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between mt-4">
+                            <div class="flex items-center">
+                                <x-checkbox id="remember_me" name="remember" />
+                                <label for="remember_me" class="ml-2 text-sm text-gray-500 dark:text-gray-400 flex items-center">
+                                    {{ __('Remember me') }}
+                                </label>
                             </div>
                             @if (Route::has('password.request'))
-                                <a class="text-sm font-medium text-primary-500 underline hover:text-primary-600"
-                                    href="{{ route('password.request') }}">
+                                <a class="text-sm font-medium text-primary-500 underline hover:text-primary-600 text-left sm:text-right" href="{{ route('password.request') }}">
                                     {{ __('Forgot your password?') }}
                                 </a>
                             @endif
@@ -85,8 +78,8 @@
                             {{ __('Or') }}
                         </span>
                     </div>
-                    <a class="cursor-pointer flex items-center justify-center w-full text-gray-700 bg-transparent border 
-                        border-gray-400 hover:bg-gray-100 hover:text-gray-900 focus:ring-4 focus:outline-none 
+                    <a class="cursor-pointer flex items-center justify-center w-full text-gray-700 bg-transparent border
+                        border-gray-400 hover:bg-gray-100 hover:text-gray-900 focus:ring-4 focus:outline-none
                         focus:ring-gray-300 font-bold rounded-lg text-base px-5 py-2.5 text-center me-2 mb-2 shadow
                         dark:text-white dark:bg-transparent dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:text-white dark:focus:ring-gray-500"
                         onclick="openGooglePopup()">
