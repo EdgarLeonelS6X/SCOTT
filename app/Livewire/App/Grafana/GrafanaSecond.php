@@ -38,7 +38,7 @@ class GrafanaSecond extends Component
 
     public function getGrafanaUrlProperty()
     {
-        $base = "https://172.16.100.177:3000/d-solo/0ce5d82e-9619-4da7-8301-e1c118fb4c14/multicast-monitor";
+        $base = "https://172.16.100.177:3000/d-solo/2f5b9422-b13f-495d-9e5d-b02979653d95/new-dashboard";
 
         [$from, $to] = $this->resolveTimeParams();
 
@@ -47,7 +47,7 @@ class GrafanaSecond extends Component
             "timezone"  => "browser",
             "refresh"   => "5s",
             "theme"     => $this->theme,
-            "panelId"   => 2,
+            "panelId"   => 1,
             "from"      => $from,
             "to"        => $to,
             "__feature.dashboardSceneSolo" => "true",
