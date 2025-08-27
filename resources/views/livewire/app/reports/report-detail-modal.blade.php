@@ -1,6 +1,6 @@
-<div
-    class="bg-white dark:bg-gray-900 p-4 sm:p-6 rounded-2xl shadow-2xl w-full max-w-6xl mx-auto mt-8 md:mt-0">
-    <div class="flex flex-col sm:flex-row sm:flex-wrap justify-between items-center gap-4 mb-6 overflow-x-auto whitespace-nowrap">
+<div class="bg-white dark:bg-gray-900 p-4 sm:p-6 rounded-2xl shadow-2xl w-full max-w-6xl mx-auto mt-8 md:mt-0 flex flex-col min-h-[60vh]" style="min-height:60vh;">
+    <div
+        class="flex flex-col sm:flex-row sm:flex-wrap justify-between items-center gap-4 mb-6 overflow-x-auto whitespace-nowrap">
         <div
             class="flex flex-wrap items-center gap-4 bg-white dark:bg-gray-800 px-4 py-2 rounded-xl shadow-2xl border border-gray-200 dark:border-gray-700 w-full sm:w-auto min-w-0">
             <i class="fa-solid fa-file-alt text-gray-800 dark:text-gray-100 text-2xl"></i>
@@ -28,7 +28,8 @@
         <div class="flex flex-col md:flex-row md:justify-between items-center gap-6">
             <div class="flex items-center gap-4 flex-1 min-w-0">
                 <img src="{{ $selectedReport->reportedBy->profile_photo_url }}"
-                    alt="{{ $selectedReport->reportedBy->name }}" class="w-12 h-12 rounded-full shadow-2xl object-cover">
+                    alt="{{ $selectedReport->reportedBy->name }}"
+                    class="w-12 h-12 rounded-full shadow-2xl object-cover">
                 <div>
                     <h4 class="text-sm font-semibold text-white dark:text-gray-300">
                         {{ __('Reported by') }}
@@ -75,7 +76,7 @@
             </div>
         </div>
     </div>
-    <div class="mt-6">
+    <div class="mt-6 flex flex-col flex-1 overflow-hidden">
         <div class="flex flex-wrap items-center gap-2">
             <i class="fa-solid fa-layer-group text-xl text-gray-800 dark:text-white mr-3"></i>
             <span class="text-lg font-semibold text-gray-800 dark:text-white mr-1.5">
@@ -83,16 +84,15 @@
             </span>
             <span class="bg-primary-100 text-primary-800 text-sm font-medium py-1 px-3 rounded-full ml-1.5">
                 {{ isset($selectedReport) && $selectedReport ? $selectedReport->reportDetails->count() : 0 }}
-                {{ isset($selectedReport) && $selectedReport->reportDetails->count() === 1 ? __('channel') : __('channels') }}
+                {{ isset($selectedReport) && $selectedReport->reportDetails->count() === 1 ? __('Channel') : __('Channels') }}
             </span>
         </div>
-    <div class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4 sm:gap-6 p-2 mt-4
-                @if (isset($selectedReport) && $selectedReport->reportDetails->count() > 4) max-h-96 overflow-y-auto @else overflow-hidden @endif"
-        style="scrollbar-width: none">
+    <div class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4 sm:gap-6 p-2 mt-4 flex-1 min-h-0 z-0"
+        style="scrollbar-width: none; max-height: 24rem; overflow-y: auto;">
             @if (isset($selectedReport) && $selectedReport)
                 @foreach ($selectedReport->reportDetails->sortBy(fn($detail) => $detail->channel->number) as $detail)
                     <div
-                        class="relative overflow-visible flex flex-col px-3 py-3 sm:px-4 sm:py-4 bg-white border border-gray-300 dark:bg-gray-800 dark:border-gray-700 rounded-xl space-y-3 text-sm min-w-0">
+                        class="relative overflow-visible flex flex-col px-3 py-3 sm:px-4 sm:py-4 bg-white border border-gray-300 dark:bg-gray-800 dark:border-gray-700 rounded-xl space-y-3 text-sm min-w-0 h-auto max-h-[190px]">
                         @if ($detail->description)
                             <div x-data="{ openModal: false }" class="absolute -top-3 -right-3 h-6 w-6"
                                 :class="{ 'z-[60]': openModal, 'z-50': !openModal }">
@@ -130,7 +130,7 @@
                                     <div class="w-10 h-10 flex-shrink-0">
                                         <img src="{{ $detail->channel->image }}" alt="{{ $detail->channel->name }}"
                                             title="{{ $detail->channel->number }} {{ $detail->channel->name }}"
-                                            class="w-10 h-10 object-contain object-center shadow-sm rounded-lg">
+                                            class="w-10 h-10 object-contain object-center">
                                     </div>
                                     <div class="flex-1 flex flex-col justify-center text-end min-w-0">
                                         <p class="text-base font-semibold text-gray-900 dark:text-white leading-tight truncate">
@@ -142,39 +142,40 @@
                                     </div>
                                 </div>
                             </div>
-                            <div
-                                class="flex flex-wrap justify-around items-center gap-2 sm:gap-3 px-2 sm:px-5 py-2 sm:py-3 mt-3 bg-gray-100 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg w-full">
-                                <div class="flex flex-col items-center tooltip"
-                                    title="{{ $detail->media === 'VIDEO' || $detail->media === 'AUDIO/VIDEO' ? __('The channel does not have video') : __('The channel has video') }}">
-                                    <i
-                                        class="fa-solid {{ $detail->media === 'VIDEO' || $detail->media === 'AUDIO/VIDEO' ? 'fa-video-slash text-red-500' : 'fa-video text-green-500' }} text-xl"></i>
-                                    <span class="text-[10px] mt-1 text-gray-500 dark:text-gray-300">VIDEO</span>
+                             <div
+                                    class="flex justify-around items-center gap-3 px-5 py-3 bg-gray-100 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg mt-5">
+                                    <div class="flex flex-col items-center tooltip"
+                                        title="{{ $detail->media === 'VIDEO' || $detail->media === 'AUDIO/VIDEO' ? __('The channel does not have video') : __('The channel has video') }}">
+                                        <i
+                                            class="fa-solid {{ $detail->media === 'VIDEO' || $detail->media === 'AUDIO/VIDEO' ? 'fa-video-slash text-red-500' : 'fa-video text-green-500' }} text-xl"></i>
+                                        <span class="text-[10px] mt-1 text-gray-500 dark:text-gray-300">VIDEO</span>
+                                    </div>
+                                    <div class="flex flex-col items-center tooltip"
+                                        title="{{ $detail->media === 'AUDIO' || $detail->media === 'AUDIO/VIDEO' ? __('The channel does not have audio') : __('The channel has audio') }}">
+                                        <i
+                                            class="fa-solid {{ $detail->media === 'AUDIO' || $detail->media === 'AUDIO/VIDEO' ? 'fa-volume-xmark text-red-500' : 'fa-volume-up text-green-500' }} text-xl"></i>
+                                        <span class="text-[10px] mt-1 text-gray-500 dark:text-gray-300">AUDIO</span>
+                                    </div>
+                                    <div class="flex flex-col items-center tooltip"
+                                        title="{{ $detail->protocol === 'DASH' || $detail->protocol === 'DASH/HLS' ? __('Not working on Web Client (DASH)') : __('Working on Web Client (DASH)') }}">
+                                        <i
+                                            class="fa-solid fa-computer {{ $detail->protocol === 'DASH' || $detail->protocol === 'DASH/HLS' ? 'text-red-500' : 'text-green-500' }} text-xl"></i>
+                                        <span class="text-[10px] mt-1 text-gray-500 dark:text-gray-300">DASH</span>
+                                    </div>
+                                    <div class="flex flex-col items-center tooltip"
+                                        title="{{ $detail->protocol === 'HLS' || $detail->protocol === 'DASH/HLS' ? __('Not working on Set Up Box (HLS)') : __('Working on Set Up Box (HLS)') }}">
+                                        <i
+                                            class="fa-solid fa-tv {{ $detail->protocol === 'HLS' || $detail->protocol === 'DASH/HLS' ? 'text-red-500' : 'text-green-500' }} text-xl"></i>
+                                        <span class="text-[10px] mt-1 text-gray-500 dark:text-gray-300">HLS</span>
+                                    </div>
                                 </div>
-                                <div class="flex flex-col items-center tooltip"
-                                    title="{{ $detail->media === 'AUDIO' || $detail->media === 'AUDIO/VIDEO' ? __('The channel does not have audio') : __('The channel has audio') }}">
-                                    <i
-                                        class="fa-solid {{ $detail->media === 'AUDIO' || $detail->media === 'AUDIO/VIDEO' ? 'fa-volume-xmark text-red-500' : 'fa-volume-up text-green-500' }} text-xl"></i>
-                                    <span class="text-[10px] mt-1 text-gray-500 dark:text-gray-300">AUDIO</span>
-                                </div>
-                                <div class="flex flex-col items-center tooltip"
-                                    title="{{ $detail->protocol === 'DASH' || $detail->protocol === 'DASH/HLS' ? __('Not working on Web Client (DASH)') : __('Working on Web Client (DASH)') }}">
-                                    <i
-                                        class="fa-solid fa-computer {{ $detail->protocol === 'DASH' || $detail->protocol === 'DASH/HLS' ? 'text-red-500' : 'text-green-500' }} text-xl"></i>
-                                    <span class="text-[10px] mt-1 text-gray-500 dark:text-gray-300">DASH</span>
-                                </div>
-                                <div class="flex flex-col items-center tooltip"
-                                    title="{{ $detail->protocol === 'HLS' || $detail->protocol === 'DASH/HLS' ? __('Not working on Set Up Box (HLS)') : __('Working on Set Up Box (HLS)') }}">
-                                    <i
-                                        class="fa-solid fa-tv {{ $detail->protocol === 'HLS' || $detail->protocol === 'DASH/HLS' ? 'text-red-500' : 'text-green-500' }} text-xl"></i>
-                                    <span class="text-[10px] mt-1 text-gray-500 dark:text-gray-300">HLS</span>
-                                </div>
-                            </div>
                         </div>
                     </div>
                 @endforeach
             @endif
         </div>
-    <div class="flex flex-col sm:flex-row flex-wrap justify-end items-stretch mt-4 gap-3 sm:gap-4 w-full max-w-full">
+        <div
+            class="flex flex-col sm:flex-row flex-wrap justify-end items-stretch mt-4 gap-3 sm:gap-4 w-full max-w-full">
             <button wire:click.prevent="markAsSolved()"
                 class="py-2 px-4 bg-primary-600 hover:bg-primary-700 text-white rounded-lg shadow font-bold text-base w-full sm:w-auto max-w-full min-w-0">
                 <i class="fa-solid fa-circle-check mr-1"></i>

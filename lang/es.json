@@ -551,5 +551,13 @@
     "Open Multicast": "Abrir la Multicast",
     "Show channel information": "Mostrar información del canal",
     "Edit channel": "Editar canal",
-    "Delete channel": "Eliminar canal"
+    "Delete channel": "Eliminar canal",
+    "The channel does not have video": "El canal no tiene video",
+    "The channel has video": "El canal tiene video",
+    "The channel does not have audio": "El canal no tiene audio",
+    "The channel has audio": "El canal tiene audio",
+    "Not working on Web Client (DASH)": "No funciona en el cliente web (DASH)",
+    "Working on Web Client (DASH)": "Funciona en el cliente web (DASH)",
+    "Not working on Set Up Box (HLS)": "No funciona en el Set Up Box (HLS)",
+    "Working on Set Up Box (HLS)": "Funciona en el Set Up Box (HLS)"
 }

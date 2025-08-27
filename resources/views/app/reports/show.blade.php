@@ -168,8 +168,6 @@
                     class="mt-6 border border-gray-300 dark:border-gray-700 rounded-xl overflow-hidden shadow-lg">
                     <button @click="open = !open"
                         class="text-base sm:text-lg font-semibold text-gray-800 dark:text-white cursor-pointer px-4 py-3 flex flex-col sm:flex-row sm:items-center sm:justify-between w-full bg-white dark:bg-gray-800 border-b dark:border-gray-700 space-y-2 sm:space-y-0">
-
-                        <!-- Icono + categoría -->
                         <div
                             class="flex flex-col sm:flex-row items-center justify-center sm:justify-start gap-2 w-full sm:w-auto text-center sm:text-left">
                             <i :class="open ? 'fa-chevron-up' : 'fa-chevron-down'"
@@ -183,12 +181,10 @@
                                 </span>
                             </span>
                         </div>
-
-                        <!-- Contador -->
                         <span
                             class="bg-primary-100 text-primary-800 text-sm font-medium py-1 px-3 rounded-full text-center sm:text-left w-full sm:w-auto">
                             {{ $report->reportDetails->count() }}
-                            {{ $report->reportDetails->count() === 1 ? __('channel') : __('channels') }}
+                            {{ $report->reportDetails->count() === 1 ? __('Channel') : __('Channels') }}
                         </span>
                     </button>
 

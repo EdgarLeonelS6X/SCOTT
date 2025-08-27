@@ -106,7 +106,7 @@
             </div>
         </div>
 
-        <div class="bg-gray-50 dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 p-6 shadow-2xl">
+        <div class="bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 p-6 shadow-2xl">
             <iframe wire:key="{{ $this->iframeKey }}" src="{{ $this->grafanaUrl }}" height="220" frameborder="0"
                 loading="lazy" referrerpolicy="no-referrer"
                 class="w-full rounded-xl border shadow-inner transition-all duration-200">

@@ -1,8 +1,8 @@
-<div class="w-full max-w-full md:w-[500px] h-[70vh] md:h-[90vh] flex flex-col bg-white dark:bg-gray-900 rounded-xl shadow-xl"
+<div class="w-full max-w-full md:w-[500px] h-[60vh] md:h-[70vh] flex flex-col bg-white dark:bg-gray-900 rounded-xl shadow-xl"
     wire:ignore.self>
     <div class="p-4 border-b border-gray-200 dark:border-gray-700 flex items-center gap-2">
-        <i class="fa-regular fa-comments"></i>
-        <h3 class="text-lg font-semibold text-gray-800 dark:text-white">{{ __('Comments') }}</h3>
+        <i class="fa-regular fa-comments text-gray-800 dark:text-gray-100 text-2xl"></i>
+        <h3 class="text-lg font-semibold text-gray-900 dark:text-white leading-tight">{{ __('Comments') }}</h3>
     </div>
 
     <div id="chat-container" class="flex-1 overflow-y-hidden px-2 py-2 space-y-2 flex flex-col"
@@ -19,12 +19,13 @@
                     @endunless
                     <div class="relative group">
                         <div class="p-3 rounded-xl shadow-sm transition-all duration-150
-                                {{ $isCurrentUser
+                                    {{ $isCurrentUser
             ? 'bg-primary-600 text-white rounded-br-none'
             : 'bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 rounded-bl-none'
-                                }}">
+                                    }}">
                             <div class="flex items-center gap-1 mb-1">
-                                <span class="text-[11px] font-semibold opacity-70 {{ $isCurrentUser ? 'text-right' : 'text-left' }}">
+                                <span
+                                    class="text-[11px] font-semibold opacity-70 {{ $isCurrentUser ? 'text-right' : 'text-left' }}">
                                     {{ $comment->user->name ?? __('Unknown') }}
                                 </span>
                                 <span class="text-[10px] opacity-50">
@@ -32,30 +33,28 @@
                                 </span>
                             </div>
                             @if($editingId === $comment->id)
-    <form wire:submit.prevent="updateComment({{ $comment->id }})" class="flex items-center gap-1">
-        <input type="text" wire:model.defer="editBody"
-            class="flex-1 px-2 py-1 rounded-md border
-                   border-gray-300 dark:border-gray-600
-                   bg-white dark:bg-gray-700
-                   text-gray-800 dark:text-gray-200
-                   placeholder-gray-400 dark:placeholder-gray-500
-                   focus:outline-none focus:ring-1 focus:ring-primary-500
-                   text-xs shadow-sm transition-colors duration-200"
-            placeholder="{{ __('Edit your comment...') }}" />
-        <button type="submit"
-            class="px-1.5 py-0.5 text-[10px] rounded bg-green-500 hover:bg-green-600 text-white">
-            ✔
-        </button>
-        <button type="button" wire:click="cancelEdit"
-            class="px-1.5 py-0.5 text-[10px] rounded bg-red-500 hover:bg-red-600 text-white">
-            ✖
-        </button>
-    </form>
-@else
-    <div class="text-sm break-words leading-snug">
+                                        <form wire:submit.prevent="updateComment({{ $comment->id }})" class="flex items-center gap-1">
+                                            <input type="text" wire:model.defer="editBody" class="flex-1 px-2 py-1 rounded-md border
+                                   border-gray-300 dark:border-gray-600
+                                   bg-white dark:bg-gray-700
+                                   text-gray-800 dark:text-gray-200
+                                   placeholder-gray-400 dark:placeholder-gray-500
+                                   focus:outline-none focus:ring-1 focus:ring-primary-500
+                                   text-xs shadow-sm transition-colors duration-200" placeholder="{{ __('Edit your comment...') }}" />
+                                            <button type="submit"
+                                                class="px-1.5 py-0.5 text-[10px] rounded bg-green-500 hover:bg-green-600 text-white">
+                                                ✔
+                                            </button>
+                                            <button type="button" wire:click="cancelEdit"
+                                                class="px-1.5 py-0.5 text-[10px] rounded bg-red-500 hover:bg-red-600 text-white">
+                                                ✖
+                                            </button>
+                                        </form>
+                            @else
+                                <div class="text-sm break-words leading-snug">
                                     {{ $comment->body }}
                                 </div>
-@endif
+                            @endif
                         </div>
                         @if($isCurrentUser)
                             <div class="absolute -top-2 right-0 flex gap-1 opacity-0 group-hover:opacity-100 transition">
@@ -77,23 +76,25 @@
                 </div>
             </div>
         @empty
-            <div class="text-gray-400 text-center">{{ __('No comments yet.') }}</div>
+            <div class="text-gray-400 text-center mt-2">{{ __('No comments yet.') }}</div>
         @endforelse
     </div>
 
-    <form wire:submit.prevent="addComment"
-        class="flex items-center gap-2 p-4 border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900">
-        <input type="text" wire:model.defer="body"
-            class="flex-1 px-4 py-2 rounded-xl border border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500 text-sm shadow-sm"
-            placeholder="{{ __('Add a comment...') }}">
-        <button type="submit"
-            class="bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-xl text-sm font-semibold shadow transition-all duration-200">
-            <i class="fa-solid fa-paper-plane"></i>
-        </button>
-    </form>
-    @error('body')
-        <div class="text-red-500 text-xs mt-1 px-4 pb-2">{{ $message }}</div>
-    @enderror
+    <div class="rounded-b-xl overflow-hidden">
+        <form wire:submit.prevent="addComment"
+            class="flex items-center gap-2 p-4 border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 rounded-b-xl">
+            <input type="text" wire:model.defer="body"
+                class="flex-1 px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500 text-sm shadow-sm"
+                placeholder="{{ __('Add a comment...') }}">
+            <button type="submit"
+                class="bg-primary-600 hover:bg-primary-700 text-white px-3 py-2 rounded-lg text-sm font-semibold shadow transition-all duration-200">
+                <i class="fa-solid fa-paper-plane"></i>
+            </button>
+        </form>
+        @error('body')
+            <div class="text-red-500 text-xs px-4 pb-2 bg-white dark:bg-gray-900 w-full">{{ $message }}</div>
+        @enderror
+    </div>
 </div>
 
 @push('scripts')
