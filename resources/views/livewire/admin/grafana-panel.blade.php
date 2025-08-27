@@ -2,7 +2,7 @@
     <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl overflow-hidden">
         <div class="flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-gray-700">
             <h2 class="text-xl font-bold text-gray-800 dark:text-gray-200 flex items-center gap-2">
-                <i class="fa-solid fa-satellite-dish text-primary-500"></i>
+                <i class="fa-solid fa-satellite-dish text-primary-600"></i>
                 {{ __('Monitoring panel') }}
             </h2>
             <span class="text-xs text-gray-400 dark:text-gray-500 md:block hidden">
@@ -83,7 +83,7 @@
                     <div class="flex items-center">
                         <button type="button" x-show="selectedChannel && selectedChannel.url"
                             @click="window.downloadM3U(selectedChannel.url, selectedChannel.number, selectedChannel.name)"
-                            class="flex justify-center items-center w-full md:w-auto text-white bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 focus:ring-4 focus:outline-none focus:ring-yellow-300 dark:focus:ring-yellow-800 font-semibold rounded-lg text-base px-4 py-3 shadow transition">
+                            class="flex justify-center items-center w-full md:w-auto text-white bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 dark:focus:ring-primary-800 font-semibold rounded-lg text-base px-4 py-3 shadow transition">
                             <i class="fa-solid fa-video mr-2"></i>
                             {{ __('Multicast') }}
                         </button>

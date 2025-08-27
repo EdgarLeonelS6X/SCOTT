@@ -41,7 +41,7 @@
 
             <button type="button" data-modal-target="create-chromecast-report-modal"
                 data-modal-toggle="create-chromecast-report-modal"
-                class="w-full bg-primary-600 text-white rounded-lg py-3 flex items-center justify-center font-semibold shadow-md hover:shadow-2xl transform transition-all hover:scale-105">
+                class="w-full bg-indigo-600 text-white rounded-lg py-3 flex items-center justify-center font-semibold shadow-md hover:shadow-2xl transform transition-all hover:scale-105">
                 <i class="fa-brands fa-chromecast mr-2"></i>
                 {{ __('Chromecast report') }}
             </button>
@@ -85,7 +85,7 @@
                 <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
                     <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
                         <h3 class="text-xl font-medium text-gray-900 dark:text-white">
-                            <i class="fa-brands fa-chromecast mr-2 text-primary-600"></i>
+                            <i class="fa-brands fa-chromecast mr-2 text-indigo-600"></i>
                             {{ __('Chromecast Feature Report') }}
                         </h3>
                         <button type="button"
@@ -133,6 +133,16 @@
         </div>
         @livewire('app.reports.report-momently-table')
     </div>
+
+    <div class="w-full mt-4 flex flex-col md:flex-row gap-4 px-3 mb-4">
+        <div class="flex-1">
+            @livewire('app.grafana.grafana-first')
+        </div>
+        <div class="flex-1">
+            @livewire('app.grafana.grafana-second')
+        </div>
+    </div>
+
     <div id="create-momently-report-modal" tabindex="-1"
         class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
         <div class="relative w-full max-w-7xl max-h-full">
@@ -185,6 +195,7 @@
             </div>
         </div>
     </div>
+
 </x-app-layout>
 
 <script>
