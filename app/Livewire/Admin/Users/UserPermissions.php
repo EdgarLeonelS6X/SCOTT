@@ -45,7 +45,11 @@ class UserPermissions extends Component
         $this->allPermissions = Permission::all();
 
         $this->role = $user->roles->pluck('name')->first();
-        $this->permissions = $user->permissions->pluck('name')->toArray();
+        if ($user->id === 1) {
+            $this->permissions = $this->allPermissions->pluck('name')->toArray();
+        } else {
+            $this->permissions = $user->permissions->pluck('name')->toArray();
+        }
 
         $auth = auth()->user();
 
@@ -128,7 +132,8 @@ class UserPermissions extends Component
 
     public function updatedRole($value)
     {
-        if (!$this->canEditPermissions) return;
+        if (!$this->canEditPermissions)
+            return;
 
         $this->applyRoleBasedPermissions($value);
     }
@@ -202,6 +207,34 @@ class UserPermissions extends Component
                 : ['icon' => 'success', 'title' => __('Well done!'), 'text' => __('Permissions updated successfully.')];
 
             $this->dispatch('swal', $message);
+        }
+    }
+
+    public function sendResetPasswordEmail()
+    {
+        $auth = auth()->user();
+        if ($auth->id !== 1 || $this->user->id === 1) {
+            $this->dispatch('swal', [
+                'icon' => 'error',
+                'title' => __('Access Denied'),
+                'text' => __('You are not authorized to send a password reset email to this user.'),
+            ]);
+            return;
+        }
+
+        try {
+            \Password::broker()->sendResetLink(['email' => $this->user->email]);
+            $this->dispatch('swal', [
+                'icon' => 'success',
+                'title' => __('Email sent'),
+                'text' => __('A password reset email has been sent to the user.'),
+            ]);
+        } catch (\Exception $e) {
+            $this->dispatch('swal', [
+                'icon' => 'error',
+                'title' => __('Error'),
+                'text' => __('There was a problem sending the password reset email.'),
+            ]);
         }
     }
 

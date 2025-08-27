@@ -574,5 +574,7 @@
     "We have sent a new verification link": "Hemos enviado un nuevo enlace de verificación.",
     "Reset link sent!": "¡Enlace de restablecimiento enviado!",
     "Reset your password": "Restablece tu contraseña",
-    "Reset password": "Restablecer contraseña"
+    "Reset password": "Restablecer contraseña",
+    "Email not verified": "Correo no verificado",
+    "Send reset email": "Enviar correo de restablecimiento"
 }

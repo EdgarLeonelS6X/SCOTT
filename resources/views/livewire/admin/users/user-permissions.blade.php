@@ -33,13 +33,12 @@
                                 ($isAuthUser && $isSelf)));
                 @endphp
                 <div class="w-full flex justify-center sm:justify-start">
-                    <div x-data="{ open: false, canSave: {{ $canSave ? 'true' : 'false' }} }" @preferences-saved.window="open = false" class="relative">
-                        <button @click="canSave && (open = !open)"
-                            :class="{
+                    <div x-data="{ open: false, canSave: {{ $canSave ? 'true' : 'false' }} }"
+                        @preferences-saved.window="open = false" class="relative">
+                        <button @click="canSave && (open = !open)" :class="{
                                 'opacity-50': !canSave,
                                 'hover:text-primary-700': canSave
-                            }"
-                            :disabled="!canSave" type="button"
+                            }" :disabled="!canSave" type="button"
                             class="flex items-center justify-center sm:justify-start text-xs text-primary-600 transition font-medium">
                             <i class="fa-solid fa-reply-all mr-2"></i>
                             <span>{{ __('Report mail preferences') }}</span>
@@ -60,8 +59,7 @@
                                 @endphp
                                 @foreach ($reportMailsList as $key => $label)
                                     <x-label class="flex items-center gap-3 text-sm text-gray-700 dark:text-gray-300">
-                                        <x-checkbox type="checkbox"
-                                            wire:model.defer="reportMails.{{ $key }}" />
+                                        <x-checkbox type="checkbox" wire:model.defer="reportMails.{{ $key }}" />
                                         <span>{{ $label }}</span>
                                     </x-label>
                                 @endforeach
@@ -84,19 +82,30 @@
                 <i class="fa-solid fa-calendar-day"></i>
                 <span>{{ __('Joined on') }} {{ $user->created_at->format('d M Y') }}</span>
             </div>
-            <div class="mt-2 flex justify-center sm:justify-end">
+            <div class="mt-2 flex flex-col sm:flex-row gap-2 justify-center sm:justify-end items-center sm:items-end">
+                @php $auth = auth()->user(); @endphp
                 @if ($user->hasVerifiedEmail())
-                    <span
-                        class="inline-flex items-center text-xs font-medium text-green-700 bg-green-200 dark:bg-green-800 dark:text-green-100 px-3 py-1 rounded-full">
-                        <i class="fa-solid fa-check-circle mr-1"></i>{{ __('Email verified') }}
-                    </span>
+                    <div
+                        class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-700 dark:bg-green-800 dark:text-green-100 gap-2">
+                        <i class="fa-solid fa-check-circle" aria-hidden="true"></i>
+                        <span>{{ __('Email verified') }}</span>
+                    </div>
                 @else
-                    <span
-                        class="inline-flex items-center text-xs font-medium text-gray-600 bg-gray-200 dark:bg-gray-600 dark:text-gray-200 px-3 py-1 rounded-full">
-                        <i class="fa-solid fa-circle-exclamation mr-1"></i>{{ __('Email not verified') }}
-                    </span>
+                    <div
+                        class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-red-100 text-red-700 dark:bg-gray-700 dark:text-red-200 gap-2">
+                        <i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i>
+                        <span>{{ __('Email not verified') }}</span>
+                    </div>
+                @endif
+                @if ($auth && $auth->id === 1 && $auth->id !== $user->id)
+                    <button wire:click="sendResetPasswordEmail" class="inline-flex items-center gap-2 px-3 py-1 text-xs font-medium rounded-full
+                       bg-primary-50 text-primary-700 hover:bg-primary-100 dark:bg-primary-900 dark:text-primary-200">
+                        <i class="fa-solid fa-envelope-circle-check" aria-hidden="true"></i>
+                        <span>{{ __('Send reset email') }}</span>
+                    </button>
                 @endif
             </div>
+
         </div>
     </div>
 
