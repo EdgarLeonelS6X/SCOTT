@@ -134,7 +134,7 @@
         @livewire('app.reports.report-momently-table')
     </div>
 
-    <div class="w-full mt-4 flex flex-col md:flex-row gap-4 px-3 mb-4">
+    <div class="w-full mt-4 flex flex-col md:flex-row gap-6 px-3 mb-4">
         <div class="flex-1">
             @livewire('app.grafana.grafana-first')
         </div>

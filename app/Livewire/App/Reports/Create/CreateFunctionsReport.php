@@ -154,6 +154,7 @@ class CreateFunctionsReport extends Component
                                 "categories.$categoryIndex.channels.$channelIndex.stage" => 'required|exists:stages,id',
                                 "categories.$categoryIndex.channels.$channelIndex.protocol" => 'required|in:HLS,DASH,HLS/DASH',
                                 "categories.$categoryIndex.channels.$channelIndex.media" => 'required|in:AUDIO,VIDEO,AUDIO/VIDEO',
+                                "categories.$categoryIndex.channels.$channelIndex.description" => 'required|string',
                             ];
                             break;
 
@@ -179,6 +180,7 @@ class CreateFunctionsReport extends Component
                                 "categories.$categoryIndex.channels.$channelIndex.channel_id" => 'required|exists:channels,id',
                                 "categories.$categoryIndex.channels.$channelIndex.stage" => 'required|exists:stages,id',
                                 "categories.$categoryIndex.channels.$channelIndex.protocol" => 'required|in:HLS,DASH,HLS/DASH',
+                                "categories.$categoryIndex.channels.$channelIndex.description" => 'required|string',
                             ];
                             break;
 
@@ -187,6 +189,7 @@ class CreateFunctionsReport extends Component
                                 "categories.$categoryIndex.channels.$channelIndex.channel_id" => 'required|exists:channels,id',
                                 "categories.$categoryIndex.channels.$channelIndex.stage" => 'required|exists:stages,id',
                                 "categories.$categoryIndex.channels.$channelIndex.protocol" => 'required|in:HLS,DASH,HLS/DASH',
+                                "categories.$categoryIndex.channels.$channelIndex.description" => 'required|string',
                             ];
                             break;
                     }
@@ -197,7 +200,7 @@ class CreateFunctionsReport extends Component
                         "categories.$categoryIndex.channels.$channelIndex.protocol.required" => __("The protocol is required."),
                         "categories.$categoryIndex.channels.$channelIndex.media.required" => __("The media type is required."),
                         "categories.$categoryIndex.channels.$channelIndex.description.required" => __("The description is required."),
-                        "categories.$categoryIndex.channels.$channelIndex.description.min" => __("The description must have at least 5 characters."),
+                        "categories.$categoryIndex.channels.$channelIndex.description.min" => __("The description is required."),
                     ];
 
                     if ($category['name'] === 'CUTV') {

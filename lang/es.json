@@ -559,5 +559,6 @@
     "Not working on Web Client (DASH)": "No funciona en el cliente web (DASH)",
     "Working on Web Client (DASH)": "Funciona en el cliente web (DASH)",
     "Not working on Set Up Box (HLS)": "No funciona en el Set Up Box (HLS)",
-    "Working on Set Up Box (HLS)": "Funciona en el Set Up Box (HLS)"
+    "Working on Set Up Box (HLS)": "Funciona en el Set Up Box (HLS)",
+    "description": "descripción"
 }

@@ -37,7 +37,7 @@ use App\Enums\ChannelReviewer;
                         :class="(categoryName.length > 8 || editingName) ? 'mt-4 sm:mt-0' : 'mt-0'">
                         <span class="bg-primary-100 text-primary-800 text-sm font-medium py-1 px-3 rounded-full">
                             {{ __('Contains') }} {{ $this->getChannelCount(0) }}
-                            {{ $this->getChannelCount(0) === 1 ? __('channel') : __('channels') }}
+                            {{ $this->getChannelCount(0) === 1 ? __('Channel') : __('Channels') }}
                         </span>
                     </div>
                 </div>
@@ -171,7 +171,7 @@ use App\Enums\ChannelReviewer;
                                 <div class="col-span-1 md:col-span-2">
                                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                         <i class="fa-solid fa-comment mr-1.5"></i>
-                                        {{ __('Description (Optional)') }}
+                                        {{ __('Description') }}
                                     </label>
                                     <textarea wire:model="reportData.channels.{{ $channelIndex }}.description" rows="3"
                                         class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"

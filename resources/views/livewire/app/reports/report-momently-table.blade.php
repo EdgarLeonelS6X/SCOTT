@@ -124,53 +124,20 @@
 </div>
 
 <script>
-    function openMiniPlayer(url) {
-        const youtubeRegex = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/)([\w-]{11})/;
-        const match = url.match(youtubeRegex);
-
-        if (match) {
-            const videoId = match[1];
-            url = `https://www.youtube.com/embed/${videoId}`;
-        }
-
-        let playerContainer = document.getElementById('miniPlayerContainer');
-        if (!playerContainer) {
-            playerContainer = document.createElement('div');
-            playerContainer.id = 'miniPlayerContainer';
-            playerContainer.classList =
-                'fixed bottom-4 right-4 w-80 bg-white shadow-lg rounded-lg overflow-hidden z-50';
-            document.body.appendChild(playerContainer);
-
-            const controlBar = document.createElement('div');
-            controlBar.classList =
-                'w-full flex justify-between items-center bg-primary-600 dark:bg-primary-700 text-white p-2 shadow-2xl';
-            controlBar.style.height = '40px';
-            controlBar.innerHTML = `
-                <span>{{ __('Playing channel') }}</span>
-                <button onclick="closeMiniPlayer()" class="text-gray-300 hover:text-white">
-                    <i class="fa-solid fa-times"></i>
-                </button>
-            `;
-            playerContainer.appendChild(controlBar);
-
-            const iframe = document.createElement('iframe');
-            iframe.classList = 'w-full';
-            iframe.style.height =
-                'calc(100% - 40px)';
-            iframe.frameBorder = 0;
-            iframe.allowFullscreen = true;
-            playerContainer.appendChild(iframe);
-        }
-
-        playerContainer.querySelector('iframe').src = url;
-        playerContainer.style.display = 'block';
-    }
-
-    function closeMiniPlayer() {
-        const playerContainer = document.getElementById('miniPlayerContainer');
-        if (playerContainer) {
-            playerContainer.style.display = 'none';
-            playerContainer.querySelector('iframe').src = '';
-        }
+function downloadM3U(url, number, name) {
+        const content = url + "\n";
+        let cleanName = (number ? number + '_' : '') + (name ? name : 'canal');
+        cleanName = cleanName.replace(/[^a-zA-Z0-9-_]/g, '_');
+        const filename = cleanName + '.m3u';
+        const blob = new Blob([content], { type: "audio/x-mpegurl" });
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        setTimeout(() => {
+            URL.revokeObjectURL(a.href);
+            document.body.removeChild(a);
+        }, 100);
     }
 </script>

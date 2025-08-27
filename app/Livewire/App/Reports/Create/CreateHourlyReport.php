@@ -203,7 +203,7 @@ class CreateHourlyReport extends Component
 
             if (!in_array($category['name'], $this->fixedCategories)) {
                 foreach ($category['channels'] as $channelIndex => $channel) {
-                    if (empty($channel['channel_id']) || empty($channel['stage']) || empty($channel['protocol']) || empty($channel['media'])) {
+                    if (empty($channel['channel_id']) || empty($channel['stage']) || empty($channel['protocol']) || empty($channel['media']) || empty($channel['description'])) {
                         throw ValidationException::withMessages([
                             "categories.$index.channels.$channelIndex" => __('All fields are required for each channel in new categories.')
                         ]);
@@ -214,11 +214,13 @@ class CreateHourlyReport extends Component
                         "categories.$index.channels.$channelIndex.stage" => 'required|exists:stages,id',
                         "categories.$index.channels.$channelIndex.protocol" => 'required|in:' . implode(',', $this->protocols),
                         "categories.$index.channels.$channelIndex.media" => 'required|in:' . implode(',', $this->mediaOptions),
+                        "categories.$index.channels.$channelIndex.description" => 'required|string',
                     ], [], [
                         "categories.$index.channels.$channelIndex.channel_id" => __('channel'),
                         "categories.$index.channels.$channelIndex.stage" => __('stage'),
                         "categories.$index.channels.$channelIndex.protocol" => __('protocol'),
                         "categories.$index.channels.$channelIndex.media" => __('media'),
+                        "categories.$index.channels.$channelIndex.description" => __('description'),
                     ]);
                 }
             }

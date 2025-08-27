@@ -124,7 +124,7 @@
                                 </div>
                             </div>
                         @endif
-                        <div @click.stop="openMiniPlayer('{{ $detail->channel->url }}')" class="cursor-pointer">
+                        <div @click.stop="downloadM3U('{{ $detail->channel->url }}', '{{ $detail->channel->number }}', '{{ $detail->channel->name }}');" class="cursor-pointer">
                             <div class="flex items-start gap-2">
                                 <div class="flex items-center gap-2 w-full min-w-0">
                                     <div class="w-10 h-10 flex-shrink-0">

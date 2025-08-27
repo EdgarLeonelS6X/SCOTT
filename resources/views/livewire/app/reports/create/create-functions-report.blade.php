@@ -31,7 +31,7 @@
                         </button>
                         <div class="dark:text-white text-base sm:text-lg font-semibold relative">
                             <h3
-                                class="cursor-pointer px-3 py-2 rounded-full shadow-md flex items-center gap-2 transition 
+                                class="cursor-pointer px-3 py-2 rounded-full shadow-md flex items-center gap-2 transition
                                    bg-gray-50 border dark:bg-gray-700 dark:border-white">
                                 <span>{{ $category['name'] ?: __('New category') }}</span>
                             </h3>
@@ -39,7 +39,7 @@
                     </div>
                     <span class="ml-2 bg-primary-100 text-primary-800 text-sm font-medium py-1 px-2 rounded-full">
                         {{ __('Contains') }} {{ count($category['channels'] ?? []) }}
-                        {{ count($category['channels'] ?? []) === 1 ? __('channel') : __('channels') }}
+                        {{ count($category['channels'] ?? []) === 1 ? __('Channel') : __('Channels') }}
                     </span>
                 </div>
                 <div x-show="open" class="mt-6 space-y-6">
@@ -102,9 +102,9 @@
                                         },
                                         get filteredChannels() {
                                             if (this.search === '') return this.channels;
-                                    
+
                                             const term = this.search.toLowerCase();
-                                    
+
                                             return this.channels.filter(c =>
                                                 c.name.toLowerCase().includes(term) ||
                                                 c.number.toString().includes(term) ||
@@ -233,7 +233,7 @@
                                     }">
                                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                         <i class="fa-solid fa-comment mr-1.5"></i>
-                                        {{ __('Description (Optional)') }}
+                                        {{ __('Description') }}
                                     </label>
                                     <textarea
                                         class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
@@ -267,7 +267,7 @@
                                                 <input type="datetime-local"
                                                     x-model="$wire.categories[{{ $index }}].channels[{{ $channelIndex }}].loss_periods[periodIndex].start_time"
                                                     @change="$wire.set('categories.{{ $index }}.channels[{{ $channelIndex }}].loss_periods.' + periodIndex + '.start_time', $event.target.value)"
-                                                    class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg 
+                                                    class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg
                                                             focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5
                                                             dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white
                                                             dark:focus:ring-primary-500 dark:focus:border-primary-500">
@@ -281,7 +281,7 @@
                                                 <input type="datetime-local"
                                                     x-model="$wire.categories[{{ $index }}].channels[{{ $channelIndex }}].loss_periods[periodIndex].end_time"
                                                     @change="$wire.set('categories.{{ $index }}.channels[{{ $channelIndex }}].loss_periods.' + periodIndex + '.end_time', $event.target.value)"
-                                                    class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg 
+                                                    class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg
                                                             focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5
                                                             dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white
                                                             dark:focus:ring-primary-500 dark:focus:border-primary-500">
