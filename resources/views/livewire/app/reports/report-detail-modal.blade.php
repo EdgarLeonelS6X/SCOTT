@@ -1,4 +1,4 @@
-<div class="bg-white dark:bg-gray-900 p-4 sm:p-6 rounded-2xl shadow-2xl w-full max-w-6xl mx-auto mt-8 md:mt-0 flex flex-col min-h-[60vh]" style="min-height:60vh;">
+<div class="bg-white dark:bg-gray-900 p-4 sm:p-6 rounded-2xl shadow-2xl w-full max-w-6xl mx-auto mt-8 md:mt-0 flex flex-col md:min-h-[80vh]">
     <div
         class="flex flex-col sm:flex-row sm:flex-wrap justify-between items-center gap-4 mb-6 overflow-x-auto whitespace-nowrap">
         <div

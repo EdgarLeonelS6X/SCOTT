@@ -162,11 +162,13 @@ class EditMomentlyReport extends Component
                 "reportData.channels.$index.stage" => 'required|exists:stages,id',
                 "reportData.channels.$index.protocol" => 'required|in:' . implode(',', $this->protocols),
                 "reportData.channels.$index.media" => 'required|in:' . implode(',', $this->mediaOptions),
+                "reportData.channels.$index.description" => 'required|string',
             ], [], [
                 "reportData.channels.$index.channel_id" => __('channel'),
                 "reportData.channels.$index.stage" => __('stage'),
                 "reportData.channels.$index.protocol" => __('protocol'),
                 "reportData.channels.$index.media" => __('media'),
+                "reportData.channels.$index.description" => __('description'),
             ]);
         }
     }

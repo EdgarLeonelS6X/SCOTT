@@ -2,8 +2,8 @@
     <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl overflow-hidden">
         <div class="flex items-center justify-between px-4 py-4 border-b border-gray-200 dark:border-gray-700">
             <h2 class="text-xl font-bold text-gray-800 dark:text-gray-200 flex items-center gap-2">
-                <i class="fa-solid fa-satellite-dish text-primary-600"></i>
-                {{ __('Multicast') }}
+                <i class="fa-solid fa-diagram-project text-primary-600"></i>
+                {{ __('Multicast Downlink DTH') }}
             </h2>
             <span class="text-xs text-gray-400 dark:text-gray-500 md:block hidden">
                 {{ __('Auto-refresh 5s') }}

@@ -84,7 +84,7 @@
                 dark:from-blue-900 dark:via-indigo-800 dark:to-purple-900
                 text-white dark:text-gray-100 ring-1 ring-white/20 dark:ring-gray-700 hover:shadow-[0_8px_25px_rgba(0,0,0,0.3)]">
                 <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6">
-                    <div class="flex items-center gap-4 w-full">
+                    <div class="flex items-center gap-4 w-auto">
                         <img src="{{ $report->reportedBy->profile_photo_url }}" alt="{{ $report->reportedBy->name }}"
                             class="w-12 h-12 rounded-full shadow-2xl">
                         <div>
@@ -96,8 +96,7 @@
                                     - {{ $report->updated_at->format('d/m/Y h:i A') }}
                                     <br>
                                     <small>
-                                        ({{ __('Last updated') }}: {{ $report->updated_at->diffForHumans() }} -
-                                        {{ $report->created_at->diffForHumans($report->updated_at) }})
+                                        ({{ __('Last updated') }}: {{ $report->updated_at->diffForHumans() }})
                                     </small>
                                 @else
                                     <br>
@@ -127,34 +126,20 @@
                         </div>
                         @if ($report->type === 'Momentary')
                             <div
-                                class="flex items-center gap-3 bg-white/20 dark:bg-gray-800 px-4 py-3 rounded-lg shadow-md w-full sm:w-auto">
+                                class="flex items-center gap-3 bg-white/20 dark:bg-gray-800 px-4 py-3 rounded-lg shadow-md w-full">
                                 <div
-                                    class="flex items-center justify-center w-10 h-10 bg-white text-gray-700 dark:bg-gray-700 dark:text-gray-300 rounded-full shadow-md">
+                                    class="flex items-center justify-center w-10 h-10 bg-white text-gray-700 dark:bg-gray-700 dark:text-gray-300 rounded-full shadow-md flex-shrink-0">
                                     <i class="fa-solid fa-gear text-lg"></i>
                                 </div>
-                                <div>
-                                    <h4 class="text-sm">{{ __('Under review by') }}</h4>
-                                    <p class="text-sm font-bold">
+                                <div class="w-full">
+                                    <h4 class="text-sm whitespace-normal break-words">{{ __('Under review by') }}</h4>
+                                    <p class="text-sm font-bold whitespace-normal break-words">
                                         {{ $report->reviewed_by }}
                                         @if ($report->duration)
-                                            - {{ __('Resolved in') }}
-                                            @php
-                                                $createdAt = \Carbon\Carbon::parse($report->created_at);
-                                                $resolvedAt = \Carbon\Carbon::parse($report->updated_at);
-                                                $totalSeconds = intval($createdAt->diffInSeconds($resolvedAt));
-
-                                                if ($totalSeconds < 60) {
-                                                    echo $totalSeconds . ' seconds';
-                                                } elseif ($totalSeconds < 3600) {
-                                                    echo floor($totalSeconds / 60) . ' minutes';
-                                                } else {
-                                                    $hours = floor($totalSeconds / 3600);
-                                                    $minutes = floor(($totalSeconds % 3600) / 60);
-                                                    echo $hours .
-                                                        ' hours ' .
-                                                        ($minutes > 0 ? $minutes . ' minutes' : '');
-                                                }
-                                            @endphp
+                                            <span class="block sm:inline text-xs dark:text-gray-400">
+                                                {{ __('Resolved') }}
+                                                {{ $report->updated_at->diffForHumans($report->created_at) }}
+                                            </span>
                                         @endif
                                     </p>
                                 </div>
