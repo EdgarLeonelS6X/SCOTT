@@ -21,6 +21,7 @@
                     'name' => $c->name,
                     'image' => $c->image,
                     'url' => $c->url,
+                    'multicast' => $channelMulticasts[$c->number] ?? null,
                 ])),
                 get filteredChannels() {
                     if (this.search === '') return this.channels;
@@ -76,8 +77,8 @@
                             </div>
                         </div>
                         <div class="flex items-center">
-                            <button type="button" x-show="selectedChannel && selectedChannel.url"
-                                @click="window.downloadM3U(selectedChannel.url, selectedChannel.number, selectedChannel.name)"
+                            <button type="button" x-show="selectedChannel && selectedChannel.multicast"
+                                @click="window.downloadM3U(selectedChannel.multicast, selectedChannel.number, selectedChannel.name)"
                                 class="flex justify-center items-center text-white bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 focus:ring-2 focus:outline-none focus:ring-primary-300 dark:focus:ring-primary-800 font-semibold rounded-md text-sm px-3 h-10 shadow transition">
                                 <i class="fa-solid fa-video mr-2"></i>
                                 {{ __('Multicast') }}
@@ -116,9 +117,10 @@
 </div>
 
 <script>
-    window.downloadM3U = function (url, number, name) {
-        if (!url) return;
-        const m3u = "#EXTM3U\n#EXTINF:-1," + (number ? number + ' ' : '') + (name ?? 'Canal') + "\n" + url + "\n";
+    window.downloadM3U = function (multicast, number, name) {
+        if (!multicast) return;
+        const udpUrl = 'udp://@' + multicast;
+        const m3u = "#EXTM3U\n#EXTINF:-1," + (number ? number + ' ' : '') + (name ?? 'Canal') + "\n" + udpUrl + "\n";
         let cleanName = (number ? number + '_' : '') + (name ? name : 'canal');
         cleanName = cleanName.replace(/[^a-zA-Z0-9-_]/g, '_');
         const filename = cleanName + '.m3u';

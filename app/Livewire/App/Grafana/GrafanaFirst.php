@@ -16,10 +16,35 @@ class GrafanaFirst extends Component
     public $absoluteTo   = null;
     public $theme = 'dark';
     public $iframeRefreshKey = 0;
+    public $channelPanelIds = [];
+    public $channelMulticasts = [];
 
     public function mount()
     {
-        $this->channels = Channel::orderBy('number', 'asc')->get();
+        $apiUrl = 'http://172.16.100.38:5000/channels';
+        $numbers = [];
+        $panelIds = [];
+        $multicasts = [];
+        try {
+            $response = @file_get_contents($apiUrl);
+            if ($response !== false) {
+                $json = json_decode($response, true);
+                if (is_array($json)) {
+                    foreach ($json as $item) {
+                        $num = (string)($item['number'] ?? '');
+                        if ($num !== '') {
+                            $numbers[] = $num;
+                            $panelIds[$num] = $item['id'] ?? null;
+                            $multicasts[$num] = $item['multicast'] ?? null;
+                        }
+                    }
+                }
+            }
+        } catch (\Throwable $e) {}
+
+        $this->channels = Channel::whereIn('number', $numbers)->orderBy('number', 'asc')->get();
+        $this->channelPanelIds = $panelIds;
+        $this->channelMulticasts = $multicasts;
     }
 
     #[On('setTheme')]
@@ -40,12 +65,20 @@ class GrafanaFirst extends Component
 
         [$from, $to] = $this->resolveTimeParams();
 
+        $panelId = 1;
+        if ($this->selectedChannel) {
+            $channel = $this->channels->firstWhere('id', $this->selectedChannel);
+            if ($channel && isset($this->channelPanelIds[$channel->number])) {
+                $panelId = $this->channelPanelIds[$channel->number];
+            }
+        }
+
         $params = [
             "orgId"     => 1,
             "timezone"  => "browser",
             "refresh"   => "5s",
             "theme"     => $this->theme,
-            "panelId"   => 1,
+            "panelId"   => $panelId,
             "from"      => $from,
             "to"        => $to,
             "__feature.dashboardSceneSolo" => "true",
@@ -55,7 +88,7 @@ class GrafanaFirst extends Component
             $params["var-canal"] = $this->selectedChannel;
         }
 
-        $params["_k"] = substr(md5(json_encode([$from, $to, $this->selectedChannel])), 0, 10);
+        $params["_k"] = substr(md5(json_encode([$from, $to, $this->selectedChannel, $panelId])), 0, 10);
 
         return $base . "?" . http_build_query($params);
     }
