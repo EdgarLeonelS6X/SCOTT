@@ -7,7 +7,7 @@ use App\Enums\ChannelIssues;
 <div>
     <form wire:submit.prevent="saveReport" class="space-y-5">
         <div
-            x-data="{ open: false, editingTitle: false, firstEdit: true, reportTitle: @entangle('reportData.title').defer || '' }">
+            x-data="{ open: true, editingTitle: false, firstEdit: true, reportTitle: @entangle('reportData.title').defer || '' }">
             <div class="p-4 md:p-6 border bg-white dark:bg-gray-800 rounded-2xl shadow-2xl">
                 <div class="flex flex-wrap items-center justify-between cursor-pointer"
                     @click="if (!editingTitle) open = !open">
@@ -33,7 +33,7 @@ use App\Enums\ChannelIssues;
                         :class="(reportTitle.length > 8 || editingTitle) ? 'mt-4 sm:mt-0' : 'mt-0'">
                         <span class="bg-primary-100 text-primary-800 text-sm font-medium py-1 px-3 rounded-full">
                             {{ __('Contains') }} {{ count($reportData['channels']) }}
-                            {{ count($reportData['channels']) === 1 ? __('channel') : __('channels') }}
+                            {{ count($reportData['channels']) === 1 ? __('Channel') : __('Channels') }}
                         </span>
                     </div>
                 </div>
@@ -110,14 +110,14 @@ use App\Enums\ChannelIssues;
 
                                     <template x-if="selectedChannelProfiles">
                                         <div class="flex gap-2 text-xs mb-3 ml-1">
-                                            <span class="px-2 py-0.5 rounded-full bg-green-300 text-green-700">
-                                                HIGH: <span x-text="selectedChannelProfiles.high ?? '-'"></span>
+                                            <span class="px-2 py-0.5 rounded-lg bg-green-300 text-green-700">
+                                                {{ __('High:') }} <span x-text="selectedChannelProfiles.high ?? '-'"></span>
                                             </span>
-                                            <span class="px-2 py-0.5 rounded-full bg-yellow-300 text-yellow-700">
-                                                MEDIUM: <span x-text="selectedChannelProfiles.medium ?? '-'"></span>
+                                            <span class="px-2 py-0.5 rounded-lg bg-yellow-300 text-yellow-700">
+                                                {{ __('Medium:') }} <span x-text="selectedChannelProfiles.medium ?? '-'"></span>
                                             </span>
-                                            <span class="px-2 py-0.5 rounded-full bg-red-300 text-red-700">
-                                                LOW: <span x-text="selectedChannelProfiles.low ?? '-'"></span>
+                                            <span class="px-2 py-0.5 rounded-lg bg-red-300 text-red-700">
+                                                {{ __('Low:') }} <span x-text="selectedChannelProfiles.low ?? '-'"></span>
                                             </span>
                                         </div>
                                     </template>
@@ -145,17 +145,17 @@ use App\Enums\ChannelIssues;
                                                         </div>
                                                         <div class="flex gap-2 mt-1 text-xs">
                                                             <span
-                                                                class="px-2 py-0.5 rounded-full bg-green-300 text-green-700 dark:bg-green-800 dark:text-green-200">
-                                                                High: <span x-text="channel.profiles?.high ?? '-'"></span>
+                                                                class="px-2 py-0.5 rounded-lg bg-green-300 text-green-700 dark:bg-green-800 dark:text-green-200">
+                                                                {{ __('High:') }} <span x-text="channel.profiles?.high ?? '-'"></span>
                                                             </span>
                                                             <span
-                                                                class="px-2 py-0.5 rounded-full bg-yellow-300 text-yellow-700 dark:bg-yellow-800 dark:text-yellow-200">
-                                                                Medium: <span
+                                                                class="px-2 py-0.5 rounded-lg bg-yellow-300 text-yellow-700 dark:bg-yellow-800 dark:text-yellow-200">
+                                                                {{ __('Medium:') }} <span
                                                                     x-text="channel.profiles?.medium ?? '-'"></span>
                                                             </span>
                                                             <span
-                                                                class="px-2 py-0.5 rounded-full bg-red-300 text-red-700 dark:bg-red-800 dark:text-red-200">
-                                                                Low: <span x-text="channel.profiles?.low ?? '-'"></span>
+                                                                class="px-2 py-0.5 rounded-lg bg-red-300 text-red-700 dark:bg-red-800 dark:text-red-200">
+                                                                {{ __('Low:') }} <span x-text="channel.profiles?.low ?? '-'"></span>
                                                             </span>
                                                         </div>
                                                     </li>
@@ -170,7 +170,7 @@ use App\Enums\ChannelIssues;
                                 </div>
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                                        <i class="fa-solid fa-gear mr-1.5"></i>
+                                        <i class="fa-solid fa-arrow-up mr-1.5"></i>
                                         {{ __('High') }} (10 Mbps)
                                     </label>
                                     <select wire:model="reportData.channels.{{ $index }}.high"
@@ -183,7 +183,7 @@ use App\Enums\ChannelIssues;
                                 </div>
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                                        <i class="fa-solid fa-gear mr-1.5"></i>
+                                        <i class="fa-solid fa-arrows-up-down mr-1.5"></i>
                                         {{ __('Medium') }} (2.5 - 3.5 Mbps)
                                     </label>
                                     <select wire:model="reportData.channels.{{ $index }}.medium"
@@ -198,7 +198,7 @@ use App\Enums\ChannelIssues;
                                 </div>
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                                        <i class="fa-solid fa-gear mr-1.5"></i>
+                                        <i class="fa-solid fa-arrow-down mr-1.5"></i>
                                         {{ __('Low') }} (1.5 - 2.5 Mbps)
                                     </label>
                                     <select wire:model="reportData.channels.{{ $index }}.low"

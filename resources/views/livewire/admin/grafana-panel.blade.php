@@ -120,6 +120,10 @@
                 loading="lazy" referrerpolicy="no-referrer"
                 class="w-full rounded-xl border shadow-inner transition-all duration-200">
             </iframe>
+
+            <div class="text-xs text-gray-500 mt-4">
+                {{ __('Current URL:') }} <code class="break-all">{{ $this->grafanaUrl }}</code>
+            </div>
         </div>
     </div>
 </div>
@@ -159,7 +163,7 @@
     });
     document.addEventListener('DOMContentLoaded', syncGrafanaThemeToLivewire);
 
-    document.addEventListener('click', function(e) {
+    document.addEventListener('click', function (e) {
         if (e.target.closest('#theme-toggle')) {
             setTimeout(syncGrafanaThemeToLivewire, 100);
         }

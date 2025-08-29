@@ -101,7 +101,7 @@
                     <button wire:click="sendResetPasswordEmail" class="inline-flex items-center gap-2 px-3 py-1 text-xs font-medium rounded-full
                        bg-primary-50 text-primary-700 hover:bg-primary-100 dark:bg-primary-900 dark:text-primary-200">
                         <i class="fa-solid fa-envelope-circle-check" aria-hidden="true"></i>
-                        <span>{{ __('Send reset email') }}</span>
+                        <span>{{ __('Reset password') }}</span>
                     </button>
                 @endif
             </div>

@@ -2,15 +2,12 @@
 
 namespace App\Livewire\App\Reports\Create;
 
-use App\Mail\Reports\ReportCreatedMail;
 use App\Models\ChannelTest;
 use Livewire\Component;
 use App\Models\Report;
 use App\Models\Channel;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
-use Illuminate\Support\Facades\Mail;
-use App\Models\User;
 
 class CreateProfileReport extends Component
 {
@@ -21,7 +18,7 @@ class CreateProfileReport extends Component
         $this->reportData = [
             'title' => '',
             'reviewed_by' => '',
-            'channels' => [$this->initializeChannel()],
+            'channels' => [],
         ];
     }
 

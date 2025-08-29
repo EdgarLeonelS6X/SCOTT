@@ -58,7 +58,7 @@
             <div class="relative w-full max-w-7xl max-h-full">
                 <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
                     <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
-                        <h3 class="text-xl font-medium text-gray-900 dark:text-white">
+                        <h3 class="text-xl font-medium text-gray-900 dark:text-white truncate">
                             <i class="fas fa-forward mr-2 text-blue-600"></i>
                             {{ __('Main functions report') }}
                         </h3>
@@ -84,7 +84,7 @@
             <div class="relative w-full max-w-7xl max-h-full">
                 <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
                     <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
-                        <h3 class="text-xl font-medium text-gray-900 dark:text-white">
+                        <h3 class="text-xl font-medium text-gray-900 dark:text-white truncate">
                             <i class="fa-brands fa-chromecast mr-2 text-indigo-600"></i>
                             {{ __('Chromecast Feature Report') }}
                         </h3>
@@ -110,7 +110,7 @@
             <div class="relative w-full max-w-7xl max-h-full">
                 <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
                     <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
-                        <h3 class="text-xl font-medium text-gray-900 dark:text-white">
+                        <h3 class="text-xl font-medium text-gray-900 dark:text-white truncate">
                             <i class="fas fa-wifi mr-2 text-yellow-600"></i>
                             {{ __('Video profile test based on internet bandwidth') }}
                         </h3>

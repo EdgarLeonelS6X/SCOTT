@@ -576,11 +576,13 @@
     "Reset your password": "Restablece tu contraseña",
     "Reset password": "Restablecer contraseña",
     "Email not verified": "Correo no verificado",
-    "Send reset email": "Enviar correo de restablecimiento",
     "No issues reported in this category": "No se han reportado problemas en esta categoría",
     "No issues reported for Chromecast.": "No se han reportado problemas para Chromecast.",
     "View content loss intervals": "Ver intervalos de pérdida de contenido",
     "Click here to edit the category name": "Haga clic aquí para editar el nombre de la categoría",
     "Your report update contains errors:": "Tu actualización de informe contiene errores:",
-    "Last updated": "Última actualización"
+    "Last updated": "Última actualización",
+    "High:": "Alto:",
+    "Medium:": "Medio:",
+    "Low:": "Bajo:"
 }

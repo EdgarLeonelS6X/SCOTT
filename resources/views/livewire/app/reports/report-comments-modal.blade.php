@@ -1,11 +1,11 @@
-<div class="w-full max-w-full md:w-[500px] h-[60vh] md:h-[70vh] flex flex-col bg-white dark:bg-gray-900 rounded-xl shadow-xl"
+<div class="w-full max-w-full md:w-[500px] h-[60vh] md:h-[70vh] min-h-[300px] flex flex-col bg-white dark:bg-gray-900 rounded-xl shadow-xl mt-4 md:mt-0 mb-4 ml-0.5"
     wire:ignore.self>
-    <div class="p-4 border-b border-gray-200 dark:border-gray-700 flex items-center gap-2">
+    <div class="p-4 border-b border-gray-200 dark:border-gray-700 flex justify-start justify-center items-center gap-2">
         <i class="fa-regular fa-comments text-gray-800 dark:text-gray-100 text-2xl"></i>
         <h3 class="text-lg font-semibold text-gray-900 dark:text-white leading-tight">{{ __('Comments') }}</h3>
     </div>
 
-    <div id="chat-container" class="flex-1 overflow-y-hidden px-2 py-2 space-y-2 flex flex-col"
+    <div id="chat-container" class="flex-1 overflow-y-auto px-2 py-2 space-y-2 flex flex-col min-h-[150px] h-full"
         style="scroll-behavior: smooth;">
         @forelse ($comments as $comment)
             @php
