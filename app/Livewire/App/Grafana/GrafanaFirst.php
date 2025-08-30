@@ -42,9 +42,14 @@ class GrafanaFirst extends Component
             }
         } catch (\Throwable $e) {}
 
-        $this->channels = Channel::whereIn('number', $numbers)->orderBy('number', 'asc')->get();
+        $this->channels = Channel::whereIn('number', $numbers)->orderByRaw('CAST(number AS UNSIGNED) ASC')->get();
         $this->channelPanelIds = $panelIds;
         $this->channelMulticasts = $multicasts;
+
+        if ($this->channels->isNotEmpty()) {
+            $default = $this->channels->firstWhere('number', '101') ?? $this->channels->first();
+            $this->selectedChannel = $default->id;
+        }
     }
 
     #[On('setTheme')]

@@ -1,9 +1,9 @@
-<div class="max-w-6xl mx-auto">
+<div class="w-full mx-auto">
     <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl overflow-hidden">
         <div class="flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-gray-700">
             <h2 class="text-xl font-bold text-gray-800 dark:text-gray-200 flex items-center gap-2">
-                <i class="fa-solid fa-satellite-dish text-primary-600"></i>
-                {{ __('Monitoring panel') }}
+                <i class="fa-solid fa-diagram-project text-primary-600"></i>
+                {{ __('Multicast Downlink DTH') }}
             </h2>
             <span class="text-xs text-gray-400 dark:text-gray-500 md:block hidden">
                 {{ __('Auto-refresh 5s') }}
@@ -21,6 +21,7 @@
                 'name' => $c->name,
                 'image' => $c->image,
                 'url' => $c->url,
+                'multicast' => $channelMulticasts[$c->number] ?? null,
             ])),
             get filteredChannels() {
                 if (this.search === '') return this.channels;
@@ -40,11 +41,17 @@
                 this.$nextTick(() => {
                     if (this.$wire.selectedChannel) {
                         const found = this.channels.find(c => c.id == this.$wire.selectedChannel);
-                        if (found) this.selectedChannel = found;
+                        if (found) {
+                            this.selectedChannel = found;
+                            this.search = found.number + ' ' + found.name;
+                        }
                     }
                     this.$watch('$wire.selectedChannel', (id) => {
                         const found = this.channels.find(c => c.id == id);
                         this.selectedChannel = found || undefined;
+                        if (found) {
+                            this.search = found.number + ' ' + found.name;
+                        }
                     });
                 });
             }
@@ -81,8 +88,8 @@
                     </div>
 
                     <div class="flex items-center">
-                        <button type="button" x-show="selectedChannel && selectedChannel.url"
-                            @click="window.downloadM3U(selectedChannel.url, selectedChannel.number, selectedChannel.name)"
+                        <button type="button" x-show="selectedChannel && selectedChannel.multicast"
+                            @click="window.downloadM3U(selectedChannel.multicast, selectedChannel.number, selectedChannel.name)"
                             class="flex justify-center items-center w-full md:w-auto text-white bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 dark:focus:ring-primary-800 font-semibold rounded-lg text-base px-4 py-3 shadow transition">
                             <i class="fa-solid fa-video mr-2"></i>
                             {{ __('Multicast') }}
@@ -121,17 +128,18 @@
                 class="w-full rounded-xl border shadow-inner transition-all duration-200">
             </iframe>
 
-            <div class="text-xs text-gray-500 mt-4">
+            {{-- <div class="text-xs text-gray-500 mt-4">
                 {{ __('Current URL:') }} <code class="break-all">{{ $this->grafanaUrl }}</code>
-            </div>
+            </div> --}}
         </div>
     </div>
 </div>
 
 <script>
-    window.downloadM3U = function (url, number, name) {
-        if (!url) return;
-        const m3u = "#EXTM3U\n#EXTINF:-1," + (number ? number + ' ' : '') + (name ?? 'Canal') + "\n" + url + "\n";
+    window.downloadM3U = function (multicast, number, name) {
+        if (!multicast) return;
+        const udpUrl = 'udp://@' + multicast;
+        const m3u = "#EXTM3U\n#EXTINF:-1," + (number ? number + ' ' : '') + (name ?? 'Canal') + "\n" + udpUrl + "\n";
         let cleanName = (number ? number + '_' : '') + (name ? name : 'canal');
         cleanName = cleanName.replace(/[^a-zA-Z0-9-_]/g, '_');
         const filename = cleanName + '.m3u';

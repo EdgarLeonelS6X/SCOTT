@@ -41,11 +41,17 @@
                     this.$nextTick(() => {
                         if (this.$wire.selectedChannel) {
                             const found = this.channels.find(c => c.id == this.$wire.selectedChannel);
-                            if (found) this.selectedChannel = found;
+                            if (found) {
+                                this.selectedChannel = found;
+                                this.search = found.number + ' ' + found.name;
+                            }
                         }
                         this.$watch('$wire.selectedChannel', (id) => {
                             const found = this.channels.find(c => c.id == id);
                             this.selectedChannel = found || undefined;
+                            if (found) {
+                                this.search = found.number + ' ' + found.name;
+                            }
                         });
                     });
                 }

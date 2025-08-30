@@ -16,7 +16,7 @@
     </x-slot>
 
     <x-slot name="content">
-        <div class="px-4 py-3 border-b border-gray-100 dark:border-gray-700 dark:bg-gray-700 rounded-t-lg">
+        <div class="px-4 py-3 border-b border-gray-100 dark:border-gray-600 dark:bg-gray-700 rounded-t-lg">
             <div class="text-sm font-semibold text-gray-900 dark:text-white text-center truncate">
                 {{ Auth::user()->name }}
             </div>
@@ -49,7 +49,7 @@
             @endif
         </div>
 
-        <div class="border-t border-gray-100 dark:border-gray-700"></div>
+        <div class="border-t border-gray-100 dark:border-gray-600"></div>
 
         <form method="POST" action="{{ route('logout') }}" x-data>
             @csrf
