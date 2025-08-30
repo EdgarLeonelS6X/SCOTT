@@ -584,5 +584,15 @@
     "Last updated": "Última actualización",
     "High:": "Alto:",
     "Medium:": "Medio:",
-    "Low:": "Bajo:"
+    "Low:": "Bajo:",
+    "Enter the data for the new channel.": "Ingrese los datos para el nuevo canal.",
+    "Drop your image here to upload it...": "Suelta tu imagen aquí para subirla...",
+    "Select status": "Seleccionar estado",
+    "Channel name": "Nombre del canal",
+    "Channel number": "Número del canal",
+    "Channel URL": "URL del canal",
+    "Select category": "Seleccionar categoría",
+    "Select origin": "Seleccionar origen",
+    "Drag and drop an image here or": "Arrastra y suelta una imagen aquí o",
+    "select one": "selecciona una"
 }

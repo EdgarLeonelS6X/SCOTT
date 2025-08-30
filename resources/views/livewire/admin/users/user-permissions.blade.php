@@ -1,4 +1,4 @@
-<div class="w-full max-w-6xl mx-auto bg-white dark:bg-gray-800 shadow-xl rounded-xl p-6">
+<div class="w-full mx-auto bg-white dark:bg-gray-800 shadow-xl rounded-lg p-6">
     <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-6 pb-6">
         <div class="flex flex-col sm:flex-row items-center sm:items-start gap-4 w-full sm:w-auto">
             <img class="h-20 w-20 rounded-full object-cover shadow-md" src="{{ $user->profile_photo_url }}"

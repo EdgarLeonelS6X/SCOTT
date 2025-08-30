@@ -136,7 +136,7 @@ use App\Enums\ChannelOrigin;
                     <div>
                         <x-label for="profile_low" class="text-sm">{{ __('Low') }}</x-label>
                         <x-input id="profile_low" type="number" step="0.1" min="0" wire:model="profiles.low"
-                            placeholder="{{ __('ex. 1.5') }}" required />
+                            placeholder="{{ __('ex. 1.5') }}" />
                     </div>
                 </div>
                 <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">

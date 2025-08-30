@@ -1,7 +1,7 @@
 <div class="bg-white dark:bg-gray-800 relative shadow-2xl rounded-lg overflow-hidden mb-6">
     <div class="flex flex-col gap-4 p-4 bg-white dark:bg-gray-800 md:flex-row md:items-center md:justify-between">
         <div class="w-full md:w-1/3">
-            <form class="relative">
+            <form class="relative" onsubmit="event.preventDefault();">
                 <label for="simple-search" class="sr-only">Search</label>
                 <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
                     <i class="fa-solid fa-magnifying-glass text-gray-400"></i>
@@ -23,6 +23,7 @@
                 maxDate: 'today',
                 onChange: function(selectedDates, dateStr) {
                     let [start, end] = dateStr.split(' to ');
+                    if (!end) end = start;
                     $wire.set('startDate', start);
                     $wire.set('endDate', end);
                 }
