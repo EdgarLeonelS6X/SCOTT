@@ -26,22 +26,29 @@
     themeToggleBtn.addEventListener('click', function () {
         themeToggleDarkIcon.classList.toggle('hidden');
         themeToggleLightIcon.classList.toggle('hidden');
+        let newTheme;
         if (localStorage.getItem('color-theme')) {
             if (localStorage.getItem('color-theme') === 'light') {
                 document.documentElement.classList.add('dark');
                 localStorage.setItem('color-theme', 'dark');
+                newTheme = 'dark';
             } else {
                 document.documentElement.classList.remove('dark');
                 localStorage.setItem('color-theme', 'light');
+                newTheme = 'light';
             }
         } else {
             if (document.documentElement.classList.contains('dark')) {
                 document.documentElement.classList.remove('dark');
                 localStorage.setItem('color-theme', 'light');
+                newTheme = 'light';
             } else {
                 document.documentElement.classList.add('dark');
                 localStorage.setItem('color-theme', 'dark');
+                newTheme = 'dark';
             }
         }
+        // Emitir evento para sincronizar tema de Grafana
+        window.dispatchEvent(new CustomEvent('grafana-theme-changed', { detail: { theme: newTheme } }));
     });
 </script>

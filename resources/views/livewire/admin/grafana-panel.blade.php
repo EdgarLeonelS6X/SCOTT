@@ -122,11 +122,27 @@
             </div>
         </div>
 
-        <div class="bg-gray-50 dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 p-6 shadow-2xl">
+        <div class="bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 p-6 shadow-2xl">
             <iframe wire:key="{{ $this->iframeKey }}" src="{{ $this->grafanaUrl }}" height="500" frameborder="0"
                 loading="lazy" referrerpolicy="no-referrer"
-                class="w-full rounded-xl border shadow-inner transition-all duration-200">
-            </iframe>
+                class="w-full rounded-xl border shadow-inner transition-all duration-200"
+                x-data="{ theme: localStorage.getItem('color-theme') === 'dark' ? 'dark' : 'light' }"
+                x-init="
+                    $watch('theme', value => {
+                        $wire.set('theme', value);
+                    });
+                    window.addEventListener('storage', (e) => {
+                        if (e.key === 'color-theme') {
+                            theme = localStorage.getItem('color-theme') === 'dark' ? 'dark' : 'light';
+                        }
+                    });
+                    window.addEventListener('grafana-theme-changed', (e) => {
+                        theme = e.detail.theme;
+                    });
+                    theme = localStorage.getItem('color-theme') === 'dark' ? 'dark' : 'light';
+                    $wire.set('theme', theme);
+                "
+            ></iframe>
 
             {{-- <div class="text-xs text-gray-500 mt-4">
                 {{ __('Current URL:') }} <code class="break-all">{{ $this->grafanaUrl }}</code>

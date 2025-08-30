@@ -58,7 +58,7 @@
             }" x-init="init()" class="flex flex-col md:flex-row md:items-end gap-1 flex-1">
                 <div class="w-full flex flex-col">
                     <label class="block text-xs font-semibold text-gray-700 dark:text-gray-200 mb-1">
-                        <i class="fa-solid fa-tv mr-1.5"></i>
+                        <i class="fa-solid fa-tv mr-1.5 mb-2"></i>
                         {{ __('Select channel') }}
                     </label>
                     <div class="flex flex-row gap-2">
@@ -95,7 +95,7 @@
             </div>
             <div class="w-full md:basis-1/3 flex flex-col">
                 <label class="block text-xs font-semibold text-gray-700 dark:text-gray-200 mb-1">
-                    <i class="fa-solid fa-clock mr-1.5"></i>
+                    <i class="fa-solid fa-clock mr-1.5 mb-2"></i>
                     {{ __('Select time range') }}
                 </label>
                 <select wire:model.live="preset"
@@ -116,8 +116,24 @@
         <div class="bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 p-6 shadow-2xl">
             <iframe wire:key="{{ $this->iframeKey }}" src="{{ $this->grafanaUrl }}" height="220" frameborder="0"
                 loading="lazy" referrerpolicy="no-referrer"
-                class="w-full rounded-xl border shadow-inner transition-all duration-200">
-            </iframe>
+                class="w-full rounded-xl border shadow-inner transition-all duration-200"
+                x-data="{ theme: localStorage.getItem('color-theme') === 'dark' ? 'dark' : 'light' }"
+                x-init="
+                    $watch('theme', value => {
+                        $wire.set('theme', value);
+                    });
+                    window.addEventListener('storage', (e) => {
+                        if (e.key === 'color-theme') {
+                            theme = localStorage.getItem('color-theme') === 'dark' ? 'dark' : 'light';
+                        }
+                    });
+                    window.addEventListener('grafana-theme-changed', (e) => {
+                        theme = e.detail.theme;
+                    });
+                    theme = localStorage.getItem('color-theme') === 'dark' ? 'dark' : 'light';
+                    $wire.set('theme', theme);
+                "
+            ></iframe>
         </div>
     </div>
 </div>

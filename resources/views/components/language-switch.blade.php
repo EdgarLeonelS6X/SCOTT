@@ -10,9 +10,9 @@
         @endif
 
         <select id="locale" name="locale" onchange="this.form.submit()"
-            class="appearance-none bg-transparent border-0 pl-2 pr-6 text-sm font-semibold text-gray-700 dark:text-gray-200 focus:outline-none cursor-pointer min-w-[70px]">
-            <option value="en" @selected(app()->getLocale() === 'en')>{{ __('English') }}</option>
-            <option value="es" @selected(app()->getLocale() === 'es')>{{ __('Español') }}</option>
+            class="appearance-none bg-transparent border-0 pl-2 pr-6 text-sm font-semibold text-gray-700 dark:text-gray-100 focus:outline-none cursor-pointer min-w-[70px] focus:ring-0 focus:border-0">
+            <option value="en" @selected(app()->getLocale() === 'en') style="color:#1f2937;" class="dark:text-gray-100">{{ __('English') }}</option>
+            <option value="es" @selected(app()->getLocale() === 'es') style="color:#1f2937;" class="dark:text-gray-100">{{ __('Español') }}</option>
         </select>
     </div>
 </form>
