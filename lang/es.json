@@ -594,5 +594,9 @@
     "Select category": "Seleccionar categoría",
     "Select origin": "Seleccionar origen",
     "Drag and drop an image here or": "Arrastra y suelta una imagen aquí o",
-    "select one": "selecciona una"
+    "select one": "selecciona una",
+    "It was reported today at ": "Se reportó hoy a las ",
+    "It was reported yesterday at ": "Se reportó ayer a las ",
+    "It was reported ": "Se reportó ",
+    "It was reported ago": "Se reportó hace"
 }

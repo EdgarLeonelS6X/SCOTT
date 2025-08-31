@@ -50,7 +50,7 @@
                             </th>
                             <th wire:click="toggleOrder"
                                 class="py-3 px-4 text-left flex items-center cursor-pointer whitespace-nowrap">
-                                <i class="fa-solid fa-calendar mr-1"></i> {{ __('Reported') }}
+                                <i class="fa-solid fa-calendar mr-1"></i> {{ __('It was reported ago') }}
                                 <i class="fa-solid {{ $order === 'asc' ? 'fa-sort-up' : 'fa-sort-down' }} ml-1"></i>
                             </th>
                             <th class="px-4 py-3 text-center">

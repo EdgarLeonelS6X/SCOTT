@@ -144,10 +144,8 @@
         </div>
     </div>
     @else
-    <div class="w-full mt-4 px-3 mb-4">
-        <div class="w-full">
-            @livewire('app.grafana.grafana-first')
-        </div>
+    <div class="w-full mt-4 px-0 mb-4">
+        @livewire('app.grafana.grafana-first')
     </div>
     @endrole
 
