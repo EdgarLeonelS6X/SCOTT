@@ -76,7 +76,7 @@
         <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
             <thead class="text-xs dark:text-white uppercase dark:bg-gray-600 shadow-2xl">
                 <tr>
-                    <th class="py-3 px-2 text-left whitespace-nowrap">
+                    <th class="py-3 px-4 pl-2 sm:pl-4 text-left whitespace-nowrap">
                         <i class="fa-solid fa-flag mr-1"></i>
                         {{ __('Folio') }}
                     </th>

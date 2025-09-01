@@ -21,6 +21,16 @@
                         {{ __('Folio') }} #{{ $selectedReport->id }}
                     </span>
                 </div>
+                <div class="flex items-center hidden md:block">
+                    <a href="{{ route('reports.show', ['report' => $selectedReport->id]) }}"
+                        class="inline-flex items-center px-2 py-1 text-xs font-semibold rounded-lg bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-200 hover:bg-blue-200 dark:hover:bg-blue-800 border border-blue-200 dark:border-blue-700 mx-2 transition">
+                        <i class="fa-solid fa-eye mr-1"></i> {{ __('Show') }}
+                    </a>
+                    <a href="{{ route('reports.edit', ['report' => $selectedReport->id]) }}"
+                        class="inline-flex items-center px-2 py-1 text-xs font-semibold rounded-lg bg-primary-100 dark:bg-primary-900 text-primary-700 dark:text-primary-200 hover:bg-primary-200 dark:hover:bg-primary-800 border border-primary-200 dark:border-primary-700 ml-1 transition">
+                        <i class="fa-solid fa-pen-to-square mr-1"></i> {{ __('Edit') }}
+                    </a>
+                </div>
             </div>
         </div>
         <button wire:click="closeReportDetails"
@@ -28,6 +38,18 @@
             <i class="fa-solid fa-xmark text-xl"></i>
         </button>
     </div>
+
+    <div class="flex flex-col gap-4 md:hidden sm:block">
+        <a href="{{ route('reports.show', ['report' => $selectedReport->id]) }}"
+            class="inline-flex justify-center items-center px-2 py-2 text-xs text-center font-semibold rounded-lg bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-200 hover:bg-blue-200 dark:hover:bg-blue-800 border border-blue-200 dark:border-blue-700 transition">
+            <i class="fa-solid fa-eye mr-1"></i> {{ __('Show') }}
+        </a>
+        <a href="{{ route('reports.edit', ['report' => $selectedReport->id]) }}"
+            class="inline-flex justify-center items-center px-2 py-2 text-xs text-center font-semibold rounded-lg bg-primary-100 dark:bg-primary-900 text-primary-700 dark:text-primary-200 hover:bg-primary-200 dark:hover:bg-primary-800 border border-primary-200 dark:border-primary-700 mb-6 transition">
+            <i class="fa-solid fa-pen-to-square mr-1"></i> {{ __('Edit') }}
+        </a>
+    </div>
+
     <div
         class="p-4 sm:p-5 rounded-xl shadow-md transition-transform hover:scale-[1.02]
                                 bg-gradient-to-br from-pink-500 via-orange-400 to-red-500
@@ -200,7 +222,7 @@
                 {{ __('Mark as solved') }}
             </button>
             <button wire:click="closeReportDetails"
-                class="flex justify-center items-center gap-2 py-2 px-4 text-base font-bold text-gray-700 bg-white rounded-lg border border-gray-400 hover:border-primary-600 hover:text-primary-600 focus:ring-4 focus:ring-primary-200 dark:text-gray-300 dark:bg-gray-800 dark:border-gray-600 dark:hover:text-primary-400 dark:hover:bg-gray-700 w-full sm:w-auto max-w-full min-w-0">
+                class="flex justify-center items-center gap-2 py-2 px-4 text-base font-bold text-gray-700 bg-white rounded-lg border border-gray-400 hover:border-primary-600 hover:text-primary-600  dark:text-gray-300 dark:bg-gray-800 dark:border-gray-600 dark:hover:text-primary-400 dark:hover:bg-gray-700 w-full sm:w-auto max-w-full min-w-0">
                 <i class="fa-solid fa-xmark"></i>
                 {{ __('Discard') }}
             </button>
