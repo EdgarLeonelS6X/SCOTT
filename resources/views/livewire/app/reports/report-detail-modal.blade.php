@@ -115,7 +115,7 @@
             </div>
         </div>
     </div>
-    <div class="mt-6 flex flex-col flex-1 overflow-hidden">
+    <div class="mt-5 flex flex-col flex-1 overflow-hidden">
         <div class="flex flex-wrap items-center gap-2">
             <i class="fa-solid fa-layer-group text-xl text-gray-800 dark:text-white mr-3"></i>
             <span class="text-lg font-semibold text-gray-800 dark:text-white mr-1.5">
@@ -126,7 +126,7 @@
                 {{ isset($selectedReport) && $selectedReport->reportDetails->count() === 1 ? __('Channel') : __('Channels') }}
             </span>
         </div>
-        <div class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4 sm:gap-6 p-2 mt-4 flex-1 min-h-0 z-0"
+        <div class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4 sm:gap-6 p-2 mt-3 flex-1 min-h-0 z-0"
             style="scrollbar-width: none; max-height: 24rem; overflow-y: auto;">
             @if (isset($selectedReport) && $selectedReport)
                 @foreach ($selectedReport->reportDetails->sortBy(fn($detail) => $detail->channel->number) as $detail)
