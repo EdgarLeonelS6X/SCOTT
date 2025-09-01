@@ -135,16 +135,16 @@
     </div>
 
     @role('master|admin')
-    <div class="w-full mt-4 flex flex-col md:flex-row gap-6 px-3 mb-4">
+    <div class="w-full mt-4 flex flex-col md:flex-row gap-4 px-3 mb-4">
         <div class="flex-1">
             @livewire('app.grafana.grafana-first')
         </div>
-        <div class="flex-1 mx-3">
+        <div class="flex-1">
             @livewire('app.grafana.grafana-second')
         </div>
     </div>
     @else
-    <div class="w-full mt-4 px-0 mb-4">
+    <div class="w-full mt-4 px-3 mb-4">
         @livewire('app.grafana.grafana-first')
     </div>
     @endrole
