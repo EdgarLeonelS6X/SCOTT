@@ -10,7 +10,6 @@ use App\Models\Channel;
 use Livewire\Component;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 
 class EditMomentlyReport extends Component

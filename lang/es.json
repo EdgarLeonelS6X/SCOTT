@@ -598,5 +598,15 @@
     "It was reported today at ": "Se reportó hoy a las ",
     "It was reported yesterday at ": "Se reportó ayer a las ",
     "It was reported ": "Se reportó ",
-    "It was reported ago": "Se reportó hace"
+    "It was reported ago": "Se reportó hace",
+    "These channels are already in revision: ": "Estos canales ya están en revisión: ",
+    "The momentary report was successfully updated.": "El reporte momentáneo se actualizó correctamente.",
+    "Updated!": "¡Actualizado!",
+    "Access denied": "Acceso denegado",
+    "Oops! You don't have permission to access this page.": "Oops! No tienes permiso para acceder a esta página.",
+    "Go to Home": "Ir a Inicio",
+    "Server error": "Error del servidor",
+    "Something went wrong on our end. We're working to fix it!": "¡Algo salió mal de nuestro lado. Estamos trabajando para solucionarlo!",
+    "Page not found": "Página no encontrada",
+    "The page you're looking for doesn't exist or has been moved.": "La página que estás buscando no existe o ha sido movida."
 }

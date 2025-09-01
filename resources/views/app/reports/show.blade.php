@@ -49,10 +49,7 @@
                             <span class="text-sm font-medium text-gray-600 dark:text-gray-300">
                                 {{ __('Folio') }} #{{ $report->id }}
                             </span>
-                            @if (
-                                $report->status === 'Revision' &&
-                                    $report->reported_by == auth()->id() &&
-                                    $report->id == auth()->user()->lastReport?->id)
+                            @if ($report->type === 'Momentary' && $report->status === 'Revision')
                                 <a href="{{ route('reports.edit', ['report' => $report->id]) }}"
                                     class="hidden md:block items-center gap-1 px-2 py-1 text-xs font-medium rounded-lg bg-primary-50 dark:bg-primary-900 text-primary-600 dark:text-primary-300 hover:bg-primary-100 dark:hover:bg-primary-800">
                                     <i class="fa-solid fa-pencil-alt text-xs"></i>
@@ -62,10 +59,7 @@
                         </div>
                     </div>
                 </div>
-                @if (
-                    $report->status === 'Revision' &&
-                        $report->reported_by == auth()->id() &&
-                        $report->id == auth()->user()->lastReport?->id)
+                @if ($report->type === 'Momentary' && $report->status === 'Revision')
                     <a href="{{ route('reports.edit', ['report' => $report->id]) }}"
                         class="md:hidden sm:block inline-flex items-center gap-2 px-4 py-2 bg-primary-100 dark:bg-primary-700 text-primary-700 dark:text-primary-300 rounded-lg border border-primary-300 dark:border-primary-600 hover:bg-primary-200 dark:hover:bg-primary-600 shadow-2xl w-full sm:w-auto justify-center sm:justify-start">
                         <i class="fa-solid fa-pencil-alt text-xs"></i>
