@@ -92,9 +92,6 @@
                                     <small>
                                         ({{ __('Last updated') }}: {{ $report->updated_at->diffForHumans() }})
                                     </small>
-                                @else
-                                    <br>
-                                    <small>({{ __('Not updated yet') }})</small>
                                 @endif
                             </p>
                         </div>

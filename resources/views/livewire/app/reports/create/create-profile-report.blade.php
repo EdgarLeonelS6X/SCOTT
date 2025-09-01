@@ -1,9 +1,3 @@
-<?php
-
-use App\Enums\ChannelIssues;
-
-?>
-
 <div>
     <form wire:submit.prevent="saveReport" class="space-y-5">
         <div
@@ -16,17 +10,17 @@ use App\Enums\ChannelIssues;
                             <i :class="open ? 'fas fa-chevron-down' : 'fas fa-chevron-right'"></i>
                         </button>
                         <div class="dark:text-white text-lg font-semibold relative min-w-0">
-                            <h3 title="Click to edit the title" x-show="!editingTitle"
+                            <h3 title="{{ __('Click here to edit the report title') }}" x-show="!editingTitle"
                                 @click.stop="editingTitle = true; if (firstEdit) { reportTitle = ''; firstEdit = false; }"
                                 class="cursor-pointer px-3 py-2 rounded-full shadow-md flex items-center gap-2 transition bg-gray-50 border dark:bg-gray-700 dark:border-white truncate max-w-[280px] md:max-w-md">
                                 <i class="fa-solid fa-pen text-gray-800 dark:text-gray-200">...</i>
                                 <span class="truncate" x-text="reportTitle"></span>
                             </h3>
-                            <input x-show="editingTitle" x-model="reportTitle" @click.stop
+                            <x-input x-show="editingTitle" x-model="reportTitle" @click.stop
                                 @click.away="editingTitle = false; if (reportTitle.trim() === '') { reportTitle = ''; } $wire.set('reportData.title', reportTitle);"
                                 @keydown.enter.prevent="editingTitle = false; if (reportTitle.trim() === '') { reportTitle = ''; } $wire.set('reportData.title', reportTitle);"
-                                placeholder="Title" autofocus
-                                class="max-w-[240px] md:max-w-md truncate border rounded p-2" />
+                                placeholder="{{ __('Report title') }}" autofocus
+                                class="max-w-[240px] md:max-w-md truncate" />
                         </div>
                     </div>
                     <div class="flex items-center gap-3 transition-all duration-300"
