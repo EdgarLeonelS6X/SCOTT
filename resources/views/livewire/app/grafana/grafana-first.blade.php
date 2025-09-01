@@ -1,4 +1,4 @@
-<div class="w-full px-3 mx-auto">
+<div class="w-full mx-auto">
     <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl overflow-hidden">
         <div class="flex items-center justify-between px-4 py-4 border-b border-gray-200 dark:border-gray-700">
             <h2 class="text-xl font-bold text-gray-800 dark:text-gray-200 flex items-center gap-2">
