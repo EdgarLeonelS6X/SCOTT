@@ -621,5 +621,8 @@
     "Long loading time": "Largo tiempo de carga",
     "No content shown": "No se mostró contenido",
     "Click here to edit the report title": "Haga clic aquí para editar el título del reporte",
-    "Report title": "Título del reporte"
+    "Report title": "Título del reporte",
+    "High": "Alto",
+    "Medium": "Medio",
+    "Low": "Bajo"
 }
