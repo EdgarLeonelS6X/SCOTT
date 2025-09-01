@@ -139,7 +139,7 @@
         <div class="flex-1">
             @livewire('app.grafana.grafana-first')
         </div>
-        <div class="flex-1 px-3">
+        <div class="flex-1 mx-3">
             @livewire('app.grafana.grafana-second')
         </div>
     </div>
