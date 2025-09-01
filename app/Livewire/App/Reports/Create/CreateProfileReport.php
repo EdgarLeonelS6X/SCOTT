@@ -15,10 +15,17 @@ class CreateProfileReport extends Component
 
     public function mount()
     {
+        $preloadNumbers = [101, 102, 103, 105, 107, 154, 255, 302, 451, 501, 508];
+        $preloadChannels = Channel::whereIn('number', $preloadNumbers)->pluck('id')->toArray();
+
         $this->reportData = [
             'title' => '',
             'reviewed_by' => '',
-            'channels' => [],
+            'channels' => array_map(function($channelId) {
+                $channel = $this->initializeChannel();
+                $channel['channel_id'] = $channelId;
+                return $channel;
+            }, $preloadChannels),
         ];
     }
 
@@ -37,9 +44,9 @@ class CreateProfileReport extends Component
     {
         return [
             'channel_id' => '',
-            'high' => '',
-            'medium' => '',
-            'low' => '',
+            'high' => \App\Enums\ChannelIssues::CORRECT->value,
+            'medium' => \App\Enums\ChannelIssues::CORRECT->value,
+            'low' => \App\Enums\ChannelIssues::CORRECT->value,
             'profiles' => [
                 ['name' => 'HIGH', 'value' => ''],
                 ['name' => 'MEDIUM', 'value' => ''],

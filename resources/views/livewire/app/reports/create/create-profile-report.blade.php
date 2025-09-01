@@ -111,13 +111,13 @@ use App\Enums\ChannelIssues;
                                     <template x-if="selectedChannelProfiles">
                                         <div class="flex gap-2 text-xs mb-3 ml-1">
                                             <span class="px-2 py-0.5 rounded-lg bg-green-300 text-green-700">
-                                                {{ __('High:') }} <span x-text="selectedChannelProfiles.high ?? '-'"></span>
+                                                {{ __('High:') }} <span x-text="selectedChannelProfiles.high ?? 'N/A'"></span>
                                             </span>
                                             <span class="px-2 py-0.5 rounded-lg bg-yellow-300 text-yellow-700">
-                                                {{ __('Medium:') }} <span x-text="selectedChannelProfiles.medium ?? '-'"></span>
+                                                {{ __('Medium:') }} <span x-text="selectedChannelProfiles.medium ?? 'N/A'"></span>
                                             </span>
                                             <span class="px-2 py-0.5 rounded-lg bg-red-300 text-red-700">
-                                                {{ __('Low:') }} <span x-text="selectedChannelProfiles.low ?? '-'"></span>
+                                                {{ __('Low:') }} <span x-text="selectedChannelProfiles.low ?? 'N/A'"></span>
                                             </span>
                                         </div>
                                     </template>
@@ -146,16 +146,16 @@ use App\Enums\ChannelIssues;
                                                         <div class="flex gap-2 mt-1 text-xs">
                                                             <span
                                                                 class="px-2 py-0.5 rounded-lg bg-green-300 text-green-700 dark:bg-green-800 dark:text-green-200">
-                                                                {{ __('High:') }} <span x-text="channel.profiles?.high ?? '-'"></span>
+                                                                {{ __('High:') }} <span x-text="channel.profiles?.high ?? 'N/A'"></span>
                                                             </span>
                                                             <span
                                                                 class="px-2 py-0.5 rounded-lg bg-yellow-300 text-yellow-700 dark:bg-yellow-800 dark:text-yellow-200">
                                                                 {{ __('Medium:') }} <span
-                                                                    x-text="channel.profiles?.medium ?? '-'"></span>
+                                                                    x-text="channel.profiles?.medium ?? 'N/A'"></span>
                                                             </span>
                                                             <span
                                                                 class="px-2 py-0.5 rounded-lg bg-red-300 text-red-700 dark:bg-red-800 dark:text-red-200">
-                                                                {{ __('Low:') }} <span x-text="channel.profiles?.low ?? '-'"></span>
+                                                                {{ __('Low:') }} <span x-text="channel.profiles?.low ?? 'N/A'"></span>
                                                             </span>
                                                         </div>
                                                     </li>
@@ -163,53 +163,30 @@ use App\Enums\ChannelIssues;
                                             </ul>
                                         </div>
                                     </div>
-
                                     @error('reportData.channels.' . $index . '.channel_id')
                                         <span class="text-red-600 text-sm">{{ $message }}</span>
                                     @enderror
                                 </div>
                                 <div>
-                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                                        <i class="fa-solid fa-arrow-up mr-1.5"></i>
-                                        {{ __('High') }} (10 Mbps)
-                                    </label>
-                                    <select wire:model="reportData.channels.{{ $index }}.high"
-                                        class="mt-2 bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
-                                        <option value="" disabled selected>{{ __('Select an option') }}</option>
-                                        @foreach (ChannelIssues::cases() as $reviewer)
-                                            <option value="{{ $reviewer->value }}">{{ $reviewer->value }}</option>
-                                        @endforeach
-                                    </select>
+                                     <x-channel-issue-select
+                                    :name="'reportData.channels.' . $index . '.high'"
+                                    :value="$channel['high'] ?? ''"
+                                    :options="\App\Helpers\ChannelIssueOptions::all()"
+                                />
                                 </div>
                                 <div>
-                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                                        <i class="fa-solid fa-arrows-up-down mr-1.5"></i>
-                                        {{ __('Medium') }} (2.5 - 3.5 Mbps)
-                                    </label>
-                                    <select wire:model="reportData.channels.{{ $index }}.medium"
-                                        class="mt-2 bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
-                                        <option value="" disabled selected>
-                                            {{ __('Select an option') }}
-                                        </option>
-                                        @foreach (ChannelIssues::cases() as $reviewer)
-                                            <option value="{{ $reviewer->value }}">{{ $reviewer->value }}</option>
-                                        @endforeach
-                                    </select>
+                                     <x-channel-issue-select
+                                    :name="'reportData.channels.' . $index . '.medium'"
+                                    :value="$channel['medium'] ?? ''"
+                                    :options="\App\Helpers\ChannelIssueOptions::all()"
+                                />
                                 </div>
                                 <div>
-                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                                        <i class="fa-solid fa-arrow-down mr-1.5"></i>
-                                        {{ __('Low') }} (1.5 - 2.5 Mbps)
-                                    </label>
-                                    <select wire:model="reportData.channels.{{ $index }}.low"
-                                        class="mt-2 bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
-                                        <option value="" disabled selected>
-                                            {{ __('Select an option') }}
-                                        </option>
-                                        @foreach (ChannelIssues::cases() as $reviewer)
-                                            <option value="{{ $reviewer->value }}">{{ $reviewer->value }}</option>
-                                        @endforeach
-                                    </select>
+                                    <x-channel-issue-select
+                                    :name="'reportData.channels.' . $index . '.low'"
+                                    :value="$channel['low'] ?? ''"
+                                    :options="\App\Helpers\ChannelIssueOptions::all()"
+                                />
                                 </div>
                             </div>
                         </div>
