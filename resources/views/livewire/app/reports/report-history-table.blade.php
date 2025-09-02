@@ -14,24 +14,43 @@
         <div
             class="w-full md:w-auto flex flex-col sm:flex-row sm:flex-wrap items-stretch lg:items-center justify-start md:justify-end gap-3">
             <div x-data="{
-                dateRange: @entangle('startDate').defer + ' to ' + @entangle('endDate').defer,
+                start: @entangle('startDate').defer,
+                end: @entangle('endDate').defer,
                 flatpickrInstance: null
-            }" x-init="flatpickrInstance = flatpickr($refs.input, {
-                mode: 'range',
-                dateFormat: 'Y-m-d',
-                defaultDate: dateRange.split(' to '),
-                maxDate: 'today',
-                onChange: function(selectedDates, dateStr) {
-                    let [start, end] = dateStr.split(' to ');
-                    if (!end) end = start;
-                    $wire.set('startDate', start);
-                    $wire.set('endDate', end);
-                }
-            })"
+            }" x-init="
+                flatpickrInstance = flatpickr($refs.input, {
+                    mode: 'range',
+                    dateFormat: 'Y-m-d',
+                    defaultDate: (start && end) ? [start, end] : (start ? [start] : []),
+                    maxDate: 'today',
+                    onChange: function(selectedDates, dateStr) {
+                        let [start, end] = dateStr.split(' to ');
+                        if (!end) end = start;
+                        $wire.set('startDate', start);
+                        $wire.set('endDate', end);
+                        $refs.input.value = end ? start + ' to ' + end : start;
+                    },
+                    onReady: function(selectedDates, dateStr, instance) {
+                        if (start && !end) {
+                            instance.input.value = start;
+                        } else if (start && end) {
+                            instance.input.value = start + ' to ' + end;
+                        }
+                    },
+                    onClose: function(selectedDates, dateStr, instance) {
+                        setTimeout(function() {
+                            let [start, end] = instance.input.value.split(' to ');
+                            if (!start) return;
+                            if (!end) end = start;
+                            instance.input.value = end ? start + ' to ' + end : start;
+                        }, 10);
+                    }
+                })
+            "
                 x-on:clear-datepicker-range.window="
-            flatpickrInstance.clear();
-            $refs.input.value = '';
-        "
+                    flatpickrInstance.clear();
+                    $refs.input.value = '';
+                "
                 class="w-full sm:w-auto">
                 <x-input id="datepicker-range" x-ref="input" type="text" placeholder="{{ __('Select a range') }}"
                     class="min-w-[16rem] w-full px-3 py-2 text-sm border border-gray-300 rounded-md dark:bg-gray-800 dark:border-gray-600 dark:text-white" />
