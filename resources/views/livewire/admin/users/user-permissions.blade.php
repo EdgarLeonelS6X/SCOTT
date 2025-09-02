@@ -4,12 +4,26 @@
             <img class="h-20 w-20 rounded-full object-cover shadow-md" src="{{ $user->profile_photo_url }}"
                 alt="{{ $user->name }}" />
             <div class="text-center sm:text-left space-y-1 w-full">
-                <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">
-                    {{ $user->name }}
+                <h1 class="flex flex-col md:flex-row items-center text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">
+                    <span>{{ $user->name }}</span>
+
                 </h1>
                 <p class="text-sm text-gray-600 dark:text-gray-300 break-words">
                     <i class="fa-solid fa-envelope mr-1"></i>
                     {{ $user->email }}
+                    @php
+                        $auth = auth()->user();
+                        $isSelfFirstAdmin = $auth->id === 1 && $user->id === 1 && $auth->hasRole('master');
+                    @endphp
+                    <button
+                        @if($isSelfFirstAdmin) disabled @else wire:click="toggleStatus" @endif
+                        type="button"
+                        class="ml-3 mt-1 md:mt-0 inline-flex items-center px-2 py-1 rounded-full text-xs font-semibold focus:outline-none transition
+                        {{ $user->status ? ($isSelfFirstAdmin ? 'bg-gray-300 text-gray-500 dark:bg-gray-700 dark:text-gray-400' : 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-100') : ($isSelfFirstAdmin ? 'bg-red-300 text-red-500 dark:bg-red-700 dark:text-red-400' : 'bg-red-200 text-red-600 dark:bg-red-700 dark:text-red-300') }}"
+                    >
+                        <i class="fa-solid {{ $user->status ? 'fa-circle-check' : 'fa-circle-xmark' }} mr-1"></i>
+                        {{ $user->status ? __('Active') : __('Inactive') }}
+                    </button>
                 </p>
                 @php
                     $auth = auth()->user();

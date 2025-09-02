@@ -27,6 +27,10 @@
                             <i class="fa-solid fa-shield-halved mr-1.5"></i>
                             {{ __('Role') }}
                         </th>
+                        <th scope="col" class="px-6 py-3 whitespace-nowrap text-center">
+                            <i class="fa-solid fa-toggle-on mr-1.5"></i>
+                            {{ __('Status') }}
+                        </th>
                         <th scope="col" class="px-6 py-3 text-center whitespace-nowrap">
                         </th>
                     </tr>
@@ -83,6 +87,17 @@
                                     </span>
                                 @else
                                     <span class="text-xs text-gray-400 italic">{{ __('No role') }}</span>
+                                @endif
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-center">
+                                @if ($user->status)
+                                    <span class="inline-flex items-center px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-100">
+                                        <i class="fa-solid fa-circle-check mr-1"></i> {{ __('Active') }}
+                                    </span>
+                                @else
+                                    <span class="inline-flex items-center px-2 py-1 text-xs font-medium rounded-full bg-red-200 text-red-600 dark:bg-red-700 dark:text-red-300">
+                                        <i class="fa-solid fa-circle-xmark mr-1"></i> {{ __('Inactive') }}
+                                    </span>
                                 @endif
                             </td>
                             <td class="px-6 py-4 text-center whitespace-nowrap">

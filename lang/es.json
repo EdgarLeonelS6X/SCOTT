@@ -638,5 +638,7 @@
     "ORIGIN CEF": "ORIGEN CEF",
     "Show stage information": "Mostrar información de la etapa",
     "Edit stage": "Editar etapa",
-    "Delete stage": "Eliminar etapa"
+    "Delete stage": "Eliminar etapa",
+    "You are not authorized to change this status.": "No estás autorizado para cambiar este estado.",
+    "User status changed successfully.": "El estado del usuario se cambió correctamente."
 }

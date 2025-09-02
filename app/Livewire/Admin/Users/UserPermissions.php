@@ -130,6 +130,28 @@ class UserPermissions extends Component
         ]);
     }
 
+    public function toggleStatus()
+    {
+        $auth = auth()->user();
+        if (!($auth->id === 1 && $auth->hasRole('master'))) {
+            $this->dispatch('swal', [
+                'icon' => 'error',
+                'title' => __('Access Denied'),
+                'text' => __('You are not authorized to change this status.'),
+            ]);
+            return;
+        }
+
+        $this->user->status = !$this->user->status;
+        $this->user->save();
+
+        $this->dispatch('swal', [
+            'icon' => 'success',
+            'title' => __('Well done!'),
+            'text' => __('User status changed successfully.'),
+        ]);
+    }
+
     public function updatedRole($value)
     {
         if (!$this->canEditPermissions)
