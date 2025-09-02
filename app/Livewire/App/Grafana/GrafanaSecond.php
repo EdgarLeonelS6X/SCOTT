@@ -20,7 +20,7 @@ class GrafanaSecond extends Component
 
     public function mount()
     {
-        $apiUrl = 'http://172.16.100.38:5000/cutv';
+        $apiUrl = 'http://172.16.100.93:5000/cutv';
         $numbers = [];
         $panelIds = [];
         try {

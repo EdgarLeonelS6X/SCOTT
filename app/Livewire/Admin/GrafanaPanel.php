@@ -25,7 +25,7 @@ class GrafanaPanel extends Component
 
     public function mount()
     {
-        $apiUrl = 'http://172.16.100.38:5000/channels';
+        $apiUrl = 'http://172.16.100.93:5000/channels';
         $numbers = [];
         $panelIds = [];
         $multicasts = [];
