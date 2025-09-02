@@ -1,5 +1,5 @@
 <div class="w-full md:w-2/3 pt-6 md:pt-0 md:pl-6 lg:pt-0 lg:pl-6" wire:key="reports-table">
-    <div class="bg-white dark:bg-gray-800 relative shadow-2xl rounded-lg overflow-hidden">
+    <div class="bg-white dark:bg-gray-800 relative shadow-lg rounded-lg overflow-hidden">
         <div class="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 p-4">
             <div class="w-full md:w-1/2">
                 <form class="flex items-center" onsubmit="event.preventDefault();">

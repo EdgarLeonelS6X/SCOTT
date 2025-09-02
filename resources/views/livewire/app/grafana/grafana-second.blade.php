@@ -1,5 +1,5 @@
 <div class="w-full mx-auto">
-    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl overflow-hidden">
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden">
         <div class="flex items-center justify-between px-4 py-4 border-b border-gray-200 dark:border-gray-700">
             <h2 class="text-xl font-bold text-gray-800 dark:text-gray-200 flex items-center gap-2">
                 <i class="fa-solid fa-forward text-primary-600"></i>
@@ -23,12 +23,17 @@
                     'url' => $c->url,
                 ])),
                 get filteredChannels() {
+                    if (this.open && this.selectedChannel && this.search === (this.selectedChannel.number + ' ' + this.selectedChannel.name)) {
+                        return this.channels;
+                    }
                     if (this.search === '') return this.channels;
                     const term = this.search.toLowerCase();
-                    return this.channels.filter(c =>
-                        c.name.toLowerCase().includes(term) ||
-                        c.number.toString().includes(term)
-                    );
+                    return this.channels.filter(c => {
+                        const combined = (c.number + ' ' + c.name).toLowerCase();
+                        return c.name.toLowerCase().includes(term)
+                            || c.number.toString().includes(term)
+                            || combined.includes(term);
+                    });
                 },
                 selectChannel(channel) {
                     this.selectedChannel = channel;
@@ -62,11 +67,10 @@
                     </label>
                     <div class="flex flex-row gap-2">
                         <div class="relative flex-1">
-                            <img x-show="selectedChannel" :src="selectedChannel.image"
+                            <img x-show="selectedChannel && search === (selectedChannel.number + ' ' + selectedChannel.name)" :src="selectedChannel.image"
                                 class="absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 object-contain rounded bg-white dark:bg-gray-700">
-                            <input type="text" x-model="search" @focus="open = true" @click="open = true; search = ''"
-                                @input="open = true" @click.away="open = false"
-                                placeholder="{{ __('Search channel...') }}"
+                            <input type="text" x-model="search" @focus="open = true" @click="open = true"
+                                @input="open = true" @click.away="open = false" placeholder="{{ __('Search channel...') }}"
                                 class="w-full pl-12 pr-2 py-2 rounded-md bg-gray-50 border border-gray-300 dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-primary-500 text-sm transition-all h-10"
                                 autocomplete="off">
                             <div x-show="open"
@@ -114,8 +118,7 @@
             <iframe wire:key="{{ $this->iframeKey }}" src="{{ $this->grafanaUrl }}" height="220" frameborder="0"
                 loading="lazy" referrerpolicy="no-referrer"
                 class="w-full rounded-xl border shadow-inner transition-all duration-200"
-                x-data="{ theme: localStorage.getItem('color-theme') === 'dark' ? 'dark' : 'light' }"
-                x-init="
+                x-data="{ theme: localStorage.getItem('color-theme') === 'dark' ? 'dark' : 'light' }" x-init="
                     $watch('theme', value => {
                         $wire.set('theme', value);
                     });
@@ -129,8 +132,7 @@
                     });
                     theme = localStorage.getItem('color-theme') === 'dark' ? 'dark' : 'light';
                     $wire.set('theme', theme);
-                "
-            ></iframe>
+                "></iframe>
         </div>
     </div>
 </div>
