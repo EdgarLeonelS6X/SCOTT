@@ -139,8 +139,10 @@ class CreateProfileReport extends Component
     protected function validateReportData()
     {
         $this->validate([
+            'reportData.title' => 'required|string',
             'reportData.channels' => 'required|array|min:1',
         ], [], [
+            'reportData.title' => __('title'),
             'reportData.channels' => __('channels')
         ]);
 
@@ -182,5 +184,4 @@ class CreateProfileReport extends Component
                 ]),
         ]);
     }
-
 }

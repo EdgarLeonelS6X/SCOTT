@@ -624,5 +624,6 @@
     "Report title": "Título del reporte",
     "High": "Alto",
     "Medium": "Medio",
-    "Low": "Bajo"
+    "Low": "Bajo",
+    "title": "título"
 }
