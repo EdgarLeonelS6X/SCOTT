@@ -15,7 +15,7 @@
                     <span
                         class="text-xs font-medium text-white bg-red-500 dark:bg-red-600 px-3 py-1 rounded-lg shadow-2xl">
                         <i class="fa-solid fa-triangle-exclamation mr-1"></i>
-                        {{ $selectedReport->type }}
+                        {{ __($selectedReport->type) }}
                     </span>
                     <span class="text-sm font-medium text-gray-500 dark:text-gray-400">
                         {{ __('Folio') }} #{{ $selectedReport->id }}
@@ -93,7 +93,7 @@
                             {{ __('Status') }}
                         </h4>
                         <p class="text-sm font-bold uppercase">
-                            {{ $selectedReport->status }}
+                            {{ __($selectedReport->status) }}
                         </p>
                     </div>
                 </div>
@@ -108,7 +108,7 @@
                             {{ __('Under review by') }}
                         </h4>
                         <p class="text-sm font-bold text-white dark:text-gray-100">
-                            {{ $selectedReport->reviewed_by }}
+                            {{ __($selectedReport->reviewed_by) }}
                         </p>
                     </div>
                 </div>
@@ -197,15 +197,15 @@
                                     <span class="text-[10px] mt-1 text-gray-500 dark:text-gray-300">AUDIO</span>
                                 </div>
                                 <div class="flex flex-col items-center tooltip"
-                                    title="{{ $detail->protocol === 'DASH' || $detail->protocol === 'DASH/HLS' ? __('Not working on Web Client (DASH)') : __('Working on Web Client (DASH)') }}">
+                                    title="{{ $detail->protocol === 'DASH' || $detail->protocol === 'HLS/DASH' ? __('Not working on Web Client (DASH)') : __('Working on Web Client (DASH)') }}">
                                     <i
-                                        class="fa-solid fa-computer {{ $detail->protocol === 'DASH' || $detail->protocol === 'DASH/HLS' ? 'text-red-500' : 'text-green-500' }} text-xl"></i>
+                                        class="fa-solid fa-computer {{ $detail->protocol === 'DASH' || $detail->protocol === 'HLS/DASH' ? 'text-red-500' : 'text-green-500' }} text-xl"></i>
                                     <span class="text-[10px] mt-1 text-gray-500 dark:text-gray-300">DASH</span>
                                 </div>
                                 <div class="flex flex-col items-center tooltip"
-                                    title="{{ $detail->protocol === 'HLS' || $detail->protocol === 'DASH/HLS' ? __('Not working on Set Up Box (HLS)') : __('Working on Set Up Box (HLS)') }}">
+                                    title="{{ $detail->protocol === 'HLS' || $detail->protocol === 'HLS/DASH' ? __('Not working on Set Up Box (HLS)') : __('Working on Set Up Box (HLS)') }}">
                                     <i
-                                        class="fa-solid fa-tv {{ $detail->protocol === 'HLS' || $detail->protocol === 'DASH/HLS' ? 'text-red-500' : 'text-green-500' }} text-xl"></i>
+                                        class="fa-solid fa-tv {{ $detail->protocol === 'HLS' || $detail->protocol === 'HLS/DASH' ? 'text-red-500' : 'text-green-500' }} text-xl"></i>
                                     <span class="text-[10px] mt-1 text-gray-500 dark:text-gray-300">HLS</span>
                                 </div>
                             </div>

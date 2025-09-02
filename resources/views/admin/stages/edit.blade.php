@@ -41,7 +41,7 @@
                             {{ __('Name') }}
                         </x-label>
                         <x-input id="name" class="block mt-1 w-full" type="text" name="name"
-                            :value="old('name', $stage->name)" required autofocus autocomplete="name"
+                            :value="old('name', __($stage->name))" required autofocus autocomplete="name"
                             placeholder="{{ __('Stage name') }}" />
                     </div>
                     <div>

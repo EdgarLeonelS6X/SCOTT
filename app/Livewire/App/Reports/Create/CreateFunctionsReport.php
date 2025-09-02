@@ -223,10 +223,10 @@ class CreateFunctionsReport extends Component
             }
 
             $report = Report::create([
-                'type' => __('Functions'),
+                'type' => 'Functions',
                 'category' => implode(', ', array_column($this->categories, 'name')),
                 'reported_by' => Auth::user()->id,
-                'status' => __('Reported'),
+                'status' => 'Reported',
             ]);
 
             foreach ($this->categories as $category) {

@@ -78,7 +78,7 @@
                         <i class="fa-solid fa-list mr-1"></i>
                         <span class="text-gray-500 dark:text-white">
                             @if ($categoryFilter)
-                                {{ $categoryFilter }}
+                                {{ __($categoryFilter) }}
                             @else
                                 {{ __('All Categories') }}
                             @endif
@@ -131,7 +131,7 @@
                                     @default
                                         <i class="fa-solid fa-layer-group mr-1.5"></i>
                                 @endswitch
-                                {{ $channel->category }}
+                                {{ __($channel->category) }}
                             </span>
                         </td>
                         <td class="px-4 py-2.5">

@@ -208,7 +208,7 @@ use App\Enums\ChannelReviewer;
                             {{ __('Select a reviewer') }}
                         </option>
                         @foreach (ChannelReviewer::cases() as $reviewer)
-                            <option value="{{ $reviewer->value }}">{{ $reviewer->value }}</option>
+                            <option value="{{ $reviewer->value }}">{{ __($reviewer->value) }}</option>
                         @endforeach
                     </select>
                 </div>

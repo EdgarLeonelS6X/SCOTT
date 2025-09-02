@@ -31,8 +31,8 @@ class CreateChromecastReport extends Component
 
         try {
             $report = Report::create([
-                'category' => __('Chromecast'),
-                'type' => __('Functions'),
+                'category' => 'Chromecast',
+                'type' => 'Functions',
                 'reported_by' => Auth::id(),
                 'status' => 'Reported',
             ]);

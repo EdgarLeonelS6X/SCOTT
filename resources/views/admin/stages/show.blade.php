@@ -42,7 +42,7 @@
         <div class="p-6 space-y-4 md:space-y-6 sm:p-8">
             <h1 class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
                 <div class="flex justify-between items-center">
-                    {{ $stage->name }}
+                    {{ __($stage->name) }}
                     @if ($stage->status === 1)
                         <span
                             class="inline-flex items-center px-2 py-1 text-xs font-medium text-green-800 bg-green-200 rounded-full dark:bg-green-800 dark:text-green-200 ml-1.5">

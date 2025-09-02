@@ -85,7 +85,7 @@ class EditMomentlyReport extends Component
                     'protocol' => $channel['protocol'],
                     'media' => $channel['media'],
                     'description' => $channel['description'],
-                    'status' => __('Revision'),
+                    'status' => 'Revision',
                 ]);
             }
 

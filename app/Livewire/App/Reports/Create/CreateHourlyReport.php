@@ -111,10 +111,10 @@ class CreateHourlyReport extends Component
             $categoryNames = implode(', ', array_column($this->categories, 'name'));
 
             $report = Report::create([
-                'type' => __('Hourly'),
+                'type' => 'Hourly',
                 'category' => $categoryNames,
                 'reported_by' => Auth::user()->id,
-                'status' => __('Reported'),
+                'status' => 'Reported',
             ]);
 
             $categories = [];

@@ -398,7 +398,6 @@
     "Low (1.5 - 2.5 Mbps)": "Bajo (1.5 - 2.5 Mbps)",
     "All Origins": "Orígenes",
     "All Categories": "Categorías",
-    "Standard TV Channel": "Canal de TV estándar",
     "There are no channels that match your search.": "No hay canales que coincidan con su búsqueda.",
     "Update channel": "Actualizar canal",
     "Update the data for this channel.": "Actualice los datos de este canal.",
@@ -625,5 +624,19 @@
     "High": "Alto",
     "Medium": "Medio",
     "Low": "Bajo",
-    "title": "título"
+    "title": "título",
+    "Reported": "Reportado",
+    "Revision": "Revisión",
+    "Momentary": "Momentáneo",
+    "Functions": "Funciones",
+    "Hourly": "General",
+    "ORIGIN": "ORIGEN",
+    "ENGINEERS": "INGENIEROS",
+    "Standard TV Channel": "Canal de TV estándar",
+    "There are no channels registered in the database.": "No hay canales registrados en la base de datos.",
+    "There are no stages registered in the database.": "No hay etapas registradas en la base de datos.",
+    "ORIGIN CEF": "ORIGEN CEF",
+    "Show stage information": "Mostrar información de la etapa",
+    "Edit stage": "Editar etapa",
+    "Delete stage": "Eliminar etapa"
 }

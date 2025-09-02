@@ -52,7 +52,7 @@
                                 class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-600 text-black dark:text-white cursor-pointer">
                                 <th scope="row"
                                     class="px-4 py-2.5 font-bold text-gray-900 whitespace-nowrap dark:text-white">
-                                    {{ $stage->name }}
+                                    {{ __($stage->name) }}
                                 </th>
                                 <td class="px-4 py-2.5">
                                     @if ($stage->status === 1)

@@ -108,7 +108,7 @@
                         <i class="fa-solid fa-list mr-1"></i>
                         <span class="text-gray-500 dark:text-white truncate">
                             @if ($typeFilter)
-                                {{ $typeFilter }}
+                                {{ __($typeFilter) }}
                             @else
                                 {{ __('All Types') }}
                             @endif
@@ -120,7 +120,7 @@
                         <i class="fa-solid fa-circle-check mr-1"></i>
                         <span class="text-gray-500 dark:text-white truncate">
                             @if ($statusFilter)
-                                {{ $statusFilter }}
+                                {{ __($statusFilter) }}
                             @else
                                 {{ __('All Status') }}
                             @endif
@@ -140,7 +140,7 @@
                             @endif
                         </button>
                     </th>
-                    <th class="py-3 px-2 text-left min-w-[270px] sm:min-w-[270px] md:min-w-[325px] cursor-pointer"
+                    <th class="py-3 px-2 text-left min-w-[260px] sm:min-w-[260px] md:min-w-[315px] cursor-pointer"
                         wire:click="toggleUserFilter">
                         <i class="fa-solid fa-user mr-1"></i>
                         <span class="text-gray-500 dark:text-white truncate">
@@ -152,9 +152,9 @@
                             <i class="ml-1 fa-solid fa-sort"></i>
                         </span>
                     </th>
-                    <th class="py-3 px-2 text-center">
+                    <th class="py-3 px-2 text-left">
                         <span class="sr-only">
-                            <i class="fa-solid fa-sliders-h mr-1"></i>
+                            <i class="fa-solid fa-sliders-h mr-2"></i>
                             {{ __('Options') }}
                         </span>
                     </th>
@@ -182,7 +182,7 @@
                                 {{ $report->category }}
                             </td>
                             <td class="px-2 sm:px-4 py-2 sm:py-3">
-                                @if ($report->type === 'Momentary' OR $report->type === 'Momentáneo')
+                                @if ($report->type === 'Momentary')
                                     <span
                                         class="inline-flex items-center px-2 py-1 text-xs sm:text-sm font-medium rounded-full text-red-800 bg-red-200 dark:bg-red-800 dark:text-red-200 whitespace-nowrap">
                                         <i class="fa-solid fa-triangle-exclamation mr-1"></i>
@@ -245,8 +245,8 @@
                 @endif
             </tbody>
         </table>
-        <div class="m-4">
-            {{ $reports->links() }}
-        </div>
+    </div>
+    <div class="m-4">
+        {{ $reports->links() }}
     </div>
 </div>

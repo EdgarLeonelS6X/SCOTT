@@ -89,12 +89,12 @@ class CreateProfileReport extends Component
 
             $report = Report::create([
                 'title' => $this->reportData['title'],
-                'type' => __('Functions'),
-                'category' => __('Speed Profiles'),
+                'type' => 'Functions',
+                'category' => 'Speed Profiles',
                 'duration' => null,
                 'reported_by' => Auth::user()->id,
                 'reviewed_by' => $this->reportData['reviewed_by'],
-                'status' => __('Reported'),
+                'status' => 'Reported',
             ]);
 
             foreach ($this->reportData['channels'] as $channel) {

@@ -33,17 +33,17 @@
                             @if ($report->type === 'Momentary')
                                 <span
                                     class="text-xs font-medium text-white bg-red-500 dark:bg-red-600 px-3 py-1 rounded-lg shadow-2xl">
-                                    <i class="fa-solid fa-triangle-exclamation mr-1"></i> {{ $report->type }}
+                                    <i class="fa-solid fa-triangle-exclamation mr-1"></i> {{ __($report->type) }}
                                 </span>
                             @elseif ($report->type === 'Hourly')
                                 <span
                                     class="text-xs font-medium text-white bg-green-500 dark:bg-green-600 px-3 py-1 rounded-lg shadow-2xl">
-                                    <i class="fa-solid fa-clock mr-1"></i> {{ $report->type }}
+                                    <i class="fa-solid fa-clock mr-1"></i> {{ __($report->type) }}
                                 </span>
                             @else
                                 <span
                                     class="text-xs font-medium text-white bg-blue-500 dark:bg-blue-600 px-3 py-1 rounded-lg shadow-2xl">
-                                    <i class="fa-solid fa-forward mr-1"></i> {{ $report->type }}
+                                    <i class="fa-solid fa-forward mr-1"></i> {{ __($report->type) }}
                                 </span>
                             @endif
                             <span class="text-sm font-medium text-gray-600 dark:text-gray-300">
@@ -112,7 +112,7 @@
                             </div>
                             <div>
                                 <h4 class="text-sm">{{ __('Status') }}</h4>
-                                <p class="text-sm font-bold uppercase">{{ $report->status }}</p>
+                                <p class="text-sm font-bold uppercase">{{ __($report->status) }}</p>
                             </div>
                         </div>
                         @if ($report->type === 'Momentary')
@@ -238,15 +238,15 @@
                                         <span class="text-[10px] mt-1 text-gray-500 dark:text-gray-300">AUDIO</span>
                                     </div>
                                     <div class="flex flex-col items-center tooltip"
-                                        title="{{ $detail->protocol === 'DASH' || $detail->protocol === 'DASH/HLS' ? __('Not working on Web Client (DASH)') : __('Working on Web Client (DASH)') }}">
+                                        title="{{ $detail->protocol === 'DASH' || $detail->protocol === 'HLS/DASH' ? __('Not working on Web Client (DASH)') : __('Working on Web Client (DASH)') }}">
                                         <i
-                                            class="fa-solid fa-computer {{ $detail->protocol === 'DASH' || $detail->protocol === 'DASH/HLS' ? 'text-red-500' : 'text-green-500' }} text-xl"></i>
+                                            class="fa-solid fa-computer {{ $detail->protocol === 'DASH' || $detail->protocol === 'HLS/DASH' ? 'text-red-500' : 'text-green-500' }} text-xl"></i>
                                         <span class="text-[10px] mt-1 text-gray-500 dark:text-gray-300">DASH</span>
                                     </div>
                                     <div class="flex flex-col items-center tooltip"
-                                        title="{{ $detail->protocol === 'HLS' || $detail->protocol === 'DASH/HLS' ? __('Not working on Set Up Box (HLS)') : __('Working on Set Up Box (HLS)') }}">
+                                        title="{{ $detail->protocol === 'HLS' || $detail->protocol === 'HLS/DASH' ? __('Not working on Set Up Box (HLS)') : __('Working on Set Up Box (HLS)') }}">
                                         <i
-                                            class="fa-solid fa-tv {{ $detail->protocol === 'HLS' || $detail->protocol === 'DASH/HLS' ? 'text-red-500' : 'text-green-500' }} text-xl"></i>
+                                            class="fa-solid fa-tv {{ $detail->protocol === 'HLS' || $detail->protocol === 'HLS/DASH' ? 'text-red-500' : 'text-green-500' }} text-xl"></i>
                                         <span class="text-[10px] mt-1 text-gray-500 dark:text-gray-300">HLS</span>
                                     </div>
                                 </div>
@@ -389,36 +389,32 @@
                                                 </div>
                                             </div>
                                             <div
-                                                class="flex justify-around items-center gap-3 px-5 py-3 bg-gray-100 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg">
-                                                <div class="flex flex-col items-center tooltip"
-                                                    title="{{ $detail->media === 'VIDEO' || $detail->media === 'AUDIO/VIDEO' ? __('The channel does not have video') : __('The channel has video') }}">
-                                                    <i
-                                                        class="fa-solid {{ $detail->media === 'VIDEO' || $detail->media === 'AUDIO/VIDEO' ? 'fa-video-slash text-red-500' : 'fa-video text-green-500' }} text-xl"></i>
-                                                    <span
-                                                        class="text-[10px] mt-1 text-gray-500 dark:text-gray-300">VIDEO</span>
-                                                </div>
-                                                <div class="flex flex-col items-center tooltip"
-                                                    title="{{ $detail->media === 'AUDIO' || $detail->media === 'AUDIO/VIDEO' ? __('The channel does not have audio') : __('The channel has audio') }}">
-                                                    <i
-                                                        class="fa-solid {{ $detail->media === 'AUDIO' || $detail->media === 'AUDIO/VIDEO' ? 'fa-volume-xmark text-red-500' : 'fa-volume-up text-green-500' }} text-xl"></i>
-                                                    <span
-                                                        class="text-[10px] mt-1 text-gray-500 dark:text-gray-300">AUDIO</span>
-                                                </div>
-                                                <div class="flex flex-col items-center tooltip"
-                                                    title="{{ $detail->protocol === 'DASH' || $detail->protocol === 'DASH/HLS' ? __('Not working on Web Client (DASH)') : __('Working on Web Client (DASH)') }}">
-                                                    <i
-                                                        class="fa-solid fa-computer {{ $detail->protocol === 'DASH' || $detail->protocol === 'DASH/HLS' ? 'text-red-500' : 'text-green-500' }} text-xl"></i>
-                                                    <span
-                                                        class="text-[10px] mt-1 text-gray-500 dark:text-gray-300">DASH</span>
-                                                </div>
-                                                <div class="flex flex-col items-center tooltip"
-                                                    title="{{ $detail->protocol === 'HLS' || $detail->protocol === 'DASH/HLS' ? __('Not working on Set Up Box (HLS)') : __('Working on Set Up Box (HLS)') }}">
-                                                    <i
-                                                        class="fa-solid fa-tv {{ $detail->protocol === 'HLS' || $detail->protocol === 'DASH/HLS' ? 'text-red-500' : 'text-green-500' }} text-xl"></i>
-                                                    <span
-                                                        class="text-[10px] mt-1 text-gray-500 dark:text-gray-300">HLS</span>
-                                                </div>
-                                            </div>
+                                    class="flex justify-around items-center gap-3 px-5 py-3 bg-gray-100 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg">
+                                    <div class="flex flex-col items-center tooltip"
+                                        title="{{ $detail->media === 'VIDEO' || $detail->media === 'AUDIO/VIDEO' ? __('The channel does not have video') : __('The channel has video') }}">
+                                        <i
+                                            class="fa-solid {{ $detail->media === 'VIDEO' || $detail->media === 'AUDIO/VIDEO' ? 'fa-video-slash text-red-500' : 'fa-video text-green-500' }} text-xl"></i>
+                                        <span class="text-[10px] mt-1 text-gray-500 dark:text-gray-300">VIDEO</span>
+                                    </div>
+                                    <div class="flex flex-col items-center tooltip"
+                                        title="{{ $detail->media === 'AUDIO' || $detail->media === 'AUDIO/VIDEO' ? __('The channel does not have audio') : __('The channel has audio') }}">
+                                        <i
+                                            class="fa-solid {{ $detail->media === 'AUDIO' || $detail->media === 'AUDIO/VIDEO' ? 'fa-volume-xmark text-red-500' : 'fa-volume-up text-green-500' }} text-xl"></i>
+                                        <span class="text-[10px] mt-1 text-gray-500 dark:text-gray-300">AUDIO</span>
+                                    </div>
+                                    <div class="flex flex-col items-center tooltip"
+                                        title="{{ $detail->protocol === 'DASH' || $detail->protocol === 'HLS/DASH' ? __('Not working on Web Client (DASH)') : __('Working on Web Client (DASH)') }}">
+                                        <i
+                                            class="fa-solid fa-computer {{ $detail->protocol === 'DASH' || $detail->protocol === 'HLS/DASH' ? 'text-red-500' : 'text-green-500' }} text-xl"></i>
+                                        <span class="text-[10px] mt-1 text-gray-500 dark:text-gray-300">DASH</span>
+                                    </div>
+                                    <div class="flex flex-col items-center tooltip"
+                                        title="{{ $detail->protocol === 'HLS' || $detail->protocol === 'HLS/DASH' ? __('Not working on Set Up Box (HLS)') : __('Working on Set Up Box (HLS)') }}">
+                                        <i
+                                            class="fa-solid fa-tv {{ $detail->protocol === 'HLS' || $detail->protocol === 'HLS/DASH' ? 'text-red-500' : 'text-green-500' }} text-xl"></i>
+                                        <span class="text-[10px] mt-1 text-gray-500 dark:text-gray-300">HLS</span>
+                                    </div>
+                                </div>
                                             @if ($fixedCategory === 'CUTV' && $detail->reportContentLosses->isNotEmpty())
                                                 <div x-data="{ showLosses: false }" class="mt-5 w-full text-center">
                                                     <div class="flex justify-center">

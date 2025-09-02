@@ -88,7 +88,7 @@
                                 <td class="py-3 px-4 whitespace-nowrap">
                                     <span
                                         class="inline-flex items-center px-2 py-1 text-sm font-medium text-yellow-800 bg-yellow-200 dark:bg-yellow-800 dark:text-yellow-200 rounded-full">
-                                        <i class="fa-solid fa-magnifying-glass mr-1.5"></i> {{ $report->status }}
+                                        <i class="fa-solid fa-magnifying-glass mr-1.5"></i> {{ __($report->status) }}
                                     </span>
                                 </td>
                                 <td class="py-3 px-4 whitespace-nowrap">

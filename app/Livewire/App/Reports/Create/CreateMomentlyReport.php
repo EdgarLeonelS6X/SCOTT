@@ -24,7 +24,7 @@ class CreateMomentlyReport extends Component
     {
         $this->stages = Stage::where('status', '1')->get();
         $this->reportData = [
-            'type' => __('Momentary'),
+            'type' => 'Momentary',
             'category' => '',
             'reported_by' => '',
             'reviewed_by' => '',
@@ -92,7 +92,7 @@ class CreateMomentlyReport extends Component
                 'reported_by' => Auth::user()->id,
                 'reviewed_by' => $this->reportData['reviewed_by'],
                 'attended_by' => null,
-                'status' => __('Revision'),
+                'status' => 'Revision',
             ]);
 
             foreach ($this->reportData['channels'] as $channel) {
@@ -103,7 +103,7 @@ class CreateMomentlyReport extends Component
                     'protocol' => $channel['protocol'],
                     'media' => $channel['media'],
                     'description' => $channel['description'],
-                    'status' => __('Revision'),
+                    'status' => 'Revision',
                 ]);
             }
 

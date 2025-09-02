@@ -98,7 +98,7 @@ use App\Enums\ChannelOrigin;
                         wire:model="category" required>
                         <option value="" selected disabled>{{ __('Select category') }}</option>
                         @foreach (ChannelCategory::cases() as $category)
-                            <option value="{{ $category->value }}">{{ $category->value }}</option>
+                            <option value="{{ $category->value }}">{{ __($category->value) }}</option>
                         @endforeach
                     </select>
                 </div>
