@@ -65,7 +65,7 @@ class GrafanaSecond extends Component
 
     public function getGrafanaUrlProperty()
     {
-        $base = "https://172.16.100.177:3000/d-solo/2f5b9422-b13f-495d-9e5d-b02979653d95/new-dashboard";
+        $base = "http://172.16.100.177/grafana/d-solo/2f5b9422-b13f-495d-9e5d-b02979653d95/new-dashboard";
 
         [$from, $to] = $this->resolveTimeParams();
 

@@ -72,7 +72,7 @@ class GrafanaPanel extends Component
 
     public function getGrafanaUrlProperty()
     {
-        $base = "https://172.16.100.177:3000/d-solo/0ce5d82e-9619-4da7-8301-e1c118fb4c14/multicast-monitor";
+        $base = "http://172.16.100.177/grafana/d-solo/0ce5d82e-9619-4da7-8301-e1c118fb4c14/multicast-monitor";
 
         [$from, $to] = $this->resolveTimeParams();
 

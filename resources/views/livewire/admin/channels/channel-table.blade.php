@@ -103,7 +103,7 @@
                         class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-600 text-black dark:text-white cursor-pointer">
                         <td class="px-4 py-2.5">
                             <img src="{{ $channel->image_url ? asset('storage/' . $channel->image_url) : asset('img/no-image.png') }}"
-                                alt="{{ $channel->name }}" class="w-10 h-10 object-center object-contain">
+                                alt="{{ $channel->name }}" class="w-10 h-10 object-center object-contain rounded-sm">
                         </td>
                         <th scope="row"
                             class="px-4 py-2.5 font-bold text-gray-900 whitespace-nowrap dark:text-white">
