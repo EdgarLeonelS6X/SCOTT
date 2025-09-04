@@ -90,7 +90,7 @@
                 <div class="order-0 md:order-none">
                     <img src="{{ $channel->image_url ? asset('storage/' . $channel->image_url) : asset('img/no-image.png') }}"
                         alt="{{ $channel->name }}"
-                        class="w-20 h-20 object-center object-contain rounded-md mx-auto md:mx-0">
+                        class="w-20 h-20 object-center object-contain rounded-lg mx-auto md:mx-0">
                 </div>
             </div>
 

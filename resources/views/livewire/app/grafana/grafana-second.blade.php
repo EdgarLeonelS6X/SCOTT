@@ -117,7 +117,7 @@
         <div class="bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 p-6 shadow-2xl">
             <iframe wire:key="{{ $this->iframeKey }}" src="{{ $this->grafanaUrl }}" height="220" frameborder="0"
                 loading="lazy" referrerpolicy="no-referrer"
-                class="w-full rounded-xl border shadow-inner transition-all duration-200"
+                class="w-full rounded-lg border shadow-inner transition-all duration-200"
                 x-data="{ theme: localStorage.getItem('color-theme') === 'dark' ? 'dark' : 'light' }" x-init="
                     $watch('theme', value => {
                         $wire.set('theme', value);
