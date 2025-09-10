@@ -125,7 +125,7 @@
                                 <div class="w-full">
                                     <h4 class="text-sm whitespace-normal break-words">{{ __('Under review by') }}</h4>
                                     <p class="text-sm font-bold whitespace-normal break-words">
-                                        {{ $report->reviewed_by }}
+                                        {{ __($report->reviewed_by) }}
                                         @if ($report->duration)
                                             <span class="block sm:inline text-xs dark:text-gray-400">
                                                 {{ __('Resolved') }}

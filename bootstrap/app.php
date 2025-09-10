@@ -14,7 +14,7 @@ return Application::configure(basePath: dirname(__DIR__))
         channels: __DIR__ . '/../routes/channels.php',
         health: '/up',
         then: function () {
-            Route::middleware(['web', 'auth', 'verified'])
+            Route::middleware(['web', 'auth', 'verified', \App\Http\Middleware\CheckUserStatus::class])
                 ->prefix('admin')
                 ->name('admin.')
                 ->group(base_path('routes/admin.php'));

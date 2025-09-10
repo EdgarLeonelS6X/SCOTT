@@ -51,7 +51,7 @@
                 @if (isset($link['children']))
                     <li>
                         <button @click="openDropdown = openDropdown === {{ $index }} ? null : {{ $index }}" class="flex items-center justify-between gap-3 px-3 py-2 w-full rounded-md transition-colors duration-150
-                                                                                                                                                                                                                    {{ $link['active'] ? 'bg-primary-50 dark:bg-primary-900 text-primary-700 dark:text-primary-300 font-medium'
+                                                                                                                                                                                                                            {{ $link['active'] ? 'bg-primary-50 dark:bg-primary-900 text-primary-700 dark:text-primary-300 font-medium'
                     : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800' }}">
                             <div class="flex items-center gap-3">
                                 <i class="{{ $link['icon'] }} text-base"></i>
@@ -111,11 +111,14 @@
         <x-language-switch />
 
         <div class="mt-6 border-t border-gray-100 dark:border-gray-800 pt-4">
-            <a href="#"
-                class="flex justify-center items-center gap-2 text-xs text-gray-400 hover:text-red-600 dark:hover:text-red-400 transition">
-                <i class="fa-solid fa-arrow-right-from-bracket"></i>
-                {{ __('Log Out') }}
-            </a>
+            <form method="POST" action="{{ route('logout') }}" x-data>
+                @csrf
+                <a href="{{ route('logout') }}" @click.prevent="$root.submit();"
+                    class="flex justify-center items-center gap-2 text-xs text-gray-400 hover:text-red-600 dark:hover:text-red-400 transition">
+                    <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                    {{ __('Log Out') }}
+                </a>
+            </form>
         </div>
     </div>
 </aside>
