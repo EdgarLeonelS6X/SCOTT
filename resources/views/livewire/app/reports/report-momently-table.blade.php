@@ -46,7 +46,7 @@
                                 <i class="fa-solid fa-layer-group mr-1"></i> {{ __('Channels') }}
                             </th>
                             <th class="py-3 px-4 text-left whitespace-nowrap">
-                                <i class="fa-solid fa-circle-check mr-1"></i> {{ __('Status') }}
+                                <i class="fa-solid fa-user-group mr-1"></i> {{ __('Under review by') }}
                             </th>
                             <th wire:click="toggleOrder"
                                 class="py-3 px-4 text-left flex items-center cursor-pointer whitespace-nowrap">
@@ -88,7 +88,7 @@
                                 <td class="py-3 px-4 whitespace-nowrap">
                                     <span
                                         class="inline-flex items-center px-2 py-1 text-sm font-medium text-yellow-800 bg-yellow-200 dark:bg-yellow-800 dark:text-yellow-200 rounded-full">
-                                        <i class="fa-solid fa-magnifying-glass mr-1.5"></i> {{ __($report->status) }}
+                                        <i class="fa-solid fa-user mr-1.5"></i> {{ __($report->reviewed_by) }}
                                     </span>
                                 </td>
                                 <td class="py-3 px-4 whitespace-nowrap">

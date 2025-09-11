@@ -20,7 +20,7 @@
             <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
                 <div
                     class="flex flex-col sm:flex-row items-start sm:items-center gap-4 bg-white dark:bg-gray-800 px-4 py-3 rounded-xl shadow-2xl border border-gray-200 dark:border-gray-700 w-full sm:w-auto">
-                    <div class="flex items-center gap-3">
+                    <div class="flex items-center gap-4">
                         <i class="fa-solid fa-file-alt text-gray-800 dark:text-gray-100 text-2xl"></i>
                         <span
                             class="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white leading-tight truncate max-w-[150px] sm:max-w-2xl overflow-hidden whitespace-nowrap">
@@ -46,7 +46,7 @@
                                     <i class="fa-solid fa-forward mr-1"></i> {{ __($report->type) }}
                                 </span>
                             @endif
-                            <span class="text-sm font-medium text-gray-600 dark:text-gray-300">
+                            <span class="text-sm font-medium text-gray-600 dark:text-gray-300 mx-2">
                                 {{ __('Folio') }} #{{ $report->id }}
                             </span>
                             @if ($report->type === 'Momentary' && $report->status === 'Revision')

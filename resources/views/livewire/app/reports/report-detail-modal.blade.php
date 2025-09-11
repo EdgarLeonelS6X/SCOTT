@@ -17,7 +17,7 @@
                         <i class="fa-solid fa-triangle-exclamation mr-1"></i>
                         {{ __($selectedReport->type) }}
                     </span>
-                    <span class="text-sm font-medium text-gray-500 dark:text-gray-400">
+                    <span class="text-sm font-medium text-gray-500 dark:text-gray-400 ml-2">
                         {{ __('Folio') }} #{{ $selectedReport->id }}
                     </span>
                 </div>

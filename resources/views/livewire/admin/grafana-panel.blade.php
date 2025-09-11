@@ -12,50 +12,55 @@
 
         <div class="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
             <div x-data="{
-            open: false,
-            search: '',
-            selectedChannel: undefined,
-            channels: @js($channels->map(fn($c) => [
-                'id' => $c->id,
-                'number' => $c->number,
-                'name' => $c->name,
-                'image' => $c->image,
-                'url' => $c->url,
-                'multicast' => $channelMulticasts[$c->number] ?? null,
-            ])),
-            get filteredChannels() {
-                if (this.search === '') return this.channels;
-                const term = this.search.toLowerCase();
-                return this.channels.filter(c =>
-                    c.name.toLowerCase().includes(term) ||
-                    c.number.toString().includes(term)
-                );
-            },
-            selectChannel(channel) {
-                this.selectedChannel = channel;
-                this.search = channel.number + ' ' + channel.name;
-                this.open = false;
-                $wire.set('selectedChannel', channel.id);
-            },
-            init() {
-                this.$nextTick(() => {
-                    if (this.$wire.selectedChannel) {
-                        const found = this.channels.find(c => c.id == this.$wire.selectedChannel);
-                        if (found) {
-                            this.selectedChannel = found;
-                            this.search = found.number + ' ' + found.name;
-                        }
+                open: false,
+                search: '',
+                selectedChannel: undefined,
+                channels: @js($channels->map(fn($c) => [
+                    'id' => $c->id,
+                    'number' => $c->number,
+                    'name' => $c->name,
+                    'image' => $c->image,
+                    'url' => $c->url,
+                    'multicast' => $channelMulticasts[$c->number] ?? null,
+                ])),
+                get filteredChannels() {
+                    if (this.open && this.selectedChannel && this.search === (this.selectedChannel.number + ' ' + this.selectedChannel.name)) {
+                        return this.channels;
                     }
-                    this.$watch('$wire.selectedChannel', (id) => {
-                        const found = this.channels.find(c => c.id == id);
-                        this.selectedChannel = found || undefined;
-                        if (found) {
-                            this.search = found.number + ' ' + found.name;
-                        }
+                    if (this.search === '') return this.channels;
+                    const term = this.search.toLowerCase();
+                    return this.channels.filter(c => {
+                        const combined = (c.number + ' ' + c.name).toLowerCase();
+                        return c.name.toLowerCase().includes(term)
+                            || c.number.toString().includes(term)
+                            || combined.includes(term);
                     });
-                });
-            }
-        }" x-init="init()" class="flex flex-col gap-4">
+                },
+                selectChannel(channel) {
+                    this.selectedChannel = channel;
+                    this.search = channel.number + ' ' + channel.name;
+                    this.open = false;
+                    $wire.set('selectedChannel', channel.id);
+                },
+                init() {
+                    this.$nextTick(() => {
+                        if (this.$wire.selectedChannel) {
+                            const found = this.channels.find(c => c.id == this.$wire.selectedChannel);
+                            if (found) {
+                                this.selectedChannel = found;
+                                this.search = found.number + ' ' + found.name;
+                            }
+                        }
+                        this.$watch('$wire.selectedChannel', (id) => {
+                            const found = this.channels.find(c => c.id == id);
+                            this.selectedChannel = found || undefined;
+                            if (found) {
+                                this.search = found.number + ' ' + found.name;
+                            }
+                        });
+                    });
+                }
+            }" x-init="init()" class="flex flex-col gap-4">
                 <label class="block text-base font-semibold text-gray-700 dark:text-gray-200">
                     <i class="fa-solid fa-tv mr-1.5"></i>
                     {{ __('Select channel') }}
@@ -63,10 +68,10 @@
 
                 <div class="flex flex-col md:flex-row items-stretch gap-4">
                     <div class="relative w-full">
-                        <img x-show="selectedChannel" :src="selectedChannel.image"
+                        <img x-show="selectedChannel && search === (selectedChannel.number + ' ' + selectedChannel.name)" :src="selectedChannel.image"
                             class="absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 object-contain rounded bg-white dark:bg-gray-700">
-                        <input type="text" x-model="search" @focus="open = true" @click="open = true; search = ''"
-                            @input="open = true" @click.away="open = false" placeholder="{{ __('Search channel...') }}"
+                        <input type="text" x-model="search" @focus="open = true" @click="open = true"
+                                @input="open = true" @click.away="open = false" placeholder="{{ __('Search channel...') }}"
                             class="w-full pl-16 pr-4 py-3 rounded-lg bg-gray-50 border border-gray-300 dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all"
                             autocomplete="off">
 
