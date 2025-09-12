@@ -22,7 +22,7 @@ use App\Enums\ChannelReviewer;
                             <h3 title="{{ __('Click here to edit the category name') }}" x-show="!editingName"
                                 @click.stop="editingName = true; if (firstEdit) { categoryName = ''; firstEdit = false; }"
                                 class="cursor-pointer px-3 py-2 rounded-full shadow-md flex items-center gap-2 transition bg-gray-50 border dark:bg-gray-700 dark:border-white truncate max-w-[280px] md:max-w-md">
-                                <i class="fa-solid fa-pen text-gray-800 dark:text-gray-200"></i>
+                                <i class="fa-solid fa-pen text-gray-800 dark:text-gray-200">...</i>
                                 <span class="truncate" x-text="categoryName"></span>
                             </h3>
                             <x-input x-show="editingName" x-model="categoryName" @click.stop
@@ -36,7 +36,7 @@ use App\Enums\ChannelReviewer;
                         </div>
                     </div>
                     <div class="flex items-center gap-3 transition-all duration-300"
-                        :class="(categoryName.length > 8 || editingName) ? 'mt-4 sm:mt-0' : 'mt-0'">
+                        :class="(categoryName.length > 2 || editingName) ? 'mt-4 sm:mt-0' : 'mt-0'">
                         <span class="bg-primary-100 text-primary-800 text-sm font-medium py-1 px-3 rounded-full">
                             {{ __('Contains') }} {{ $this->getChannelCount(0) }}
                             {{ $this->getChannelCount(0) === 1 ? __('Channel') : __('Channels') }}

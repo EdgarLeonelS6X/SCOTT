@@ -74,17 +74,35 @@ class CreateProfileReport extends Component
         try {
             $this->validateReportData();
 
+            if (empty($this->reportData['channels']) || count($this->reportData['channels']) < 1) {
+                $this->dispatch('swal', [
+                    'icon' => 'error',
+                    'title' => __('Error'),
+                    'text' => __('You must select at least one channel to create a report.')
+                ]);
+                return;
+            }
+
             $channelIds = array_column($this->reportData['channels'], 'channel_id');
             $channelCounts = array_count_values($channelIds);
-
+            $repeatedChannels = [];
             foreach ($channelCounts as $channelId => $count) {
                 if ($count > 1) {
-                    throw ValidationException::withMessages([
-                        'reportData.channels' => __('The channel ":channel" cannot be selected more than once.', [
-                            'channel' => Channel::find($channelId)?->number ?? $channelId
-                        ])
-                    ]);
+                    $repeatedChannels[] = Channel::find($channelId)?->number ?? $channelId;
                 }
+            }
+            if (!empty($repeatedChannels)) {
+                $errorMessages = '<ul style="text-align: center;">';
+                foreach ($repeatedChannels as $channelNumber) {
+                    $errorMessages .= "<li>• " . __('The channel ":channel" cannot be selected more than once.', ['channel' => $channelNumber]) . "</li>";
+                }
+                $errorMessages .= '</ul>';
+                $this->dispatch('swal', [
+                    'icon' => 'error',
+                    'title' => __('Error'),
+                    'html' => '<b>' . __('Your report log contains errors:') . '</b><br><br>' . $errorMessages,
+                ]);
+                return;
             }
 
             $report = Report::create([

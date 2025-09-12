@@ -24,7 +24,7 @@
                         </div>
                     </div>
                     <div class="flex items-center gap-3 transition-all duration-300"
-                        :class="(reportTitle.length > 8 || editingTitle) ? 'mt-4 sm:mt-0' : 'mt-0'">
+                        :class="(reportTitle.length > 1 || editingTitle) ? 'mt-4 sm:mt-0' : 'mt-0'">
                         <span class="bg-primary-100 text-primary-800 text-sm font-medium py-1 px-3 rounded-full">
                             {{ __('Contains') }} {{ count($reportData['channels']) }}
                             {{ count($reportData['channels']) === 1 ? __('Channel') : __('Channels') }}
@@ -46,56 +46,66 @@
 
                             <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
                                 <div x-data="{
-                                                                            open: false,
-                                                                            search: '',
-                                                                            selectedChannelImage: '',
-                                                                            selectedChannelNumber: '',
-                                                                            selectedChannelName: '',
-                                                                            selectedChannelProfiles: null,
-                                                                            channels: {{ $channels->toJson() }},
-                                                                            clearSelection() {
-                                                                                this.selectedChannelImage = '';
-                                                                                this.selectedChannelNumber = '';
-                                                                                this.selectedChannelName = '';
-                                                                                this.selectedChannelProfiles = null;
-                                                                                this.search = '';
-                                                                                this.open = true;
-                                                                            },
-                                                                            get filteredChannels() {
-                                                                                if (this.search === '') return this.channels;
-                                                                                const term = this.search.toLowerCase();
-                                                                                return this.channels.filter(c =>
-                                                                                    (c.name.toLowerCase().includes(term)) ||
-                                                                                    (c.number.toString().includes(term)) ||
-                                                                                    ((c.number + ' ' + c.name).toLowerCase().includes(term))
-                                                                                );
-                                                                            },
-                                                                        }" x-init="
-                                                                            const selectedId = @js(data_get($reportData['channels'][$index] ?? [], 'channel_id'));
-                                                                            if (selectedId) {
-                                                                                const selected = channels.find(c => c.id === selectedId);
-                                                                                if (selected) {
-                                                                                    selectedChannelImage = selected.image;
-                                                                                    selectedChannelNumber = selected.number;
-                                                                                    selectedChannelName = selected.name;
-                                                                                    selectedChannelProfiles = selected.profiles;
-                                                                                    search = selected.number + ' ' + selected.name;
-                                                                                }
-                                                                            }
-                                                                        ">
+                                    open: false,
+                                    search: '',
+                                    selectedChannel: undefined,
+                                    channels: @js(collect($channels)->map(fn($c) => [
+                                        'id' => is_array($c) ? $c['id'] : $c->id,
+                                        'number' => is_array($c) ? $c['number'] : $c->number,
+                                        'name' => is_array($c) ? $c['name'] : $c->name,
+                                        'image' => is_array($c) ? $c['image'] : $c->image,
+                                        'profiles' => is_array($c) ? ($c['profiles'] ?? null) : ($c->profiles ?? null),
+                                    ])),
+                                    get filteredChannels() {
+                                        if (this.open && this.selectedChannel && this.search === (this.selectedChannel.number + ' ' + this.selectedChannel.name)) {
+                                            return this.channels;
+                                        }
+                                        if (this.search === '') return this.channels;
+                                        const term = this.search.toLowerCase();
+                                        return this.channels.filter(c => {
+                                            const combined = (c.number + ' ' + c.name).toLowerCase();
+                                            return c.name.toLowerCase().includes(term)
+                                                || c.number.toString().includes(term)
+                                                || combined.includes(term);
+                                        });
+                                    },
+                                    selectChannel(channel) {
+                                        this.selectedChannel = channel;
+                                        this.search = channel.number + ' ' + channel.name;
+                                        this.open = false;
+                                        $wire.set('reportData.channels.{{ $index }}.channel_id', channel.id);
+                                    },
+                                    init() {
+                                        this.$nextTick(() => {
+                                            const selectedId = $wire.get('reportData.channels.{{ $index }}.channel_id');
+                                            if (selectedId) {
+                                                const found = this.channels.find(c => c.id == selectedId);
+                                                if (found) {
+                                                    this.selectedChannel = found;
+                                                    this.search = found.number + ' ' + found.name;
+                                                }
+                                            }
+                                            this.$watch(() => $wire.get('reportData.channels.{{ $index }}.channel_id'), (id) => {
+                                                const found = this.channels.find(c => c.id == id);
+                                                this.selectedChannel = found || undefined;
+                                                if (found) {
+                                                    this.search = found.number + ' ' + found.name;
+                                                }
+                                            });
+                                        });
+                                    }
+                                }" x-init="init()">
                                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                         <i class="fa-solid fa-tv mr-1.5"></i> {{ __('Channel') }}
                                     </label>
 
                                     <div class="relative mb-2">
-                                        <input type="text" x-model="search" :placeholder="selectedChannelNumber
-                                                                                    ? selectedChannelNumber + ' ' + selectedChannelName
-                                                                                    : '{{ __('Search channel...') }}'"
+                                        <input type="text" x-model="search" :placeholder="selectedChannel ? (selectedChannel.number + ' ' + selectedChannel.name) : '{{ __('Search channel...') }}'"
                                             @focus="open = true" @input="if (search === '') clearSelection()"
                                             @click.away="open = false"
-                                            class="w-full p-2.5 pl-14 rounded-lg bg-gray-50 border border-gray-300 dark:bg-gray-700 dark:text-white focus:ring-primary-600 focus:border-primary-600">
+                                            class="w-full p-2.5 pl-14 rounded-lg bg-gray-50 border border-gray-300 dark:bg-gray-700 dark:text-white focus:ring-primary-600 focus:border-primary-600 truncate">
                                         <div class="absolute left-3 top-1/2 -translate-y-1/2 flex items-center">
-                                            <img x-show="selectedChannelImage" :src="selectedChannelImage"
+                                            <img x-show="selectedChannel && selectedChannel.image" :src="selectedChannel.image"
                                                 class="w-8 h-8 object-contain object-center" x-cloak>
                                         </div>
                                         <i class="fa-solid fa-chevron-down absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 dark:text-gray-300 cursor-pointer"
@@ -122,20 +132,12 @@
                                             <ul
                                                 class="max-h-60 overflow-y-auto scrollbar-thin dark:scrollbar-thumb-gray-600">
                                                 <template x-for="channel in filteredChannels" :key="channel.id">
-                                                    <li @click="
-                                                                                                $wire.set('reportData.channels.{{ $index }}.channel_id', channel.id);
-                                                                                                selectedChannelImage = channel.image;
-                                                                                                selectedChannelNumber = channel.number;
-                                                                                                selectedChannelName = channel.name;
-                                                                                                selectedChannelProfiles = channel.profiles;
-                                                                                                search = selectedChannelNumber + ' ' + selectedChannelName;
-                                                                                                open = false;
-                                                                                            "
+                                                    <li @click="selectChannel(channel)"
                                                         class="flex flex-col px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 cursor-pointer">
                                                         <div class="flex items-center">
                                                             <img :src="channel.image" class="w-8 h-8 object-contain">
-                                                            <span class="ml-3 text-sm text-gray-900 dark:text-gray-300"
-                                                                x-text="channel.number + ' ' + channel.name"></span>
+                                                            <span class="ml-3 text-sm text-gray-900 dark:text-gray-300 truncate max-w-[180px]"
+                                                                x-text="channel.number + ' ' + channel.name" :title="channel.number + ' ' + channel.name"></span>
                                                         </div>
                                                         <div class="flex gap-2 mt-1 text-xs">
                                                             <span

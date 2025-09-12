@@ -14,7 +14,7 @@
                         <div :class="isFixed ? 'flex items-center gap-2 w-full' : 'flex flex-col w-full gap-2'">
                             <div
                                 :class="isFixed ? 'flex items-center justify-between gap-2 w-full' :
-                                    'flex items-center gap-2 max-w-[270px] md:max-w-lg'">
+                                    'flex items-center gap-2 min-w-0'">
                                 <button type="button" class="text-primary-600" @click.stop="open = !open">
                                     <i :class="open ? 'fas fa-chevron-down' : 'fas fa-chevron-right'"></i>
                                 </button>
@@ -38,23 +38,24 @@
                                     <div class="ml-auto">
                                         <span
                                             class="bg-primary-100 text-primary-800 text-sm font-medium py-1 px-3 rounded-full whitespace-nowrap">
-                                            {{ __('Contains') }} {{ $this->getChannelCount($index) }}
+                                            <span class="hidden sm:inline">{{ __('Contains') }}</span> {{ $this->getChannelCount($index) }}
                                             {{ $this->getChannelCount($index) === 1 ? __('Channel') : __('Channels') }}
                                         </span>
                                     </div>
                                 </template>
                             </div>
                             <template x-if="!isFixed">
-                                <div class="flex items-center justify-between w-full mt-2">
-                                    <span
-                                        class="bg-primary-100 text-primary-800 text-sm font-medium py-1 px-3 rounded-full whitespace-nowrap">
-                                        {{ __('Contains') }} {{ $this->getChannelCount($index) }}
-                                        {{ $this->getChannelCount($index) === 1 ? __('Channel') : __('Channels') }}
-                                    </span>
+                                <div class="flex items-center gap-2 w-full mt-2 ml-auto">
+                                    <div class="flex flex-1 items-center gap-2">
+                                        <span
+                                            class="bg-primary-100 text-primary-800 text-sm font-medium py-1 px-3 rounded-full whitespace-nowrap">
+                                            <span class="hidden sm:inline">{{ __('Contains') }}</span> {{ $this->getChannelCount($index) }}
+                                            {{ $this->getChannelCount($index) === 1 ? __('Channel') : __('Channels') }}
+                                        </span>
+                                    </div>
                                     <button type="button" @click.stop="$wire.removeCategory({{ $index }})"
                                         class="inline-flex items-center text-red-500 hover:text-red-700 dark:hover:text-red-400 text-sm">
-                                        <i class="fas fa-trash-alt mr-1"></i>
-                                        <span class="hidden sm:inline">{{ __('Delete') }}</span>
+                                        <i class="fas fa-trash-alt mr-1"></i>{{ __('Delete category') }}
                                     </button>
                                 </div>
                             </template>
@@ -99,72 +100,70 @@
                                     <div x-data="{
                                         open: false,
                                         search: '',
-                                        selectedChannelImage: '',
-                                        selectedChannelNumber: '',
-                                        selectedChannelName: '',
-                                        channels: {{ $channelsList->toJson() }},
-                                        clearSelection() {
-                                            this.selectedChannelImage = '';
-                                            this.selectedChannelNumber = '';
-                                            this.selectedChannelName = '';
-                                            this.search = '';
-                                            this.open = true;
-                                        },
+                                        selectedChannel: undefined,
+                                        channels: @js($channelsList->map(fn($c) => [
+                                            'id' => $c['id'],
+                                            'number' => $c['number'],
+                                            'name' => $c['name'],
+                                            'image' => $c['image']
+                                        ])),
                                         get filteredChannels() {
+                                            if (this.open && this.selectedChannel && this.search === (this.selectedChannel.number + ' ' + this.selectedChannel.name)) {
+                                                return this.channels;
+                                            }
                                             if (this.search === '') return this.channels;
-
                                             const term = this.search.toLowerCase();
-
-                                            return this.channels.filter(c =>
-                                                c.name.toLowerCase().includes(term) ||
-                                                c.number.toString().includes(term) ||
-                                                (c.number + ' ' + c.name)
-                                                .toLowerCase().includes(term)
-                                            );
+                                            return this.channels.filter(c => {
+                                                const combined = (c.number + ' ' + c.name).toLowerCase();
+                                                return c.name.toLowerCase().includes(term)
+                                                    || c.number.toString().includes(term)
+                                                    || combined.includes(term);
+                                            });
+                                        },
+                                        selectChannel(channel) {
+                                            this.selectedChannel = channel;
+                                            this.search = channel.number + ' ' + channel.name;
+                                            this.open = false;
+                                            $wire.set('categories.{{ $index }}.channels.{{ $channelIndex }}.channel_id', channel.id);
+                                        },
+                                        init() {
+                                            this.$nextTick(() => {
+                                                const selectedId = $wire.get('categories.{{ $index }}.channels.{{ $channelIndex }}.channel_id');
+                                                if (selectedId) {
+                                                    const found = this.channels.find(c => c.id == selectedId);
+                                                    if (found) {
+                                                        this.selectedChannel = found;
+                                                        this.search = found.number + ' ' + found.name;
+                                                    }
+                                                }
+                                                this.$watch(() => $wire.get('categories.{{ $index }}.channels.{{ $channelIndex }}.channel_id'), (id) => {
+                                                    const found = this.channels.find(c => c.id == id);
+                                                    this.selectedChannel = found || undefined;
+                                                    if (found) {
+                                                        this.search = found.number + ' ' + found.name;
+                                                    }
+                                                });
+                                            });
                                         }
-                                    }" x-init="selectedChannelImage = '{{ $selectedChannel['image'] ?? '' }}';
-                                    selectedChannelNumber = '{{ $selectedChannel['number'] ?? '' }}';
-                                    selectedChannelName = '{{ $selectedChannel['name'] ?? '' }}';">
+                                    }" x-init="init()">
                                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                             <i class="fa-solid fa-tv mr-1.5"></i> {{ __('Channel') }}
                                         </label>
-                                        <div class="relative">
-                                            <input type="text" x-model="search"
-                                                :placeholder="selectedChannelNumber ? selectedChannelNumber + ' ' +
-                                                    selectedChannelName : '{{ __('Search channel...') }}'"
-                                                @focus="open = true" @input="if (search === '') clearSelection()"
-                                                @click.away="open = false"
-                                                class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 pl-14 dark:bg-gray-700 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
-                                            <div
-                                                class="absolute left-3 top-1/2 transform -translate-y-1/2 flex items-center space-x-2">
-                                                <img x-show="selectedChannelImage" :src="selectedChannelImage"
-                                                    class="w-8 h-8 object-contain object-center transition-opacity duration-200"
-                                                    x-cloak>
-                                            </div>
-                                            <i class="fa-solid fa-chevron-down absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 dark:text-gray-300 cursor-pointer transition-transform duration-200"
-                                                :class="open ? 'rotate-180' : ''" @click="open = !open"></i>
-                                        </div>
-                                        <div class="relative">
-                                            <div x-show="open" x-cloak
-                                                class="absolute z-10 mt-1 w-full max-w-md bg-white border border-gray-300 rounded-lg shadow-2xl dark:bg-gray-700 dark:border-gray-600 transition-all duration-200 ease-in-out">
-                                                <ul
-                                                    class="max-h-60 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-100 dark:scrollbar-thumb-gray-600 dark:scrollbar-track-gray-700">
-                                                    <template x-for="channel in filteredChannels"
-                                                        :key="channel.id">
-                                                        <li @click="
-                                                                $wire.set('categories.{{ $index }}.channels.{{ $channelIndex }}.channel_id', channel.id);
-                                                                selectedChannelImage = channel.image;
-                                                                selectedChannelNumber = channel.number;
-                                                                selectedChannelName = channel.name;
-                                                                search = selectedChannelNumber + ' ' + selectedChannelName;
-                                                                open = false;
-                                                            "
-                                                            class="cursor-pointer px-4 py-2 flex items-center space-x-3 hover:bg-gray-100 dark:hover:bg-gray-600 transition-all duration-200 ease-in-out">
-                                                            <img :src="channel.image"
-                                                                class="w-8 h-8 object-contain">
-                                                            <span
-                                                                class="text-sm font-medium text-gray-900 dark:text-gray-300"
-                                                                x-text="channel.number + ' ' + channel.name"></span>
+                                        <div class="relative flex-1">
+                                            <img x-show="selectedChannel && search === (selectedChannel.number + ' ' + selectedChannel.name)" :src="selectedChannel?.image"
+                                                class="absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 object-contain rounded bg-white dark:bg-gray-700">
+                                            <input type="text" x-model="search" @focus="open = true" @click="open = true"
+                                                @input="open = true" @click.away="open = false" placeholder="{{ __('Search channel...') }}"
+                                                class="w-full pl-12 pr-2 py-2 rounded-md bg-gray-50 border border-gray-300 dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-primary-500 text-sm transition-all h-10"
+                                                autocomplete="off">
+                                            <div x-show="open"
+                                                class="absolute z-20 mt-1 w-full bg-white border border-gray-300 rounded-lg shadow-2xl dark:bg-gray-700 dark:border-gray-600">
+                                                <ul class="max-h-48 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 dark:scrollbar-thumb-gray-600">
+                                                    <template x-for="channel in filteredChannels" :key="channel.id">
+                                                        <li @click="selectChannel(channel)"
+                                                            class="cursor-pointer px-3 py-1.5 flex items-center gap-2 hover:bg-gray-200 dark:hover:bg-gray-600 rounded transition">
+                                                            <img :src="channel.image" class="w-6 h-6 object-contain rounded border-gray-200 dark:border-gray-700">
+                                                            <span class="text-sm font-medium text-gray-900 dark:text-gray-200 truncate max-w-[280px] block" x-text="channel.number + ' ' + channel.name" :title="channel.number + ' ' + channel.name"></span>
                                                         </li>
                                                     </template>
                                                 </ul>

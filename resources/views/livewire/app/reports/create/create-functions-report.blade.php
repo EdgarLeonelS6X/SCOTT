@@ -93,33 +93,52 @@
                                     <div x-data="{
                                         open: false,
                                         search: '',
-                                        selectedChannel: null,
-                                        channels: {{ $channelsList->toJson() }},
-                                        clearSelection() {
-                                            this.selectedChannel = null;
-                                            this.search = '';
-                                            this.open = true;
-                                        },
+                                        selectedChannel: undefined,
+                                        channels: @js($channelsList->map(fn($c) => [
+                                            'id' => $c['id'],
+                                            'number' => $c['number'],
+                                            'name' => $c['name'],
+                                            'image' => $c['image']
+                                        ])),
                                         get filteredChannels() {
+                                            if (this.open && this.selectedChannel && this.search === (this.selectedChannel.number + ' ' + this.selectedChannel.name)) {
+                                                return this.channels;
+                                            }
                                             if (this.search === '') return this.channels;
-
                                             const term = this.search.toLowerCase();
-
-                                            return this.channels.filter(c =>
-                                                c.name.toLowerCase().includes(term) ||
-                                                c.number.toString().includes(term) ||
-                                                (c.number + ' ' + c.name)
-                                                .toLowerCase().includes(term)
-                                            );
+                                            return this.channels.filter(c => {
+                                                const combined = (c.number + ' ' + c.name).toLowerCase();
+                                                return c.name.toLowerCase().includes(term)
+                                                    || c.number.toString().includes(term)
+                                                    || combined.includes(term);
+                                            });
+                                        },
+                                        selectChannel(channel) {
+                                            this.selectedChannel = channel;
+                                            this.search = channel.number + ' ' + channel.name;
+                                            this.open = false;
+                                            $wire.set('categories.{{ $index }}.channels.{{ $channelIndex }}.channel_id', channel.id);
+                                        },
+                                        init() {
+                                            this.$nextTick(() => {
+                                                const selectedId = $wire.get('categories.{{ $index }}.channels.{{ $channelIndex }}.channel_id');
+                                                if (selectedId) {
+                                                    const found = this.channels.find(c => c.id == selectedId);
+                                                    if (found) {
+                                                        this.selectedChannel = found;
+                                                        this.search = found.number + ' ' + found.name;
+                                                    }
+                                                }
+                                                this.$watch(() => $wire.get('categories.{{ $index }}.channels.{{ $channelIndex }}.channel_id'), (id) => {
+                                                    const found = this.channels.find(c => c.id == id);
+                                                    this.selectedChannel = found || undefined;
+                                                    if (found) {
+                                                        this.search = found.number + ' ' + found.name;
+                                                    }
+                                                });
+                                            });
                                         }
-                                    }" x-init="@if($selectedChannel)
-                                    selectedChannel = {
-                                        id: '{{ $selectedChannel['id'] ?? '' }}',
-                                        number: '{{ $selectedChannel['number'] ?? '' }}',
-                                        name: '{{ $selectedChannel['name'] ?? '' }}',
-                                        image: '{{ $selectedChannel['image'] ?? '' }}'
-                                    };
-                                    @endif">
+                                    }" x-init="init()">
                                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                             <i class="fa-solid fa-tv mr-1.5"></i> {{ __('Channel') }}
                                         </label>

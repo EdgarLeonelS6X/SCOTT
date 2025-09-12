@@ -640,5 +640,8 @@
     "Edit stage": "Editar etapa",
     "Delete stage": "Eliminar etapa",
     "You are not authorized to change this status.": "No estás autorizado para cambiar este estado.",
-    "User status changed successfully.": "El estado del usuario se cambió correctamente."
+    "User status changed successfully.": "El estado del usuario se cambió correctamente.",
+    "Delete category": "Eliminar categoría",
+    "You must select at least one channel to create a report.": "Debe seleccionar al menos un canal para crear un informe.",
+    "The channel \":channel\" cannot be selected more than once.": "El canal \":channel\" no puede ser seleccionado más de una vez."
 }
