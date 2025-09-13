@@ -103,7 +103,7 @@
                                         <input type="text" x-model="search" :placeholder="selectedChannel ? (selectedChannel.number + ' ' + selectedChannel.name) : '{{ __('Search channel...') }}'"
                                             @focus="open = true" @input="if (search === '') clearSelection()"
                                             @click.away="open = false"
-                                            class="w-full p-2.5 pl-14 rounded-lg bg-gray-50 border border-gray-300 dark:bg-gray-700 dark:text-white focus:ring-primary-600 focus:border-primary-600 truncate">
+                                            class="w-full px-4 py-2 pl-14 rounded-lg bg-gray-50 border border-gray-300 dark:bg-gray-700 dark:text-white focus:ring-primary-600 focus:border-primary-600 truncate">
                                         <div class="absolute left-3 top-1/2 -translate-y-1/2 flex items-center">
                                             <img x-show="selectedChannel && selectedChannel.image" :src="selectedChannel.image"
                                                 class="w-8 h-8 object-contain object-center" x-cloak>
