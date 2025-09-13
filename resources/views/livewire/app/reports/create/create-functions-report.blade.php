@@ -147,7 +147,7 @@
                                                 :placeholder="selectedChannel ? selectedChannel.number + ' ' + selectedChannel.name :
                                                     '{{ __('Search channel...') }}'"
                                                 @focus="open = true" @input="open = true" @click.away="open = false"
-                                                class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 pl-14 dark:bg-gray-700 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                                                class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 pl-14 dark:bg-gray-700 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500 cursor-pointer">
                                             <div
                                                 class="absolute left-3 top-1/2 transform -translate-y-1/2 flex items-center space-x-2">
                                                 <template x-if="selectedChannel">
@@ -172,9 +172,9 @@
                                                                 search = channel.number + ' ' + channel.name;
                                                                 open = false;
                                                             "
-                                                            class="cursor-pointer px-4 py-2 flex items-center space-x-3 hover:bg-gray-100 dark:hover:bg-gray-600 transition-all duration-200 ease-in-out">
+                                                            class="cursor-pointer px-3 py-1.5 flex items-center space-x-3 hover:bg-gray-100 dark:hover:bg-gray-600 transition-all duration-200 ease-in-out">
                                                             <img :src="channel.image"
-                                                                class="w-10 h-10 object-contain object-center">
+                                                                class="w-6 h-6 object-contain object-center">
                                                             <span
                                                                 class="text-sm font-medium text-gray-900 dark:text-gray-300"
                                                                 x-text="channel.number + ' ' + channel.name"></span>

@@ -111,7 +111,7 @@ use App\Enums\ChannelReviewer;
                                             class="absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 object-contain rounded bg-white dark:bg-gray-700">
                                         <input type="text" x-model="search" @focus="open = true" @click="open = true"
                                             @input="open = true" @click.away="open = false" placeholder="{{ __('Search channel...') }}"
-                                            class="w-full pl-12 pr-2 py-3 rounded-md bg-gray-50 border border-gray-300 dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-primary-500 text-sm transition-all"
+                                            class="w-full pl-12 pr-2 py-3 rounded-lg bg-gray-50 border border-gray-300 dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-primary-500 text-sm transition-all cursor-pointer"
                                             autocomplete="off">
                                         <div x-show="open"
                                             class="absolute z-20 mt-1 w-full bg-white border border-gray-300 rounded-lg shadow-2xl dark:bg-gray-700 dark:border-gray-600">
@@ -125,6 +125,8 @@ use App\Enums\ChannelReviewer;
                                                 </template>
                                             </ul>
                                         </div>
+                                        <i class="fa-solid fa-chevron-down absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 dark:text-gray-300 cursor-pointer transition-transform duration-200"
+                                                :class="open ? 'rotate-180' : ''" @click="open = !open"></i>
                                     </div>
                                 </div>
                                 <div>

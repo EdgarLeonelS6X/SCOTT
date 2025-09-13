@@ -68,11 +68,12 @@
 
                 <div class="flex flex-col md:flex-row items-stretch gap-4">
                     <div class="relative w-full">
-                        <img x-show="selectedChannel && search === (selectedChannel.number + ' ' + selectedChannel.name)" :src="selectedChannel.image"
+                        <img x-show="selectedChannel && search === (selectedChannel.number + ' ' + selectedChannel.name)"
+                            :src="selectedChannel.image"
                             class="absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 object-contain rounded bg-white dark:bg-gray-700">
                         <input type="text" x-model="search" @focus="open = true" @click="open = true"
-                                @input="open = true" @click.away="open = false" placeholder="{{ __('Search channel...') }}"
-                            class="w-full pl-16 pr-4 py-3 rounded-lg bg-gray-50 border border-gray-300 dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all"
+                            @input="open = true" @click.away="open = false" placeholder="{{ __('Search channel...') }}"
+                            class="w-full pl-16 pr-4 py-3 rounded-lg bg-gray-50 border border-gray-300 dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all cursor-pointer"
                             autocomplete="off">
 
                         <div x-show="open"
@@ -90,6 +91,8 @@
                                 </template>
                             </ul>
                         </div>
+                        <i class="fa-solid fa-chevron-down absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 dark:text-gray-300 cursor-pointer transition-transform duration-200"
+                            :class="open ? 'rotate-180' : ''" @click="open = !open"></i>
                     </div>
 
                     <div class="flex items-center">
@@ -131,8 +134,7 @@
             <iframe wire:key="{{ $this->iframeKey }}" src="{{ $this->grafanaUrl }}" height="500" frameborder="0"
                 loading="lazy" referrerpolicy="no-referrer"
                 class="w-full rounded-lg border shadow-inner transition-all duration-200"
-                x-data="{ theme: localStorage.getItem('color-theme') === 'dark' ? 'dark' : 'light' }"
-                x-init="
+                x-data="{ theme: localStorage.getItem('color-theme') === 'dark' ? 'dark' : 'light' }" x-init="
                     $watch('theme', value => {
                         $wire.set('theme', value);
                     });
@@ -146,8 +148,7 @@
                     });
                     theme = localStorage.getItem('color-theme') === 'dark' ? 'dark' : 'light';
                     $wire.set('theme', theme);
-                "
-            ></iframe>
+                "></iframe>
 
             {{-- <div class="text-xs text-gray-500 mt-4">
                 {{ __('Current URL:') }} <code class="break-all">{{ $this->grafanaUrl }}</code>
