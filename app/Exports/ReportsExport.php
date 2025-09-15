@@ -12,16 +12,35 @@ use Maatwebsite\Excel\Concerns\WithStyles;
 
 class ReportsExport implements FromCollection, WithHeadings, ShouldAutoSize, WithMapping, WithStyles
 {
-    public $reports;
+    public $details;
+    public $search;
 
-    public function __construct($reports)
+    public function __construct($reports, $search = null)
     {
-        $this->reports = $reports;
+        $this->search = $search;
+
+        $details = collect($reports)->flatMap(function ($report) {
+            $filtered = $report->reportDetails;
+            if ($this->search) {
+                $search = strtolower($this->search);
+                $filtered = $filtered->filter(function ($detail) use ($search) {
+                    $number = strtolower($detail->channel->number ?? '');
+                    $name   = strtolower($detail->channel->name ?? '');
+                    return str_contains($number, $search) || str_contains($name, $search);
+                });
+            }
+            return $filtered->map(function ($detail) use ($report) {
+                $detail->parentReport = $report;
+                return $detail;
+            });
+        });
+
+        $this->details = $details;
     }
 
     public function collection()
     {
-        return $this->reports;
+        return $this->details;
     }
 
     public function headings(): array
@@ -37,7 +56,9 @@ class ReportsExport implements FromCollection, WithHeadings, ShouldAutoSize, Wit
             'Reviewed By',
             'Attended By',
             'Duration',
-            'Associated Channels',
+            'Channel Number',
+            'Channel Name',
+            'Subcategory',
             'Protocol',
             'Media',
             'Description',
@@ -45,125 +66,48 @@ class ReportsExport implements FromCollection, WithHeadings, ShouldAutoSize, Wit
         ];
     }
 
-    public function map($report): array
+    public function map($detail): array
     {
-        $channels = $report->reportDetails
-            ->groupBy(function ($detail) use ($report) {
-                return $report->type === 'Momentary'
-                    ? ($report->category ?? 'Unknown Category')
-                    : ($detail->subcategory ?? 'Unknown Subcategory');
-            })
-            ->map(function ($details, $group) use ($report) {
-                if ($details->isEmpty()) {
-                    return "Category: {$group} - All channels verified correctly.";
-                }
+        $report = $detail->parentReport;
 
-                $channelsList = $details->map(function ($detail) {
-                    $number = $detail->channel->number ?? 'No Number';
-                    $name = $detail->channel->name ?? 'Unknown Channel';
-                    return "{$number} {$name}";
-                })->join(', ');
+        $number      = $detail->channel->number ?? 'No Number';
+        $name        = $detail->channel->name ?? 'Unknown Channel';
+        $subcategory = $detail->subcategory ?? 'Unknown Subcategory';
+        $protocol    = $detail->protocol ?? 'No Protocol';
 
-                return "Category: {$group} - {$channelsList}";
-            })
-            ->join("\n");
-
-        $protocols = $report->reportDetails
-            ->groupBy(function ($detail) use ($report) {
-                return $report->type === 'Momentary'
-                    ? ($report->category ?? 'Unknown Category')
-                    : ($detail->subcategory ?? 'Unknown Subcategory');
-            })
-            ->map(function ($details, $group) {
-                $channelsList = $details->map(function ($detail) {
-                    $number = $detail->channel->number ?? 'No Number';
-                    $name = $detail->channel->name ?? 'Unknown Channel';
-                    $protocol = $detail->protocol ?? 'No Protocol';
-                    return "{$number} {$name}: {$protocol}";
-                })->join(', ');
-
-                return "Category: {$group} - {$channelsList}";
-            })
-            ->join("\n");
-
-        $media = $report->reportDetails
-            ->groupBy(function ($detail) use ($report) {
-                return $report->type === 'Momentary'
-                    ? ($report->category ?? 'Unknown Category')
-                    : ($detail->subcategory ?? 'Unknown Subcategory');
-            })
-            ->map(function ($details, $group) use ($report) {
-                $channelsList = $details->map(function ($detail) use ($report) {
-                    $number = $detail->channel->number ?? 'No Number';
-                    $name = $detail->channel->name ?? 'Unknown Channel';
-                    $subcategory = $detail->subcategory ?? null;
-                    $media = $detail->media;
-
-                    if ($report->type === 'Functions' && in_array($subcategory, ['EPG', 'PC']) && (is_null($media) || $media == '')) {
-                        $media = 'Not Applicable';
-                    } else {
-                        $media = $media ?? 'No Media';
-                    }
-
-                    return "{$number} {$name}: {$media}";
-                })->join(', ');
-
-                return "Category: {$group} - {$channelsList}";
-            })
-            ->join("\n");
-
-        $descriptions = $report->reportDetails
-            ->map(function ($detail) use ($report) {
-                $number = $detail->channel->number ?? 'No Number';
-                $name = $detail->channel->name ?? 'Unknown Channel';
-
-                $categoryOrSubcategory = $report->type === 'Momentary'
-                    ? ($report->category ?? 'Unknown Category')
-                    : ($detail->subcategory ?? 'Unknown Subcategory');
-
-                if ($report->type === 'Functions' && $categoryOrSubcategory === 'CUTV') {
-                    $description = 'Not Applicable';
-                } else {
-                    $description = $detail->description ?? 'No Applicable';
-                }
-
-                return "Category: {$categoryOrSubcategory} - {$number} {$name}: {$description}";
-            })
-            ->join("\n");
+        if (
+            $report->type === 'Functions' &&
+            in_array($subcategory, ['EPG', 'PC']) &&
+            (is_null($detail->media) || $detail->media == '')
+        ) {
+            $media = 'Not Applicable';
+        } else {
+            $media = $detail->media ?? 'No Media';
+        }
+        if ($report->type === 'Functions' && $subcategory === 'CUTV') {
+            $description = 'Not Applicable';
+        } else {
+            $description = $detail->description ?? 'No Applicable';
+        }
         $losses = '';
-        if ($report->type === 'Functions') {
-            $losses = $report->reportDetails
-                ->where('subcategory', 'CUTV')
-                ->flatMap(function ($detail) {
-                    $channelNumber = $detail->channel->number ?? 'No Number';
-                    $channelName = $detail->channel->name ?? 'Unknown Channel';
-                    $subcategory = $detail->subcategory ?? 'No Subcategory';
-
-                    if ($detail->reportContentLosses->isEmpty()) {
-                        return [];
-                    }
-
-                    return $detail->reportContentLosses->map(function ($loss) use ($channelNumber, $channelName, $subcategory) {
-                        $start = \Carbon\Carbon::parse($loss->start_time);
-                        $end = \Carbon\Carbon::parse($loss->end_time);
-                        $diff = $start->diff($end);
-                        $days = (int)$diff->format('%a');
-                        $hours = (int)$diff->format('%H');
-                        $minutes = (int)$diff->format('%I');
-
-                        $duration = '';
-                        if ($days > 0) {
-                            $duration .= "{$days}d ";
-                        }
-                        if ($hours > 0 || $days > 0) {
-                            $duration .= "{$hours}h ";
-                        }
-                        $duration .= "{$minutes}m";
-
-                        return "Subcategory: {$subcategory}, Channel: {$channelNumber} {$channelName}, Start: {$start->format('d/m/Y H:i')}, End: {$end->format('d/m/Y H:i')}, Duration: {$duration}";
-                    });
-                })
-                ->join("\n");
+        if ($report->type === 'Functions' && $subcategory === 'CUTV' && !$detail->reportContentLosses->isEmpty()) {
+            $losses = $detail->reportContentLosses->map(function ($loss) use ($number, $name, $subcategory) {
+                $start = \Carbon\Carbon::parse($loss->start_time);
+                $end   = \Carbon\Carbon::parse($loss->end_time);
+                $diff  = $start->diff($end);
+                $days    = (int) $diff->format('%a');
+                $hours   = (int) $diff->format('%H');
+                $minutes = (int) $diff->format('%I');
+                $duration = '';
+                if ($days > 0) {
+                    $duration .= "{$days}d ";
+                }
+                if ($hours > 0 || $days > 0) {
+                    $duration .= "{$hours}h ";
+                }
+                $duration .= "{$minutes}m";
+                return "Start: {$start->format('d/m/Y H:i')}, End: {$end->format('d/m/Y H:i')}, Duration: {$duration}";
+            })->join("\n");
         }
 
         return [
@@ -174,13 +118,15 @@ class ReportsExport implements FromCollection, WithHeadings, ShouldAutoSize, Wit
             $report->created_at->format('Y/m/d h:i A'),
             $report->updated_at->format('Y/m/d h:i A'),
             $report->reportedBy->name ?? 'N/A',
-            $report->reviewedBy->name ?? '',
+            $report->reviewed_by ?? '',
             $report->attendedBy->name ?? '',
             $report->duration ?? '',
-            $channels,
-            $protocols,
+            $number,
+            $name,
+            $subcategory,
+            $protocol,
             $media,
-            $descriptions,
+            $description,
             $losses,
         ];
     }
