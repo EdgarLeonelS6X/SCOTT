@@ -14,7 +14,31 @@
                         class="bg-gray-200 text-black text-xs font-semibold py-1 px-3 rounded-full shadow-2xl inline-flex items-center mt-2">
                         <i class="fa-solid fa-clock mr-1"></i>
                         <span id="time" class="w-[78px] text-center">--:--:--</span>
+                        <button type="button" data-modal-target="logs-modal" data-modal-toggle="logs-modal" class="ml-1 text-gray-600 hover:text-gray-800" title="{{ __('View latest logs') }}">
+                            <i class="fa-solid fa-file-lines"></i>
+                        </button>
                     </span>
+                    <div id="logs-modal" tabindex="-1" class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
+                        <div class="relative w-full max-w-xl max-h-full mx-auto">
+                            <div class="relative bg-white rounded-lg shadow dark:bg-gray-800">
+                                <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
+                                    <h3 class="text-lg font-bold text-gray-800 dark:text-white flex items-center">
+                                        <i class="fa-solid fa-file-lines mr-2 text-gray-600"></i>
+                                        {{ __('Latest logs') }}
+                                    </h3>
+                                    <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="logs-modal">
+                                        <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+                                        </svg>
+                                        <span class="sr-only">Cerrar</span>
+                                    </button>
+                                </div>
+                                <div class="p-4 md:p-5 space-y-4">
+                                    @livewire('app.logs.latest-logs')
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 

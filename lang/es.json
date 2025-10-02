@@ -643,5 +643,9 @@
     "User status changed successfully.": "El estado del usuario se cambió correctamente.",
     "Delete category": "Eliminar categoría",
     "You must select at least one channel to create a report.": "Debe seleccionar al menos un canal para crear un informe.",
-    "The channel \":channel\" cannot be selected more than once.": "El canal \":channel\" no puede ser seleccionado más de una vez."
+    "The channel \":channel\" cannot be selected more than once.": "El canal \":channel\" no puede ser seleccionado más de una vez.",
+    "View latest logs": "Ver últimos registros",
+    "Latest logs": "Últimos registros",
+    "Could not load logs.": "No se pudieron cargar los registros.",
+    "No recent logs.": "No hay logs recientes."
 }
