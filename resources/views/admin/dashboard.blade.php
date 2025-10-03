@@ -48,7 +48,7 @@
                     <div>
                         <p class="text-xs text-gray-500 dark:text-gray-400 uppercase">{{ __('Contact') }}</p>
                         <a href="mailto:ecuevas@stargroup.com.mx"
-                            class="text-gray-900 dark:text-gray-100 font-medium hover:text-primary-600 dark:hover:text-primary-400 transition-colors">
+                            class="text-gray-900 dark:text-gray-100 font-medium hover:text-primary-600 dark:hover:text-primary-400">
                             ecuevas@stargroup.com.mx
                         </a>
                     </div>
