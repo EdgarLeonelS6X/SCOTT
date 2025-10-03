@@ -34,8 +34,8 @@
         [
             'name' => __('Grafana'),
             'icon' => 'fa-solid fa-chart-pie',
-            'route' => route('admin.stages.index'),
-            'active' => request()->routeIs('admin.stages.*'),
+            'route' => route('admin.grafana.index'),
+            'active' => request()->routeIs('admin.grafana.*'),
         ],
         [
             'name' => __('MySQL'),

@@ -64,7 +64,7 @@
                 <div class="w-full flex flex-col">
                     <label class="block text-xs font-semibold text-gray-700 dark:text-gray-200 mb-1">
                         <i class="fa-solid fa-tv mr-1.5 mb-2"></i>
-                        {{ __('Select channel') }}
+                        {{ __('Channel') }}
                     </label>
                     <div class="flex flex-row gap-2">
                         <div class="relative flex-1">
@@ -100,8 +100,7 @@
                             <button type="button" x-show="selectedChannel && selectedChannel.multicast"
                                 @click="window.downloadM3U(selectedChannel.multicast, selectedChannel.number, selectedChannel.name)"
                                 class="flex justify-center items-center text-white bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 focus:ring-2 focus:outline-none focus:ring-primary-300 dark:focus:ring-primary-800 font-semibold rounded-md text-sm px-3 h-10 shadow transition">
-                                <i class="fa-solid fa-video mr-2"></i>
-                                {{ __('Multicast') }}
+                                <i class="fa-solid fa-video"></i>
                             </button>
                         </div>
                     </div>
@@ -110,7 +109,7 @@
             <div class="w-full md:basis-1/3 flex flex-col">
                 <label class="block text-xs font-semibold text-gray-700 dark:text-gray-200 mb-1">
                     <i class="fa-solid fa-clock mr-1.5 mb-2"></i>
-                    {{ __('Select time range') }}
+                    {{ __('Time range') }}
                 </label>
                 <select wire:model.live="preset"
                     class="bg-gray-50 border border-gray-300 text-gray-900 rounded-md focus:ring-2 focus:ring-primary-500 focus:border-primary-500 block w-full py-2 px-2 text-sm dark:bg-gray-700 dark:text-white transition-all h-10">

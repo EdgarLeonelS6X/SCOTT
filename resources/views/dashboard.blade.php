@@ -135,12 +135,19 @@
     </div>
 
     @role('master|admin')
-    <div class="w-full mt-4 flex flex-col md:flex-row gap-6 px-3 mb-4">
-        <div class="flex-1">
-            @livewire('app.grafana.grafana-first')
+    <div class="w-full mt-6 px-4 mb-4 flex flex-col lg:flex-row gap-6">
+        <div class="lg:w-3/4 w-full flex flex-col gap-6">
+            <div class="flex flex-col md:flex-row gap-6">
+                <div class="flex-1 min-h-[300px]">
+                    @livewire('app.grafana.grafana-first')
+                </div>
+                <div class="flex-1 min-h-[300px]">
+                    @livewire('app.grafana.grafana-second')
+                </div>
+            </div>
         </div>
-        <div class="flex-1">
-            @livewire('app.grafana.grafana-second')
+        <div class="lg:w-1/4 w-full">
+            @livewire('app.logs.latest-logs')
         </div>
     </div>
     @else

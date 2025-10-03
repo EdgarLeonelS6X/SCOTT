@@ -52,7 +52,7 @@
                     $refs.input.value = '';
                 "
                 class="w-full sm:w-auto">
-                <x-input id="datepicker-range" x-ref="input" type="text" placeholder="{{ __('Select a range') }}"
+                <x-input id="datepicker-range" x-ref="input" type="text" placeholder="{{ __('Select a range time') }}"
                     class="min-w-[16rem] w-full px-3 py-2 text-sm border border-gray-300 rounded-md dark:bg-gray-800 dark:border-gray-600 dark:text-white" />
             </div>
             <div class="relative w-full sm:w-auto">
