@@ -30,14 +30,20 @@
             'icon' => 'fa-solid fa-bars-staggered',
             'route' => route('admin.stages.index'),
             'active' => request()->routeIs('admin.stages.*'),
-        ]
-        // [
-        //     'name' => __('MySQL'),
-        //     'icon' => 'fa-solid fa-database',
-        //     'route' => 'http://172.16.100.93/phpmyadmin/index.php?route=/database/structure&db=scott_database',
-        //     'external' => true,
-        //     'active' => false,
-        // ],
+        ],
+        [
+            'name' => __('Grafana'),
+            'icon' => 'fa-solid fa-chart-pie',
+            'route' => route('admin.stages.index'),
+            'active' => request()->routeIs('admin.stages.*'),
+        ],
+        [
+            'name' => __('MySQL'),
+            'icon' => 'fa-solid fa-database',
+            'route' => 'http://172.16.100.93/phpmyadmin/index.php?route=/database/structure&db=scott_database',
+            'external' => true,
+            'active' => false,
+        ],
     ];
 @endphp
 
@@ -50,11 +56,10 @@
             @foreach ($links as $index => $link)
                 @if (isset($link['children']))
                     <li>
-                        <button @click="openDropdown = openDropdown === {{ $index }} ? null : {{ $index }}" class="flex items-center justify-between gap-3 px-3 py-2 w-full rounded-md transition-colors duration-150
-                                                                                                                                                                                                                            {{ $link['active'] ? 'bg-primary-50 dark:bg-primary-900 text-primary-700 dark:text-primary-300 font-medium'
+                        <button @click="openDropdown = openDropdown === {{ $index }} ? null : {{ $index }}" class="flex items-center justify-between gap-3 px-3 py-2 w-full rounded-md transition-colors duration-150 {{ $link['active'] ? 'bg-primary-50 dark:bg-primary-900 text-primary-700 dark:text-primary-300 font-medium'
                     : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800' }}">
                             <div class="flex items-center gap-3">
-                                <i class="{{ $link['icon'] }} text-base"></i>
+                                <i class="{{ $link['icon'] }} w-4 h-4"></i>
                                 <span class="truncate">{{ $link['name'] }}</span>
                             </div>
                             <i class="fa-solid fa-chevron-down text-xs transition-transform"
