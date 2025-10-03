@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\GrafanaURL;
 use Illuminate\Http\Request;
 
 class GrafanaController extends Controller
@@ -12,7 +13,9 @@ class GrafanaController extends Controller
      */
     public function index()
     {
-        return view('admin.grafana.index');
+        $grafanaURLS = GrafanaURL::all();
+
+        return view('admin.grafana.index', compact('grafanaURLS'));
     }
 
     /**

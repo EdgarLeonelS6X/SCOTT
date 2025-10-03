@@ -151,8 +151,13 @@
         </div>
     </div>
     @else
-    <div class="w-full mt-4 px-3 mb-4">
-        @livewire('app.grafana.grafana-first')
+    <div class="w-full mt-6 px-4 mb-4 flex flex-col lg:flex-row gap-6">
+        <div class="lg:w-3/4 w-full flex flex-col gap-6">
+            @livewire('app.grafana.grafana-first')
+        </div>
+        <div class="lg:w-1/4 w-full">
+            @livewire('app.logs.latest-logs')
+        </div>
     </div>
     @endrole
 

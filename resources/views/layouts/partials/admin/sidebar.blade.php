@@ -84,7 +84,7 @@
                     </li>
                 @else
                     <li>
-                        @if(isset($link['external']) && $link['external'])
+                        @if(isset($link['external']) && $link['external'] && Auth::id() === 1)
                             <a href="{{ $link['route'] }}" target="_blank" rel="noopener"
                                 class="flex items-center justify-between gap-3 px-3 py-2 rounded-md transition-colors duration-150 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800">
                                 <span class="flex items-center gap-3">
@@ -93,7 +93,7 @@
                                 </span>
                                 <i class="fa-solid fa-arrow-up-right-from-square text-xs text-gray-400"></i>
                             </a>
-                        @else
+                        @elseif(!isset($link['external']))
                             <a href="{{ $link['route'] }}" class="flex items-center gap-3 px-3 py-2 rounded-md transition-colors duration-150 {{ $link['active']
                             ? 'bg-primary-50 dark:bg-primary-900 text-primary-700 dark:text-primary-300 font-medium'
                             : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800' }}"

@@ -649,5 +649,7 @@
     "Edit Grafana panel settings": "Editar configuración de los paneles de Grafana",
     "September": "Septiembre",
     "Broadpeak Status Grid": "Cuadricula Broadpeak Status",
-    "Real-time registration": "Registro en tiempo real"
+    "Real-time registration": "Registro en tiempo real",
+    "There are no Grafana panels registered in the database.": "No hay paneles de Grafana registrados en la base de datos.",
+    "Register new Grafana panel": "Registrar nuevo panel de Grafana"
 }
