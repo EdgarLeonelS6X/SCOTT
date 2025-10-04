@@ -27,7 +27,7 @@
             </div>
 
             <div class="flex justify-center sm:justify-end">
-                <a href="{{ route('admin.channels.create') }}"
+                <a href="{{ route('admin.grafana.create') }}"
                     class="text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800 shadow-xl">
                     <i class="fa-solid fa-plus mr-1"></i>
                     {{ __('Register new Grafana panel') }}

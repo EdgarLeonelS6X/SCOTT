@@ -651,5 +651,9 @@
     "Broadpeak Status Grid": "Cuadricula Broadpeak Status",
     "Real-time registration": "Registro en tiempo real",
     "There are no Grafana panels registered in the database.": "No hay paneles de Grafana registrados en la base de datos.",
-    "Register new Grafana panel": "Registrar nuevo panel de Grafana"
+    "Register new Grafana panel": "Registrar nuevo panel de Grafana",
+    "Enter the data for the new Grafana panel.": "Ingrese los datos para el nuevo panel de Grafana.",
+    "Panel name": "Nombre del panel",
+    "Panel URL": "URL del panel",
+    "Panel API Key": "Clave API del panel"
 }
