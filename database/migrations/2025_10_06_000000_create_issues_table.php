@@ -16,9 +16,9 @@ class CreateIssuesTable extends Migration
         Schema::create('issues', function (Blueprint $table) {
             $table->id();
             $table->string('channel');
-            $table->string('issue_type');
+            $table->string('issueType');
             $table->string('tag');
-            $table->text('issue_description');
+            $table->text('issueDescription');
             $table->timestamps();
         });
     }

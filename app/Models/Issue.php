@@ -16,8 +16,8 @@ class Issue extends Model
      */
     protected $fillable = [
         'channel',
-        'issue_type',
+        'issueType',
         'tag',
-        'issue_description',
+        'issueDescription',
     ];
 }
