@@ -655,5 +655,7 @@
     "Enter the data for the new Grafana panel.": "Ingrese los datos para el nuevo panel de Grafana.",
     "Panel name": "Nombre del panel",
     "Panel URL": "URL del panel",
-    "Panel API Key": "Clave API del panel"
+    "Panel API Key": "Clave API del panel",
+    "auto-scroll enabled": "auto-scroll habilitado",
+    "Connected": "Conectado"
 }
