@@ -1,5 +1,5 @@
 <div class="w-full mx-auto">
-  <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl overflow-hidden flex flex-col h-[428px]">
+  <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden flex flex-col h-[428px]">
     <div class="flex items-center justify-between px-4 py-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50">
       <div class="flex items-center gap-2">
         <i class="fa-solid fa-terminal text-primary-600"></i>
