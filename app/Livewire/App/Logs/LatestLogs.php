@@ -20,7 +20,6 @@ class LatestLogs extends Component
         $issues = Issue::orderByDesc('created_at')->limit(20)->get()->reverse();
         $this->logs = $issues->map(function($issue) {
             $date = $issue->created_at ? $issue->created_at->format('d/m/Y H:i:s') : '';
-            // Buscar número de canal (asume que el nombre es tipo '102 Las Estrellas')
             $channelNumber = null;
             $channelName = $issue->channel;
             if (preg_match('/^(\d+)/', $channelName, $matches)) {
@@ -30,7 +29,7 @@ class LatestLogs extends Component
             if ($channelNumber) {
                 $channel = Channel::where('number', $channelNumber)->first();
                 if ($channel && !empty($channel->image_url)) {
-                    $channelImage = $channel->image_url;
+                    $channelImage = $channel->image;
                 }
             }
             return [

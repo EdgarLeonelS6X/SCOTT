@@ -658,5 +658,9 @@
     "Panel API Key": "Clave API del panel",
     "auto-scroll enabled": "auto-scroll habilitado",
     "Connected": "Conectado",
-    "No logs found.": "No se encontraron registros."
+    "No logs found.": "No se encontraron registros.",
+    "Log type glossary": "Glosario de tipos de registro",
+    "CUTV error on end user": "Error de CUTV en el usuario final",
+    "CUTV error on origin": "Error de CUTV en el origen",
+    "DTH Downlink error": "Error de Downlink en DTH"
 }
