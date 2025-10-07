@@ -17,19 +17,26 @@ class LatestLogs extends Component
 
     public function fetchLogs()
     {
-    $issues = Issue::orderBy('created_at')->limit(20)->get();
+    $issues = Issue::orderBy('created_at')->limit(28)->get();
         $this->logs = $issues->map(function($issue) {
             $date = $issue->created_at ? $issue->created_at->format('d/m/Y H:i:s') : '';
             $channelNumber = null;
-            $channelName = $issue->channel;
-            if (preg_match('/^(\d+)/', $channelName, $matches)) {
+            $originalChannel = $issue->channel;
+            $channelNumber = null;
+            $channelName = $originalChannel;
+            if (preg_match('/^(\d+)/', $originalChannel, $matches)) {
                 $channelNumber = $matches[1];
             }
             $channelImage = null;
             if ($channelNumber) {
                 $channel = Channel::where('number', $channelNumber)->first();
-                if ($channel && !empty($channel->image_url)) {
-                    $channelImage = $channel->image;
+                if ($channel) {
+                    if (!empty($channel->image_url)) {
+                        $channelImage = $channel->image;
+                    }
+                    if (!empty($channel->name)) {
+                        $channelName = $channel->name;
+                    }
                 }
             }
             return [
