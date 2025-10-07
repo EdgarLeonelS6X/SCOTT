@@ -17,7 +17,7 @@
           </button>
           <div x-show="open" x-cloak class="absolute z-10 inline-block px-3 py-2 text-xs font-medium text-white bg-gray-900 rounded-lg shadow-xs w-64 right-0 translate-x-0 mt-2 dark:bg-gray-700">
             <div class="mb-1 font-semibold text-primary-200">{{ __('Log type glossary') }}</div>
-            <div class="flex items-center gap-2 space-y-2 mb-1">
+            <div class="flex items-center gap-2 mb-1">
               <span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-red-100 text-red-700 border border-opacity-30 border-current text-[10px]">
                 <i class="fa-solid fa-circle-exclamation text-[11px]"></i>
               </span>
