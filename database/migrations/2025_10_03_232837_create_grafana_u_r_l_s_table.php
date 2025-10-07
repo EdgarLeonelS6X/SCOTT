@@ -13,6 +13,8 @@ return new class extends Migration
     {
         Schema::create('grafana_u_r_l_s', function (Blueprint $table) {
             $table->id();
+            $table->string('name');
+            $table->string('url');
             $table->timestamps();
         });
     }

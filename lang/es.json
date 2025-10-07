@@ -657,5 +657,6 @@
     "Panel URL": "URL del panel",
     "Panel API Key": "Clave API del panel",
     "auto-scroll enabled": "auto-scroll habilitado",
-    "Connected": "Conectado"
+    "Connected": "Conectado",
+    "No logs found.": "No se encontraron registros."
 }

@@ -13,7 +13,11 @@ return new class extends Migration
     {
         Schema::create('grafana_k_e_y_s', function (Blueprint $table) {
             $table->id();
+            $table->string('key')->unique();
+            $table->unsignedBigInteger('url_id')->unique();
             $table->timestamps();
+
+            $table->foreign('url_id')->references('id')->on('grafana_u_r_l_s')->onDelete('cascade');
         });
     }
 

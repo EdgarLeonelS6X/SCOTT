@@ -16,13 +16,17 @@
 
     <div
       id="logs-container"
+      wire:poll.2000ms="fetchLogs"
       class="flex-1 overflow-y-auto font-mono text-[13px] leading-relaxed px-4 py-5 flex flex-col justify-end space-y-1 bg-gray-50 dark:bg-gray-800"
       style="scrollbar-width: thin; scrollbar-color: #4b5563 transparent;">
 
-      <p class="text-gray-400 font-mono tracking-tight text-xs animate-pulse">SCOTT:~$ github.com/EdgarLSyxz</p>
-      <p class="text-red-400 font-mono tracking-tight text-xs">[03/10/2025 14:21:16] [DTH] 101 Azteca UNO: Lost frames</p>
-      <p class="text-yellow-400 font-mono tracking-tight text-xs">[03/10/2025 14:21:16] [CUTV] 103 Imagen TV: 11:00 - 13:00</p>
-      <p class="text-blue-400 font-mono tracking-tight text-xs">[03/10/2025 14:21:16] [TRANSPONDER] ULTRA: Loss of transponders</p>
+      @if (!empty($logs))
+        @foreach ($logs as $log)
+          <p class="text-gray-400 font-mono tracking-tight text-xs">{{ $log }}</p>
+        @endforeach
+      @else
+        <p class="text-gray-400 font-mono tracking-tight text-xs">{{ __('No logs found.') }}</p>
+      @endif
     </div>
 
     <div class="px-4 py-2 text-[11px] text-gray-500 dark:text-gray-600 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 flex items-center justify-between">
