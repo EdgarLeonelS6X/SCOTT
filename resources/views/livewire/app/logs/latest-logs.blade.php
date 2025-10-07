@@ -59,7 +59,7 @@
           'LOW' => 'text-gray-500',
         ];
       @endphp
-  @foreach (array_reverse($logs ?? []) as $i => $log)
+  @foreach (($logs ?? []) as $i => $log)
         @php
           $tagColor = $tagColors[strtoupper($log['tag'])] ?? 'text-gray-500';
           $badgeBg = match(strtoupper($log['tag'])) {
