@@ -662,5 +662,8 @@
     "Log type glossary": "Glosario de tipos de registro",
     "CUTV error on end user": "Error de CUTV en el usuario final",
     "CUTV error on origin": "Error de CUTV en el origen",
-    "DTH Downlink error": "Error de Downlink en DTH"
+    "DTH Downlink error": "Error de Downlink en DTH",
+    "Critical": "Crítico",
+    "Warning": "Advertencia",
+    "Info": "Información"
 }
