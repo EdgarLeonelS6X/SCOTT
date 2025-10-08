@@ -139,8 +139,8 @@
                 x-show="showBtn"
                 @click="scrollToBottom(); newLogs = false;"
                 :class="{'animate-pulse': newLogs}"
-                class="sticky float-right bottom-2 right-2 z-20 bg-primary-600 hover:bg-primary-700 bg-opacity-80 text-white rounded-full shadow-lg p-2 transition-all duration-200 flex items-center justify-center relative"
-                style="box-shadow: 0 2px 8px 0 rgba(0,0,0,0.15); margin-left: auto;"
+                class="absolute bottom-2 right-2 z-20 bg-primary-600 hover:bg-primary-700 bg-opacity-80 text-white rounded-full shadow-lg p-2 transition-all duration-200 flex items-center justify-center"
+                style="box-shadow: 0 2px 8px 0 rgba(0,0,0,0.15);"
                 title="{{ __('Scroll to bottom') }}">
                 <i class="fa-solid fa-arrow-down"></i>
                 <span x-show="newLogs" class="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full border-2 border-white"></span>
