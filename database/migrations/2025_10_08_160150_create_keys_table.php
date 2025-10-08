@@ -11,13 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('grafana_k_e_y_s', function (Blueprint $table) {
+        Schema::create('keys', function (Blueprint $table) {
             $table->id();
-            $table->string('key')->unique();
             $table->unsignedBigInteger('url_id')->unique();
+            $table->string('key')->nullable();
             $table->timestamps();
 
-            $table->foreign('url_id')->references('id')->on('grafana_u_r_l_s')->onDelete('cascade');
+            $table->foreign('url_id')->references('id')->on('urls')->onDelete('cascade');
         });
     }
 
@@ -26,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('grafana_k_e_y_s');
+        Schema::dropIfExists('keys');
     }
 };

@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('grafana_u_r_l_s', function (Blueprint $table) {
+        Schema::create('urls', function (Blueprint $table) {
             $table->id();
             $table->string('name');
             $table->string('url');
@@ -24,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('grafana_u_r_l_s');
+        Schema::dropIfExists('urls');
     }
 };
