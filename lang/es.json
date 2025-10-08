@@ -666,5 +666,8 @@
     "Critical": "Crítico",
     "Warning": "Advertencia",
     "Info": "Información",
-    "Scroll to bottom": "Desplazarse hacia abajo"
+    "Scroll to bottom": "Desplazarse hacia abajo",
+    "Grafana Panel 1": "Panel de Grafana 1",
+    "Grafana Panel 2": "Panel de Grafana 2",
+    "Configuration": "Configuración"
 }
