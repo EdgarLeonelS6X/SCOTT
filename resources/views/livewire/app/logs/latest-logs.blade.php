@@ -57,84 +57,86 @@
                 </div>
             </div>
         </div>
-        <div id="logs-container" wire:poll.2000ms="fetchLogs"
-            class="overflow-y-auto font-mono text-[12px] leading-relaxed px-2 py-5 space-y-1 bg-gray-50 dark:bg-gray-800 relative"
-            style="scrollbar-width: thin; scrollbar-color: #4b5563 transparent; height: 320px; max-height: 320px; min-height: 0;"
-            x-data="{
-                atBottom: true,
-                showBtn: false,
-                newLogs: false,
-                lastLogCount: 0,
-                scrollToBottom() {
-                    const el = $el;
-                    el.scrollTo({ top: el.scrollHeight, behavior: 'smooth' });
-                },
-                isAtBottom() {
-                    const el = $el;
-                    return Math.abs(el.scrollHeight - el.scrollTop - el.clientHeight) < 2;
-                },
-                handleScroll() {
-                    this.atBottom = this.isAtBottom();
-                    this.showBtn = !this.atBottom;
-                    if (this.atBottom) this.newLogs = false;
-                },
-                maybeScrollOnUpdate() {
-                    const el = $el;
-                    const logCount = el.querySelectorAll('[data-log-row]').length;
-                    if (logCount > this.lastLogCount && !this.atBottom) {
-                        this.newLogs = true;
+        <div class="relative" style="height: 320px; max-height: 320px; min-height: 0;">
+            <div id="logs-container" wire:poll.2000ms="fetchLogs"
+                class="overflow-y-auto font-mono text-[12px] leading-relaxed px-2 py-5 space-y-1 bg-gray-50 dark:bg-gray-800 h-full"
+                style="scrollbar-width: thin; scrollbar-color: #4b5563 transparent;"
+                x-data="{
+                    atBottom: true,
+                    showBtn: false,
+                    newLogs: false,
+                    lastLogCount: 0,
+                    scrollToBottom() {
+                        const el = $el;
+                        el.scrollTo({ top: el.scrollHeight, behavior: 'smooth' });
+                    },
+                    isAtBottom() {
+                        const el = $el;
+                        return Math.abs(el.scrollHeight - el.scrollTop - el.clientHeight) < 2;
+                    },
+                    handleScroll() {
+                        this.atBottom = this.isAtBottom();
+                        this.showBtn = !this.atBottom;
+                        if (this.atBottom) this.newLogs = false;
+                    },
+                    maybeScrollOnUpdate() {
+                        const el = $el;
+                        const logCount = el.querySelectorAll('[data-log-row]').length;
+                        if (logCount > this.lastLogCount && !this.atBottom) {
+                            this.newLogs = true;
+                        }
+                        this.lastLogCount = logCount;
+                        if (this.atBottom) this.scrollToBottom();
                     }
-                    this.lastLogCount = logCount;
-                    if (this.atBottom) this.scrollToBottom();
-                }
-            }"
-            x-init="scrollToBottom(); atBottom = true; showBtn = false; newLogs = false; lastLogCount = $el.querySelectorAll('[data-log-row]').length; $el.addEventListener('scroll', () => handleScroll())"
-            x-effect="maybeScrollOnUpdate()">
-            @php
-                $tagColors = [
-                    'HIGH' => 'text-red-500',
-                    'MID' => 'text-yellow-600',
-                    'LOW' => 'text-gray-500',
-                ];
-              @endphp
-            @foreach (($logs ?? []) as $i => $log)
+                }"
+                x-init="scrollToBottom(); atBottom = true; showBtn = false; newLogs = false; lastLogCount = $el.querySelectorAll('[data-log-row]').length; $el.addEventListener('scroll', () => handleScroll())"
+                x-effect="maybeScrollOnUpdate()">
                 @php
-                    $tagColor = $tagColors[strtoupper($log['tag'])] ?? 'text-gray-500';
-                    $badgeBg = match (strtoupper($log['tag'])) {
-                        'HIGH' => 'bg-red-100 text-red-700',
-                        'MID' => 'bg-yellow-100 text-yellow-700',
-                        'LOW' => 'bg-gray-100 text-gray-700',
-                        default => 'bg-gray-200 text-gray-600',
-                    };
-                    $rowBg = $i % 2 === 0 ? 'bg-white dark:bg-gray-800/40' : 'bg-gray-100 dark:bg-gray-900/30';
-                    $tagIcon = match (strtoupper($log['tag'])) {
-                        'HIGH' => 'fa-solid fa-circle-exclamation',
-                        'MID' => 'fa-solid fa-triangle-exclamation',
-                        'LOW' => 'fa-solid fa-info-circle',
-                        default => 'fa-regular fa-circle',
-                    };
-                @endphp
-                <div class="rounded px-2 py-1 mb-1 {{ $rowBg }}" data-log-row>
-                    <div class="flex items-center justify-between font-mono text-[11px]">
-                        <span class="text-gray-400">{{ $log['date'] }}</span>
-                        <span
-                            class="px-1.5 py-0.5 rounded {{ $badgeBg }} border border-opacity-30 border-current uppercase font-bold text-[9px] {{ $tagColor }} flex items-center gap-1">
-                            <i class="{{ $tagIcon }} text-[11px]"></i>
-                            {{ __($log['type']) }}
-                        </span>
+                    $tagColors = [
+                        'HIGH' => 'text-red-500',
+                        'MID' => 'text-yellow-600',
+                        'LOW' => 'text-gray-500',
+                    ];
+                  @endphp
+                @foreach (($logs ?? []) as $i => $log)
+                    @php
+                        $tagColor = $tagColors[strtoupper($log['tag'])] ?? 'text-gray-500';
+                        $badgeBg = match (strtoupper($log['tag'])) {
+                            'HIGH' => 'bg-red-100 text-red-700',
+                            'MID' => 'bg-yellow-100 text-yellow-700',
+                            'LOW' => 'bg-gray-100 text-gray-700',
+                            default => 'bg-gray-200 text-gray-600',
+                        };
+                        $rowBg = $i % 2 === 0 ? 'bg-white dark:bg-gray-800/40' : 'bg-gray-100 dark:bg-gray-900/30';
+                        $tagIcon = match (strtoupper($log['tag'])) {
+                            'HIGH' => 'fa-solid fa-circle-exclamation',
+                            'MID' => 'fa-solid fa-triangle-exclamation',
+                            'LOW' => 'fa-solid fa-info-circle',
+                            default => 'fa-regular fa-circle',
+                        };
+                    @endphp
+                    <div class="rounded px-2 py-1 mb-1 {{ $rowBg }}" data-log-row>
+                        <div class="flex items-center justify-between font-mono text-[11px]">
+                            <span class="text-gray-400">{{ $log['date'] }}</span>
+                            <span
+                                class="px-1.5 py-0.5 rounded {{ $badgeBg }} border border-opacity-30 border-current uppercase font-bold text-[9px] {{ $tagColor }} flex items-center gap-1">
+                                <i class="{{ $tagIcon }} text-[11px]"></i>
+                                {{ __($log['type']) }}
+                            </span>
+                        </div>
+                        <div class="flex items-center gap-2 mt-0.5 text-[11px]">
+                            <img src="{{ $log['channel_image'] }}" alt="img canal"
+                                class="w-7 h-7 object-contain object-center transition-all duration-200"
+                                style="image-rendering: auto;" loading="lazy">
+                            <span class="font-semibold text-gray-700 dark:text-gray-200 truncate max-w-[110px]"
+                                title="{{ $log['channel'] }}">{{ __($log['channel']) }}</span>
+                        </div>
+                        <div class="py-1 text-[10px] text-gray-400 whitespace-normal break-words">
+                            {{ __($log['description']) }}
+                        </div>
                     </div>
-                    <div class="flex items-center gap-2 mt-0.5 text-[11px]">
-                        <img src="{{ $log['channel_image'] }}" alt="img canal"
-                            class="w-7 h-7 object-contain object-center transition-all duration-200"
-                            style="image-rendering: auto;" loading="lazy">
-                        <span class="font-semibold text-gray-700 dark:text-gray-200 truncate max-w-[110px]"
-                            title="{{ $log['channel'] }}">{{ __($log['channel']) }}</span>
-                    </div>
-                    <div class="py-1 text-[10px] text-gray-400 whitespace-normal break-words">
-                        {{ __($log['description']) }}
-                    </div>
-                </div>
-            @endforeach
+                @endforeach
+            </div>
             <button
                 x-show="showBtn"
                 @click="scrollToBottom(); newLogs = false;"
