@@ -58,7 +58,7 @@
             </div>
         </div>
         <div id="logs-container" wire:poll.2000ms="fetchLogs"
-            class="overflow-y-auto font-mono text-[12px] leading-relaxed px-2 py-5 space-y-1 bg-gray-50 dark:bg-gray-800 relative"
+            class="overflow-y-auto font-mono text-[12px] leading-relaxed px-2 pt-2 pb-8 space-y-1 bg-gray-50 dark:bg-gray-800 relative"
             style="scrollbar-width: thin; scrollbar-color: #4b5563 transparent; height: 320px; max-height: 320px; min-height: 0;"
             x-data="{
                 atBottom: true,
