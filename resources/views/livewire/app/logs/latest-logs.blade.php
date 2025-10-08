@@ -136,16 +136,9 @@
                 </div>
             @endforeach
             <button
-                x-show="showBtn"
-                x-transition:enter="transition-opacity ease-out duration-200"
-                x-transition:enter-start="opacity-0"
-                x-transition:enter-end="opacity-100"
-                x-transition:leave="transition-opacity ease-in duration-200"
-                x-transition:leave-start="opacity-100"
-                x-transition:leave-end="opacity-0"
                 @click="scrollToBottom(); newLogs = false;"
                 :class="{'animate-pulse': newLogs}"
-                class="absolute bottom-4 right-4 z-30 bg-primary-600 hover:bg-primary-700 bg-opacity-80 text-white rounded-full shadow-lg p-2 transition-all duration-200 flex items-center justify-center"
+                class="absolute bottom-2 right-2 z-30 bg-primary-600 hover:bg-primary-700 bg-opacity-80 text-white rounded-full shadow-lg p-2 transition-all duration-200 flex items-center justify-center"
                 style="box-shadow: 0 2px 8px 0 rgba(0,0,0,0.15);"
                 title="{{ __('Scroll to bottom') }}">
                 <i class="fa-solid fa-arrow-down"></i>
