@@ -84,7 +84,7 @@
                     </li>
                 @else
                     <li>
-                        @if(isset($link['external']) && $link['external'] && Auth::id() === 1)
+                        @if(isset($link['external']) && $link['external'] && Auth::user() && Auth::user()->hasRole('master'))
                             <a href="{{ $link['route'] }}" target="_blank" rel="noopener"
                                 class="flex items-center justify-between gap-3 px-3 py-2 rounded-md transition-colors duration-150 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800">
                                 <span class="flex items-center gap-3">
