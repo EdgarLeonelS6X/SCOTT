@@ -50,9 +50,9 @@
       wire:poll.2000ms="fetchLogs"
       class="overflow-y-auto font-mono text-[12px] leading-relaxed px-2 py-5 space-y-1 bg-gray-50 dark:bg-gray-800"
       style="scrollbar-width: thin; scrollbar-color: #4b5563 transparent; height: 320px; max-height: 320px; min-height: 0;"
-      x-data="{ scrollToBottom() { this.$el.scrollTop = this.$el.scrollHeight } }"
-      x-init="$nextTick(() => scrollToBottom())"
-      x-effect="$nextTick(() => scrollToBottom())">
+      x-data="{ logCount: {{ count($logs ?? []) }}, scrollToBottom() { const el = $el; el.scrollTop = el.scrollHeight; } }"
+      x-init="scrollToBottom()"
+      x-effect="if (logCount !== {{ count($logs ?? []) }}) { logCount = {{ count($logs ?? []) }}; scrollToBottom(); }">
       @php
         $tagColors = [
           'HIGH' => 'text-red-500',
