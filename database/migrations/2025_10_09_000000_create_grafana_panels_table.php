@@ -5,25 +5,21 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
-        Schema::create('urls', function (Blueprint $table) {
+        Schema::create('grafana_panels', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('type');
             $table->string('url');
+            $table->string('api_url')->nullable();
+            $table->string('endpoint')->nullable();
+            $table->string('api_key')->nullable();
             $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
-        Schema::dropIfExists('urls');
+        Schema::dropIfExists('grafana_panels');
     }
 };

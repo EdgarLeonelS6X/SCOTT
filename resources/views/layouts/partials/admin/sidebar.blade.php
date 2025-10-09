@@ -32,10 +32,10 @@
             'active' => request()->routeIs('admin.stages.*'),
         ],
         [
-            'name' => __('Integrations'),
-            'icon' => 'fa-solid fa-puzzle-piece',
-            'route' => route('admin.integrations.index'),
-            'active' => request()->routeIs('admin.integrations.*'),
+            'name' => __('Grafana'),
+            'icon' => 'fa-solid fa-chart-pie',
+            'route' => route('admin.grafana.index'),
+            'active' => request()->routeIs('admin.grafana.*'),
         ],
         [
             'name' => __('MySQL'),

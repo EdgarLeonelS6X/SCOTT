@@ -33,5 +33,3 @@ Route::resource('/reports', ReportController::class)->middleware('auth');
 
 Route::post('/language/switch', [LanguageController::class, 'switchLanguage'])
     ->name('language.switch');
-
-Broadcast::routes();
