@@ -128,7 +128,7 @@
               class="w-7 h-7 object-contain object-center transition-all duration-200" style="image-rendering: auto;"
               loading="lazy">
             @if(!empty($log['channel_number']))
-              <span class="font-mono text-xs text-gray-400 dark:text-gray-500">{{ $log['channel_number'] }}</span>
+              <span class="font-semibold text-gray-700 dark:text-gray-200">{{ $log['channel_number'] }}</span>
             @endif
             <span class="font-semibold text-gray-700 dark:text-gray-200"
               title="{{ $log['channel'] }}">{{ __($log['channel']) }}</span>

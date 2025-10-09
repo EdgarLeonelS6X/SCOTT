@@ -4,6 +4,7 @@ namespace App\Livewire\App\Grafana;
 
 use Livewire\Component;
 use App\Models\Channel;
+use App\Models\GrafanaPanel;
 use Carbon\Carbon;
 
 class GrafanaFirst extends Component
@@ -13,7 +14,7 @@ class GrafanaFirst extends Component
     public $mode = 'relative';
     public $preset = '1h';
     public $absoluteFrom = null;
-    public $absoluteTo   = null;
+    public $absoluteTo = null;
     public $theme = 'dark';
     public $iframeRefreshKey = 0;
     public $channelPanelIds = [];
@@ -21,7 +22,8 @@ class GrafanaFirst extends Component
 
     public function mount()
     {
-        $apiUrl = 'http://172.16.100.93:5000/channels';
+        $grafanaPanel = GrafanaPanel::find(1);
+        $apiUrl = $grafanaPanel ? $grafanaPanel->endpoint : null;
         $numbers = [];
         $panelIds = [];
         $multicasts = [];
@@ -31,7 +33,7 @@ class GrafanaFirst extends Component
                 $json = json_decode($response, true);
                 if (is_array($json)) {
                     foreach ($json as $item) {
-                        $num = (string)($item['number'] ?? '');
+                        $num = (string) ($item['number'] ?? '');
                         if ($num !== '') {
                             $numbers[] = $num;
                             $panelIds[$num] = $item['id'] ?? null;
@@ -40,7 +42,8 @@ class GrafanaFirst extends Component
                     }
                 }
             }
-        } catch (\Throwable $e) {}
+        } catch (\Throwable $e) {
+        }
 
         $this->channels = Channel::whereIn('number', $numbers)->orderByRaw('CAST(number AS UNSIGNED) ASC')->get();
         $this->channelPanelIds = $panelIds;
@@ -66,7 +69,8 @@ class GrafanaFirst extends Component
 
     public function getGrafanaUrlProperty()
     {
-        $base = "http://172.16.100.177/grafana/d-solo/0ce5d82e-9619-4da7-8301-e1c118fb4c14/multicast-monitor";
+        $grafanaPanel = $grafanaPanel ?? GrafanaPanel::find(1);
+        $base = $grafanaPanel ? $grafanaPanel->url : null;
 
         [$from, $to] = $this->resolveTimeParams();
 
@@ -79,13 +83,13 @@ class GrafanaFirst extends Component
         }
 
         $params = [
-            "orgId"     => 1,
-            "timezone"  => "browser",
-            "refresh"   => "5s",
-            "theme"     => $this->theme,
-            "panelId"   => $panelId,
-            "from"      => $from,
-            "to"        => $to,
+            "orgId" => 1,
+            "timezone" => "browser",
+            "refresh" => "5s",
+            "theme" => $this->theme,
+            "panelId" => $panelId,
+            "from" => $from,
+            "to" => $to,
             "__feature.dashboardSceneSolo" => "true",
         ];
 
@@ -115,14 +119,15 @@ class GrafanaFirst extends Component
         }
 
         $fromMs = $this->toMillis($this->absoluteFrom) ?? now()->subHour()->getTimestampMs();
-        $toMs   = $this->toMillis($this->absoluteTo)   ?? now()->getTimestampMs();
+        $toMs = $this->toMillis($this->absoluteTo) ?? now()->getTimestampMs();
 
         return [$fromMs, $toMs];
     }
 
     protected function toMillis(?string $dt): ?int
     {
-        if (!$dt) return null;
+        if (!$dt)
+            return null;
         try {
             return Carbon::parse($dt)->getTimestampMs();
         } catch (\Throwable $e) {
