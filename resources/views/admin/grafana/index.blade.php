@@ -37,16 +37,9 @@
                                 {{ __('URL') }}
                             </th>
                             <th scope="col" class="px-4 py-3">
-                                <i class="fa-solid fa-link mr-1"></i>
-                                {{ __('API URL') }}
-                            </th>
-                            <th scope="col" class="px-4 py-3">
                                 <i class="fa-solid fa-cloud mr-1"></i>
                                 {{ __('Endpoint') }}
                             </th>
-                            <th scope="col" class="px-4 py-3">
-                                <i class="fa-solid fa-key mr-1"></i>
-                                {{ __('API Key') }}
                             <th scope="col" class="px-4 py-3">
                                 <span class="sr-only">
                                     <i class="fa-solid fa-sliders-h mr-1"></i>
@@ -59,18 +52,20 @@
                         @foreach ($panels as $panel)
                             <tr onclick="window.location.href='{{ route('admin.grafana.show', $panel) }}'"
                                 class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-600 text-black dark:text-white cursor-pointer group">
-                                <th scope="row" class="px-4 py-2.5 font-bold text-gray-900 whitespace-nowrap dark:text-white">
+                                <th scope="row" class="px-4 py-4 font-bold text-gray-900 whitespace-nowrap dark:text-white">
                                     {{ __($panel->name) }}
                                 </th>
-                                <td class="px-4 py-2.5">
+                                <td class="px-4 py-4 max-w-[420px]">
                                     @php
                                         $urlTrunc = strlen($panel->url) > 40 ? substr($panel->url, 0, 20) . '…' . substr($panel->url, -16) : $panel->url;
                                     @endphp
                                     <span
-                                        class="inline-flex items-center gap-2 px-4 py-1 bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-full text-xs font-medium max-w-[260px] relative"
+                                        class="inline-flex items-center gap-2 px-3 py-1 bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-full text-xs font-medium w-full relative"
                                         x-data="{ show: false }" @mouseenter="show = true" @mouseleave="show = false"
                                         @focusin="show = true" @focusout="show = false">
-                                        <span class="truncate block max-w-[200px]">{{ $urlTrunc }}</span>
+                                        <i class="fa-solid fa-bullseye text-blue-500"></i>
+                                        <span class="block w-full truncate"
+                                            style="text-overflow: ellipsis;">{{ $panel->url }}</span>
                                         @if(strlen($panel->url) > 40)
                                             <span x-show="show" x-transition:enter="transition ease-out duration-200"
                                                 x-transition:enter-start="opacity-0 scale-95"
@@ -78,7 +73,7 @@
                                                 x-transition:leave="transition ease-in duration-150"
                                                 x-transition:leave-start="opacity-100 scale-100"
                                                 x-transition:leave-end="opacity-0 scale-95"
-                                                class="fixed z-50 px-4 py-2 text-xs rounded shadow-lg max-w-xs break-all bg-gray-900 text-white dark:bg-gray-100 dark:text-gray-900 border border-gray-200 dark:border-gray-700"
+                                                class="fixed z-50 px-4 py-2 text-xs rounded shadow-lg max-w-2xl min-w-[400px] break-all bg-gray-900 text-white dark:bg-gray-100 dark:text-gray-900"
                                                 style="display: none;" x-cloak
                                                 x-bind:style="'top: ' + ($el.closest('td').getBoundingClientRect().top + window.scrollY + 32) + 'px; left: ' + ($el.closest('td').getBoundingClientRect().left + window.scrollX + $el.closest('td').offsetWidth/2) + 'px; transform: translateX(-50%);'">
                                                 {{ $panel->url }}
@@ -86,39 +81,16 @@
                                         @endif
                                     </span>
                                 </td>
-                                <td class="px-4 py-2.5">
-                                    @php
-                                        $apiUrlTrunc = strlen($panel->api_url) > 40 ? substr($panel->api_url, 0, 20) . '…' . substr($panel->api_url, -16) : $panel->api_url;
-                                    @endphp
-                                    <span
-                                        class="inline-flex items-center gap-2 px-4 py-1 bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-full text-xs font-medium max-w-[260px] relative"
-                                        x-data="{ show: false }" @mouseenter="show = true" @mouseleave="show = false"
-                                        @focusin="show = true" @focusout="show = false">
-                                        <span class="truncate block max-w-[200px]">{{ $apiUrlTrunc }}</span>
-                                        @if(strlen($panel->api_url) > 40)
-                                            <span x-show="show" x-transition:enter="transition ease-out duration-200"
-                                                x-transition:enter-start="opacity-0 scale-95"
-                                                x-transition:enter-end="opacity-100 scale-100"
-                                                x-transition:leave="transition ease-in duration-150"
-                                                x-transition:leave-start="opacity-100 scale-100"
-                                                x-transition:leave-end="opacity-0 scale-95"
-                                                class="fixed z-50 px-4 py-2 text-xs rounded shadow-lg w-full max-w-xs break-all bg-gray-900 text-white dark:bg-gray-100 dark:text-gray-900 border border-gray-200 dark:border-gray-700"
-                                                style="display: none;" x-cloak
-                                                x-bind:style="'top: ' + ($el.closest('td').getBoundingClientRect().top + window.scrollY + 32) + 'px; left: ' + ($el.closest('td').getBoundingClientRect().left + window.scrollX + $el.closest('td').offsetWidth/2) + 'px; transform: translateX(-50%);'">
-                                                {{ $panel->api_url }}
-                                            </span>
-                                        @endif
-                                    </span>
-                                </td>
-                                <td class="px-4 py-2.5">
+                                <td class="px-4 py-4">
                                     @php
                                         $endpointTrunc = strlen($panel->endpoint) > 40 ? substr($panel->endpoint, 0, 20) . '…' . substr($panel->endpoint, -16) : $panel->endpoint;
                                     @endphp
                                     <span
-                                        class="inline-flex items-center gap-2 px-4 py-1 bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-full text-xs font-medium max-w-[260px] relative"
+                                        class="inline-flex items-center gap-2 px-3 py-1 bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-full text-xs font-medium relative"
                                         x-data="{ show: false }" @mouseenter="show = true" @mouseleave="show = false"
                                         @focusin="show = true" @focusout="show = false">
-                                        <span class="truncate block max-w-[200px]">{{ $endpointTrunc }}</span>
+                                        <i class="fa-solid fa-code text-green-500"></i>
+                                        <span>{{ $panel->endpoint }}</span>
                                         @if(strlen($panel->endpoint) > 40)
                                             <span x-show="show" x-transition:enter="transition ease-out duration-200"
                                                 x-transition:enter-start="opacity-0 scale-95"
@@ -126,7 +98,7 @@
                                                 x-transition:leave="transition ease-in duration-150"
                                                 x-transition:leave-start="opacity-100 scale-100"
                                                 x-transition:leave-end="opacity-0 scale-95"
-                                                class="fixed z-50 px-4 py-2 text-xs rounded shadow-lg w-auto max-w-xs break-all bg-gray-900 text-white dark:bg-gray-100 dark:text-gray-900 border border-gray-200 dark:border-gray-700"
+                                                class="fixed z-50 px-4 py-2 text-xs rounded shadow-lg w-auto max-w-xs break-all bg-gray-900 text-white dark:bg-gray-100 dark:text-gray-900"
                                                 style="display: none;" x-cloak
                                                 x-bind:style="'top: ' + ($el.closest('td').getBoundingClientRect().top + window.scrollY + 32) + 'px; left: ' + ($el.closest('td').getBoundingClientRect().left + window.scrollX + $el.closest('td').offsetWidth/2) + 'px; transform: translateX(-50%);'">
                                                 {{ $panel->endpoint }}
@@ -134,22 +106,10 @@
                                         @endif
                                     </span>
                                 </td>
-                                <td class="px-4 py-2.5 max-w-[120px] truncate relative">
-                                    @if ($panel->api_key)
-                                        @php
-                                            $apiKeyTrunc = str_repeat('*', strlen($panel->api_key));
-                                        @endphp
-                                        <span class="font-mono inline-block max-w-[90px]">
-                                            <span class="truncate block">{{ $apiKeyTrunc }}</span>
-                                        </span>
-                                    @else
-                                        <span class="text-gray-400">{{ __('No API Key') }}</span>
-                                    @endif
-                                </td>
-                                <td class="px-4 py-2.5 flex items-center justify-center align-middle">
+                                <td class="px-4 py-4 flex items-center justify-center align-middle">
                                     <span class="flex items-center h-full justify-center"
                                         style="height: 100%; min-height: 24px;">
-                                        <i class="fa-solid fa-chevron-right transition-colors duration-200 text-gray-300 group-hover:text-gray-700 dark:text-gray-500 dark:group-hover:text-gray-400"
+                                        <i class="fa-solid fa-chevron-right transition-colors text-gray-300 group-hover:text-gray-700 dark:text-gray-500 dark:group-hover:text-gray-400"
                                             style="vertical-align: middle; font-size: 1.1em; line-height: 1;"></i>
                                     </span>
                                 </td>

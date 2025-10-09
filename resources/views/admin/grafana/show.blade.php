@@ -135,7 +135,7 @@
                     eyeIcon.classList.add('fa-eye-slash');
                 } else {
                     keyInput.value = '*'.repeat(realKey.length);
-                    btnLabel.textContent = "{{ __('Show Key') }}";
+                    btnLabel.textContent = "{{ __('Show key') }}";
                     eyeIcon.classList.remove('fa-eye-slash');
                     eyeIcon.classList.add('fa-eye');
                 }
