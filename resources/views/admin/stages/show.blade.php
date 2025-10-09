@@ -1,19 +1,19 @@
 <x-admin-layout :breadcrumbs="[
-    [
-        'name' => __('Dashboard'),
-        'icon' => 'fa-solid fa-wrench',
-        'route' => route('admin.dashboard'),
-    ],
-    [
-        'name' => __('Stages'),
-        'icon' => 'fa-solid fa-bars-staggered',
-        'route' => route('admin.stages.index'),
-    ],
-    [
-        'name' => $stage->name,
-        'icon' => 'fa-solid fa-circle-info',
-    ],
-]">
+        [
+            'name' => __('Dashboard'),
+            'icon' => 'fa-solid fa-wrench',
+            'route' => route('admin.dashboard'),
+        ],
+        [
+            'name' => __('Stages'),
+            'icon' => 'fa-solid fa-bars-staggered',
+            'route' => route('admin.stages.index'),
+        ],
+        [
+            'name' => __('Stage'),
+            'icon' => 'fa-solid fa-circle-info',
+        ],
+    ]">
 
     <x-slot name="action">
         <div class="hidden lg:flex space-x-2">

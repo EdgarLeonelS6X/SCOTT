@@ -8,6 +8,7 @@ class Url extends Model
 {
     protected $fillable = [
         'name',
+        'type',
         'url',
     ];
 

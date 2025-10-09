@@ -5,7 +5,7 @@
         ]
     ]">
 
-    {{-- <div class="max-w-xl mx-auto">
+    <div class="max-w-xl mx-auto">
         <div class="dark:bg-gray-900 dark:border-gray-800 rounded-lg p-2 text-center relative overflow-hidden">
             <div class="relative flex flex-col items-center gap-3">
                 <div
@@ -65,6 +65,6 @@
                 </div>
             </div>
         </div>
-    </div> --}}
+    </div>
 
 </x-admin-layout>

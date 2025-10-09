@@ -7,8 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 class Key extends Model
 {
     protected $fillable = [
-        'key',
         'url_id',
+        'key',
     ];
 
     public function url()
