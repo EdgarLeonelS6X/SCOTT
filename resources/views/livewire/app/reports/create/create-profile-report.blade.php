@@ -46,89 +46,97 @@
 
                             <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
                                 <div x-data="{
-                                    open: false,
-                                    search: '',
-                                    selectedChannel: undefined,
-                                    channels: @js(collect($channels)->map(fn($c) => [
-                                        'id' => is_array($c) ? $c['id'] : $c->id,
-                                        'number' => is_array($c) ? $c['number'] : $c->number,
-                                        'name' => is_array($c) ? $c['name'] : $c->name,
-                                        'image' => is_array($c) ? $c['image'] : $c->image,
-                                        'profiles' => is_array($c) ? ($c['profiles'] ?? null) : ($c->profiles ?? null),
-                                    ])),
-                                    get filteredChannels() {
-                                        if (this.open && this.selectedChannel && this.search === (this.selectedChannel.number + ' ' + this.selectedChannel.name)) {
-                                            return this.channels;
-                                        }
-                                        if (this.search === '') return this.channels;
-                                        const term = this.search.toLowerCase();
-                                        return this.channels.filter(c => {
-                                            const combined = (c.number + ' ' + c.name).toLowerCase();
-                                            return c.name.toLowerCase().includes(term)
-                                                || c.number.toString().includes(term)
-                                                || combined.includes(term);
-                                        });
-                                    },
-                                    selectChannel(channel) {
-                                        this.selectedChannel = channel;
-                                        this.search = channel.number + ' ' + channel.name;
-                                        this.open = false;
-                                        $wire.set('reportData.channels.{{ $index }}.channel_id', channel.id);
-                                    },
-                                    init() {
-                                        this.$nextTick(() => {
-                                            const selectedId = $wire.get('reportData.channels.{{ $index }}.channel_id');
-                                            if (selectedId) {
-                                                const found = this.channels.find(c => c.id == selectedId);
-                                                if (found) {
-                                                    this.selectedChannel = found;
-                                                    this.search = found.number + ' ' + found.name;
-                                                }
-                                            }
-                                            this.$watch(() => $wire.get('reportData.channels.{{ $index }}.channel_id'), (id) => {
-                                                const found = this.channels.find(c => c.id == id);
-                                                this.selectedChannel = found || undefined;
-                                                if (found) {
-                                                    this.search = found.number + ' ' + found.name;
-                                                }
-                                            });
-                                        });
-                                    }
-                                }" x-init="init()">
+                                                    open: false,
+                                                    search: '',
+                                                    selectedChannel: undefined,
+                                                    channels: @js(collect($channels)->map(fn($c) => [
+                                                        'id' => is_array($c) ? $c['id'] : $c->id,
+                                                        'number' => is_array($c) ? $c['number'] : $c->number,
+                                                        'name' => is_array($c) ? $c['name'] : $c->name,
+                                                        'image' => is_array($c) ? $c['image'] : $c->image,
+                                                        'profiles' => is_array($c) ? ($c['profiles'] ?? null) : ($c->profiles ?? null),
+                                                    ])),
+                                                    get filteredChannels() {
+                                                        if (this.open && this.selectedChannel && this.search === (this.selectedChannel.number + ' ' + this.selectedChannel.name)) {
+                                                            return this.channels;
+                                                        }
+                                                        if (this.search === '') return this.channels;
+                                                        const term = this.search.toLowerCase();
+                                                        return this.channels.filter(c => {
+                                                            const combined = (c.number + ' ' + c.name).toLowerCase();
+                                                            return c.name.toLowerCase().includes(term)
+                                                                || c.number.toString().includes(term)
+                                                                || combined.includes(term);
+                                                        });
+                                                    },
+                                                    selectChannel(channel) {
+                                                        this.selectedChannel = channel;
+                                                        this.search = channel.number + ' ' + channel.name;
+                                                        this.open = false;
+                                                        $wire.set('reportData.channels.{{ $index }}.channel_id', channel.id);
+                                                    },
+                                                    init() {
+                                                        this.$nextTick(() => {
+                                                            const selectedId = $wire.get('reportData.channels.{{ $index }}.channel_id');
+                                                            if (selectedId) {
+                                                                const found = this.channels.find(c => c.id == selectedId);
+                                                                if (found) {
+                                                                    this.selectedChannel = found;
+                                                                    this.search = found.number + ' ' + found.name;
+                                                                }
+                                                            }
+                                                            this.$watch(() => $wire.get('reportData.channels.{{ $index }}.channel_id'), (id) => {
+                                                                const found = this.channels.find(c => c.id == id);
+                                                                this.selectedChannel = found || undefined;
+                                                                if (found) {
+                                                                    this.search = found.number + ' ' + found.name;
+                                                                }
+                                                            });
+                                                        });
+                                                    }
+                                                }" x-init="init()">
                                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                         <i class="fa-solid fa-tv mr-1.5"></i> {{ __('Channel') }}
                                     </label>
 
                                     <div class="relative mb-2">
-                                        <input type="text" x-model="search" :placeholder="selectedChannel ? (selectedChannel.number + ' ' + selectedChannel.name) : '{{ __('Search channel...') }}'"
+                                        <input type="text" x-model="search"
+                                            :placeholder="selectedChannel ? (selectedChannel.number + ' ' + selectedChannel.name) : '{{ __('Search channel...') }}'"
                                             @focus="open = true" @input="if (search === '') clearSelection()"
                                             @click.away="open = false"
                                             class="w-full px-4 py-2 pl-14 rounded-lg bg-gray-50 border border-gray-300 dark:bg-gray-700 dark:text-white focus:ring-primary-600 focus:border-primary-600 truncate cursor-pointer">
                                         <div class="absolute left-3 top-1/2 -translate-y-1/2 flex items-center">
-                                            <img x-show="selectedChannel && selectedChannel.image" :src="selectedChannel.image"
-                                                class="w-8 h-8 object-contain object-center" x-cloak>
+                                            <img x-show="selectedChannel && selectedChannel.image"
+                                                :src="selectedChannel.image" class="w-8 h-8 object-contain object-center"
+                                                x-cloak>
                                         </div>
                                         <i class="fa-solid fa-chevron-down absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 dark:text-gray-300 cursor-pointer"
                                             :class="open ? 'rotate-180' : ''" @click="open = !open"></i>
                                     </div>
 
-                                    <template x-if="selectedChannelProfiles">
+                                    <template x-if="selectedChannel && selectedChannel.profiles">
                                         <div class="flex gap-2 text-xs mb-3 ml-1">
-                                            <span class="px-2 py-0.5 rounded-lg bg-green-300 text-green-700">
-                                                {{ __('High:') }} <span x-text="selectedChannelProfiles.high ?? 'N/A'"></span>
+                                            <span
+                                                class="px-2 py-0.5 rounded-lg bg-green-300 text-green-700 dark:bg-green-800 dark:text-green-200 flex items-center gap-1">
+                                                <i class="fa-solid fa-arrow-up"></i> {{ __('High:') }} <span
+                                                    x-text="selectedChannel.profiles.high ?? 'N/A'"></span>
                                             </span>
-                                            <span class="px-2 py-0.5 rounded-lg bg-yellow-300 text-yellow-700">
-                                                {{ __('Medium:') }} <span x-text="selectedChannelProfiles.medium ?? 'N/A'"></span>
+                                            <span
+                                                class="px-2 py-0.5 rounded-lg bg-yellow-300 text-yellow-700 dark:bg-yellow-800 dark:text-yellow-200 flex items-center gap-1">
+                                                <i class="fa-solid fa-arrows-up-down"></i> {{ __('Medium:') }} <span
+                                                    x-text="selectedChannel.profiles.medium ?? 'N/A'"></span>
                                             </span>
-                                            <span class="px-2 py-0.5 rounded-lg bg-red-300 text-red-700">
-                                                {{ __('Low:') }} <span x-text="selectedChannelProfiles.low ?? 'N/A'"></span>
+                                            <span
+                                                class="px-2 py-0.5 rounded-lg bg-red-300 text-red-700 dark:bg-red-800 dark:text-red-200 flex items-center gap-1">
+                                                <i class="fa-solid fa-arrow-down"></i> {{ __('Low:') }} <span
+                                                    x-text="selectedChannel.profiles.low ?? 'N/A'"></span>
                                             </span>
                                         </div>
                                     </template>
 
                                     <div class="relative">
                                         <div x-show="open" x-cloak
-                                            class="absolute z-10 w-full mt-1 bg-white border rounded-lg shadow-2xl dark:bg-gray-700 transition-all">
+                                            class="absolute z-10 w-full mt-1 bg-white rounded-lg shadow-2xl dark:bg-gray-700 transition-all border border-gray-200 dark:border-gray-600/40">
                                             <ul
                                                 class="max-h-60 overflow-y-auto scrollbar-thin dark:scrollbar-thumb-gray-600">
                                                 <template x-for="channel in filteredChannels" :key="channel.id">
@@ -136,22 +144,27 @@
                                                         class="flex flex-col px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 cursor-pointer">
                                                         <div class="flex items-center">
                                                             <img :src="channel.image" class="w-8 h-8 object-contain">
-                                                            <span class="ml-3 text-sm text-gray-900 dark:text-gray-300 truncate max-w-[180px]"
-                                                                x-text="channel.number + ' ' + channel.name" :title="channel.number + ' ' + channel.name"></span>
+                                                            <span
+                                                                class="ml-3 text-sm text-gray-900 dark:text-gray-300 truncate max-w-[180px]"
+                                                                x-text="channel.number + ' ' + channel.name"
+                                                                :title="channel.number + ' ' + channel.name"></span>
                                                         </div>
                                                         <div class="flex gap-2 mt-1 text-xs">
                                                             <span
-                                                                class="px-2 py-0.5 rounded-lg bg-green-300 text-green-700 dark:bg-green-800 dark:text-green-200">
-                                                                {{ __('High:') }} <span x-text="channel.profiles?.high ?? 'N/A'"></span>
+                                                                class="px-2 py-0.5 rounded-lg bg-green-300 text-green-700 dark:bg-green-800 dark:text-green-200 flex items-center gap-1">
+                                                                <i class="fa-solid fa-arrow-up"></i> {{ __('High:') }} <span
+                                                                    x-text="channel.profiles?.high ?? 'N/A'"></span>
                                                             </span>
                                                             <span
-                                                                class="px-2 py-0.5 rounded-lg bg-yellow-300 text-yellow-700 dark:bg-yellow-800 dark:text-yellow-200">
+                                                                class="px-2 py-0.5 rounded-lg bg-yellow-300 text-yellow-700 dark:bg-yellow-800 dark:text-yellow-200 flex items-center gap-1">
+                                                                <i class="fa-solid fa-arrows-up-down"></i>
                                                                 {{ __('Medium:') }} <span
                                                                     x-text="channel.profiles?.medium ?? 'N/A'"></span>
                                                             </span>
                                                             <span
-                                                                class="px-2 py-0.5 rounded-lg bg-red-300 text-red-700 dark:bg-red-800 dark:text-red-200">
-                                                                {{ __('Low:') }} <span x-text="channel.profiles?.low ?? 'N/A'"></span>
+                                                                class="px-2 py-0.5 rounded-lg bg-red-300 text-red-700 dark:bg-red-800 dark:text-red-200 flex items-center gap-1">
+                                                                <i class="fa-solid fa-arrow-down"></i> {{ __('Low:') }}
+                                                                <span x-text="channel.profiles?.low ?? 'N/A'"></span>
                                                             </span>
                                                         </div>
                                                     </li>
@@ -164,25 +177,18 @@
                                     @enderror
                                 </div>
                                 <div>
-                                     <x-channel-issue-select
-                                    :name="'reportData.channels.' . $index . '.high'"
-                                    :value="$channel['high'] ?? ''"
-                                    :options="\App\Helpers\ChannelIssueOptions::all()"
-                                />
+                                    <x-channel-issue-select :name="'reportData.channels.' . $index . '.high'"
+                                        :value="$channel['high'] ?? ''"
+                                        :options="\App\Helpers\ChannelIssueOptions::all()" />
                                 </div>
                                 <div>
-                                     <x-channel-issue-select
-                                    :name="'reportData.channels.' . $index . '.medium'"
-                                    :value="$channel['medium'] ?? ''"
-                                    :options="\App\Helpers\ChannelIssueOptions::all()"
-                                />
+                                    <x-channel-issue-select :name="'reportData.channels.' . $index . '.medium'"
+                                        :value="$channel['medium'] ?? ''"
+                                        :options="\App\Helpers\ChannelIssueOptions::all()" />
                                 </div>
                                 <div>
-                                    <x-channel-issue-select
-                                    :name="'reportData.channels.' . $index . '.low'"
-                                    :value="$channel['low'] ?? ''"
-                                    :options="\App\Helpers\ChannelIssueOptions::all()"
-                                />
+                                    <x-channel-issue-select :name="'reportData.channels.' . $index . '.low'"
+                                        :value="$channel['low'] ?? ''" :options="\App\Helpers\ChannelIssueOptions::all()" />
                                 </div>
                             </div>
                         </div>
