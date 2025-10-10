@@ -78,11 +78,14 @@
                                 autocomplete="off">
                             <div x-show="open"
                                 class="absolute z-20 mt-1 w-full bg-white border border-gray-300 rounded-lg shadow-2xl dark:bg-gray-700 dark:border-gray-600">
-                                <ul
-                                    class="max-h-48 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 dark:scrollbar-thumb-gray-600">
+                                <ul class="max-h-48 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 dark:scrollbar-thumb-gray-600"
+                                    x-ref="channelList"
+                                    x-init="$watch('open', value => { if(value && selectedChannel) { $nextTick(() => { const list = $refs.channelList; const selected = list.querySelector('[data-selected]'); if(selected) { list.scrollTop = selected.offsetTop - list.offsetTop - 24; } }); } })">
                                     <template x-for="channel in filteredChannels" :key="channel.id">
                                         <li @click="selectChannel(channel)"
-                                            class="cursor-pointer px-3 py-1.5 flex items-center gap-2 hover:bg-gray-200 dark:hover:bg-gray-600 rounded transition">
+                                            :data-selected="selectedChannel && channel.id === selectedChannel.id ? true : null"
+                                            class="cursor-pointer px-3 py-1.5 flex items-center gap-2 hover:bg-gray-200 dark:hover:bg-gray-600 rounded transition"
+                                            :class="''">
                                             <img :src="channel.image"
                                                 class="w-6 h-6 object-contain rounded border-gray-200 dark:border-gray-700">
                                             <span
