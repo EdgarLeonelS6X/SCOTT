@@ -149,7 +149,7 @@
         </div>
       @endforeach
       <button x-show="showBtn" @click="scrollToBottom(); newLogs = false;" :class="{'animate-pulse': newLogs}"
-        class="sticky float-right bottom-2 right-2 z-20 bg-primary-600 hover:bg-primary-700 bg-opacity-80 text-white rounded-full shadow-lg p-2 transition-all duration-200 flex items-center justify-center relative"
+        class="sticky float-right bottom-2 right-2 z-50 bg-primary-600 hover:bg-primary-700 bg-opacity-80 text-white rounded-full shadow-lg p-1.5 transition-all duration-200 flex items-center justify-center relative"
         style="box-shadow: 0 2px 8px 0 rgba(0,0,0,0.15); margin-left: auto;" title="{{ __('Scroll to bottom') }}">
         <i class="fa-solid fa-arrow-down"></i>
         <span x-show="newLogs"
