@@ -87,9 +87,16 @@
                     this.lastLogCount = logCount;
                     if (this.atBottom) this.scrollToBottom();
                 }
-            }"
-      x-init="scrollToBottom(); atBottom = true; showBtn = false; newLogs = false; lastLogCount = $el.querySelectorAll('[data-log-row]').length; $el.addEventListener('scroll', () => handleScroll())"
-      x-effect="maybeScrollOnUpdate()">
+            }" x-init="
+        scrollToBottom();
+        atBottom = true;
+        showBtn = false;
+        newLogs = false;
+        lastLogCount = $el.querySelectorAll('[data-log-row]').length;
+        $el.addEventListener('scroll', () => handleScroll());
+        // Forzar Alpine a recalcular cuando cambian los logs
+        window.addEventListener('logs-updated', () => { maybeScrollOnUpdate(); });
+      " x-effect="maybeScrollOnUpdate()">
       @php
         $tagColors = [
           'HIGH' => 'text-red-500',
@@ -98,6 +105,9 @@
         ];
       @endphp
       @foreach (($logs ?? []) as $i => $log)
+        @if ($i === (count($logs ?? []) - 1))
+          <script>window.dispatchEvent(new Event('logs-updated'));</script>
+        @endif
         @php
           $tagColor = $tagColors[strtoupper($log['tag'])] ?? 'text-gray-500';
           $badgeBg = match (strtoupper($log['tag'])) {
