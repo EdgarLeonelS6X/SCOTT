@@ -63,7 +63,9 @@ class GrafanaSecond extends Component
 
     public function render()
     {
-        return view('livewire.app.grafana.grafana-second');
+        $grafanaPanel = GrafanaPanel::find(2);
+
+        return view('livewire.app.grafana.grafana-second', compact('grafanaPanel'));
     }
 
     public function getGrafanaUrlProperty()

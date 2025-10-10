@@ -55,17 +55,17 @@
                                 <th scope="row" class="px-4 py-4 font-bold text-gray-900 whitespace-nowrap dark:text-white">
                                     {{ __($panel->name) }}
                                 </th>
-                                <td class="px-4 py-4 max-w-[420px]">
+                                <td class="px-4 py-4">
                                     @php
                                         $urlTrunc = strlen($panel->url) > 40 ? substr($panel->url, 0, 20) . '…' . substr($panel->url, -16) : $panel->url;
                                     @endphp
                                     <span
-                                        class="inline-flex items-center gap-2 px-3 py-1 bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-full text-xs font-medium w-full relative"
+                                        class="inline-flex items-center gap-2 px-3 py-1 bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-full text-xs font-medium relative"
                                         x-data="{ show: false }" @mouseenter="show = true" @mouseleave="show = false"
                                         @focusin="show = true" @focusout="show = false">
                                         <i class="fa-solid fa-bullseye text-blue-500"></i>
-                                        <span class="block w-full truncate"
-                                            style="text-overflow: ellipsis;">{{ $panel->url }}</span>
+                                        <span class="block truncate"
+                                            style="max-width: 400px; text-overflow: ellipsis;">{{ $panel->url }}</span>
                                         @if(strlen($panel->url) > 40)
                                             <span x-show="show" x-transition:enter="transition ease-out duration-200"
                                                 x-transition:enter-start="opacity-0 scale-95"

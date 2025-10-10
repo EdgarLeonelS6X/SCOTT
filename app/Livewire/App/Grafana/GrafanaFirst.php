@@ -64,7 +64,9 @@ class GrafanaFirst extends Component
 
     public function render()
     {
-        return view('livewire.app.grafana.grafana-first');
+        $grafanaPanel = GrafanaPanel::find(1);
+
+        return view('livewire.app.grafana.grafana-first', compact('grafanaPanel'));
     }
 
     public function getGrafanaUrlProperty()

@@ -3,7 +3,7 @@
         <div class="flex items-center justify-between px-4 py-4 border-b border-gray-200 dark:border-gray-700">
             <h2 class="text-xl font-bold text-gray-800 dark:text-gray-200 flex items-center gap-2">
                 <i class="fa-solid fa-forward text-primary-600"></i>
-                {{ __('CUTV') }}
+                {{ $grafanaPanel?->name ?? __('CUTV') }}
             </h2>
             <span class="text-xs text-gray-400 dark:text-gray-500 md:block hidden">
                 {{ __('Auto-refresh 5s') }}
@@ -107,7 +107,7 @@
                     {{ __('Time range') }}
                 </label>
                 <select wire:model.live="preset"
-                    class="bg-gray-50 border border-gray-300 text-gray-900 rounded-md focus:ring-2 focus:ring-primary-500 focus:border-primary-500 block w-full py-2 px-2 text-sm dark:bg-gray-700 dark:text-white transition-all h-10">
+                    class="bg-gray-50 border border-gray-300 text-gray-900 rounded-md focus:ring-2 focus:ring-primary-500 focus:border-primary-500 block w-full py-2 px-2 text-sm dark:bg-gray-700 dark:text-white transition-all h-10 truncate leading-tight">
                     <option value="5m">{{ __('Last 5 minutes') }}</option>
                     <option value="15m">{{ __('Last 15 minutes') }}</option>
                     <option value="30m">{{ __('Last 30 minutes') }}</option>
@@ -121,7 +121,7 @@
             </div>
         </div>
 
-        <div class="bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 p-6 shadow-2xl">
+        <div class="bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 py-6 px-4 shadow-2xl">
             <iframe wire:key="{{ $this->iframeKey }}" src="{{ $this->grafanaUrl }}" height="220" frameborder="0"
                 loading="lazy" referrerpolicy="no-referrer"
                 class="w-full rounded-lg border shadow-inner transition-all duration-200"

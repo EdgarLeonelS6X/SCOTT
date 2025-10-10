@@ -36,7 +36,7 @@
     </x-slot>
     <div
         class="w-full bg-white rounded-lg shadow-2xl border border-gray-100 dark:border-gray-700 md:mt-0 xl:p-0 dark:bg-gray-800">
-        <div class="p-8 space-y-6">
+        <div class="p-6 space-y-6">
             <div class="flex justify-between items-center gap-3">
                 <span class="truncate text-2xl font-extrabold text-gray-900 dark:text-white">
                     {{ $panel->name }}
@@ -83,6 +83,18 @@
             </div>
         </div>
     </div>
+
+
+    <div class="mt-6">
+        @if($panel->id == 1)
+            @livewire('app.grafana.grafana-first')
+        @elseif($panel->id == 2)
+            @livewire('app.grafana.grafana-second')
+            <!-- @elseif($panel->id == 3)
+                                @livewire('app.grafana.grafana-third') -->
+        @endif
+    </div>
+
     <div class="lg:hidden mt-6 space-y-5">
         <a href="{{ route('admin.grafana.index') }}"
             class="flex justify-center items-center w-full text-white bg-gray-600 hover:bg-gray-500 focus:ring-4 focus:outline-none focus:ring-gray-300 dark:focus:ring-gray-800 font-medium rounded-lg text-sm px-4 py-2">
