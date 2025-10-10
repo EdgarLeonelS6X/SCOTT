@@ -147,7 +147,7 @@
       </button>
 
       <div x-show="newLogs && showBtn" x-transition.opacity.duration.300ms
-        class="fixed left-1/2 bottom-16 -translate-x-1/2 z-30 bg-primary-600/90 text-white px-4 py-2 rounded-full shadow-lg flex items-center gap-2 text-xs font-semibold pointer-events-none select-none animate-bounce"
+        class="absolute left-1/2 bottom-16 -translate-x-1/2 z-30 bg-primary-600/90 text-white px-4 py-2 rounded-full shadow-lg flex items-center gap-2 text-xs font-semibold pointer-events-none select-none animate-bounce"
         style="min-width: 120px;">
         <i class="fa-solid fa-bolt"></i>
         {{ __('New logs available') }}
