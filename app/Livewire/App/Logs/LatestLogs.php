@@ -21,16 +21,16 @@ class LatestLogs extends Component
         $this->logs = $issues->map(function ($issue) {
             $date = $issue->created_at ? $issue->created_at->format('d/m/Y H:i:s') : '';
             $channelNumber = null;
-            $originalChannel = $issue->channel;
+            $originalChannel = $issue->channel ?? '';
             $channelName = $originalChannel;
-            if (preg_match('/^(\d+)/', $originalChannel, $matches)) {
+            if (is_string($originalChannel) && preg_match('/^(\d+)/', $originalChannel, $matches)) {
                 $channelNumber = $matches[1];
             }
             $channelImage = null;
             if ($channelNumber) {
                 $channel = Channel::where('number', $channelNumber)->first();
                 if ($channel) {
-                    if (!empty($channel->image_url)) {
+                    if (!empty($channel->image)) {
                         $channelImage = $channel->image;
                     }
                     if (!empty($channel->name)) {
@@ -41,11 +41,11 @@ class LatestLogs extends Component
 
             return [
                 'date' => $date,
-                'channel' => $channelName,
+                'channel' => $channelName ?? '',
                 'channel_number' => $channelNumber,
-                'type' => $issue->issueType,
-                'description' => $issue->issueDescription,
-                'tag' => $issue->tag,
+                'type' => $issue->issueType ?? '',
+                'description' => $issue->issueDescription ?? '',
+                'tag' => $issue->tag ?? '',
                 'channel_image' => $channelImage,
             ];
         })->values()->toArray();
