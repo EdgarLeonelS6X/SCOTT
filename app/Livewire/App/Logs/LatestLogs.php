@@ -17,7 +17,7 @@ class LatestLogs extends Component
 
     public function fetchLogs()
     {
-        $issues = Issue::orderByDesc('created_at')->limit(28)->get()->reverse();
+        $issues = Issue::orderByDesc('created_at')->get()->reverse();
         $this->logs = $issues->map(function ($issue) {
             $date = $issue->created_at ? $issue->created_at->format('d/m/Y H:i:s') : '';
             $channelNumber = null;

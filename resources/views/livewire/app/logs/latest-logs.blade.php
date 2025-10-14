@@ -94,7 +94,6 @@
         newLogs = false;
         lastLogCount = $el.querySelectorAll('[data-log-row]').length;
         $el.addEventListener('scroll', () => handleScroll());
-        // Forzar Alpine a recalcular cuando cambian los logs
         window.addEventListener('logs-updated', () => { maybeScrollOnUpdate(); });
       " x-effect="maybeScrollOnUpdate()">
       @php
@@ -155,13 +154,6 @@
         <span x-show="newLogs"
           class="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full border-2 border-white"></span>
       </button>
-
-      <div x-show="newLogs && showBtn" x-transition.opacity.duration.300ms
-        class="absolute left-1/2 bottom-16 -translate-x-1/2 z-30 bg-primary-600/90 text-white px-4 py-2 rounded-full shadow-lg flex items-center gap-2 text-xs font-semibold pointer-events-none select-none animate-bounce"
-        style="min-width: 120px;">
-        <i class="fa-solid fa-bolt"></i>
-        {{ __('New logs available') }}
-      </div>
     </div>
     <div
       class="px-4 py-3.5 text-xs text-gray-500 dark:text-gray-600 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 flex items-center justify-between">

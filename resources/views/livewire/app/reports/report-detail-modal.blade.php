@@ -115,7 +115,7 @@
             </div>
         </div>
     </div>
-    <div class="mt-5 flex flex-col flex-1 overflow-hidden">
+    <div class="mt-5 flex flex-col flex-1 overflow-hidden min-h-0">
         <div class="flex flex-wrap items-center gap-2">
             <i class="fa-solid fa-layer-group text-xl text-gray-800 dark:text-white mr-3"></i>
             <span class="text-lg font-semibold text-gray-800 dark:text-white mr-1.5">
@@ -215,7 +215,7 @@
             @endif
         </div>
         <div
-            class="flex flex-col sm:flex-row flex-wrap justify-end items-stretch mt-4 gap-3 sm:gap-4 w-full max-w-full my-1 pr-1">
+            class="flex flex-col sm:flex-row flex-wrap justify-end items-stretch gap-3 sm:gap-4 w-full max-w-full my-1 pr-1 mt-auto">
             <button wire:click.prevent="markAsSolved()"
                 class="py-2 px-4 bg-primary-600 hover:bg-primary-700 text-white rounded-lg shadow font-bold text-base w-full sm:w-auto max-w-full min-w-0">
                 <i class="fa-solid fa-circle-check mr-1"></i>
