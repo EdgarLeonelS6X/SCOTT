@@ -17,8 +17,18 @@ class LatestLogs extends Component
 
     public function fetchLogs()
     {
-        $issues = Issue::orderByDesc('created_at')->get()->reverse();
-        $this->logs = $issues->map(function ($issue) {
+        $issues = Issue::orderByDesc('created_at')->limit(100)->get()->reverse();
+        $channelNumbers = collect($issues)->map(function ($issue) {
+            $originalChannel = $issue->channel ?? '';
+            if (is_string($originalChannel) && preg_match('/^(\d+)/', $originalChannel, $matches)) {
+                return $matches[1];
+            }
+            return null;
+        })->filter()->unique()->values()->all();
+
+        $channels = Channel::whereIn('number', $channelNumbers)->get()->keyBy('number');
+
+        $this->logs = $issues->map(function ($issue) use ($channels) {
             $date = $issue->created_at ? $issue->created_at->format('d/m/Y H:i:s') : '';
             $channelNumber = null;
             $originalChannel = $issue->channel ?? '';
@@ -27,15 +37,13 @@ class LatestLogs extends Component
                 $channelNumber = $matches[1];
             }
             $channelImage = null;
-            if ($channelNumber) {
-                $channel = Channel::where('number', $channelNumber)->first();
-                if ($channel) {
-                    if (!empty($channel->image)) {
-                        $channelImage = $channel->image;
-                    }
-                    if (!empty($channel->name)) {
-                        $channelName = $channel->name;
-                    }
+            if ($channelNumber && $channels->has($channelNumber)) {
+                $channel = $channels->get($channelNumber);
+                if (!empty($channel->image)) {
+                    $channelImage = $channel->image;
+                }
+                if (!empty($channel->name)) {
+                    $channelName = $channel->name;
                 }
             }
 
