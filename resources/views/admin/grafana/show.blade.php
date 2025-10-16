@@ -57,7 +57,17 @@
                 </div>
                 <div class="flex flex-col gap-1">
                     <x-label><i class="fa-solid fa-cloud mr-1"></i> {{ __('Endpoint') }}</x-label>
-                    <x-input type="text" :value="$panel->endpoint" disabled class="w-full" />
+                    <div class="flex items-center gap-2">
+                        <x-input type="text" :value="$panel->endpoint" disabled class="w-full" />
+                        @if($panel->endpoint)
+                            <a href="{{ $panel->endpoint }}" target="_blank" rel="noopener noreferrer"
+                                class="flex items-center gap-2 min-w-[150px] justify-center px-4 py-3.5 text-sm font-semibold text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600"
+                                title="{{ __('Open endpoint in new tab') }}">
+                                <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                                <span>{{ __('Open endpoint') }}</span>
+                            </a>
+                        @endif
+                    </div>
                 </div>
                 <div class="flex flex-col gap-1">
                     <x-label><i class="fa-solid fa-key mr-1"></i> {{ __('API Key') }}</x-label>
@@ -91,7 +101,7 @@
         @elseif($panel->id == 2)
             @livewire('app.grafana.grafana-second')
             <!-- @elseif($panel->id == 3)
-                                @livewire('app.grafana.grafana-third') -->
+                                        @livewire('app.grafana.grafana-third') -->
         @endif
     </div>
 

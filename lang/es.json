@@ -682,5 +682,7 @@
     "Update panel": "Actualizar panel",
     "Update Grafana panel": "Actualizar panel de Grafana",
     "Grafana panel updated successfully.": "Panel de Grafana actualizado con éxito.",
-    "New logs available": "Nuevos logs disponibles"
+    "New logs available": "Nuevos logs disponibles",
+    "Open endpoint": "Abrir endpoint",
+    "Open endpoint in new tab": "Abrir endpoint en una nueva pestaña"
 }
