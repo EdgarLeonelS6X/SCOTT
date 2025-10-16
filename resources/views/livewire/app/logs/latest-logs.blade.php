@@ -57,45 +57,14 @@
         </div>
       </div>
     </div>
-    <div id="logs-container" wire:poll.visible.30000ms="fetchLogs"
+    <div id="logs-container" wire:poll.visible.30s="fetchLogs"
       class="overflow-y-auto font-mono text-[12px] leading-relaxed px-2 py-5 space-y-1 bg-gray-50 dark:bg-gray-800 relative"
       style="scrollbar-width: thin; scrollbar-color: #4b5563 transparent; height: 320px; max-height: 320px; min-height: 0;"
-      x-data="{
-                atBottom: true,
-                showBtn: false,
-                newLogs: false,
-                lastLogCount: 0,
-                scrollToBottom() {
-                    const el = $el;
-                    el.scrollTo({ top: el.scrollHeight, behavior: 'smooth' });
-                },
-                isAtBottom() {
-                    const el = $el;
-                    return Math.abs(el.scrollHeight - el.scrollTop - el.clientHeight) < 2;
-                },
-                handleScroll() {
-                    this.atBottom = this.isAtBottom();
-                    this.showBtn = !this.atBottom;
-                    if (this.atBottom) this.newLogs = false;
-                },
-                maybeScrollOnUpdate() {
-                    const el = $el;
-                    const logCount = el.querySelectorAll('[data-log-row]').length;
-                    if (logCount > this.lastLogCount && !this.atBottom) {
-                        this.newLogs = true;
-                    }
-                    this.lastLogCount = logCount;
-                    if (this.atBottom) this.scrollToBottom();
-                }
-            }" x-init="
-        scrollToBottom();
-        atBottom = true;
-        showBtn = false;
-        newLogs = false;
-        lastLogCount = $el.querySelectorAll('[data-log-row]').length;
-        $el.addEventListener('scroll', () => handleScroll());
-        window.addEventListener('logs-updated', () => { maybeScrollOnUpdate(); });
-      " x-effect="maybeScrollOnUpdate()">
+      x-data="{}" x-init="
+        const store = window.ensureLogsStore();
+        store.ensureInitialized({{ $latestIssueId ?? 0 }}, $el);
+        $el.addEventListener('scroll', () => store.handleScroll());
+      " x-effect="window.ensureLogsStore().hydrate({{ $latestIssueId ?? 0 }})">
       @php
         $tagColors = [
           'HIGH' => 'text-red-500',
@@ -147,11 +116,12 @@
           </div>
         </div>
       @endforeach
-      <button x-show="showBtn" @click="scrollToBottom(); newLogs = false;" :class="{'animate-pulse': newLogs}"
-        class="sticky float-right bottom-2 right-2 z-50 bg-primary-600 hover:bg-primary-700 bg-opacity-80 text-white rounded-full shadow-lg p-1.5 transition-all duration-200 flex items-center justify-center relative"
+      <button x-show="Alpine.store('logsState').showBtn" @click="window.ensureLogsStore().jumpToBottom()"
+        :class="{'animate-pulse': Alpine.store('logsState').newLogs}"
+        class="sticky float-right bottom-2 right-2 z-50 bg-primary-600 hover:bg-primary-700 bg-opacity-80 text-white rounded-full shadow-lg p-1.5 transition-all duration-200 flex items-center justify-center"
         style="box-shadow: 0 2px 8px 0 rgba(0,0,0,0.15); margin-left: auto;" title="{{ __('Scroll to bottom') }}">
         <i class="fa-solid fa-arrow-down"></i>
-        <span x-show="newLogs"
+        <span x-show="Alpine.store('logsState').newLogs"
           class="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full border-2 border-white"></span>
       </button>
     </div>
@@ -165,3 +135,103 @@
     </div>
   </div>
 </div>
+
+@once
+  <script>
+    if (!window.ensureLogsStore) {
+      window.ensureLogsStore = function () {
+        const AlpineInstance = window.Alpine;
+        if (!AlpineInstance) {
+          return {
+            ensureInitialized() { },
+            hydrate() { },
+            handleScroll() { },
+            jumpToBottom() { }
+          };
+        }
+
+        if (!AlpineInstance.store('logsState')) {
+          AlpineInstance.store('logsState', {
+            container: null,
+            initialized: false,
+            atBottom: true,
+            showBtn: false,
+            newLogs: false,
+            lastMaxId: 0,
+            latestId: 0,
+            previousScrollTop: 0,
+            ensureInitialized(latestId, el) {
+              this.container = el;
+              if (!this.initialized) {
+                this.lastMaxId = latestId;
+                this.latestId = latestId;
+                this.scrollToBottom();
+                this.previousScrollTop = this.container ? this.container.scrollTop : 0;
+                this.initialized = true;
+              }
+              this.hydrate(latestId);
+            },
+            hydrate(latestId) {
+              if (!this.container) return;
+              const wasAtBottom = this.isAtBottom();
+              const previousTop = this.container.scrollTop;
+
+              this.latestId = latestId;
+              if (latestId > this.lastMaxId) {
+                if (wasAtBottom) {
+                  this.newLogs = false;
+                  this.scrollToBottom();
+                } else {
+                  this.container.scrollTop = previousTop;
+                  this.newLogs = true;
+                }
+                this.lastMaxId = latestId;
+              } else if (wasAtBottom) {
+                this.newLogs = false;
+              }
+
+              this.refreshFlags();
+              this.previousScrollTop = this.container.scrollTop;
+            },
+            handleScroll() {
+              if (!this.container) return;
+              this.previousScrollTop = this.container.scrollTop;
+              this.refreshFlags();
+              if (this.atBottom && this.newLogs) {
+                this.newLogs = false;
+                this.lastMaxId = this.latestId;
+              }
+            },
+            jumpToBottom() {
+              this.scrollToBottom();
+              this.newLogs = false;
+              this.lastMaxId = this.latestId;
+              this.refreshFlags();
+              if (this.container) {
+                this.previousScrollTop = this.container.scrollTop;
+              }
+            },
+            scrollToBottom() {
+              if (!this.container) return;
+              this.container.scrollTo({ top: this.container.scrollHeight, behavior: 'smooth' });
+            },
+            refreshFlags() {
+              this.atBottom = this.isAtBottom();
+              this.showBtn = !this.atBottom;
+            },
+            isAtBottom() {
+              if (!this.container) return true;
+              return Math.abs(this.container.scrollHeight - this.container.scrollTop - this.container.clientHeight) < 2;
+            }
+          });
+        }
+
+        return AlpineInstance.store('logsState');
+      };
+    }
+
+    document.addEventListener('alpine:init', () => {
+      window.ensureLogsStore();
+    });
+  </script>
+@endonce

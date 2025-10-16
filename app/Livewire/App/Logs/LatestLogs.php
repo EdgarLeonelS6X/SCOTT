@@ -9,6 +9,7 @@ use App\Models\Channel;
 class LatestLogs extends Component
 {
     public $logs = [];
+    public $latestIssueId = 0;
 
     public function mount()
     {
@@ -17,7 +18,8 @@ class LatestLogs extends Component
 
     public function fetchLogs()
     {
-        $issues = Issue::orderByDesc('created_at')->limit(100)->get()->reverse();
+        $issues = Issue::orderByDesc('created_at')->limit(28)->get()->reverse();
+        $this->latestIssueId = Issue::max('id') ?? 0;
         $channelNumbers = collect($issues)->map(function ($issue) {
             $originalChannel = $issue->channel ?? '';
             if (is_string($originalChannel) && preg_match('/^(\d+)/', $originalChannel, $matches)) {
@@ -63,6 +65,7 @@ class LatestLogs extends Component
     {
         return view('livewire.app.logs.latest-logs', [
             'logs' => $this->logs,
+            'latestIssueId' => $this->latestIssueId,
         ]);
     }
 }
