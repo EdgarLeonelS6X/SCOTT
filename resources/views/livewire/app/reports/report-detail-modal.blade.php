@@ -52,10 +52,10 @@
 
     <div
         class="p-4 sm:p-5 rounded-xl shadow-md transition-transform hover:scale-[1.02]
-                                bg-gradient-to-br from-pink-500 via-orange-400 to-red-500
-                                dark:from-blue-900 dark:via-indigo-800 dark:to-purple-900
-                                text-white dark:text-gray-100 ring-1 ring-white/20 dark:ring-gray-700 hover:shadow-[0_8px_25px_rgba(0,0,0,0.3)]">
-        <div class="flex flex-col md:flex-row md:justify-between items-center gap-6">
+                bg-gradient-to-br from-pink-500 via-orange-400 to-red-500
+                dark:from-blue-900 dark:via-indigo-800 dark:to-purple-900
+                text-white dark:text-gray-100 ring-1 ring-white/20 dark:ring-gray-700 hover:shadow-[0_8px_25px_rgba(0,0,0,0.3)]">
+        <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6">
             <div class="flex items-center gap-4 flex-1 min-w-0">
                 <img src="{{ $selectedReport->reportedBy->profile_photo_url }}"
                     alt="{{ $selectedReport->reportedBy->name }}"
@@ -75,9 +75,6 @@
                                 ({{ __('Last updated') }}: {{ $selectedReport->updated_at->diffForHumans() }})
                             </small>
                         @endif
-                    </p>
-                    <p class="text-xs opacity-80">
-
                     </p>
                 </div>
             </div>
