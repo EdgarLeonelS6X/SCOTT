@@ -49,16 +49,16 @@
                 </div>
                 <div class="flex flex-col gap-1">
                     <x-label><i class="fa-solid fa-link mr-1"></i> {{ __('URL') }}</x-label>
-                    <x-input type="text" :value="$panel->url" disabled class="w-full" />
+                    <x-input type="text" :value="$panel->url" disabled class="w-full truncate leading-tight" />
                 </div>
                 <div class="flex flex-col gap-1">
                     <x-label><i class="fa-solid fa-link mr-1"></i> {{ __('API URL') }}</x-label>
-                    <x-input type="text" :value="$panel->api_url" disabled class="w-full" />
+                    <x-input type="text" :value="$panel->api_url" disabled class="w-full truncate leading-tight" />
                 </div>
                 <div class="flex flex-col gap-1">
                     <x-label><i class="fa-solid fa-cloud mr-1"></i> {{ __('Endpoint') }}</x-label>
                     <div class="flex items-center gap-2">
-                        <x-input type="text" :value="$panel->endpoint" disabled class="w-full" />
+                        <x-input type="text" :value="$panel->endpoint" disabled class="w-full truncate leading-tight" />
                         @if($panel->endpoint)
                             <a href="{{ $panel->endpoint }}" target="_blank" rel="noopener noreferrer"
                                 class="flex items-center gap-2 min-w-[150px] justify-center px-4 py-3.5 text-sm font-semibold text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600"
@@ -74,7 +74,7 @@
                     <div class="flex items-center gap-2">
                         @if($panel->api_key)
                             <x-input type="text" :value="str_repeat('*', strlen($panel->api_key))" disabled
-                                class="w-full font-mono" id="api-key-value" />
+                                class="w-full font-mono truncate leading-tight" id="api-key-value" />
                             <button id="toggle-key-btn" type="button"
                                 class="flex items-center gap-2 min-w-[150px] justify-center px-4 py-3.5 text-sm font-semibold text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600"
                                 onclick="toggleKeyVisibility()" title="{{ __('Show/Hide API Key') }}">
@@ -101,7 +101,7 @@
         @elseif($panel->id == 2)
             @livewire('app.grafana.grafana-second')
             <!-- @elseif($panel->id == 3)
-                                        @livewire('app.grafana.grafana-third') -->
+                                                @livewire('app.grafana.grafana-third') -->
         @endif
     </div>
 
