@@ -4,7 +4,8 @@
             <img class="h-20 w-20 rounded-full object-cover shadow-md" src="{{ $user->profile_photo_url }}"
                 alt="{{ $user->name }}" />
             <div class="text-center sm:text-left space-y-1 w-full">
-                <h1 class="flex flex-col md:flex-row items-center text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">
+                <h1
+                    class="flex flex-col md:flex-row items-center text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">
                     <span>{{ $user->name }}</span>
 
                 </h1>
@@ -15,12 +16,9 @@
                         $auth = auth()->user();
                         $isSelfFirstAdmin = $auth->id === 1 && $user->id === 1 && $auth->hasRole('master');
                     @endphp
-                    <button
-                        @if($isSelfFirstAdmin) disabled @else wire:click="toggleStatus" @endif
-                        type="button"
+                    <button @if($isSelfFirstAdmin) disabled @else wire:click="toggleStatus" @endif type="button"
                         class="ml-3 mt-1 md:mt-0 inline-flex items-center px-2 py-1 rounded-full text-xs font-semibold focus:outline-none transition
-                        {{ $user->status ? ($isSelfFirstAdmin ? 'bg-gray-300 text-gray-500 dark:bg-gray-700 dark:text-gray-400' : 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-100') : ($isSelfFirstAdmin ? 'bg-red-300 text-red-500 dark:bg-red-700 dark:text-red-400' : 'bg-red-200 text-red-600 dark:bg-red-700 dark:text-red-300') }}"
-                    >
+                        {{ $user->status ? ($isSelfFirstAdmin ? 'bg-gray-300 text-gray-500 dark:bg-gray-700 dark:text-gray-400' : 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-100') : ($isSelfFirstAdmin ? 'bg-red-300 text-red-500 dark:bg-red-700 dark:text-red-400' : 'bg-red-200 text-red-600 dark:bg-red-700 dark:text-red-300') }}">
                         <i class="fa-solid {{ $user->status ? 'fa-circle-check' : 'fa-circle-xmark' }} mr-1"></i>
                         {{ $user->status ? __('Active') : __('Inactive') }}
                     </button>
@@ -112,8 +110,9 @@
                     </div>
                 @endif
                 @if ($auth && $auth->id === 1 && $auth->id !== $user->id)
-                    <button wire:click="sendResetPasswordEmail" class="inline-flex items-center gap-2 px-3 py-1 text-xs font-medium rounded-full
-                       bg-primary-50 text-primary-700 hover:bg-primary-100 dark:bg-primary-900 dark:text-primary-200">
+                    <button wire:click="sendResetPasswordEmail"
+                        class="inline-flex items-center gap-2 px-3 py-1 text-xs font-medium rounded-full
+                                bg-primary-50 text-primary-700 hover:bg-primary-100 dark:bg-primary-900 dark:text-primary-200">
                         <i class="fa-solid fa-envelope-circle-check" aria-hidden="true"></i>
                         <span>{{ __('Reset password') }}</span>
                     </button>
@@ -147,30 +146,67 @@
                 $icons = [
                     'channels' => 'fa-tv',
                     'stages' => 'fa-bars-staggered',
+                    'grafana' => 'fa-chart-pie',
                     'roles' => 'fa-shield-halved',
                     'permissions' => 'fa-key',
                 ];
             @endphp
             @foreach ($grouped as $group => $perms)
+                @if (!in_array($group, ['roles', 'permissions']))
+                    <div class="p-4 rounded-md border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700">
+                        <h3
+                            class="text-sm font-bold text-gray-700 dark:text-white uppercase mb-3 flex items-center gap-2 {{ !$canEditPermissions ? 'opacity-50' : '' }}">
+                            <i class="fa-solid {{ $icons[$group] ?? 'fa-lock' }}"></i>{{ __(ucfirst($group)) }}
+                        </h3>
+                        <div class="space-y-2">
+                            @foreach ($perms as $permission)
+                                <label class="flex items-center gap-2 {{ !$canEditPermissions ? 'opacity-50' : '' }}">
+                                    <input type="checkbox" value="{{ $permission->name }}" wire:model="permissions"
+                                        class="w-4 h-4 text-primary-600 bg-white border-gray-300 rounded focus:ring-primary-500 dark:bg-gray-700 dark:border-gray-600"
+                                        @disabled(!$canEditPermissions || in_array($permission->name, $forbiddenPermissions))>
+                                    <span class="text-sm text-gray-800 dark:text-gray-200">
+                                        {{ __(ucfirst(str_replace($group . '.', '', $permission->name))) }}
+                                    </span>
+                                </label>
+                            @endforeach
+                        </div>
+                    </div>
+                @endif
+            @endforeach
+            @if(isset($grouped['roles']) || isset($grouped['permissions']))
                 <div class="p-4 rounded-md border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700">
                     <h3
                         class="text-sm font-bold text-gray-700 dark:text-white uppercase mb-3 flex items-center gap-2 {{ !$canEditPermissions ? 'opacity-50' : '' }}">
-                        <i class="fa-solid {{ $icons[$group] ?? 'fa-lock' }}"></i>{{ ucfirst($group) }}
+                        <i class="fa-solid fa-shield-halved"></i>{{ __('Roles & Permissions') }}
                     </h3>
                     <div class="space-y-2">
-                        @foreach ($perms as $permission)
-                            <label class="flex items-center gap-2 {{ !$canEditPermissions ? 'opacity-50' : '' }}">
-                                <input type="checkbox" value="{{ $permission->name }}" wire:model="permissions"
-                                    class="w-4 h-4 text-primary-600 bg-white border-gray-300 rounded focus:ring-primary-500 dark:bg-gray-700 dark:border-gray-600"
-                                    @disabled(!$canEditPermissions || $role === 'master' || in_array($permission->name, $forbiddenPermissions))>
-                                <span class="text-sm text-gray-800 dark:text-gray-200">
-                                    {{ ucfirst(str_replace($group . '.', '', $permission->name)) }}
-                                </span>
-                            </label>
-                        @endforeach
+                        @if(isset($grouped['roles']))
+                            @foreach ($grouped['roles'] as $permission)
+                                <label class="flex items-center gap-2 {{ !$canEditPermissions ? 'opacity-50' : '' }}">
+                                    <input type="checkbox" value="{{ $permission->name }}" wire:model="permissions"
+                                        class="w-4 h-4 text-primary-600 bg-white border-gray-300 rounded focus:ring-primary-500 dark:bg-gray-700 dark:border-gray-600"
+                                        @disabled(!$canEditPermissions || $role === 'master' || in_array($permission->name, $forbiddenPermissions))>
+                                    <span class="text-sm text-gray-800 dark:text-gray-200">
+                                        {{ __(ucfirst(str_replace('roles.', '', $permission->name))) }}
+                                    </span>
+                                </label>
+                            @endforeach
+                        @endif
+                        @if(isset($grouped['permissions']))
+                            @foreach ($grouped['permissions'] as $permission)
+                                <label class="flex items-center gap-2 {{ !$canEditPermissions ? 'opacity-50' : '' }}">
+                                    <input type="checkbox" value="{{ $permission->name }}" wire:model="permissions"
+                                        class="w-4 h-4 text-primary-600 bg-white border-gray-300 rounded focus:ring-primary-500 dark:bg-gray-700 dark:border-gray-600"
+                                        @disabled(!$canEditPermissions || $role === 'master' || in_array($permission->name, $forbiddenPermissions))>
+                                    <span class="text-sm text-gray-800 dark:text-gray-200">
+                                        {{ __(ucfirst(str_replace('permissions.', '', $permission->name))) }}
+                                    </span>
+                                </label>
+                            @endforeach
+                        @endif
                     </div>
                 </div>
-            @endforeach
+            @endif
         </div>
     </div>
 

@@ -20,6 +20,9 @@ class RolesAndPermissionsSeeder extends Seeder
             'stages.create',
             'stages.edit',
             'stages.delete',
+            'grafana.create',
+            'grafana.edit',
+            'grafana.delete',
             'roles.edit',
             'permissions.assign',
         ];
