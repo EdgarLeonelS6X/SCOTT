@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 
 class GrafanaController extends Controller
 {
+    use \Illuminate\Foundation\Auth\Access\AuthorizesRequests;
     /**
      * Display a listing of the resource.
      */
@@ -23,6 +24,8 @@ class GrafanaController extends Controller
      */
     public function create()
     {
+        $this->authorize('create', GrafanaPanel::class);
+
         return view('admin.grafana.create');
     }
 
@@ -73,6 +76,8 @@ class GrafanaController extends Controller
     {
         $panel = GrafanaPanel::findOrFail($id);
 
+        $this->authorize('edit', $panel);
+
         return view('admin.grafana.edit', compact('panel'));
     }
 
@@ -113,6 +118,18 @@ class GrafanaController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $panel = GrafanaPanel::findOrFail($id);
+
+        $this->authorize('delete', $panel);
+
+        $panel->delete();
+
+        session()->flash('swal', [
+            'icon' => 'success',
+            'title' => __('Well done!'),
+            'text' => __('Grafana panel deleted successfully.')
+        ]);
+
+        return redirect()->route('admin.grafana.index');
     }
 }

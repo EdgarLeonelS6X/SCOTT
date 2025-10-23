@@ -20,4 +20,4 @@ Route::resource('/channels', ChannelController::class)
 Route::resource('/stages', StageController::class)->middleware(['auth', 'verified', 'can:viewAny,App\Models\Stage']);
 
 Route::resource('/grafana', GrafanaController::class)
-    ->middleware(['auth', 'verified', 'can:viewAny,App\\Models\\GrafanaPanel']);
+    ->middleware(['auth', 'verified', 'can:viewAny,App\Models\GrafanaPanel']);
