@@ -64,13 +64,13 @@ class UserController extends Controller
             ]);
             return redirect()->back()->withInput();
         }
-        $user = User::create([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'password' => bcrypt($data['password']),
-            'status' => $data['status'],
-            'email_verified_at' => now(),
-        ]);
+        $user = new User();
+        $user->name = $data['name'];
+        $user->email = $data['email'];
+        $user->password = bcrypt($data['password']);
+        $user->status = $data['status'];
+        $user->email_verified_at = now();
+        $user->save();
         if (isset($data['role'])) {
             $user->syncRoles([$data['role']]);
         }
