@@ -1,14 +1,14 @@
 <x-admin-layout :breadcrumbs="[
-    [
-        'name' => __('Dashboard'),
-        'icon' => 'fa-solid fa-wrench',
-        'route' => route('admin.dashboard'),
-    ],
-    [
-        'name' => __('Stages'),
-        'icon' => 'fa-solid fa-bars-staggered',
-    ],
-]">
+        [
+            'name' => __('Dashboard'),
+            'icon' => 'fa-solid fa-wrench',
+            'route' => route('admin.dashboard'),
+        ],
+        [
+            'name' => __('Stages'),
+            'icon' => 'fa-solid fa-bars-staggered',
+        ],
+    ]">
 
     @if ($stages->count())
         @can('create', App\Models\Stage::class)
@@ -19,12 +19,12 @@
                     {{ __('Register new stage') }}
                 </a>
             </x-slot>
+            <a href="{{ route('admin.stages.create') }}"
+                class="mb-4 sm:hidden block text-center text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800 shadow-xl">
+                <i class="fa-solid fa-plus mr-1"></i>
+                {{ __('Register new stage') }}
+            </a>
         @endcan
-        <a href="{{ route('admin.stages.create') }}"
-            class="mb-4 sm:hidden block text-center text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800 shadow-xl">
-            <i class="fa-solid fa-plus mr-1"></i>
-            {{ __('Register new stage') }}
-        </a>
         <div class="bg-white dark:bg-gray-800 relative shadow-2xl rounded-lg overflow-hidden">
             <div class="overflow-x-auto">
                 <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
@@ -50,8 +50,7 @@
                         @foreach ($stages as $stage)
                             <tr onclick="window.location.href='{{ route('admin.stages.show', $stage) }}'"
                                 class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-600 text-black dark:text-white cursor-pointer">
-                                <th scope="row"
-                                    class="px-4 py-2.5 font-bold text-gray-900 whitespace-nowrap dark:text-white">
+                                <th scope="row" class="px-4 py-2.5 font-bold text-gray-900 whitespace-nowrap dark:text-white">
                                     {{ __($stage->name) }}
                                 </th>
                                 <td class="px-4 py-2.5">
@@ -71,8 +70,7 @@
                                 </td>
                                 <td class="px-4 py-2.5 flex items-center justify-center">
                                     <button id="stage-dropdown-button-{{ $stage->id }}"
-                                        data-dropdown-toggle="stage-dropdown-{{ $stage->id }}"
-                                        onclick="event.stopPropagation()"
+                                        data-dropdown-toggle="stage-dropdown-{{ $stage->id }}" onclick="event.stopPropagation()"
                                         class="inline-flex items-center p-3 text-sm font-medium text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none dark:text-gray-400 dark:hover:text-gray-100"
                                         type="button">
                                         <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20"
@@ -110,8 +108,7 @@
                                                     id="delete-form-{{ $stage->id }}">
                                                     @csrf
                                                     @method('DELETE')
-                                                    <button type="button"
-                                                        @click.stop.prevent="confirmDelete({{ $stage->id }})"
+                                                    <button type="button" @click.stop.prevent="confirmDelete({{ $stage->id }})"
                                                         title="{{ __('Delete stage') }}"
                                                         class="flex items-center w-full text-left py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">
                                                         <i class="fa-solid fa-trash-can mr-2"></i>
@@ -132,8 +129,8 @@
         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 p-4 mb-4 text-sm text-blue-800 rounded-lg bg-blue-50 dark:bg-gray-800 dark:text-blue-400 shadow-xl"
             role="alert">
             <div class="flex items-center gap-3">
-                <svg class="w-5 h-5 flex-shrink-0" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                    fill="currentColor" viewBox="0 0 20 20">
+                <svg class="w-5 h-5 flex-shrink-0" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+                    viewBox="0 0 20 20">
                     <path
                         d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
                 </svg>

@@ -7,33 +7,123 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
-use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class UserController extends Controller
 {
-    use AuthorizesRequests;
-
     public function index()
     {
         $users = User::orderBy('status', 'desc')->get();
-
-        return view("admin.users.index", compact("users"));
+        return view('admin.users.index', compact('users'));
     }
 
     public function show(User $user)
     {
-        $this->authorize('view', $user);
-
         $roles = Role::all();
         $permissions = Permission::all();
-
         return view('admin.users.show', compact('user', 'roles', 'permissions'));
+    }
+
+    public function create()
+    {
+        if (!auth()->user() || !auth()->user()->hasRole('master')) {
+            abort(403);
+        }
+        $roles = Role::all();
+        return view('admin.users.create', compact('roles'));
+    }
+
+    public function store(Request $request)
+    {
+        $data = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => [
+                'required',
+                'email',
+                'unique:users,email',
+                'regex:/^[A-Za-z0-9._%+-]+@stargroup\\.com\\.mx$/i',
+            ],
+            'password' => 'required|string|min:8|confirmed',
+            'role' => 'nullable|exists:roles,name',
+        ], [
+            'email.regex' => __('Only @stargroup.com.mx emails are allowed.'),
+        ]);
+        $user = User::create([
+            'name' => $data['name'],
+            'email' => $data['email'],
+            'password' => bcrypt($data['password']),
+            'status' => true,
+            'email_verified_at' => now(),
+        ]);
+        if (isset($data['role'])) {
+            $user->syncRoles([$data['role']]);
+        }
+        session()->flash('swal', [
+            'icon' => 'success',
+            'title' => __('Well done!'),
+            'text' => __('User created successfully.'),
+        ]);
+        return redirect()->route('admin.users.show', $user);
+    }
+
+    public function edit(User $user)
+    {
+        if ($user->id == 1) {
+            abort(403, 'This user is protected and cannot be edited.');
+        }
+        if (!auth()->user() || !auth()->user()->hasRole('master')) {
+            abort(403);
+        }
+        $roles = Role::all();
+        return view('admin.users.edit', compact('user', 'roles'));
+    }
+
+    public function update(Request $request, User $user)
+    {
+        if ($user->id == 1) {
+            abort(403, 'This user is protected and cannot be updated.');
+        }
+        $data = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email,' . $user->id,
+            'password' => 'nullable|string|min:8|confirmed',
+            'role' => 'nullable|exists:roles,name',
+        ]);
+        $user->name = $data['name'];
+        $user->email = $data['email'];
+        if (!empty($data['password'])) {
+            $user->password = bcrypt($data['password']);
+        }
+        $user->save();
+        if (isset($data['role'])) {
+            $user->syncRoles([$data['role']]);
+        }
+        session()->flash('swal', [
+            'icon' => 'success',
+            'title' => __('Well done!'),
+            'text' => __('User updated successfully.'),
+        ]);
+        return redirect()->route('admin.users.show', $user);
+    }
+
+    public function destroy(User $user)
+    {
+        if ($user->id == 1) {
+            abort(403, 'This user is protected and cannot be deleted.');
+        }
+        if (!auth()->user() || !auth()->user()->hasRole('master')) {
+            abort(403);
+        }
+        $user->delete();
+        session()->flash('swal', [
+            'icon' => 'success',
+            'title' => __('Well done!'),
+            'text' => __('User deleted successfully.'),
+        ]);
+        return redirect()->route('admin.users.index');
     }
 
     public function updatePermissions(Request $request, User $user)
     {
-        $this->authorize('update', $user);
-
         $data = $request->validate([
             'role' => 'nullable|exists:roles,name',
             'permissions' => 'array',

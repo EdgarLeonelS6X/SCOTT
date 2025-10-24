@@ -686,5 +686,14 @@
     "Open endpoint": "Abrir endpoint",
     "Open endpoint in new tab": "Abrir endpoint en una nueva pestaña",
     "Grafana panel deleted successfully.": "Panel de Grafana eliminado con éxito.",
-    "Roles & Permissions": "Roles y Permisos"
+    "Roles & Permissions": "Roles y Permisos",
+    "Register new user": "Registrar nuevo usuario",
+    "Enter the data for the new user.": "Ingrese los datos para el nuevo usuario.",
+    "User name": "Nombre del usuario",
+    "Select role": "Seleccionar rol",
+    "Update user": "Actualizar usuario",
+    "Update the data for this user.": "Actualice los datos de este usuario.",
+    "User created successfully.": "Usuario creado con éxito.",
+    "User updated successfully.": "Usuario actualizado con éxito.",
+    "User deleted successfully.": "Usuario eliminado con éxito."
 }
