@@ -59,7 +59,7 @@ class EditChannel extends Component
     public function update()
     {
         $this->validate([
-            'number' => 'required|integer|unique:channels,number,' . $this->channel->id,
+            'number' => 'required|integer',
             'origin' => 'nullable|string',
             'name' => 'required|string',
             'url' => 'nullable',
