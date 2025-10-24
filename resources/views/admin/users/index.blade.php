@@ -1,14 +1,14 @@
 <x-admin-layout :breadcrumbs="[
-    [
-        'name' => __('Dashboard'),
-        'icon' => 'fa-solid fa-wrench',
-        'route' => route('admin.dashboard'),
-    ],
-    [
-        'name' => __('Users'),
-        'icon' => 'fa-solid fa-user-group',
-    ],
-]">
+        [
+            'name' => __('Dashboard'),
+            'icon' => 'fa-solid fa-wrench',
+            'route' => route('admin.dashboard'),
+        ],
+        [
+            'name' => __('Users'),
+            'icon' => 'fa-solid fa-user-group',
+        ],
+    ]">
 
     <div class="bg-white dark:bg-gray-800 relative shadow-2xl rounded-lg overflow-hidden">
         <div class="overflow-x-auto">
@@ -52,38 +52,51 @@
                             <td class="px-6 py-4 whitespace-nowrap">
                                 @php
                                     $role = $user->roles->first()?->name;
+                                    if ($user->id === 1) {
+                                        $badge = [
+                                            'label' => 'Developer',
+                                            'icon' => 'fa-code',
+                                            'bg' => 'bg-red-600',
+                                            'text' => 'text-white',
+                                            'dark_bg' => 'dark:bg-red-700',
+                                            'dark_text' => 'dark:text-white',
+                                        ];
+                                    } elseif ($role === 'master') {
+                                        $badge = [
+                                            'label' => 'Master',
+                                            'icon' => 'fa-crown',
+                                            'bg' => 'bg-yellow-200',
+                                            'text' => 'text-yellow-900',
+                                            'dark_bg' => 'dark:bg-yellow-700',
+                                            'dark_text' => 'dark:text-yellow-100',
+                                        ];
+                                    } elseif ($role === 'admin') {
+                                        $badge = [
+                                            'label' => 'Admin',
+                                            'icon' => 'fa-gear',
+                                            'bg' => 'bg-blue-600',
+                                            'text' => 'text-white',
+                                            'dark_bg' => 'dark:bg-blue-800',
+                                            'dark_text' => 'dark:text-white',
+                                        ];
+                                    } elseif ($role === 'user') {
+                                        $badge = [
+                                            'label' => 'User',
+                                            'icon' => 'fa-user',
+                                            'bg' => 'bg-gray-400',
+                                            'text' => 'text-white',
+                                            'dark_bg' => 'dark:bg-gray-700',
+                                            'dark_text' => 'dark:text-white',
+                                        ];
+                                    } else {
+                                        $badge = null;
+                                    }
                                 @endphp
-                                @if ($role)
-                                    @php
-                                        $roleName = ucfirst($role);
-                                        $roleStyles = match ($role) {
-                                            'master' => [
-                                                'bg' => 'bg-yellow-200',
-                                                'text' => 'text-yellow-900',
-                                                'dark_bg' => 'dark:bg-yellow-700',
-                                                'dark_text' => 'dark:text-yellow-100',
-                                                'icon' => 'fa-crown',
-                                            ],
-                                            'admin' => [
-                                                'bg' => 'bg-red-200',
-                                                'text' => 'text-red-800',
-                                                'dark_bg' => 'dark:bg-red-900',
-                                                'dark_text' => 'dark:text-red-200',
-                                                'icon' => 'fa-gear',
-                                            ],
-                                            default => [
-                                                'bg' => 'bg-blue-100',
-                                                'text' => 'text-blue-800',
-                                                'dark_bg' => 'dark:bg-blue-900',
-                                                'dark_text' => 'dark:text-blue-200',
-                                                'icon' => 'fa-user',
-                                            ],
-                                        };
-                                    @endphp
+                                @if ($badge)
                                     <span
-                                        class="inline-flex items-center px-2 py-1 text-xs font-medium rounded-full {{ $roleStyles['bg'] }} {{ $roleStyles['text'] }} {{ $roleStyles['dark_bg'] }} {{ $roleStyles['dark_text'] }}">
-                                        <i class="fa-solid {{ $roleStyles['icon'] }} mr-1 text-xs"></i>
-                                        {{ $roleName }}
+                                        class="inline-flex items-center px-2 py-1 text-xs font-medium rounded-full {{ $badge['bg'] }} {{ $badge['text'] }} {{ $badge['dark_bg'] }} {{ $badge['dark_text'] }}">
+                                        <i class="fa-solid {{ $badge['icon'] }} mr-1 text-xs"></i>
+                                        {{ $badge['label'] }}
                                     </span>
                                 @else
                                     <span class="text-xs text-gray-400 italic">{{ __('No role') }}</span>
@@ -91,11 +104,13 @@
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-center">
                                 @if ($user->status)
-                                    <span class="inline-flex items-center px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-100">
+                                    <span
+                                        class="inline-flex items-center px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-100">
                                         <i class="fa-solid fa-circle-check mr-1"></i> {{ __('Active') }}
                                     </span>
                                 @else
-                                    <span class="inline-flex items-center px-2 py-1 text-xs font-medium rounded-full bg-red-200 text-red-600 dark:bg-red-700 dark:text-red-300">
+                                    <span
+                                        class="inline-flex items-center px-2 py-1 text-xs font-medium rounded-full bg-red-200 text-red-600 dark:bg-red-700 dark:text-red-300">
                                         <i class="fa-solid fa-circle-xmark mr-1"></i> {{ __('Inactive') }}
                                     </span>
                                 @endif
