@@ -46,6 +46,7 @@ class UserController extends Controller
                 ],
                 'password' => 'required|string|min:8|confirmed',
                 'role' => 'nullable|exists:roles,name',
+                'status' => 'required|boolean',
             ], [
                 'email.regex' => __('Only @stargroup.com.mx emails are allowed.'),
             ]);
@@ -67,7 +68,7 @@ class UserController extends Controller
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => bcrypt($data['password']),
-            'status' => true,
+            'status' => $data['status'],
             'email_verified_at' => now(),
         ]);
         if (isset($data['role'])) {
