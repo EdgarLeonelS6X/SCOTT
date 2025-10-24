@@ -112,7 +112,7 @@
                 @if ($auth && $auth->id === 1 && $auth->id !== $user->id)
                     <button wire:click="sendResetPasswordEmail"
                         class="inline-flex items-center gap-2 px-3 py-1 text-xs font-medium rounded-full
-                                bg-primary-50 text-primary-700 hover:bg-primary-100 dark:bg-primary-900 dark:text-primary-200">
+                                        bg-primary-50 text-primary-700 hover:bg-primary-100 dark:bg-primary-900 dark:text-primary-200">
                         <i class="fa-solid fa-envelope-circle-check" aria-hidden="true"></i>
                         <span>{{ __('Reset password') }}</span>
                     </button>
@@ -159,7 +159,14 @@
                             <i class="fa-solid {{ $icons[$group] ?? 'fa-lock' }}"></i>{{ __(ucfirst($group)) }}
                         </h3>
                         <div class="space-y-2">
-                            @foreach ($perms as $permission)
+                            @php
+                                $sortedPerms = collect($perms)->sortBy(function ($p) use ($group) {
+                                    $parts = explode('.', $p->name, 2);
+                                    $action = $parts[1] ?? '';
+                                    return $action === 'view' ? 0 : 1;
+                                })->values();
+                            @endphp
+                            @foreach ($sortedPerms as $permission)
                                 <label class="flex items-center gap-2 {{ !$canEditPermissions ? 'opacity-50' : '' }}">
                                     <input type="checkbox" value="{{ $permission->name }}" wire:model="permissions"
                                         class="w-4 h-4 text-primary-600 bg-white border-gray-300 rounded focus:ring-primary-500 dark:bg-gray-700 dark:border-gray-600"

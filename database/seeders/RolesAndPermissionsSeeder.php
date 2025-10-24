@@ -14,12 +14,15 @@ class RolesAndPermissionsSeeder extends Seeder
         app()[PermissionRegistrar::class]->forgetCachedPermissions();
 
         $permissions = [
+            'channels.view',
             'channels.create',
             'channels.edit',
             'channels.delete',
+            'stages.view',
             'stages.create',
             'stages.edit',
             'stages.delete',
+            'grafana.view',
             'grafana.create',
             'grafana.edit',
             'grafana.delete',

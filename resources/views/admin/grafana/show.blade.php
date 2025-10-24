@@ -22,16 +22,20 @@
                 <i class="fa-solid fa-arrow-left mr-1.5"></i>
                 {{ __('Go back') }}
             </a>
-            <a href="{{ route('admin.grafana.edit', $panel) }}"
-                class="flex justify-center items-center text-white bg-blue-600 hover:bg-blue-500 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2 text-center">
-                <i class="fa-solid fa-pen-to-square mr-1.5"></i>
-                {{ __('Edit') }}
-            </a>
-            <button onclick="confirmDelete()"
-                class="flex justify-center items-center text-white bg-red-600 hover:bg-red-500 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm px-5 py-2 text-center">
-                <i class="fa-solid fa-trash-can mr-1.5"></i>
-                {{ __('Delete') }}
-            </button>
+            @can('edit', $panel)
+                <a href="{{ route('admin.grafana.edit', $panel) }}"
+                    class="flex justify-center items-center text-white bg-blue-600 hover:bg-blue-500 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2 text-center">
+                    <i class="fa-solid fa-pen-to-square mr-1.5"></i>
+                    {{ __('Edit') }}
+                </a>
+            @endcan
+            @can('delete', $panel)
+                <button onclick="confirmDelete()"
+                    class="flex justify-center items-center text-white bg-red-600 hover:bg-red-500 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm px-5 py-2 text-center">
+                    <i class="fa-solid fa-trash-can mr-1.5"></i>
+                    {{ __('Delete') }}
+                </button>
+            @endcan
         </div>
     </x-slot>
     <div
@@ -101,7 +105,7 @@
         @elseif($panel->id == 2)
             @livewire('app.grafana.grafana-second')
             <!-- @elseif($panel->id == 3)
-                                                @livewire('app.grafana.grafana-third') -->
+                            @livewire('app.grafana.grafana-third') -->
         @endif
     </div>
 
@@ -111,16 +115,20 @@
             <i class="fa-solid fa-arrow-left mr-1.5"></i>
             {{ __('Go back') }}
         </a>
-        <a href="{{ route('admin.grafana.edit', $panel) }}"
-            class="flex justify-center items-center w-full text-white bg-blue-600 hover:bg-blue-500 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-4 py-2">
-            <i class="fa-solid fa-pen-to-square mr-1.5"></i>
-            {{ __('Edit') }}
-        </a>
-        <button onclick="confirmDelete()"
-            class="flex justify-center items-center w-full text-white bg-red-600 hover:bg-red-500 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm px-4 py-2">
-            <i class="fa-solid fa-trash-can mr-1.5"></i>
-            {{ __('Delete') }}
-        </button>
+        @can('edit', $panel)
+            <a href="{{ route('admin.grafana.edit', $panel) }}"
+                class="flex justify-center items-center w-full text-white bg-blue-600 hover:bg-blue-500 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-4 py-2">
+                <i class="fa-solid fa-pen-to-square mr-1.5"></i>
+                {{ __('Edit') }}
+            </a>
+        @endcan
+        @can('delete', $panel)
+            <button onclick="confirmDelete()"
+                class="flex justify-center items-center w-full text-white bg-red-600 hover:bg-red-500 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm px-4 py-2">
+                <i class="fa-solid fa-trash-can mr-1.5"></i>
+                {{ __('Delete') }}
+            </button>
+        @endcan
     </div>
     <form action="{{ route('admin.grafana.destroy', $panel) }}" method="POST" id="delete-form">
         @csrf

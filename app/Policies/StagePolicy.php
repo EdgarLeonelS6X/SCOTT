@@ -13,9 +13,7 @@ class StagePolicy
     public function viewAny(User $user): bool
     {
         return $user->hasAnyPermission([
-            'stages.create',
-            'stages.edit',
-            'stages.delete'
+            'stages.view',
         ]) || $user->hasRole('admin');
     }
 

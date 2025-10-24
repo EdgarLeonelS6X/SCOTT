@@ -16,6 +16,8 @@ class StageController extends Controller
      */
     public function index()
     {
+        $this->authorize('viewAny', Stage::class);
+
         $stages = Stage::orderBy('status', 'desc')->get();
 
         return view("admin.stages.index", compact("stages"));

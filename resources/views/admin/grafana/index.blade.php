@@ -11,18 +11,20 @@
     ]">
 
     @if ($panels->count())
-        <x-slot name="action">
+        @can('create', App\Models\GrafanaPanel::class)
+            <x-slot name="action">
+                <a href="{{ route('admin.grafana.create') }}"
+                    class="hidden sm:block text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800 shadow-xl">
+                    <i class="fa-solid fa-plus mr-1"></i>
+                    {{ __('Register new panel') }}
+                </a>
+            </x-slot>
             <a href="{{ route('admin.grafana.create') }}"
-                class="hidden sm:block text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800 shadow-xl">
+                class="mb-4 sm:hidden block text-center text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800 shadow-xl">
                 <i class="fa-solid fa-plus mr-1"></i>
                 {{ __('Register new panel') }}
             </a>
-        </x-slot>
-        <a href="{{ route('admin.grafana.create') }}"
-            class="mb-4 sm:hidden block text-center text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800 shadow-xl">
-            <i class="fa-solid fa-plus mr-1"></i>
-            {{ __('Register new panel') }}
-        </a>
+        @endcan
         <div class="bg-white dark:bg-gray-800 relative shadow-2xl rounded-lg overflow-hidden">
             <div class="overflow-x-auto">
                 <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">

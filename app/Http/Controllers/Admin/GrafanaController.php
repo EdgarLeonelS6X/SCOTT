@@ -5,15 +5,19 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\GrafanaPanel;
 use Illuminate\Http\Request;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class GrafanaController extends Controller
 {
-    use \Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+    use AuthorizesRequests;
+
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
+        $this->authorize('viewAny', GrafanaPanel::class);
+
         $panels = GrafanaPanel::all();
 
         return view('admin.grafana.index', compact('panels'));

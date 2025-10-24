@@ -685,5 +685,6 @@
     "New logs available": "Nuevos logs disponibles",
     "Open endpoint": "Abrir endpoint",
     "Open endpoint in new tab": "Abrir endpoint en una nueva pestaña",
-    "Grafana panel deleted successfully.": "Panel de Grafana eliminado con éxito."
+    "Grafana panel deleted successfully.": "Panel de Grafana eliminado con éxito.",
+    "Roles & Permissions": "Roles y Permisos"
 }

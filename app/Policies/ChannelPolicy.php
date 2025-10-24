@@ -13,9 +13,7 @@ class ChannelPolicy
     public function viewAny(User $user): bool
     {
         return $user->hasAnyPermission([
-            'channels.create',
-            'channels.edit',
-            'channels.delete'
+            'channels.view',
         ]) || $user->hasRole('admin');
     }
 

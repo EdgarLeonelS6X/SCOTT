@@ -5,7 +5,7 @@ namespace App\Policies;
 use App\Models\User;
 use App\Models\GrafanaPanel;
 
-class GrafanaPolicy
+class GrafanaPanelPolicy
 {
     /**
      * Determine whether the user can view any models.
@@ -14,9 +14,6 @@ class GrafanaPolicy
     {
         return $user->hasAnyPermission([
             'grafana.view',
-            'grafana.create',
-            'grafana.edit',
-            'grafana.delete'
         ]) || $user->hasRole('admin');
     }
 

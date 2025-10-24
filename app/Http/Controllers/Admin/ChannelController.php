@@ -17,6 +17,8 @@ class ChannelController extends Controller
      */
     public function index()
     {
+        $this->authorize('viewAny', Channel::class);
+
         $channels = Channel::orderBy("id", "desc")->paginate(10);
 
         return view("admin.channels.index", compact("channels"));
