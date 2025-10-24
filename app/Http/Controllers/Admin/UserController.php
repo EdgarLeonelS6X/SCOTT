@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
+use Illuminate\Validation\ValidationException;
 
 class UserController extends Controller
 {
@@ -34,19 +35,34 @@ class UserController extends Controller
 
     public function store(Request $request)
     {
-        $data = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => [
-                'required',
-                'email',
-                'unique:users,email',
-                'regex:/^[A-Za-z0-9._%+-]+@stargroup\\.com\\.mx$/i',
-            ],
-            'password' => 'required|string|min:8|confirmed',
-            'role' => 'nullable|exists:roles,name',
-        ], [
-            'email.regex' => __('Only @stargroup.com.mx emails are allowed.'),
-        ]);
+        try {
+            $data = $request->validate([
+                'name' => 'required|string|max:255',
+                'email' => [
+                    'required',
+                    'email',
+                    'unique:users,email',
+                    'regex:/^[A-Za-z0-9._%+-]+@stargroup\\.com\\.mx$/i',
+                ],
+                'password' => 'required|string|min:8|confirmed',
+                'role' => 'nullable|exists:roles,name',
+            ], [
+                'email.regex' => __('Only @stargroup.com.mx emails are allowed.'),
+            ]);
+        } catch (ValidationException $e) {
+            $errors = $e->validator->errors()->all();
+            $errorMessages = '<ul style="list-style-type: disc; padding-left: 20px;">';
+            foreach ($errors as $error) {
+                $errorMessages .= "<li style='list-style-position: inside;'>$error</li>";
+            }
+            $errorMessages .= '</ul>';
+            session()->flash('swal', [
+                'icon' => 'error',
+                'title' => '¡Error!',
+                'html' => '<b>' . __('Your registration contains the following errors:') . '</b><br><br>' . $errorMessages,
+            ]);
+            return redirect()->back()->withInput();
+        }
         $user = User::create([
             'name' => $data['name'],
             'email' => $data['email'],
@@ -82,12 +98,27 @@ class UserController extends Controller
         if ($user->id == 1) {
             abort(403, 'This user is protected and cannot be updated.');
         }
-        $data = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email,' . $user->id,
-            'password' => 'nullable|string|min:8|confirmed',
-            'role' => 'nullable|exists:roles,name',
-        ]);
+        try {
+            $data = $request->validate([
+                'name' => 'required|string|max:255',
+                'email' => 'required|email|unique:users,email,' . $user->id,
+                'password' => 'nullable|string|min:8|confirmed',
+                'role' => 'nullable|exists:roles,name',
+            ]);
+        } catch (ValidationException $e) {
+            $errors = $e->validator->errors()->all();
+            $errorMessages = '<ul style="list-style-type: disc; padding-left: 20px;">';
+            foreach ($errors as $error) {
+                $errorMessages .= "<li style='list-style-position: inside;'>$error</li>";
+            }
+            $errorMessages .= '</ul>';
+            session()->flash('swal', [
+                'icon' => 'error',
+                'title' => '¡Error!',
+                'html' => '<b>' . __('Your registration contains the following errors:') . '</b><br><br>' . $errorMessages,
+            ]);
+            return redirect()->back()->withInput();
+        }
         $user->name = $data['name'];
         $user->email = $data['email'];
         if (!empty($data['password'])) {
