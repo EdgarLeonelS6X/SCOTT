@@ -94,7 +94,7 @@ class ChannelTable extends Component
             $query->where('category', $this->categoryFilter);
         }
 
-        $channels = $query->orderBy('number')->paginate(10);
+        $channels = $query->orderByDesc('status')->orderBy('number')->paginate(10);
 
         return view('livewire.admin.channels.channel-table', [
             'channels' => $channels,
