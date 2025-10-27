@@ -20,6 +20,14 @@ class GrafanaController extends Controller
 
         $panels = GrafanaPanel::all();
 
+        $panels = $panels->sortBy(function ($panel) {
+            if ($panel->id == 2)
+                return 3;
+            if ($panel->id == 3)
+                return 2;
+            return $panel->id;
+        })->values();
+
         return view('admin.grafana.index', compact('panels'));
     }
 

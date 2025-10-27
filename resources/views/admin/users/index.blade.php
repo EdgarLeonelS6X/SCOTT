@@ -111,6 +111,9 @@
                                         class="inline-flex items-center px-2 py-1 text-xs font-medium rounded-full {{ $badge['bg'] }} {{ $badge['text'] }} {{ $badge['dark_bg'] }} {{ $badge['dark_text'] }}">
                                         <i class="fa-solid {{ $badge['icon'] }} mr-1 text-xs"></i>
                                         {{ $badge['label'] }}
+                                        @if (in_array($user->id, [2, 5, 7, 8]))
+                                            ({{ __('Engineering') }})
+                                        @endif
                                     </span>
                                 @else
                                     <span class="text-xs text-gray-400 italic">{{ __('No role') }}</span>

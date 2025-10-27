@@ -3,13 +3,12 @@
         <div class="flex items-center justify-between px-4 py-4 border-b border-gray-200 dark:border-gray-700">
             <h2 class="text-xl font-bold text-gray-800 dark:text-gray-200 flex items-center gap-2">
                 <i class="fa-solid fa-forward text-primary-600"></i>
-                {{ $grafanaPanel?->name ?? __('CUTV') }}
+                {{ $grafanaPanel?->name }}
             </h2>
             <span class="text-xs text-gray-400 dark:text-gray-500 md:block hidden">
                 {{ __('Auto-refresh 5s') }}
             </span>
         </div>
-
         <div class="p-4 flex flex-col md:flex-row md:items-end gap-4 md:gap-6">
             <div class="w-full md:basis-2/3" x-data="{
                 open: false,

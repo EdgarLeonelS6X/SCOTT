@@ -697,5 +697,7 @@
     "User updated successfully.": "Usuario actualizado con éxito.",
     "User deleted successfully.": "Usuario eliminado con éxito.",
     "No role": "Sin rol",
-    "October": "Octubre"
+    "October": "Octubre",
+    "Engineering": "Ingeniería",
+    "Switch Grafana panel": "Cambiar panel de Grafana"
 }

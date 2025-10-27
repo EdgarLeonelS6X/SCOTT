@@ -7,8 +7,9 @@ use App\Models\Channel;
 use App\Models\GrafanaPanel;
 use Carbon\Carbon;
 
-class GrafanaSecond extends Component
+class GrafanaDynamic extends Component
 {
+    public $dashboardId = 1;
     public $channels = [];
     public $selectedChannel = null;
     public $mode = 'relative';
@@ -18,13 +19,24 @@ class GrafanaSecond extends Component
     public $theme = 'dark';
     public $iframeRefreshKey = 0;
     public $channelPanelIds = [];
+    public $channelMulticasts = [];
+    public $showSwitch = true;
 
-    public function mount()
+
+    public function mount($dashboardId = 1, $showSwitch = true)
     {
-        $grafanaPanel = GrafanaPanel::find(2);
+        $this->dashboardId = $dashboardId;
+        $this->showSwitch = (bool) $showSwitch;
+        $this->loadDashboardData();
+    }
+
+    public function loadDashboardData()
+    {
+        $grafanaPanel = GrafanaPanel::find($this->dashboardId);
         $apiUrl = $grafanaPanel ? $grafanaPanel->endpoint : null;
         $numbers = [];
         $panelIds = [];
+        $multicasts = [];
         try {
             $response = @file_get_contents($apiUrl);
             if ($response !== false) {
@@ -35,6 +47,7 @@ class GrafanaSecond extends Component
                         if ($num !== '') {
                             $numbers[] = $num;
                             $panelIds[$num] = $item['id'] ?? null;
+                            $multicasts[$num] = $item['multicast'] ?? null;
                         }
                     }
                 }
@@ -43,15 +56,22 @@ class GrafanaSecond extends Component
         }
 
         $this->channels = Channel::whereIn('number', $numbers)
-            ->where('category', 'RESTART/CUTV')
             ->orderByRaw('CAST(number AS UNSIGNED) ASC')
             ->get();
         $this->channelPanelIds = $panelIds;
+        $this->channelMulticasts = $multicasts;
 
         if ($this->channels->isNotEmpty()) {
             $default = $this->channels->firstWhere('number', '101') ?? $this->channels->first();
             $this->selectedChannel = $default->id;
         }
+    }
+
+    public function switchDashboard()
+    {
+        $this->dashboardId = $this->dashboardId === 1 ? 3 : 1;
+        $this->loadDashboardData();
+        $this->iframeRefreshKey++;
     }
 
     #[On('setTheme')]
@@ -63,14 +83,13 @@ class GrafanaSecond extends Component
 
     public function render()
     {
-        $grafanaPanel = GrafanaPanel::find(2);
-
-        return view('livewire.app.grafana.grafana-second', compact('grafanaPanel'));
+        $grafanaPanel = GrafanaPanel::find($this->dashboardId);
+        return view('livewire.app.grafana.grafana-dynamic', compact('grafanaPanel'));
     }
 
     public function getGrafanaUrlProperty()
     {
-        $grafanaPanel = $grafanaPanel ?? GrafanaPanel::find(2);
+        $grafanaPanel = $grafanaPanel ?? GrafanaPanel::find($this->dashboardId);
         $base = $grafanaPanel ? $grafanaPanel->url : null;
 
         [$from, $to] = $this->resolveTimeParams();

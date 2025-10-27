@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Livewire\App\Grafana;
 
 use Livewire\Component;
@@ -7,7 +6,7 @@ use App\Models\Channel;
 use App\Models\GrafanaPanel;
 use Carbon\Carbon;
 
-class GrafanaFirst extends Component
+class GrafanaCutv extends Component
 {
     public $channels = [];
     public $selectedChannel = null;
@@ -18,15 +17,13 @@ class GrafanaFirst extends Component
     public $theme = 'dark';
     public $iframeRefreshKey = 0;
     public $channelPanelIds = [];
-    public $channelMulticasts = [];
 
     public function mount()
     {
-        $grafanaPanel = GrafanaPanel::find(1);
+        $grafanaPanel = GrafanaPanel::find(2);
         $apiUrl = $grafanaPanel ? $grafanaPanel->endpoint : null;
         $numbers = [];
         $panelIds = [];
-        $multicasts = [];
         try {
             $response = @file_get_contents($apiUrl);
             if ($response !== false) {
@@ -37,7 +34,6 @@ class GrafanaFirst extends Component
                         if ($num !== '') {
                             $numbers[] = $num;
                             $panelIds[$num] = $item['id'] ?? null;
-                            $multicasts[$num] = $item['multicast'] ?? null;
                         }
                     }
                 }
@@ -45,9 +41,11 @@ class GrafanaFirst extends Component
         } catch (\Throwable $e) {
         }
 
-        $this->channels = Channel::whereIn('number', $numbers)->orderByRaw('CAST(number AS UNSIGNED) ASC')->get();
+        $this->channels = Channel::whereIn('number', $numbers)
+            ->where('category', 'RESTART/CUTV')
+            ->orderByRaw('CAST(number AS UNSIGNED) ASC')
+            ->get();
         $this->channelPanelIds = $panelIds;
-        $this->channelMulticasts = $multicasts;
 
         if ($this->channels->isNotEmpty()) {
             $default = $this->channels->firstWhere('number', '101') ?? $this->channels->first();
@@ -64,14 +62,14 @@ class GrafanaFirst extends Component
 
     public function render()
     {
-        $grafanaPanel = GrafanaPanel::find(1);
+        $grafanaPanel = GrafanaPanel::find(2);
 
-        return view('livewire.app.grafana.grafana-first', compact('grafanaPanel'));
+        return view('livewire.app.grafana.grafana-cutv', compact('grafanaPanel'));
     }
 
     public function getGrafanaUrlProperty()
     {
-        $grafanaPanel = $grafanaPanel ?? GrafanaPanel::find(1);
+        $grafanaPanel = $grafanaPanel ?? GrafanaPanel::find(2);
         $base = $grafanaPanel ? $grafanaPanel->url : null;
 
         [$from, $to] = $this->resolveTimeParams();

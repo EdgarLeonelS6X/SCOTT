@@ -139,10 +139,10 @@
         <div class="lg:w-3/4 w-full flex flex-col gap-6">
             <div class="flex flex-col md:flex-row gap-6">
                 <div class="flex-1 min-h-[300px]">
-                    @livewire('app.grafana.grafana-first')
+                    @livewire('app.grafana.grafana-dynamic')
                 </div>
                 <div class="flex-1 min-h-[300px]">
-                    @livewire('app.grafana.grafana-second')
+                    @livewire('app.grafana.grafana-cutv')
                 </div>
             </div>
         </div>
@@ -153,7 +153,7 @@
     @else
     <div class="w-full mt-6 px-4 mb-4 flex flex-col lg:flex-row gap-6">
         <div class="lg:w-3/4 w-full flex flex-col gap-6">
-            @livewire('app.grafana.grafana-first')
+            @livewire('app.grafana.grafana-dynamic')
         </div>
         <div class="lg:w-1/4 w-full">
             @livewire('app.logs.latest-logs')

@@ -98,14 +98,11 @@
         </div>
     </div>
 
-
     <div class="mt-6">
-        @if($panel->id == 1)
-            @livewire('app.grafana.grafana-first')
+        @if(in_array($panel->id, [1, 3]))
+            @livewire('app.grafana.grafana-dynamic', ['dashboardId' => $panel->id, 'showSwitch' => false])
         @elseif($panel->id == 2)
-            @livewire('app.grafana.grafana-second')
-            <!-- @elseif($panel->id == 3)
-                            @livewire('app.grafana.grafana-third') -->
+            @livewire('app.grafana.grafana-cutv')
         @endif
     </div>
 

@@ -3,10 +3,27 @@
         <div class="flex items-center justify-between px-4 py-4 border-b border-gray-200 dark:border-gray-700">
             <h2 class="text-xl font-bold text-gray-800 dark:text-gray-200 flex items-center gap-2">
                 <i class="fa-solid fa-diagram-project text-primary-600"></i>
-                {{ $grafanaPanel?->name ?? __('Multicast Downlink DTH') }}
+                {{ $grafanaPanel?->name }}
             </h2>
-            <span class="text-xs text-gray-400 dark:text-gray-500 md:block hidden">
+            <span class="text-xs text-gray-400 dark:text-gray-500 md:flex items-center gap-1">
                 {{ __('Auto-refresh 5s') }}
+                @php
+                    $isShowView = request()->route() && str_contains(request()->route()->getName(), 'admin.grafana.show');
+                @endphp
+                @if ((!isset($showSwitch) || $showSwitch) && !$isShowView)
+                    <button type="button" wire:click="switchDashboard" title="{{ __('Switch Grafana panel') }}"
+                        class="p-1 rounded-full" x-data="{ spinning: false }"
+                        @click="if (!spinning) { spinning = true; setTimeout(() => spinning = false, 700); }">
+                        <style>
+                            .spin-once {
+                                transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+                                transform: rotate(180deg);
+                            }
+                        </style>
+                        <i
+                            :class="['fa-solid', 'fa-repeat', 'text-primary-600', 'hover:text-primary-500', 'dark:hover:text-primary-700', 'text-base', spinning ? 'spin-once' : '']"></i>
+                    </button>
+                @endif
             </span>
         </div>
 
@@ -16,13 +33,13 @@
                 search: '',
                 selectedChannel: undefined,
                 channels: @js($channels->map(fn($c) => [
-    'id' => $c->id,
-    'number' => $c->number,
-    'name' => $c->name,
-    'image' => $c->image,
-    'url' => $c->url,
-    'multicast' => $channelMulticasts[$c->number] ?? null,
-])),
+                    'id' => $c->id,
+                    'number' => $c->number,
+                    'name' => $c->name,
+                    'image' => $c->image,
+                    'url' => $c->url,
+                    'multicast' => $channelMulticasts[$c->number] ?? null,
+                ])),
                 get filteredChannels() {
                     if (this.open && this.selectedChannel && this.search === (this.selectedChannel.number + ' ' + this.selectedChannel.name)) {
                         return this.channels;
@@ -91,7 +108,8 @@
                                             <span
                                                 class="text-sm font-medium text-gray-900 dark:text-gray-200 truncate max-w-[280px] block"
                                                 x-text="channel.number + ' ' + channel.name"
-                                                :title="channel.number + ' ' + channel.name"></span>
+                                                :title="channel.number + ' ' + channel.name">
+                                            </span>
                                         </li>
                                     </template>
                                 </ul>
@@ -147,7 +165,8 @@
                     });
                     theme = localStorage.getItem('color-theme') === 'dark' ? 'dark' : 'light';
                     $wire.set('theme', theme);
-                "></iframe>
+                ">
+            </iframe>
         </div>
     </div>
 </div>
