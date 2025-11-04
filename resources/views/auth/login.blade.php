@@ -13,12 +13,13 @@
                             </p>
                         </div>
                     @endsession
-                    <h1 class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
+                    <h1
+                        class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
                         {{ __('Sign in to your account') }}
                     </h1>
                     @if (session('swal'))
                         <script>
-                            window.onload = function() {
+                            window.onload = function () {
                                 Swal.fire({
                                     icon: '{{ session('swal')['icon'] }}',
                                     title: '{{ session('swal')['title'] }}',
@@ -46,15 +47,17 @@
                             <x-input id="password" class="block mt-1 w-full" type="password" name="password" required
                                 autocomplete="current-password" placeholder="••••••••" />
                         </div>
-                        <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between mt-4">
+                        <div class="flex gap-2 flex-row items-center justify-between mt-4">
                             <div class="flex items-center">
                                 <x-checkbox id="remember_me" name="remember" />
-                                <label for="remember_me" class="ml-2 text-sm text-gray-500 dark:text-gray-400 flex items-center">
+                                <label for="remember_me"
+                                    class="ml-2 text-sm text-gray-500 dark:text-gray-400 flex items-center">
                                     {{ __('Remember me') }}
                                 </label>
                             </div>
                             @if (Route::has('password.request'))
-                                <a class="text-sm font-medium text-primary-500 underline hover:text-primary-600 text-left sm:text-right" href="{{ route('password.request') }}">
+                                <a class="text-sm font-medium text-primary-500 underline hover:text-primary-600 text-right"
+                                    href="{{ route('password.request') }}">
                                     {{ __('Forgot your password?') }}
                                 </a>
                             @endif
@@ -109,7 +112,7 @@
         }
     }
 
-    window.addEventListener("message", function(event) {
+    window.addEventListener("message", function (event) {
         if (event.data.error) {
             Swal.fire({
                 icon: 'error',
