@@ -51,13 +51,22 @@
         -translate-x-full sm:translate-x-0"
     :class="{ 'translate-x-0': sidebarOpen, '-translate-x-full': !sidebarOpen }" aria-label="Sidebar"
     x-data="{ openDropdown: null }">
+    @php
+        $area = Auth::user()?->area;
+        $activeBg = $area === 'OTT' ? 'bg-primary-50 dark:bg-primary-900' : ($area === 'DTH' ? 'bg-secondary-50 dark:bg-secondary-900' : 'bg-primary-50 dark:bg-primary-900');
+        $activeText = $area === 'OTT' ? 'text-primary-700 dark:text-primary-300' : ($area === 'DTH' ? 'text-secondary-700 dark:text-secondary-300' : 'text-primary-700 dark:text-primary-300');
+        $activeFont = 'font-medium';
+        $childActiveBg = $area === 'OTT' ? 'bg-primary-100 dark:bg-primary-800' : ($area === 'DTH' ? 'bg-secondary-100 dark:bg-secondary-800' : 'bg-primary-100 dark:bg-primary-800');
+        $childActiveText = $area === 'OTT' ? 'text-primary-700 dark:text-primary-300' : ($area === 'DTH' ? 'text-secondary-700 dark:text-secondary-300' : 'text-primary-700 dark:text-primary-300');
+        $hoverText = $area === 'OTT' ? 'hover:text-primary-600 dark:hover:text-primary-400' : ($area === 'DTH' ? 'hover:text-secondary-600 dark:hover:text-secondary-400' : 'hover:text-primary-600 dark:hover:text-primary-400');
+    @endphp
     <div class="flex flex-col h-full px-4 pb-6 mt-2">
         <ul class="flex-1 space-y-1">
             @foreach ($links as $index => $link)
                 @if (isset($link['children']))
                     <li>
-                        <button @click="openDropdown = openDropdown === {{ $index }} ? null : {{ $index }}" class="flex items-center justify-between gap-3 px-3 py-2 w-full rounded-md transition-colors duration-150 {{ $link['active'] ? 'bg-primary-50 dark:bg-primary-900 text-primary-700 dark:text-primary-300 font-medium'
-                    : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800' }}">
+                        <button @click="openDropdown = openDropdown === {{ $index }} ? null : {{ $index }}"
+                            class="flex items-center justify-between gap-3 px-3 py-2 w-full rounded-md transition-colors duration-150 {{ $link['active'] ? "$activeBg $activeText $activeFont" : "text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 $hoverText" }}">
                             <div class="flex items-center gap-3">
                                 <i class="{{ $link['icon'] }} w-4 h-4"></i>
                                 <span class="truncate">{{ $link['name'] }}</span>
@@ -68,9 +77,10 @@
                         <ul x-show="openDropdown === {{ $index }}" x-transition class="pl-8 mt-1 space-y-1">
                             @foreach ($link['children'] as $child)
                                     <li>
-                                        <a href="{{ $child['route'] }}" class="flex items-center gap-2 justify-between px-3 py-1.5 rounded-md text-sm transition-colors duration-150 {{ $child['active']
-                                ? 'bg-primary-100 dark:bg-primary-800 text-primary-700 dark:text-primary-300'
-                                : 'text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800' }}">
+                                        <a href="{{ $child['route'] }}"
+                                            class="flex items-center gap-2 justify-between px-3 py-1.5 rounded-md text-sm transition-colors duration-150 {{ $child['active']
+                                ? "$childActiveBg $childActiveText"
+                                : "text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 $hoverText" }}">
                                             <span class="flex items-center gap-2">
                                                 @if(isset($child['icon']))
                                                     <i class="{{ $child['icon'] }} text-xs"></i>
@@ -86,17 +96,22 @@
                     <li>
                         @if(isset($link['external']) && $link['external'] && Auth::user() && Auth::user()->hasRole('master'))
                             <a href="{{ $link['route'] }}" target="_blank" rel="noopener"
-                                class="flex items-center justify-between gap-3 px-3 py-2 rounded-md transition-colors duration-150 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800">
+                                class="group flex items-center justify-between gap-3 px-3 py-2 rounded-md transition-colors duration-150 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 {{ $hoverText }}">
                                 <span class="flex items-center gap-3">
                                     <i class="{{ $link['icon'] }} text-base"></i>
                                     <span class="truncate">{{ $link['name'] }}</span>
                                 </span>
-                                <i class="fa-solid fa-arrow-up-right-from-square text-xs text-gray-400"></i>
+                                @php
+                                    $externalIconGroupHover = $area === 'OTT' ? 'group-hover:text-primary-500 group-hover:dark:text-primary-400' : ($area === 'DTH' ? 'group-hover:text-secondary-500 group-hover:dark:text-secondary-400' : 'group-hover:text-primary-500 group-hover:dark:text-primary-400');
+                                @endphp
+                                <i
+                                    class="fa-solid fa-arrow-up-right-from-square text-xs text-gray-400 {{ $externalIconGroupHover }}"></i>
                             </a>
                         @elseif(!isset($link['external']))
-                            <a href="{{ $link['route'] }}" class="flex items-center gap-3 px-3 py-2 rounded-md transition-colors duration-150 {{ $link['active']
-                            ? 'bg-primary-50 dark:bg-primary-900 text-primary-700 dark:text-primary-300 font-medium'
-                            : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800' }}"
+                            <a href="{{ $link['route'] }}"
+                                class="flex items-center gap-3 px-3 py-2 rounded-md transition-colors duration-150 {{ $link['active']
+                            ? "$activeBg $activeText $activeFont"
+                            : "text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 $hoverText" }}"
                                 aria-current="{{ $link['active'] ? 'page' : false }}">
                                 <i class="{{ $link['icon'] }} text-base"></i>
                                 <span class="truncate">{{ $link['name'] }}</span>

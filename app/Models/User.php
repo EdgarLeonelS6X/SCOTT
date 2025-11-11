@@ -17,6 +17,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory;
+
     use HasProfilePhoto;
     use Notifiable;
     use TwoFactorAuthenticatable;
@@ -33,7 +34,25 @@ class User extends Authenticatable implements MustVerifyEmail
         'google_id',
         'report_mail_preferences',
         'status',
+        'area',
     ];
+
+    public const AREA_OTT = 'OTT';
+
+    public const AREA_DTH = 'DTH';
+
+    public static function getAreas(): array
+    {
+        return [self::AREA_OTT, self::AREA_DTH];
+    }
+
+    public function setAreaAttribute($value)
+    {
+        if (! in_array($value, self::getAreas())) {
+            throw new \InvalidArgumentException("Invalid area value: $value");
+        }
+        $this->attributes['area'] = $value;
+    }
 
     /**
      * The attributes that should be hidden for serialization.
@@ -78,7 +97,7 @@ class User extends Authenticatable implements MustVerifyEmail
     protected static function booted()
     {
         static::created(function ($user) {
-            if (!$user->roles()->exists()) {
+            if (! $user->roles()->exists()) {
                 $user->assignRole('user');
             }
         });

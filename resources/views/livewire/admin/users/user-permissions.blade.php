@@ -1,4 +1,9 @@
 <div class="w-full mx-auto bg-white dark:bg-gray-800 shadow-xl rounded-lg p-6">
+    @php
+        $area = Auth::user()?->area;
+        $primaryBtn = $area === 'OTT' ? 'bg-primary-600 hover:bg-primary-700' : ($area === 'DTH' ? 'bg-secondary-600 hover:bg-secondary-700' : 'bg-primary-600 hover:bg-primary-700');
+        $primaryBtnText = 'text-white';
+    @endphp
     <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-6 pb-6">
         <div class="flex flex-col sm:flex-row items-center sm:items-start gap-4 w-full sm:w-auto">
             <img class="h-20 w-20 rounded-full object-cover shadow-md" src="{{ $user->profile_photo_url }}"
@@ -45,13 +50,16 @@
                                 ($isAuthUser && $isSelf)));
                 @endphp
                 <div class="w-full flex justify-center sm:justify-start">
+                    @php
+                        $prefBtnText = $area === 'OTT' ? 'text-primary-600 hover:text-primary-700' : ($area === 'DTH' ? 'text-secondary-600 hover:text-secondary-700' : 'text-primary-600 hover:text-primary-700');
+                    @endphp
                     <div x-data="{ open: false, canSave: {{ $canSave ? 'true' : 'false' }} }"
                         @preferences-saved.window="open = false" class="relative">
                         <button @click="canSave && (open = !open)" :class="{
                                 'opacity-50': !canSave,
-                                'hover:text-primary-700': canSave
+                                '{{ $area === 'OTT' ? 'hover:text-primary-700' : ($area === 'DTH' ? 'hover:text-secondary-700' : 'hover:text-primary-700') }}': canSave
                             }" :disabled="!canSave" type="button"
-                            class="flex items-center justify-center sm:justify-start text-xs text-primary-600 transition font-medium">
+                            class="flex items-center justify-center sm:justify-start text-xs transition font-medium {{ $area === 'OTT' ? 'text-primary-600' : ($area === 'DTH' ? 'text-secondary-600' : 'text-primary-600') }}">
                             <i class="fa-solid fa-reply-all mr-2"></i>
                             <span>{{ __('Report mail preferences') }}</span>
                             <i :class="open ? 'fa-chevron-up' : 'fa-chevron-down'"
@@ -77,7 +85,7 @@
                                 @endforeach
                                 <div class="flex justify-end pt-2">
                                     <button type="submit" {{ !$canSave ? 'disabled' : '' }}
-                                        class="text-xs px-4 py-2 bg-primary-600 text-white rounded-md hover:bg-primary-700 transition font-semibold disabled:opacity-50 disabled:cursor-not-allowed">
+                                        class="text-xs px-4 py-2 {{ $primaryBtn }} {{ $primaryBtnText }} rounded-md transition font-semibold disabled:opacity-50 disabled:cursor-not-allowed">
                                         <i class="fa-solid fa-floppy-disk mr-1"></i>
                                         {{ __('Save') }}
                                     </button>
@@ -110,9 +118,12 @@
                     </div>
                 @endif
                 @if ($auth && $auth->id === 1 && $auth->id !== $user->id)
+                    @php
+                        $resetBtnBg = $area === 'OTT' ? 'bg-primary-50 hover:bg-primary-100 dark:bg-primary-900' : ($area === 'DTH' ? 'bg-secondary-50 hover:bg-secondary-100 dark:bg-secondary-900' : 'bg-primary-50 hover:bg-primary-100 dark:bg-primary-900');
+                        $resetBtnText = $area === 'OTT' ? 'text-primary-700 dark:text-primary-200' : ($area === 'DTH' ? 'text-secondary-700 dark:text-secondary-200' : 'text-primary-700 dark:text-primary-200');
+                    @endphp
                     <button wire:click="sendResetPasswordEmail"
-                        class="inline-flex items-center gap-2 px-3 py-1 text-xs font-medium rounded-full
-                                        bg-primary-50 text-primary-700 hover:bg-primary-100 dark:bg-primary-900 dark:text-primary-200">
+                        class="inline-flex items-center gap-2 px-3 py-1 text-xs font-medium rounded-full {{ $resetBtnBg }} {{ $resetBtnText }}">
                         <i class="fa-solid fa-envelope-circle-check" aria-hidden="true"></i>
                         <span>{{ __('Reset password') }}</span>
                     </button>
@@ -127,7 +138,7 @@
             <i class="fa-solid fa-shield-halved mr-2"></i>{{ __('Role') }}
         </label>
         <select id="role" wire:model="role" x-data x-on:change="$wire.onRoleChanged($event.target.value)"
-            class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+            class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white {{ Auth::user()->area === 'DTH' ? 'focus:ring-secondary-600 focus:border-secondary-600 dark:focus:ring-secondary-500 dark:focus:border-secondary-500' : 'focus:ring-primary-600 focus:border-primary-600 dark:focus:ring-primary-500 dark:focus:border-primary-500' }}"
             @disabled(!$canEditRoles)>
             @foreach ($allRoles as $r)
                 <option value="{{ $r->name }}">{{ ucfirst($r->name) }}</option>
@@ -153,7 +164,7 @@
             @endphp
             @foreach ($grouped as $group => $perms)
                 @if (!in_array($group, ['roles', 'permissions']))
-                    <div class="p-4 rounded-md border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700">
+                    <div class="p-4 rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700">
                         <h3
                             class="text-sm font-bold text-gray-700 dark:text-white uppercase mb-3 flex items-center gap-2 {{ !$canEditPermissions ? 'opacity-50' : '' }}">
                             <i class="fa-solid {{ $icons[$group] ?? 'fa-lock' }}"></i>{{ __(ucfirst($group)) }}
@@ -167,9 +178,12 @@
                                 })->values();
                             @endphp
                             @foreach ($sortedPerms as $permission)
+                                @php
+                                    $primaryCheckbox = $area === 'OTT' ? 'text-primary-600 focus:ring-primary-500' : ($area === 'DTH' ? 'text-secondary-600 focus:ring-secondary-500' : 'text-primary-600 focus:ring-primary-500');
+                                @endphp
                                 <label class="flex items-center gap-2 {{ !$canEditPermissions ? 'opacity-50' : '' }}">
                                     <input type="checkbox" value="{{ $permission->name }}" wire:model="permissions"
-                                        class="w-4 h-4 text-primary-600 bg-white border-gray-300 rounded focus:ring-primary-500 dark:bg-gray-700 dark:border-gray-600"
+                                        class="w-4 h-4 {{ $primaryCheckbox }} bg-white border-gray-300 rounded focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
                                         @disabled(!$canEditPermissions || in_array($permission->name, $forbiddenPermissions))>
                                     <span class="text-sm text-gray-800 dark:text-gray-200">
                                         {{ __(ucfirst(str_replace($group . '.', '', $permission->name))) }}
@@ -181,7 +195,7 @@
                 @endif
             @endforeach
             @if(isset($grouped['roles']) || isset($grouped['permissions']))
-                <div class="p-4 rounded-md border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700">
+                <div class="p-4 rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700">
                     <h3
                         class="text-sm font-bold text-gray-700 dark:text-white uppercase mb-3 flex items-center gap-2 {{ !$canEditPermissions ? 'opacity-50' : '' }}">
                         <i class="fa-solid fa-shield-halved"></i>{{ __('Roles & Permissions') }}
@@ -189,9 +203,12 @@
                     <div class="space-y-2">
                         @if(isset($grouped['roles']))
                             @foreach ($grouped['roles'] as $permission)
+                                @php
+                                    $primaryCheckbox = $area === 'OTT' ? 'text-primary-600 focus:ring-primary-500' : ($area === 'DTH' ? 'text-secondary-600 focus:ring-secondary-500' : 'text-primary-600 focus:ring-primary-500');
+                                @endphp
                                 <label class="flex items-center gap-2 {{ !$canEditPermissions ? 'opacity-50' : '' }}">
                                     <input type="checkbox" value="{{ $permission->name }}" wire:model="permissions"
-                                        class="w-4 h-4 text-primary-600 bg-white border-gray-300 rounded focus:ring-primary-500 dark:bg-gray-700 dark:border-gray-600"
+                                        class="w-4 h-4 {{ $primaryCheckbox }} bg-white border-gray-300 rounded focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
                                         @disabled(!$canEditPermissions || $role === 'master' || in_array($permission->name, $forbiddenPermissions))>
                                     <span class="text-sm text-gray-800 dark:text-gray-200">
                                         {{ __(ucfirst(str_replace('roles.', '', $permission->name))) }}
@@ -201,9 +218,12 @@
                         @endif
                         @if(isset($grouped['permissions']))
                             @foreach ($grouped['permissions'] as $permission)
+                                @php
+                                    $primaryCheckbox = $area === 'OTT' ? 'text-primary-600 focus:ring-primary-500' : ($area === 'DTH' ? 'text-secondary-600 focus:ring-secondary-500' : 'text-primary-600 focus:ring-primary-500');
+                                @endphp
                                 <label class="flex items-center gap-2 {{ !$canEditPermissions ? 'opacity-50' : '' }}">
                                     <input type="checkbox" value="{{ $permission->name }}" wire:model="permissions"
-                                        class="w-4 h-4 text-primary-600 bg-white border-gray-300 rounded focus:ring-primary-500 dark:bg-gray-700 dark:border-gray-600"
+                                        class="w-4 h-4 {{ $primaryCheckbox }} bg-white border-gray-300 rounded focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
                                         @disabled(!$canEditPermissions || $role === 'master' || in_array($permission->name, $forbiddenPermissions))>
                                     <span class="text-sm text-gray-800 dark:text-gray-200">
                                         {{ __(ucfirst(str_replace('permissions.', '', $permission->name))) }}
@@ -226,7 +246,7 @@
     @if ($canEditRoles || $canEditPermissions)
         <div class="mt-5 text-right">
             <button wire:click="save"
-                class="bg-primary-600 hover:bg-primary-700 text-white px-6 py-2 rounded-md shadow font-semibold">
+                class="{{ $primaryBtn }} {{ $primaryBtnText }} px-6 py-2 rounded-md shadow font-semibold">
                 <i class="fa-solid fa-floppy-disk mr-1"></i>
                 {{ __('Save changes') }}
             </button>

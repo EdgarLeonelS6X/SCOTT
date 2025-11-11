@@ -70,36 +70,51 @@
                             required autocomplete="new-password"
                             placeholder="{{ __('••••••••') }}" />
                     </div>
-                    <div>
-                        <x-label for="role">
-                            <i class="fa-solid fa-shield-halved mr-1"></i>
-                            {{ __('Role') }}
-                        </x-label>
-                        <select id="role" name="role" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
-                            <option selected disabled>{{ __('Select role') }}</option>
-                            @foreach ($roles as $role)
-                                <option value="{{ $role->name }}">{{ ucfirst(__($role->name)) }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div>
-                        <x-label for="status">
-                            <i class="fa-solid fa-toggle-on mr-1"></i>
-                            {{ __('Status') }}
-                        </x-label>
-                        <select id="status"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                            name="status" required>
-                            <option selected disabled>{{ __('Select status') }}</option>
-                            <option value="1">{{ __('Active') }}</option>
-                            <option value="0">{{ __('Inactive') }}</option>
-                        </select>
-                    </div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-5 mt-5 w-full">
+                        <div>
+                            <x-label for="role">
+                                <i class="fa-solid fa-shield-halved mr-1"></i>
+                                {{ __('Role') }}
+                            </x-label>
+                            <select id="role" name="role"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white {{ Auth::user()->area === 'DTH' ? 'focus:ring-secondary-600 focus:border-secondary-600 dark:focus:ring-secondary-500 dark:focus:border-secondary-500' : 'focus:ring-primary-600 focus:border-primary-600 dark:focus:ring-primary-500 dark:focus:border-primary-500' }}">
+                                <option selected disabled>{{ __('Select role') }}</option>
+                                @foreach ($roles as $role)
+                                    <option value="{{ $role->name }}">{{ ucfirst(__($role->name)) }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div>
+                            <x-label for="area">
+                                <i class="fa-solid fa-building mr-1"></i>
+                                {{ __('Area') }}
+                            </x-label>
+                            <select id="area" name="area"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white {{ Auth::user()->area === 'DTH' ? 'focus:ring-secondary-600 focus:border-secondary-600 dark:focus:ring-secondary-500 dark:focus:border-secondary-500' : 'focus:ring-primary-600 focus:border-primary-600 dark:focus:ring-primary-500 dark:focus:border-primary-500' }}">
+                                <option selected disabled>{{ __('Select area') }}</option>
+                                <option value="OTT" @if(old('area') === 'OTT') selected @endif>OTT</option>
+                                <option value="DTH" @if(old('area') === 'DTH') selected @endif>DTH</option>
+                            </select>
+                        </div>
+                        <div>
+                            <x-label for="status">
+                                <i class="fa-solid fa-toggle-on mr-1"></i>
+                                {{ __('Status') }}
+                            </x-label>
+                            <select id="status"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white {{ Auth::user()->area === 'DTH' ? 'focus:ring-secondary-600 focus:border-secondary-600 dark:focus:ring-secondary-500 dark:focus:border-secondary-500' : 'focus:ring-primary-600 focus:border-primary-600 dark:focus:ring-primary-500 dark:focus:border-primary-500' }}"
+                                name="status" required>
+                                <option selected disabled>{{ __('Select status') }}</option>
+                                <option value="1">{{ __('Active') }}</option>
+                                <option value="0">{{ __('Inactive') }}</option>
+                            </select>
+                        </div>
                 </div>
                 <div class="flex justify-end items-center">
-                    <x-button class="flex justify-center items-center mt-8 font-bold">
-                        <i class="fa-solid fa-floppy-disk mr-2"></i>
-                        {{ __('Register new user') }}
+                    <x-button :class="(Auth::user()->area === 'DTH' ? 'bg-secondary-700 hover:bg-secondary-800 focus:ring-secondary-300 dark:bg-secondary-600 dark:hover:bg-secondary-700 dark:focus:ring-secondary-800' : 'bg-primary-700 hover:bg-primary-800 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800') . ' flex justify-center items-center mt-8 font-bold text-white'">
+                            <i class="fa-solid fa-floppy-disk mr-2"></i>
+                            {{ __('Register new user') }}
                     </x-button>
                 </div>
             </form>

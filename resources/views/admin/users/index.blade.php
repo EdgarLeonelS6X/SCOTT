@@ -13,13 +13,13 @@
     @role('master')
     <x-slot name="action">
         <a href="{{ route('admin.users.create') }}"
-            class="hidden sm:block text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800 shadow-xl">
+            class="hidden sm:block text-white {{ Auth::user()->area === 'DTH' ? 'bg-secondary-700 hover:bg-secondary-800 focus:ring-secondary-300 dark:bg-secondary-600 dark:hover:bg-secondary-700 dark:focus:ring-secondary-800' : 'bg-primary-700 hover:bg-primary-800 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800' }} font-medium rounded-lg text-sm px-5 py-2 focus:outline-none shadow-xl">
             <i class="fa-solid fa-plus mr-1"></i>
             {{ __('Register new user') }}
         </a>
     </x-slot>
     <a href="{{ route('admin.users.create') }}"
-        class="mb-4 sm:hidden block text-center text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800 shadow-xl">
+        class="mb-4 sm:hidden block text-center text-white {{ Auth::user()->area === 'DTH' ? 'bg-secondary-700 hover:bg-secondary-800 focus:ring-secondary-300 dark:bg-secondary-600 dark:hover:bg-secondary-700 dark:focus:ring-secondary-800' : 'bg-primary-700 hover:bg-primary-800 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800' }} font-medium rounded-lg text-sm px-5 py-2 focus:outline-none shadow-xl">
         <i class="fa-solid fa-plus mr-1"></i>
         {{ __('Register new user') }}
     </a>
@@ -40,6 +40,10 @@
                         <th scope="col" class="px-6 py-3 whitespace-nowrap">
                             <i class="fa-solid fa-shield-halved mr-1.5"></i>
                             {{ __('Role') }}
+                        </th>
+                        <th scope="col" class="px-6 py-3 whitespace-nowrap">
+                            <i class="fa-solid fa-building mr-1.5"></i>
+                            {{ __('Area') }}
                         </th>
                         <th scope="col" class="px-6 py-3 whitespace-nowrap text-center">
                             <i class="fa-solid fa-toggle-on mr-1.5"></i>
@@ -117,6 +121,26 @@
                                     </span>
                                 @else
                                     <span class="text-xs text-gray-400 italic">{{ __('No role') }}</span>
+                                @endif
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                @php
+                                    $areaClasses = $user->area === 'DTH'
+                                        ? 'bg-secondary-200 text-secondary-800 dark:bg-secondary-700 dark:text-secondary-100'
+                                        : 'bg-primary-200 text-primary-800 dark:bg-primary-700 dark:text-primary-100';
+                                @endphp
+                                @if ($user->area === 'OTT')
+                                    <span
+                                        class="inline-flex items-center px-2 py-1 text-xs font-medium rounded-full {{ $areaClasses }}">
+                                        <i class="fa-solid fa-cube mr-1"></i> OTT
+                                    </span>
+                                @elseif ($user->area === 'DTH')
+                                    <span
+                                        class="inline-flex items-center px-2 py-1 text-xs font-medium rounded-full {{ $areaClasses }}">
+                                        <i class="fa-solid fa-satellite-dish mr-1"></i> DTH
+                                    </span>
+                                @else
+                                    <span class="text-xs text-gray-400 italic">{{ __('N/A') }}</span>
                                 @endif
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-center">

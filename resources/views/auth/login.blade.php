@@ -56,8 +56,17 @@
                                 </label>
                             </div>
                             @if (Route::has('password.request'))
-                                <a class="text-sm font-medium text-primary-500 underline hover:text-primary-600 text-right"
-                                    href="{{ route('password.request') }}">
+                                @php
+                                    $linkClass = 'text-sm font-medium underline text-black hover:text-gray-900 dark:text-white dark:hover:text-gray-200';
+                                    if (Auth::check()) {
+                                        if (Auth::user()->area === 'DTH') {
+                                            $linkClass = 'text-sm font-medium underline text-secondary-700 hover:text-secondary-800 dark:text-secondary-300 dark:hover:text-secondary-100';
+                                        } elseif (Auth::user()->area === 'OTT') {
+                                            $linkClass = 'text-sm font-medium underline text-primary-700 hover:text-primary-800 dark:text-primary-300 dark:hover:text-primary-100';
+                                        }
+                                    }
+                                @endphp
+                                <a class="{{ $linkClass }} text-right" href="{{ route('password.request') }}">
                                     {{ __('Forgot your password?') }}
                                 </a>
                             @endif
@@ -68,8 +77,17 @@
                         </x-button>
                         <p class="text-sm font-light text-gray-500 dark:text-gray-400 mt-4 flex justify-center">
                             {{ __("Don't have an account yet?") }}
-                            <a href="{{ route('register') }}"
-                                class="ms-2 font-medium text-primary-500 underline hover:text-primary-600">
+                            @php
+                                $linkClass = 'ms-2 font-medium underline text-black hover:text-gray-900 dark:text-white dark:hover:text-gray-200';
+                                if (Auth::check()) {
+                                    if (Auth::user()->area === 'DTH') {
+                                        $linkClass = 'ms-2 font-medium underline text-secondary-700 hover:text-secondary-800 dark:text-secondary-300 dark:hover:text-secondary-100';
+                                    } elseif (Auth::user()->area === 'OTT') {
+                                        $linkClass = 'ms-2 font-medium underline text-primary-700 hover:text-primary-800 dark:text-primary-300 dark:hover:text-primary-100';
+                                    }
+                                }
+                            @endphp
+                            <a href="{{ route('register') }}" class="{{ $linkClass }}">
                                 {{ __('Sign up') }}
                             </a>
                         </p>

@@ -105,6 +105,8 @@ class UserController extends Controller
                 'email' => 'required|email|unique:users,email,' . $user->id,
                 'password' => 'nullable|string|min:8|confirmed',
                 'role' => 'nullable|exists:roles,name',
+                'area' => 'required|in:OTT,DTH',
+                'status' => 'required|boolean',
             ]);
         } catch (ValidationException $e) {
             $errors = $e->validator->errors()->all();
@@ -122,6 +124,8 @@ class UserController extends Controller
         }
         $user->name = $data['name'];
         $user->email = $data['email'];
+        $user->area = $data['area'];
+        $user->status = $data['status'];
         if (!empty($data['password'])) {
             $user->password = bcrypt($data['password']);
         }

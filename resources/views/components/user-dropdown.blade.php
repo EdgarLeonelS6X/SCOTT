@@ -2,13 +2,13 @@
     <x-slot name="trigger">
         @if (Laravel\Jetstream\Jetstream::managesProfilePhotos())
             <button
-                class="flex items-center text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-primary-300 dark:focus:ring-primary-600 transition shadow-sm hover:shadow-md">
+                class="flex items-center text-sm rounded-full focus:outline-none focus:ring-2 {{ Auth::user()->area === 'DTH' ? 'focus:ring-secondary-300 dark:focus:ring-secondary-600' : 'focus:ring-primary-300 dark:focus:ring-primary-600' }} transition shadow-sm hover:shadow-md">
                 <img class="h-9 w-9 rounded-full object-cover border border-gray-300 dark:border-gray-700"
                     src="{{ Auth::user()->profile_photo_url }}" alt="{{ Auth::user()->name }}" />
             </button>
         @else
             <button type="button"
-                class="inline-flex items-center px-3 py-2 rounded-lg text-gray-600 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-primary-300 dark:focus:ring-primary-600 shadow-sm transition">
+                class="inline-flex items-center px-3 py-2 rounded-lg text-gray-600 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 {{ Auth::user()->area === 'DTH' ? 'focus:ring-secondary-300 dark:focus:ring-secondary-600' : 'focus:ring-primary-300 dark:focus:ring-primary-600' }} shadow-sm transition">
                 <span class="font-medium">{{ Auth::user()->name }}</span>
                 <i class="fa-solid fa-chevron-down ml-2 text-xs opacity-70"></i>
             </button>
@@ -27,23 +27,39 @@
 
         <div class="py-2 space-y-1">
             <x-dropdown-link href="{{ route('profile.show') }}" class="group">
-                <i class="fa-solid fa-user mr-2 text-gray-400 group-hover:text-primary-500 transition"></i>
+                <i @class([
+                    'fa-solid fa-user mr-2 text-gray-400 transition',
+                    'group-hover:text-primary-500' => Auth::user()->area === 'OTT',
+                    'group-hover:text-secondary-500' => Auth::user()->area === 'DTH',
+                ])></i>
                 {{ __('Profile') }}
             </x-dropdown-link>
 
             <x-dropdown-link href="{{ route('dashboard') }}" class="group">
-                <i class="fa-solid fa-house mr-2 text-gray-400 group-hover:text-primary-500 transition"></i>
+                <i @class([
+                    'fa-solid fa-house mr-2 text-gray-400 transition',
+                    'group-hover:text-primary-500' => Auth::user()->area === 'OTT',
+                    'group-hover:text-secondary-500' => Auth::user()->area === 'DTH',
+                ])></i>
                 {{ __('Home') }}
             </x-dropdown-link>
 
             <x-dropdown-link href="{{ route('admin.dashboard') }}" class="group">
-                <i class="fa-solid fa-wrench mr-2 text-gray-400 group-hover:text-primary-500 transition"></i>
+                <i @class([
+                    'fa-solid fa-wrench mr-2 text-gray-400 transition',
+                    'group-hover:text-primary-500' => Auth::user()->area === 'OTT',
+                    'group-hover:text-secondary-500' => Auth::user()->area === 'DTH',
+                ])></i>
                 {{ __('Dashboard') }}
             </x-dropdown-link>
 
             @if (Laravel\Jetstream\Jetstream::hasApiFeatures())
                 <x-dropdown-link href="{{ route('api-tokens.index') }}" class="group">
-                    <i class="fa-solid fa-key mr-2 text-gray-400 group-hover:text-primary-500 transition"></i>
+                    <i @class([
+                        'fa-solid fa-key mr-2 text-gray-400 transition',
+                        'group-hover:text-primary-500' => Auth::user()->area === 'OTT',
+                        'group-hover:text-secondary-500' => Auth::user()->area === 'DTH',
+                    ])></i>
                     {{ __('API Tokens') }}
                 </x-dropdown-link>
             @endif
