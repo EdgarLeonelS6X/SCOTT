@@ -8,6 +8,9 @@ use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Redirect;
 
 class UserController extends Controller
 {
@@ -214,5 +217,16 @@ class UserController extends Controller
         }
 
         return redirect()->back()->with('success', __('Permissions updated successfully.'));
+    }
+
+    public function switchArea($area): RedirectResponse
+    {
+        $user = Auth::user();
+        if ($user && ($user->role === 'master' || $user->hasRole('master')) && in_array($area, ['OTT', 'DTH'])) {
+            $user->area = $area;
+            $user->save();
+            Auth::setUser($user->fresh());
+        }
+        return Redirect::back();
     }
 }

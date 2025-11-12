@@ -700,5 +700,7 @@
     "October": "Octubre",
     "Engineering": "Ingeniería",
     "Switch Grafana panel": "Cambiar panel de Grafana",
-    "Select area": "Seleccionar área"
+    "Select area": "Seleccionar área",
+    "Switch to OTT": "Cambiar a OTT",
+    "Switch to DTH": "Cambiar a DTH"
 }
