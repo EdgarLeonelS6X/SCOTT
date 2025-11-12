@@ -13,8 +13,11 @@
                         </svg>
                     </div>
                     <input type="text" wire:model.live="search" id="simple-search"
-                        class="bg-gray-50 border border-gray-300 text-gray-900 text-xs sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full pl-10 p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                        placeholder="{{ __('Search') }}" required="" autofocus>
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-xs sm:text-sm rounded-lg block w-full pl-10 p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white
+                            {{ Auth::user()?->area === 'DTH'
+                                ? 'focus:ring-secondary-500 focus:border-secondary-500 dark:focus:ring-secondary-500 dark:focus:border-secondary-500'
+                                : 'focus:ring-primary-500 focus:border-primary-500 dark:focus:ring-primary-500 dark:focus:border-primary-500' }}"
+                        placeholder="{{ __('Search') }}" required autofocus>
                 </div>
             </form>
         </div>
@@ -22,7 +25,11 @@
             class="w-full md:w-auto flex flex-col md:flex-row space-y-2 md:space-y-0 items-stretch md:items-center justify-end md:space-x-3 flex-shrink-0">
             @can('create', App\Models\Channel::class)
                 <a href="{{ route('admin.channels.create') }}"
-                    class="block w-full sm:w-auto text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-xs sm:text-sm px-5 py-2 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800 shadow-xl text-center">
+                    class="block w-full sm:w-auto text-white
+                        {{ Auth::user()?->area === 'DTH'
+                            ? 'bg-secondary-700 hover:bg-secondary-800 focus:ring-4 focus:ring-secondary-300 dark:bg-secondary-600 dark:hover:bg-secondary-700 dark:focus:ring-secondary-800'
+                            : 'bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800' }}
+                        font-medium rounded-lg text-xs sm:text-sm px-5 py-2 focus:outline-none shadow-xl text-center">
                     <i class="fa-solid fa-plus mr-1"></i>
                     {{ __('Register new channel') }}
                 </a>
@@ -114,7 +121,11 @@
                         </td>
                         <td class="px-4 py-2.5">
                             <span
-                                class="inline-flex items-center px-2 py-1 text-xs font-medium text-primary-800 bg-primary-200 rounded-full dark:bg-primary-800 dark:text-primary-200">
+                                class="inline-flex items-center px-2 py-1 text-xs font-medium
+                                    {{ Auth::user()?->area === 'DTH'
+                                        ? 'text-secondary-800 bg-secondary-200 dark:bg-secondary-800 dark:text-secondary-200'
+                                        : 'text-primary-800 bg-primary-200 dark:bg-primary-800 dark:text-primary-200' }}
+                                    rounded-full">
                                 @switch($channel->category)
                                     @case('Standard TV Channel')
                                         <i class="fa-solid fa-tv mr-1.5"></i>

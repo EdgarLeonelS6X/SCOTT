@@ -23,7 +23,11 @@
                 {{ __('Go back') }}
             </a>
             <button onclick="downloadM3U('{{ $channel->url }}', '{{ $channel->number }}', '{{ $channel->name }}')"
-                class="flex w-full sm:w-auto justify-center items-center text-white bg-yellow-600 hover:bg-yellow-500 focus:ring-4 focus:outline-none focus:ring-yellow-300 dark:focus:ring-yellow-800 font-medium rounded-lg text-sm px-4 py-2 text-center">
+                class="flex w-full sm:w-auto justify-center items-center text-white
+                    {{ Auth::user()?->area === 'DTH'
+                        ? 'bg-secondary-700 hover:bg-secondary-800 focus:ring-4 focus:ring-secondary-300 dark:bg-secondary-600 dark:hover:bg-secondary-700 dark:focus:ring-secondary-800'
+                        : 'bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800' }}
+                    font-medium rounded-lg text-sm px-4 py-2 text-center">
                 <i class="fa-solid fa-video mr-1.5"></i>
                 {{ __('Multicast') }}
             </button>
@@ -49,11 +53,19 @@
                 class="flex flex-col md:flex-row items-center md:items-center justify-between text-center md:text-left gap-4">
                 <div class="order-1 md:order-none flex flex-col items-center md:items-start">
                     <h1 class="text-xl md:text-2xl font-bold text-gray-900 dark:text-white">
-                        <span class="text-primary-600">{{ $channel->number }}</span> {{ $channel->name }}
+                        <span class="
+                            {{ Auth::user()?->area === 'DTH'
+                                ? 'text-secondary-600'
+                                : 'text-primary-600' }}
+                        ">{{ $channel->number }}</span> {{ $channel->name }}
                     </h1>
                     <div class="mt-2 flex flex-wrap justify-center md:justify-start items-center gap-2">
                         <span
-                            class="inline-flex items-center px-2 py-1 text-xs font-medium text-primary-800 bg-primary-200 rounded-full dark:bg-primary-800 dark:text-primary-200">
+                            class="inline-flex items-center px-2 py-1 text-xs font-medium
+                                {{ Auth::user()?->area === 'DTH'
+                                    ? 'text-secondary-800 bg-secondary-200 dark:bg-secondary-800 dark:text-secondary-200'
+                                    : 'text-primary-800 bg-primary-200 dark:bg-primary-800 dark:text-primary-200' }}
+                                rounded-full">
                             @switch($channel->category)
                                 @case('Standard TV Channel')
                                     <i class="fa-solid fa-tv mr-1.5"></i>
@@ -160,7 +172,11 @@
             {{ __('Go back') }}
         </a>
         <button onclick="downloadM3U('{{ $channel->url }}', '{{ $channel->number }}', '{{ $channel->name }}')"
-            class="flex justify-center items-center w-full text-white bg-yellow-600 hover:bg-yellow-500 focus:ring-4 focus:outline-none focus:ring-yellow-300 dark:focus:ring-yellow-800 font-medium rounded-lg text-sm px-4 py-2">
+            class="flex justify-center items-center w-full text-white
+                {{ Auth::user()?->area === 'DTH'
+                    ? 'bg-secondary-700 hover:bg-secondary-800 focus:ring-4 focus:ring-secondary-300 dark:bg-secondary-600 dark:hover:bg-secondary-700 dark:focus:ring-secondary-800'
+                    : 'bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800' }}
+                font-medium rounded-lg text-sm px-4 py-2">
             <i class="fa-solid fa-video mr-1.5"></i>
             {{ __('Open in VLC') }}
         </button>

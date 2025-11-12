@@ -1,14 +1,14 @@
 <x-admin-layout :breadcrumbs="[
-    [
-        'name' => __('Dashboard'),
-        'icon' => 'fa-solid fa-wrench',
-        'route' => route('admin.dashboard'),
-    ],
-    [
-        'name' => __('Channels'),
-        'icon' => 'fa-solid fa-tv',
-    ],
-]">
+        [
+            'name' => __('Dashboard'),
+            'icon' => 'fa-solid fa-wrench',
+            'route' => route('admin.dashboard'),
+        ],
+        [
+            'name' => __('Channels'),
+            'icon' => 'fa-solid fa-tv',
+        ],
+    ]">
 
     @if ($channels->count())
         @livewire('admin.channels.channel-table')
@@ -27,8 +27,11 @@
             </div>
 
             <div class="flex justify-center sm:justify-end">
-                <a href="{{ route('admin.channels.create') }}"
-                    class="text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800 shadow-xl">
+                <a href="{{ route('admin.channels.create') }}" class="text-white
+                            {{ Auth::user()?->area === 'DTH'
+            ? 'bg-secondary-700 hover:bg-secondary-800 focus:ring-4 focus:ring-secondary-300 dark:bg-secondary-600 dark:hover:bg-secondary-700 dark:focus:ring-secondary-800'
+            : 'bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800' }}
+                            font-medium rounded-lg text-sm px-5 py-2 focus:outline-none shadow-xl">
                     <i class="fa-solid fa-plus mr-1"></i>
                     {{ __('Register new channel') }}
                 </a>

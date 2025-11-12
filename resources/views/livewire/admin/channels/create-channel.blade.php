@@ -49,7 +49,8 @@ use App\Enums\ChannelOrigin;
                             <p class="text-sm text-gray-400 dark:text-gray-300 text-center">
                                 <i class="fa-solid fa-cloud-arrow-up text-xl mb-2"></i><br>
                                 {{ __('Drag and drop an image here or') }}
-                                <span class="text-primary-600 cursor-pointer underline"
+                                <span
+                                    class="cursor-pointer underline {{ Auth::user()?->area === 'DTH' ? 'text-secondary-600' : 'text-primary-600' }}"
                                     onclick="document.getElementById('image-input').click()">
                                     {{ __('select one') }}
                                 </span>
@@ -91,8 +92,10 @@ use App\Enums\ChannelOrigin;
                         <i class="fa-solid fa-list mr-1"></i>
                         {{ __('Category') }}
                     </x-label>
-                    <select id="category"
-                        class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                    <select id="category" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white
+                            {{ Auth::user()?->area === 'DTH'
+    ? 'focus:ring-secondary-600 focus:border-secondary-600 dark:focus:ring-secondary-500 dark:focus:border-secondary-500'
+    : 'focus:ring-primary-600 focus:border-primary-600 dark:focus:ring-primary-500 dark:focus:border-primary-500' }}"
                         wire:model="category" required>
                         <option value="" disabled>{{ __('Select category') }}</option>
                         @foreach (ChannelCategory::cases() as $category)
@@ -105,8 +108,10 @@ use App\Enums\ChannelOrigin;
                         <i class="fa-solid fa-arrow-right-arrow-left mr-1"></i>
                         {{ __('Origin') }}
                     </x-label>
-                    <select id="origin"
-                        class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                    <select id="origin" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white
+                            {{ Auth::user()?->area === 'DTH'
+    ? 'focus:ring-secondary-600 focus:border-secondary-600 dark:focus:ring-secondary-500 dark:focus:border-secondary-500'
+    : 'focus:ring-primary-600 focus:border-primary-600 dark:focus:ring-primary-500 dark:focus:border-primary-500' }}"
                         wire:model="origin" required>
                         <option value="" selected disabled>{{ __('Select origin') }}</option>
                         @foreach (ChannelOrigin::cases() as $origin)
@@ -146,8 +151,10 @@ use App\Enums\ChannelOrigin;
                     <i class="fa-solid fa-toggle-on mr-1"></i>
                     {{ __('Status') }}
                 </x-label>
-                <select id="status"
-                    class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                <select id="status" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white
+                        {{ Auth::user()?->area === 'DTH'
+    ? 'focus:ring-secondary-600 focus:border-secondary-600 dark:focus:ring-secondary-500 dark:focus:border-secondary-500'
+    : 'focus:ring-primary-600 focus:border-primary-600 dark:focus:ring-primary-500 dark:focus:border-primary-500' }}"
                     wire:model="status" required>
                     <option value="" disabled>{{ __('Select status') }}</option>
                     <option value="1">{{ __('Active') }}</option>
@@ -164,7 +171,6 @@ use App\Enums\ChannelOrigin;
     </div>
 </div>
 
-
 <script>
     document.addEventListener('DOMContentLoaded', () => {
         const fileInput = document.getElementById('image-input');
@@ -173,14 +179,16 @@ use App\Enums\ChannelOrigin;
 
         let dragCounter = 0;
 
+        const activeBorderClass = "{{ Auth::user()?->area === 'DTH' ? 'border-secondary-500' : 'border-primary-500' }}";
+
         const showOverlay = () => {
             overlay.classList.remove('hidden');
-            dropArea.classList.add('border-primary-500');
+            dropArea.classList.add(activeBorderClass);
         };
 
         const hideOverlay = () => {
             overlay.classList.add('hidden');
-            dropArea.classList.remove('border-primary-500');
+            dropArea.classList.remove(activeBorderClass);
         };
 
         window.addEventListener('dragenter', (e) => {
@@ -218,7 +226,7 @@ use App\Enums\ChannelOrigin;
                         bubbles: true
                     }));
                 } else {
-                    alert("Solo se permiten imágenes.");
+                    alert("Only images are allowed.");
                 }
             }
         });
