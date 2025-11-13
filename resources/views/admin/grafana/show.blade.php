@@ -42,9 +42,31 @@
         class="w-full bg-white rounded-lg shadow-2xl border border-gray-100 dark:border-gray-700 md:mt-0 xl:p-0 dark:bg-gray-800">
         <div class="p-6 space-y-6">
             <div class="flex justify-between items-center gap-3">
-                <span class="truncate text-2xl font-extrabold text-gray-900 dark:text-white">
-                    {{ $panel->name }}
-                </span>
+                <div class="flex flex-col md:flex-row md:items-center md:justify-between w-full gap-2">
+                    <span class="truncate text-2xl font-extrabold text-gray-900 dark:text-white">
+                        {{ $panel->name }}
+                    </span>
+                    @php
+                        $areaClasses = $panel->area === 'DTH'
+                            ? 'bg-secondary-200 text-secondary-800 dark:bg-secondary-700 dark:text-secondary-100'
+                            : 'bg-primary-200 text-primary-800 dark:bg-primary-700 dark:text-primary-100';
+                    @endphp
+                    @if ($panel->area === 'OTT')
+                        <span
+                            class="inline-flex items-center px-3 py-1 text-sm font-semibold rounded-full {{ $areaClasses }} shadow transition duration-150"
+                            role="status" aria-label="Área OTT" title="Área OTT">
+                            <i class="fa-solid fa-cube mr-2"></i> OTT
+                        </span>
+                    @elseif ($panel->area === 'DTH')
+                        <span
+                            class="inline-flex items-center px-3 py-1 text-sm font-semibold rounded-full {{ $areaClasses }} shadow transition duration-150"
+                            role="status" aria-label="Área DTH" title="Área DTH">
+                            <i class="fa-solid fa-satellite-dish mr-2"></i> DTH
+                        </span>
+                    @else
+                        <span class="text-sm text-gray-400 italic">{{ __('N/A') }}</span>
+                    @endif
+                </div>
             </div>
             <div class="flex flex-col gap-6 mt-4">
                 <div class="flex flex-col gap-1">

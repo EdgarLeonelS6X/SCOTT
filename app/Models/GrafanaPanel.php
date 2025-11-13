@@ -13,6 +13,7 @@ class GrafanaPanel extends Model
 
     protected $fillable = [
         'name',
+        'area',
         'url',
         'api_url',
         'endpoint',

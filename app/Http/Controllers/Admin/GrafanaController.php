@@ -48,6 +48,7 @@ class GrafanaController extends Controller
     {
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
+            'area' => ['required', 'string', 'in:OTT,DTH'],
             'url' => ['required', 'string', 'max:255'],
             'api_url' => ['nullable', 'string', 'max:255'],
             'endpoint' => ['nullable', 'string', 'max:255'],
@@ -56,6 +57,7 @@ class GrafanaController extends Controller
 
         $panel = GrafanaPanel::create([
             'name' => $validated['name'],
+            'area' => $validated['area'],
             'url' => $validated['url'],
             'api_url' => $validated['api_url'] ?? null,
             'endpoint' => $validated['endpoint'] ?? null,
@@ -102,6 +104,7 @@ class GrafanaController extends Controller
 
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
+            'area' => ['required', 'string', 'in:OTT,DTH'],
             'url' => ['required', 'string', 'max:255'],
             'api_url' => ['nullable', 'string', 'max:255'],
             'endpoint' => ['nullable', 'string', 'max:255'],
@@ -110,6 +113,7 @@ class GrafanaController extends Controller
 
         $panel->update([
             'name' => $validated['name'],
+            'area' => $validated['area'],
             'url' => $validated['url'],
             'api_url' => $validated['api_url'] ?? null,
             'endpoint' => $validated['endpoint'] ?? null,
