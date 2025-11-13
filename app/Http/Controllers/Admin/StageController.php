@@ -40,14 +40,17 @@ class StageController extends Controller
     {
         $request->validate([
             "name" => "required|string",
+            "area" => "required|in:OTT,DTH",
             "status" => "required|string",
         ], [], [
             "name" => __('stage name'),
-            "stage" => __('stage stage'),
+            "area" => __('stage area'),
+            "status" => __('stage status'),
         ]);
 
         $stage = Stage::create([
             'name' => $request->name,
+            'area' => $request->area,
             'status' => $request->status,
         ]);
 
@@ -85,14 +88,17 @@ class StageController extends Controller
     {
         $request->validate([
             'name' => 'required|string',
+            'area' => 'required|in:OTT,DTH',
             'status' => 'required|string',
         ], [], [
             'name' => __('stage name'),
+            'area' => __('stage area'),
             'status' => __('stage status'),
         ]);
 
         $stage->update([
             'name' => $request->name,
+            'area' => $request->area,
             'status' => $request->status,
         ]);
 

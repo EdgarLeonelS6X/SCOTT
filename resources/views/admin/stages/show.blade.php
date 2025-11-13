@@ -39,23 +39,52 @@
         </div>
     </x-slot>
     <div class="w-full bg-white rounded-lg shadow-2xl dark:border md:mt-0 xl:p-0 dark:bg-gray-800 dark:border-gray-700">
-        <div class="p-6 space-y-4 md:space-y-6 sm:p-8">
+        <div class="p-6 space-y-4 md:space-y-6 sm:p-6">
             <h1 class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
                 <div class="flex justify-between items-center">
-                    {{ __($stage->name) }}
-                    @if ($stage->status === 1)
-                        <span
-                            class="inline-flex items-center px-2 py-1 text-xs font-medium text-green-800 bg-green-200 rounded-full dark:bg-green-800 dark:text-green-200 ml-1.5">
-                            <i class="fa-solid fa-check-circle mr-1"></i>
-                            {{ __('Active') }}
-                        </span>
-                    @else
-                        <span
-                            class="inline-flex items-center px-2 py-1 text-xs font-medium text-red-800 bg-red-200 rounded-full dark:bg-red-800 dark:text-red-200 ml-1.5">
-                            <i class="fa-solid fa-times-circle mr-1"></i>
-                            {{ __('Inactive') }}
-                        </span>
-                    @endif
+                    <div class="w-full flex flex-col items-center justify-center gap-4">
+                        <div class="w-full flex flex-col md:flex-row md:items-center md:justify-between gap-4 py-4">
+                            <span
+                                class="block text-center md:text-left font-extrabold text-3xl text-gray-900 dark:text-white mb-2 md:mb-0">{{ __($stage->name) }}</span>
+                            <div class="flex flex-row flex-wrap items-center justify-center md:justify-end gap-3">
+                                @php
+                                    $areaClasses = $stage->area === 'DTH'
+                                        ? 'bg-secondary-200 text-secondary-800 dark:bg-secondary-700 dark:text-secondary-100'
+                                        : 'bg-primary-200 text-primary-800 dark:bg-primary-700 dark:text-primary-100';
+                                @endphp
+                                @if ($stage->area === 'OTT')
+                                    <span
+                                        class="inline-flex items-center px-3 py-1 text-sm font-semibold rounded-full {{ $areaClasses }} shadow transition duration-150"
+                                        role="status" aria-label="Área OTT" title="Área OTT">
+                                        <i class="fa-solid fa-cube mr-2"></i> OTT
+                                    </span>
+                                @elseif ($stage->area === 'DTH')
+                                    <span
+                                        class="inline-flex items-center px-3 py-1 text-sm font-semibold rounded-full {{ $areaClasses }} shadow transition duration-150"
+                                        role="status" aria-label="Área DTH" title="Área DTH">
+                                        <i class="fa-solid fa-satellite-dish mr-2"></i> DTH
+                                    </span>
+                                @else
+                                    <span class="text-sm text-gray-400 italic">{{ __('N/A') }}</span>
+                                @endif
+                                @if ($stage->status === 1)
+                                    <span
+                                        class="inline-flex items-center px-3 py-1 text-sm font-semibold text-green-800 bg-green-200 rounded-full dark:bg-green-800 dark:text-green-200 shadow transition duration-150"
+                                        role="status" aria-label="Activo" title="Activo">
+                                        <i class="fa-solid fa-check-circle mr-2"></i>
+                                        {{ __('Active') }}
+                                    </span>
+                                @else
+                                    <span
+                                        class="inline-flex items-center px-3 py-1 text-sm font-semibold text-red-800 bg-red-200 rounded-full dark:bg-red-800 dark:text-red-200 shadow transition duration-150"
+                                        role="status" aria-label="Inactivo" title="Inactivo">
+                                        <i class="fa-solid fa-times-circle mr-2"></i>
+                                        {{ __('Inactive') }}
+                                    </span>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </h1>
         </div>

@@ -34,7 +34,7 @@
             <form action="{{ route('admin.stages.update', $stage) }}" method="POST">
                 @method('PUT')
                 @csrf
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <div>
                         <x-label for="name">
                             <i class="fa-solid fa-bars-staggered mr-1"></i>
@@ -43,6 +43,22 @@
                         <x-input id="name" class="block mt-1 w-full" type="text" name="name"
                             :value="old('name', __($stage->name))" required autofocus autocomplete="name"
                             placeholder="{{ __('Stage name') }}" />
+                    </div>
+                    <div>
+                        <x-label for="area">
+                            <i class="fa-solid fa-building mr-1"></i>
+                            {{ __('Area') }}
+                        </x-label>
+                        <select id="area"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white
+                                {{ Auth::user()?->area === 'DTH'
+                                    ? 'focus:ring-secondary-600 focus:border-secondary-600 dark:focus:ring-secondary-500 dark:focus:border-secondary-500'
+                                    : 'focus:ring-primary-600 focus:border-primary-600 dark:focus:ring-primary-500 dark:focus:border-primary-500' }}"
+                            name="area" required>
+                            <option disabled>{{ __('Select area') }}</option>
+                            <option value="OTT" @selected(old('area', $stage->area) == 'OTT')>{{ __('OTT') }}</option>
+                            <option value="DTH" @selected(old('area', $stage->area) == 'DTH')>{{ __('DTH') }}</option>
+                        </select>
                     </div>
                     <div>
                         <x-label for="status">

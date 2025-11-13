@@ -13,20 +13,22 @@
     @if ($stages->count())
         @can('create', App\Models\Stage::class)
             <x-slot name="action">
-                <a href="{{ route('admin.stages.create') }}" class="hidden sm:block text-white
-                                {{ Auth::user()?->area === 'DTH'
+                <a href="{{ route('admin.stages.create') }}"
+                    class="hidden sm:block text-white
+                                                                {{ Auth::user()?->area === 'DTH'
                     ? 'bg-secondary-700 hover:bg-secondary-800 focus:ring-4 focus:ring-secondary-300 dark:bg-secondary-600 dark:hover:bg-secondary-700 dark:focus:ring-secondary-800'
                     : 'bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800' }}
-                                font-medium rounded-lg text-sm px-5 py-2 focus:outline-none shadow-xl">
+                                                                font-medium rounded-lg text-sm px-5 py-2 focus:outline-none shadow-xl">
                     <i class="fa-solid fa-plus mr-1"></i>
                     {{ __('Register new stage') }}
                 </a>
             </x-slot>
-            <a href="{{ route('admin.stages.create') }}" class="mb-4 sm:hidden block text-center text-white
-                            {{ Auth::user()?->area === 'DTH'
+            <a href="{{ route('admin.stages.create') }}"
+                class="mb-4 sm:hidden block text-center text-white
+                                                            {{ Auth::user()?->area === 'DTH'
                     ? 'bg-secondary-700 hover:bg-secondary-800 focus:ring-4 focus:ring-secondary-300 dark:bg-secondary-600 dark:hover:bg-secondary-700 dark:focus:ring-secondary-800'
                     : 'bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800' }}
-                            font-medium rounded-lg text-sm px-5 py-2 focus:outline-none shadow-xl">
+                                                            font-medium rounded-lg text-sm px-5 py-2 focus:outline-none shadow-xl">
                 <i class="fa-solid fa-plus mr-1"></i>
                 {{ __('Register new stage') }}
             </a>
@@ -39,6 +41,10 @@
                             <th scope="col" class="px-4 py-3">
                                 <i class="fa-solid fa-bars-staggered mr-1"></i>
                                 {{ __('Name') }}
+                            </th>
+                            <th scope="col" class="px-4 py-3">
+                                <i class="fa-solid fa-building mr-1"></i>
+                                {{ __('Area') }}
                             </th>
                             <th scope="col" class="px-4 py-3">
                                 <i class="fa-solid fa-toggle-on mr-1"></i>
@@ -59,6 +65,26 @@
                                 <th scope="row" class="px-4 py-2.5 font-bold text-gray-900 whitespace-nowrap dark:text-white">
                                     {{ __($stage->name) }}
                                 </th>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    @php
+                                        $areaClasses = $stage->area === 'DTH'
+                                            ? 'bg-secondary-200 text-secondary-800 dark:bg-secondary-700 dark:text-secondary-100'
+                                            : 'bg-primary-200 text-primary-800 dark:bg-primary-700 dark:text-primary-100';
+                                    @endphp
+                                    @if ($stage->area === 'OTT')
+                                        <span
+                                            class="inline-flex items-center px-2 py-1 text-xs font-medium rounded-full {{ $areaClasses }}">
+                                            <i class="fa-solid fa-cube mr-1"></i> OTT
+                                        </span>
+                                    @elseif ($stage->area === 'DTH')
+                                        <span
+                                            class="inline-flex items-center px-2 py-1 text-xs font-medium rounded-full {{ $areaClasses }}">
+                                            <i class="fa-solid fa-satellite-dish mr-1"></i> DTH
+                                        </span>
+                                    @else
+                                        <span class="text-xs text-gray-400 italic">{{ __('N/A') }}</span>
+                                    @endif
+                                </td>
                                 <td class="px-4 py-2.5">
                                     @if ($stage->status === 1)
                                         <span
@@ -147,10 +173,10 @@
 
             <div class="flex justify-center sm:justify-end">
                 <a href="{{ route('admin.stages.create') }}" class="text-white
-                            {{ Auth::user()?->area === 'DTH'
+                                            {{ Auth::user()?->area === 'DTH'
             ? 'bg-secondary-700 hover:bg-secondary-800 focus:ring-4 focus:ring-secondary-300 dark:bg-secondary-600 dark:hover:bg-secondary-700 dark:focus:ring-secondary-800'
             : 'bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800' }}
-                            font-medium rounded-lg text-sm px-5 py-2 focus:outline-none shadow-xl">
+                                            font-medium rounded-lg text-sm px-5 py-2 focus:outline-none shadow-xl">
                     <i class="fa-solid fa-plus mr-1"></i>
                     {{ __('Register new stage') }}
                 </a>
