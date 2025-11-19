@@ -1,19 +1,19 @@
 <x-admin-layout :breadcrumbs="[
-    [
-        'name' => __('Dashboard'),
-        'icon' => 'fa-solid fa-wrench',
-        'route' => route('admin.dashboard'),
-    ],
-    [
-        'name' => __('Users'),
-        'icon' => 'fa-solid fa-user-group',
-        'route' => route('admin.users.index'),
-    ],
-    [
-        'name' => __('Update'),
-        'icon' => 'fa-solid fa-pen',
-    ],
-]">
+        [
+            'name' => __('Dashboard'),
+            'icon' => 'fa-solid fa-wrench',
+            'route' => route('admin.dashboard'),
+        ],
+        [
+            'name' => __('Users'),
+            'icon' => 'fa-solid fa-user-group',
+            'route' => route('admin.users.index'),
+        ],
+        [
+            'name' => __('Update'),
+            'icon' => 'fa-solid fa-pen',
+        ],
+    ]">
 
     <x-slot name="action">
         <a href="{{ route('admin.users.show', $user) }}"
@@ -23,7 +23,7 @@
         </a>
     </x-slot>
     <div class="w-full bg-white rounded-lg shadow-2xl dark:border md:mt-0 xl:p-0 dark:bg-gray-800 dark:border-gray-700">
-        <div class="p-6 space-y-4 md:space-y-6 sm:p-8">
+        <div class="p-6 space-y-6 sm:p-8">
             <h1 class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
                 <i class="fa-solid fa-user-group mr-1.5"></i>
                 {{ __('Update user') }}
@@ -72,7 +72,7 @@
                             placeholder="{{ __('••••••••') }}" />
                     </div>
                 </div>
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-5 mt-5 w-full">
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-5 mt-5 w-full">
                         <div>
                             <x-label for="role">
                                 <i class="fa-solid fa-shield-halved mr-1"></i>
@@ -96,6 +96,18 @@
                                 <option disabled>{{ __('Select area') }}</option>
                                 <option value="OTT" @if(old('area', $user->area) === 'OTT') selected @endif>OTT</option>
                                 <option value="DTH" @if(old('area', $user->area) === 'DTH') selected @endif>DTH</option>
+                            </select>
+                        </div>
+                        <div>
+                            <x-label for="can_switch_area">
+                                <i class="fa-solid fa-arrows-left-right mr-1"></i>
+                                {{ __('Allow area switch') }}
+                            </x-label>
+                            <select id="can_switch_area" name="can_switch_area"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white {{ Auth::user()->area === 'DTH' ? 'focus:ring-secondary-600 focus:border-secondary-600 dark:focus:ring-secondary-500 dark:focus:border-secondary-500' : 'focus:ring-primary-600 focus:border-primary-600 dark:focus:ring-primary-500 dark:focus:border-primary-500' }}">
+                                <option disabled>{{ __('Select option') }}</option>
+                                <option value="1" @if(old('can_switch_area', $user->can_switch_area)) selected @endif>{{ __('Yes') }}</option>
+                                <option value="0" @if(!old('can_switch_area', $user->can_switch_area)) selected @endif>{{ __('No') }}</option>
                             </select>
                         </div>
                         <div>

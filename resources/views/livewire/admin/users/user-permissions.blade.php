@@ -1,4 +1,4 @@
-<div class="w-full mx-auto bg-white dark:bg-gray-800 shadow-xl rounded-lg p-6">
+<div class="w-full mx-auto bg-white dark:bg-gray-800 shadow-xl rounded-lg p-4 sm:p-6">
     @php
         $area = Auth::user()?->area;
         $primaryBtn = $area === 'OTT' ? 'bg-primary-600 hover:bg-primary-700' : ($area === 'DTH' ? 'bg-secondary-600 hover:bg-secondary-700' : 'bg-primary-600 hover:bg-primary-700');
@@ -6,13 +6,18 @@
     @endphp
     <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-6 pb-6">
         <div class="flex flex-col sm:flex-row items-center sm:items-start gap-4 w-full sm:w-auto">
-            <img class="h-20 w-20 rounded-full object-cover shadow-md" src="{{ $user->profile_photo_url }}"
-                alt="{{ $user->name }}" />
+            <img class="h-16 w-16 sm:h-20 sm:w-20 rounded-full object-cover shadow-md"
+                src="{{ $user->profile_photo_url }}" alt="{{ $user->name }}" />
             <div class="text-center sm:text-left space-y-1 w-full">
+                @php
+                    $userArea = $user->area ?? null;
+                    $userAreaClasses = $userArea === 'DTH'
+                        ? 'bg-secondary-200 text-secondary-800 dark:bg-secondary-700 dark:text-secondary-100'
+                        : ($userArea === 'OTT' ? 'bg-primary-200 text-primary-800 dark:bg-primary-700 dark:text-primary-100' : 'bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-200');
+                @endphp
                 <h1
-                    class="flex flex-col md:flex-row items-center text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">
+                    class="flex flex-col md:flex-row flex-wrap items-center text-lg font-bold text-gray-900 dark:text-white gap-4">
                     <span>{{ $user->name }}</span>
-
                 </h1>
                 <p class="text-sm text-gray-600 dark:text-gray-300 break-words">
                     <i class="fa-solid fa-envelope mr-1"></i>
@@ -22,11 +27,18 @@
                         $isSelfFirstAdmin = $auth->id === 1 && $user->id === 1 && $auth->hasRole('master');
                     @endphp
                     <button @if($isSelfFirstAdmin) disabled @else wire:click="toggleStatus" @endif type="button"
-                        class="ml-3 mt-1 md:mt-0 inline-flex items-center px-2 py-1 rounded-full text-xs font-semibold focus:outline-none transition
+                        class="ml-2.5 mt-2 sm:mt-0 inline-flex items-center px-2 py-1 rounded-full text-xs font-semibold focus:outline-none transition
                         {{ $user->status ? ($isSelfFirstAdmin ? 'bg-gray-300 text-gray-500 dark:bg-gray-700 dark:text-gray-400' : 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-100') : ($isSelfFirstAdmin ? 'bg-red-300 text-red-500 dark:bg-red-700 dark:text-red-400' : 'bg-red-200 text-red-600 dark:bg-red-700 dark:text-red-300') }}">
                         <i class="fa-solid {{ $user->status ? 'fa-circle-check' : 'fa-circle-xmark' }} mr-1"></i>
                         {{ $user->status ? __('Active') : __('Inactive') }}
                     </button>
+                    @if($userArea)
+                        <span
+                            class="ml-2.5 inline-flex items-center px-2 py-1 text-xs font-semibold rounded-full {{ $userAreaClasses }}">
+                            <i class="fa-solid {{ $userArea === 'DTH' ? 'fa-satellite-dish' : 'fa-cube' }} mr-1"></i>
+                            {{ $userArea }}
+                        </span>
+                    @endif
                 </p>
                 @php
                     $auth = auth()->user();
@@ -66,7 +78,7 @@
                                 class="fa-solid ml-2 transition-transform duration-300"></i>
                         </button>
                         <div x-show="open" x-transition.origin.top.left @click.outside="open = false"
-                            class="mt-2 bg-white dark:bg-gray-700 shadow-lg rounded-lg p-4 space-y-4 border dark:border-gray-600 absolute z-10 w-72">
+                            class="mt-2 bg-white dark:bg-gray-700 shadow-lg rounded-lg p-4 space-y-4 border dark:border-gray-600 absolute z-10 w-full sm:w-72 left-0 sm:left-auto sm:right-0">
                             <form wire:submit.prevent="saveReportPreferences" class="space-y-3">
                                 @php
                                     $reportMailsList = [
@@ -129,7 +141,6 @@
                     </button>
                 @endif
             </div>
-
         </div>
     </div>
 

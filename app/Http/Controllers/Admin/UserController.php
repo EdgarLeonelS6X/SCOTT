@@ -50,6 +50,7 @@ class UserController extends Controller
                 'password' => 'required|string|min:8|confirmed',
                 'role' => 'nullable|exists:roles,name',
                 'status' => 'required|boolean',
+                'can_switch_area' => 'required|boolean',
             ], [
                 'email.regex' => __('Only @stargroup.com.mx emails are allowed.'),
             ]);
@@ -72,6 +73,9 @@ class UserController extends Controller
         $user->email = $data['email'];
         $user->password = bcrypt($data['password']);
         $user->status = $data['status'];
+        if (array_key_exists('can_switch_area', $data)) {
+            $user->can_switch_area = (bool) $data['can_switch_area'];
+        }
         $user->email_verified_at = now();
         $user->save();
         if (isset($data['role'])) {
@@ -109,6 +113,7 @@ class UserController extends Controller
                 'password' => 'nullable|string|min:8|confirmed',
                 'role' => 'nullable|exists:roles,name',
                 'area' => 'required|in:OTT,DTH',
+                'can_switch_area' => 'required|boolean',
                 'status' => 'required|boolean',
             ]);
         } catch (ValidationException $e) {
@@ -128,6 +133,9 @@ class UserController extends Controller
         $user->name = $data['name'];
         $user->email = $data['email'];
         $user->area = $data['area'];
+        if (array_key_exists('can_switch_area', $data)) {
+            $user->can_switch_area = (bool) $data['can_switch_area'];
+        }
         $user->status = $data['status'];
         if (!empty($data['password'])) {
             $user->password = bcrypt($data['password']);
@@ -219,14 +227,35 @@ class UserController extends Controller
         return redirect()->back()->with('success', __('Permissions updated successfully.'));
     }
 
-    public function switchArea($area): RedirectResponse
-    {
+    public function switchArea(
+        \Illuminate\Http\Request $request,
+        $area
+    ): RedirectResponse {
         $user = Auth::user();
-        if ($user && ($user->role === 'master' || $user->hasRole('master')) && in_array($area, ['OTT', 'DTH'])) {
+        if (! $user) {
+            return Redirect::back();
+        }
+
+        $allowedAreas = ['OTT', 'DTH'];
+        if (! in_array($area, $allowedAreas)) {
+            return Redirect::back();
+        }
+
+        // Masters persist the change to their user record (as before)
+        if ($user->hasRole('master')) {
             $user->area = $area;
             $user->save();
             Auth::setUser($user->fresh());
+            return Redirect::back();
         }
+
+        // Non-master users can switch area only if they have the flag
+        if ($user->can_switch_area) {
+            // Store the active area in session so the switch is temporary
+            $request->session()->put('active_area', $area);
+            return Redirect::back();
+        }
+
         return Redirect::back();
     }
 }

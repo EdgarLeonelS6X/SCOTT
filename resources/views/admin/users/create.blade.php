@@ -71,7 +71,7 @@
                             placeholder="{{ __('••••••••') }}" />
                     </div>
                 </div>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-5 mt-5 w-full">
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-5 mt-5 w-full">
                         <div>
                             <x-label for="role">
                                 <i class="fa-solid fa-shield-halved mr-1"></i>
@@ -108,6 +108,18 @@
                                 <option selected disabled>{{ __('Select status') }}</option>
                                 <option value="1">{{ __('Active') }}</option>
                                 <option value="0">{{ __('Inactive') }}</option>
+                            </select>
+                        </div>
+                        <div>
+                            <x-label for="can_switch_area">
+                                <i class="fa-solid fa-arrows-left-right mr-1"></i>
+                                {{ __('Allow area switch') }}
+                            </x-label>
+                            <select id="can_switch_area" name="can_switch_area"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white {{ Auth::user()->area === 'DTH' ? 'focus:ring-secondary-600 focus:border-secondary-600 dark:focus:ring-secondary-500 dark:focus:border-secondary-500' : 'focus:ring-primary-600 focus:border-primary-600 dark:focus:ring-primary-500 dark:focus:border-primary-500' }}">
+                                <option selected disabled>{{ __('Select option') }}</option>
+                                <option value="1" @if(old('can_switch_area') === '1') selected @endif>{{ __('Yes') }}</option>
+                                <option value="0" @if(old('can_switch_area') === '0') selected @endif>{{ __('No') }}</option>
                             </select>
                         </div>
                 </div>

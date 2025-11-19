@@ -35,6 +35,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'report_mail_preferences',
         'status',
         'area',
+        'can_switch_area',
     ];
 
     public const AREA_OTT = 'OTT';
@@ -76,18 +77,16 @@ class User extends Authenticatable implements MustVerifyEmail
     ];
 
     /**
-     * Get the attributes that should be cast.
+     * The attributes that should be cast.
      *
-     * @return array<string, string>
+     * @var array<string, string>
      */
-    protected function casts(): array
-    {
-        return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-            'status' => 'boolean',
-        ];
-    }
+    protected $casts = [
+        'email_verified_at' => 'datetime',
+        'password' => 'hashed',
+        'status' => 'boolean',
+        'can_switch_area' => 'boolean',
+    ];
 
     public function reports()
     {
