@@ -48,7 +48,7 @@ class UserController extends Controller
                     'regex:/^[A-Za-z0-9._%+-]+@stargroup\\.com\\.mx$/i',
                 ],
                 'password' => 'required|string|min:8|confirmed',
-                'role' => 'nullable|exists:roles,name',
+                'role' => 'required|exists:roles,name',
                 'status' => 'required|boolean',
                 'can_switch_area' => 'required|boolean',
             ], [
@@ -68,6 +68,17 @@ class UserController extends Controller
             ]);
             return redirect()->back()->withInput();
         }
+
+        $canSwitch = array_key_exists('can_switch_area', $data) ? (bool) $data['can_switch_area'] : false;
+        if (! $data['status'] && $canSwitch) {
+            session()->flash('swal', [
+                'icon' => 'error',
+                'title' => __('Invalid configuration!'),
+                'text' => __('Cannot create an inactive user with area-switch permission.'),
+            ]);
+            return redirect()->back()->withInput();
+        }
+
         $user = new User();
         $user->name = $data['name'];
         $user->email = $data['email'];
@@ -80,6 +91,22 @@ class UserController extends Controller
         $user->save();
         if (isset($data['role'])) {
             $user->syncRoles([$data['role']]);
+        }
+
+        $forbidden = [
+            'admin' => ['roles.edit'],
+            'user' => ['roles.edit', 'permissions.assign'],
+        ];
+
+        $assignedRole = $user->roles->pluck('name')->first();
+        if ($assignedRole === 'master') {
+            $user->syncPermissions(Permission::all()->pluck('name')->toArray());
+        } else {
+            $all = Permission::all();
+            $allowed = $all->filter(function ($perm) use ($forbidden, $assignedRole) {
+                return ! in_array($perm->name, $forbidden[$assignedRole] ?? []);
+            })->pluck('name')->toArray();
+            $user->syncPermissions($allowed);
         }
         session()->flash('swal', [
             'icon' => 'success',
@@ -130,6 +157,15 @@ class UserController extends Controller
             ]);
             return redirect()->back()->withInput();
         }
+        $canSwitchUpdate = array_key_exists('can_switch_area', $data) ? (bool) $data['can_switch_area'] : (bool) $user->can_switch_area;
+        if (! $data['status'] && $canSwitchUpdate) {
+            session()->flash('swal', [
+                'icon' => 'error',
+                'title' => __('Invalid user configuration!'),
+                'text' => __('Cannot set a user to inactive while leaving area-switch permission enabled.'),
+            ]);
+            return redirect()->back()->withInput();
+        }
         $user->name = $data['name'];
         $user->email = $data['email'];
         $user->area = $data['area'];
@@ -143,6 +179,21 @@ class UserController extends Controller
         $user->save();
         if (isset($data['role'])) {
             $user->syncRoles([$data['role']]);
+        }
+        $forbidden = [
+            'admin' => ['roles.edit'],
+            'user' => ['roles.edit', 'permissions.assign'],
+        ];
+
+        $finalRole = $user->roles->pluck('name')->first();
+        if ($finalRole === 'master') {
+            $user->syncPermissions(Permission::all()->pluck('name')->toArray());
+        } else {
+            $all = Permission::all();
+            $allowed = $all->filter(function ($perm) use ($forbidden, $finalRole) {
+                return ! in_array($perm->name, $forbidden[$finalRole] ?? []);
+            })->pluck('name')->toArray();
+            $user->syncPermissions($allowed);
         }
         session()->flash('swal', [
             'icon' => 'success',
@@ -228,7 +279,6 @@ class UserController extends Controller
     }
 
     public function switchArea(
-        \Illuminate\Http\Request $request,
         $area
     ): RedirectResponse {
         $user = Auth::user();
@@ -241,21 +291,22 @@ class UserController extends Controller
             return Redirect::back();
         }
 
-        // Masters persist the change to their user record (as before)
-        if ($user->hasRole('master')) {
-            $user->area = $area;
-            $user->save();
-            Auth::setUser($user->fresh());
+        if (! $user->can_switch_area) {
             return Redirect::back();
         }
 
-        // Non-master users can switch area only if they have the flag
-        if ($user->can_switch_area) {
-            // Store the active area in session so the switch is temporary
-            $request->session()->put('active_area', $area);
+        if (! $user->status) {
+            session()->flash('swal', [
+                'icon' => 'error',
+                'title' => __('Action not allowed'),
+                'text' => __('You cannot switch area because your user is inactive.'),
+            ]);
             return Redirect::back();
         }
 
+        $user->area = $area;
+        $user->save();
+        Auth::setUser($user->fresh());
         return Redirect::back();
     }
 }

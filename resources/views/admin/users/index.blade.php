@@ -46,6 +46,10 @@
                             {{ __('Area') }}
                         </th>
                         <th scope="col" class="px-6 py-3 whitespace-nowrap text-center">
+                            <i class="fa-solid fa-arrows-left-right mr-1.5"></i>
+                            {{ __('Can switch area') }}
+                        </th>
+                        <th scope="col" class="px-6 py-3 whitespace-nowrap text-center">
                             <i class="fa-solid fa-toggle-on mr-1.5"></i>
                             {{ __('Status') }}
                         </th>
@@ -141,6 +145,21 @@
                                     </span>
                                 @else
                                     <span class="text-xs text-gray-400 italic">{{ __('N/A') }}</span>
+                                @endif
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-center">
+                                @if ($user->can_switch_area)
+                                    <span
+                                        class="inline-flex items-center px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-100">
+                                        <i class="fa-solid fa-circle-check mr-1"></i>
+                                        {{ __('Yes') }}
+                                    </span>
+                                @else
+                                    <span
+                                        class="inline-flex items-center px-2 py-1 text-xs font-medium rounded-full bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-300">
+                                        <i class="fa-solid fa-ban mr-1"></i>
+                                        {{ __('No') }}
+                                    </span>
                                 @endif
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-center">

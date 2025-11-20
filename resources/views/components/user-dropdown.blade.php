@@ -53,16 +53,18 @@
                 {{ __('Dashboard') }}
             </x-dropdown-link>
 
-            <x-dropdown-link
-                href="{{ route('admin.user.switch-area', ['area' => Auth::user()?->area === 'OTT' ? 'DTH' : 'OTT']) }}"
-                class="group">
-                <i @class([
-                    'fa-solid fa-arrows-rotate mr-2 text-gray-400 transition',
-                    'group-hover:text-primary-500' => Auth::user()->area === 'OTT',
-                    'group-hover:text-secondary-500' => Auth::user()->area === 'DTH',
-                ])></i>
-                {{ Auth::user()?->area === 'OTT' ? __('Switch to DTH') : __('Switch to OTT') }}
-            </x-dropdown-link>
+            @if(Auth::user()->can_switch_area)
+                <x-dropdown-link
+                    href="{{ route('admin.user.switch-area', ['area' => Auth::user()?->area === 'OTT' ? 'DTH' : 'OTT']) }}"
+                    class="group">
+                    <i @class([
+                        'fa-solid fa-arrows-rotate mr-2 text-gray-400 transition',
+                        'group-hover:text-primary-500' => Auth::user()->area === 'OTT',
+                        'group-hover:text-secondary-500' => Auth::user()->area === 'DTH',
+                    ])></i>
+                    {{ Auth::user()?->area === 'OTT' ? __('Switch to DTH') : __('Switch to OTT') }}
+                </x-dropdown-link>
+            @endif
 
             @if (Laravel\Jetstream\Jetstream::hasApiFeatures())
                 <x-dropdown-link href="{{ route('api-tokens.index') }}" class="group">

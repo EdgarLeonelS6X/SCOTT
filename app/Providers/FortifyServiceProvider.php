@@ -62,19 +62,29 @@ class FortifyServiceProvider extends ServiceProvider
 
             $user = User::where('email', $request->email)->first();
 
-            if (!$user || !Hash::check($request->password, $user->password)) {
-                session()->flash('swal', [
-                    'icon' => 'error',
-                    'title' => '¡Error!',
-                    'text' => __('The provided credentials are incorrect.'),
-                ]);
+                if (!$user || !Hash::check($request->password, $user->password)) {
+                    session()->flash('swal', [
+                        'icon' => 'error',
+                        'title' => __('Error!'),
+                        'text' => __('The provided credentials are incorrect.'),
+                    ]);
+                    throw ValidationException::withMessages([
+                        'email' => __('The provided credentials are incorrect.'),
+                    ]);
+                }
 
-                throw ValidationException::withMessages([
-                    'email' => __('The provided credentials are incorrect.'),
-                ]);
-            }
+                if (!$user->status) {
+                    session()->flash('swal', [
+                        'icon' => 'error',
+                        'title' => __('Inactive user!'),
+                        'text' => __('You cannot log in because your user is inactive. Please contact the administrator.'),
+                    ]);
+                    throw ValidationException::withMessages([
+                        'email' => __('You cannot log in because your user is inactive. Please contact the administrator.'),
+                    ]);
+                }
 
-            return $user;
+                return $user;
         });
 
         RateLimiter::for('login', function (Request $request) {

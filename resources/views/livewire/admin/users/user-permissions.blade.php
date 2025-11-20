@@ -37,6 +37,11 @@
                             class="ml-2.5 inline-flex items-center px-2 py-1 text-xs font-semibold rounded-full {{ $userAreaClasses }}">
                             <i class="fa-solid {{ $userArea === 'DTH' ? 'fa-satellite-dish' : 'fa-cube' }} mr-1"></i>
                             {{ $userArea }}
+                            <span
+                                class="ml-1 inline-flex items-center justify-center w-4 h-4 rounded-full bg-white text-gray-600 dark:bg-gray-700 dark:text-gray-300 border border-white/20 text-xs"
+                                title="{{ __('Switch') }}" aria-hidden="true">
+                                <i class="fa-solid fa-repeat text-[8px]"></i>
+                            </span>
                         </span>
                     @endif
                 </p>

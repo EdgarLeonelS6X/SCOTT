@@ -705,5 +705,11 @@
     "Switch to DTH": "Cambiar a DTH",
     "Area": "Área",
     "Allow area switch": "Permitir cambio de área",
-    "Select option": "Seleccionar una opción"
+    "Select option": "Seleccionar una opción",
+    "Can switch area": "Puede cambiar de área",
+    "Inactive user!": "¡Usuario inactivo!",
+    "You cannot log in because your user is inactive. Please contact the administrator.": "No puedes iniciar sesión porque tu usuario está inactivo. Por favor, contacta al administrador.",
+    "Invalid configuration!": "¡Configuración inválida!",
+    "Cannot create an inactive user with area-switch permission.": "No se puede crear un usuario inactivo con permiso de cambio de área.",
+    "Only @stargroup.com.mx emails are allowed.": "Solo se permiten correos electrónicos @stargroup.com.mx."
 }
