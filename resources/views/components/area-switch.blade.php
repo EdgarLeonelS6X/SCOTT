@@ -7,9 +7,7 @@
 @endphp
 @if($isMaster)
     <a href="{{ route('user.switch-area', ['area' => $nextArea]) }}"
-        class="inline-flex items-center px-3 py-1 rounded text-xs font-semibold transition
-                   {{ $currentArea === 'OTT' ? 'bg-primary-100 text-primary-700 hover:bg-primary-200' : 'bg-secondary-100 text-secondary-700 hover:bg-secondary-200' }}">
-        <i class="fa-solid fa-arrows-rotate mr-1"></i>
-        {{ $label }}
+        class="flex items-center justify-center w-9 h-9 rounded-full text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 transition shadow-sm {{ $currentArea === 'DTH' ? 'focus:ring-secondary-300 dark:focus:ring-secondary-600' : 'focus:ring-primary-300 dark:focus:ring-primary-600' }}">
+        <i class="fa-solid fa-arrows-rotate text-lg hover:animate-spin"></i>
     </a>
 @endif

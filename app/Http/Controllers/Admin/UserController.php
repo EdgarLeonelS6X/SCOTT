@@ -48,9 +48,11 @@ class UserController extends Controller
                     'regex:/^[A-Za-z0-9._%+-]+@stargroup\\.com\\.mx$/i',
                 ],
                 'password' => 'required|string|min:8|confirmed',
+                'area' => 'required|in:OTT,DTH',
                 'role' => 'required|exists:roles,name',
                 'status' => 'required|boolean',
                 'can_switch_area' => 'required|boolean',
+                'default_area' => 'sometimes|accepted',
             ], [
                 'email.regex' => __('Only @stargroup.com.mx emails are allowed.'),
             ]);
@@ -84,6 +86,8 @@ class UserController extends Controller
         $user->email = $data['email'];
         $user->password = bcrypt($data['password']);
         $user->status = $data['status'];
+        $user->area = $request->input('area', 'OTT');
+        $user->default_area = $user->area;
         if (array_key_exists('can_switch_area', $data)) {
             $user->can_switch_area = (bool) $data['can_switch_area'];
         }
@@ -140,6 +144,7 @@ class UserController extends Controller
                 'password' => 'nullable|string|min:8|confirmed',
                 'role' => 'nullable|exists:roles,name',
                 'area' => 'required|in:OTT,DTH',
+                'default_area' => 'sometimes|accepted',
                 'can_switch_area' => 'required|boolean',
                 'status' => 'required|boolean',
             ]);
@@ -169,7 +174,13 @@ class UserController extends Controller
         $user->name = $data['name'];
         $user->email = $data['email'];
         $user->area = $data['area'];
+        if ($request->has('default_area')) {
+            $user->default_area = $user->area;
+        }
         if (array_key_exists('can_switch_area', $data)) {
+            if ($user->can_switch_area && !$data['can_switch_area']) {
+                $user->area = $user->default_area ?? $data['area'];
+            }
             $user->can_switch_area = (bool) $data['can_switch_area'];
         }
         $user->status = $data['status'];

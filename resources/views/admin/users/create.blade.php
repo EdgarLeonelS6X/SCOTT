@@ -91,11 +91,36 @@
                                 {{ __('Area') }}
                             </x-label>
                             <select id="area" name="area"
-                                class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white {{ Auth::user()->area === 'DTH' ? 'focus:ring-secondary-600 focus:border-secondary-600 dark:focus:ring-secondary-500 dark:focus:border-secondary-500' : 'focus:ring-primary-600 focus:border-primary-600 dark:focus:ring-primary-500 dark:focus:border-primary-500' }}">
+                                class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white {{ Auth::user()->area === 'DTH' ? 'focus:ring-secondary-600 focus:border-secondary-600 dark:focus:ring-secondary-500' : 'focus:ring-primary-600 focus:border-primary-600 dark:focus:ring-primary-500' }}">
                                 <option selected disabled>{{ __('Select area') }}</option>
                                 <option value="OTT" @if(old('area') === 'OTT') selected @endif>OTT</option>
                                 <option value="DTH" @if(old('area') === 'DTH') selected @endif>DTH</option>
                             </select>
+                        <script>
+                            (function(){
+                                const areaSelect = document.getElementById('area');
+                                const defaultCheckbox = document.getElementById('default_area');
+                                if (!areaSelect || !defaultCheckbox) return;
+                                const originalDefault = defaultCheckbox.dataset.original || '';
+                                // manualToggle: true when user explicitly toggles checkbox
+                                let manualToggle = false;
+                                defaultCheckbox.addEventListener('change', function(){ manualToggle = true; });
+
+                                // Initialize: if there's no original default (new user), keep checked by default
+                                if (!originalDefault) {
+                                    defaultCheckbox.checked = true;
+                                } else {
+                                    defaultCheckbox.checked = (areaSelect.value === originalDefault);
+                                }
+
+                                areaSelect.addEventListener('change', function(){
+                                    if (!manualToggle) {
+                                        // keep checkbox synced to whether selected area equals original default
+                                        defaultCheckbox.checked = (areaSelect.value === originalDefault);
+                                    }
+                                });
+                            })();
+                        </script>
                         </div>
                         <div>
                             <x-label for="status">
@@ -104,6 +129,8 @@
                             </x-label>
                             <select id="status"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white {{ Auth::user()->area === 'DTH' ? 'focus:ring-secondary-600 focus:border-secondary-600 dark:focus:ring-secondary-500 dark:focus:border-secondary-500' : 'focus:ring-primary-600 focus:border-primary-600 dark:focus:ring-primary-500 dark:focus:border-primary-500' }}"
+                                    class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white {{ Auth::user()->area === 'DTH' ? 'focus:ring-secondary-600 focus:border-secondary-600 dark:focus:ring-secondary-500' : 'focus:ring-primary-600 focus:border-primary-600 dark:focus:ring-primary-500' }}"
+                                    class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white {{ Auth::user()->area === 'DTH' ? 'focus:ring-secondary-600 focus:border-secondary-600 dark:focus:ring-secondary-500' : 'focus:ring-primary-600 focus:border-primary-600 dark:focus:ring-primary-500' }}"
                                 name="status" required>
                                 <option selected disabled>{{ __('Select status') }}</option>
                                 <option value="1" @if(old('status') === '1') selected @endif>{{ __('Active') }}</option>

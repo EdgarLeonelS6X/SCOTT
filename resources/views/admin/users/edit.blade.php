@@ -41,7 +41,7 @@
                             {{ __('Name') }}
                         </x-label>
                         <x-input id="name" class="block mt-1 w-full" type="text" name="name"
-                            :value="old('name', $user->name)" required autofocus autocomplete="name"
+                            :value="old('name', $user->name)" required autocomplete="name"
                             placeholder="{{ __('User name') }}" />
                     </div>
                     <div>
@@ -72,14 +72,14 @@
                             placeholder="{{ __('••••••••') }}" />
                     </div>
                 </div>
-                    <div class="grid grid-cols-1 md:grid-cols-4 gap-5 mt-5 w-full">
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-5 mt-5 w-full">
                         <div>
                             <x-label for="role">
                                 <i class="fa-solid fa-shield-halved mr-1"></i>
                                 {{ __('Role') }}
                             </x-label>
                             <select id="role" name="role"
-                                class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white {{ Auth::user()->area === 'DTH' ? 'focus:ring-secondary-600 focus:border-secondary-600 dark:focus:ring-secondary-500 dark:focus:border-secondary-500' : 'focus:ring-primary-600 focus:border-primary-600 dark:focus:ring-primary-500 dark:focus:border-primary-500' }}">
+                                class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white {{ Auth::user()->area === 'DTH' ? 'focus:ring-secondary-600 focus:border-secondary-600 dark:focus:ring-secondary-500' : 'focus:ring-primary-600 focus:border-primary-600 dark:focus:ring-primary-500' }}">
                                 <option disabled>{{ __('Select role') }}</option>
                                 @foreach ($roles as $role)
                                     <option value="{{ $role->name }}" @if($user->roles->first()?->name === $role->name) selected @endif>{{ ucfirst(__($role->name)) }}</option>
@@ -87,16 +87,41 @@
                             </select>
                         </div>
                         <div>
-                            <x-label for="area">
-                                <i class="fa-solid fa-building mr-1"></i>
-                                {{ __('Area') }}
-                            </x-label>
+                            <div class="flex justify-between items-center gap-4">
+                                <x-label for="area" class="flex items-center m-0">
+                                    <i class="fa-solid fa-building mr-1"></i>
+                                    {{ __('Area') }}
+                                </x-label>
+                                <label for="default_area" class="flex items-center cursor-pointer select-none text-xs text-gray-600 dark:text-gray-300 mb-2">
+                                    <x-checkbox id="default_area" name="default_area" value="1"
+                                        data-original="{{ $user->default_area ?? '' }}"
+                                        :checked="old('area', $user->area) === $user->default_area"
+                                        class="mr-2" />
+                                    <span>{{ __('Default area') }}</span>
+                                </label>
+                            </div>
                             <select id="area" name="area"
-                                class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white {{ Auth::user()->area === 'DTH' ? 'focus:ring-secondary-600 focus:border-secondary-600 dark:focus:ring-secondary-500 dark:focus:border-secondary-500' : 'focus:ring-primary-600 focus:border-primary-600 dark:focus:ring-primary-500 dark:focus:border-primary-500' }}">
+                                class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white {{ Auth::user()->area === 'DTH' ? 'focus:ring-secondary-600 focus:border-secondary-600 dark:focus:ring-secondary-500' : 'focus:ring-primary-600 focus:border-primary-600 dark:focus:ring-primary-500' }}">
                                 <option disabled>{{ __('Select area') }}</option>
                                 <option value="OTT" @if(old('area', $user->area) === 'OTT') selected @endif>OTT</option>
                                 <option value="DTH" @if(old('area', $user->area) === 'DTH') selected @endif>DTH</option>
                             </select>
+                            <script>
+                                (function(){
+                                    const areaSelect = document.getElementById('area');
+                                    const defaultCheckbox = document.getElementById('default_area');
+                                    if (!areaSelect || !defaultCheckbox) return;
+                                    const originalDefault = defaultCheckbox.dataset.original || '';
+                                    let manualToggle = false;
+                                    defaultCheckbox.addEventListener('change', function(){ manualToggle = true; });
+                                    defaultCheckbox.checked = (areaSelect.value === originalDefault);
+                                    areaSelect.addEventListener('change', function(){
+                                        if (!manualToggle) {
+                                            defaultCheckbox.checked = (areaSelect.value === originalDefault);
+                                        }
+                                    });
+                                })();
+                            </script>
                         </div>
                         <div>
                             <x-label for="can_switch_area">
@@ -104,7 +129,7 @@
                                 {{ __('Allow area switch') }}
                             </x-label>
                             <select id="can_switch_area" name="can_switch_area"
-                                class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white {{ Auth::user()->area === 'DTH' ? 'focus:ring-secondary-600 focus:border-secondary-600 dark:focus:ring-secondary-500 dark:focus:border-secondary-500' : 'focus:ring-primary-600 focus:border-primary-600 dark:focus:ring-primary-500 dark:focus:border-primary-500' }}">
+                                class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white {{ Auth::user()->area === 'DTH' ? 'focus:ring-secondary-600 focus:border-secondary-600 dark:focus:ring-secondary-500' : 'focus:ring-primary-600 focus:border-primary-600 dark:focus:ring-primary-500' }}">
                                 <option disabled>{{ __('Select option') }}</option>
                                 <option value="1" @if(old('can_switch_area', $user->can_switch_area)) selected @endif>{{ __('Yes') }}</option>
                                 <option value="0" @if(!old('can_switch_area', $user->can_switch_area)) selected @endif>{{ __('No') }}</option>
@@ -116,7 +141,7 @@
                                 {{ __('Status') }}
                             </x-label>
                             <select id="status"
-                                class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white {{ Auth::user()->area === 'DTH' ? 'focus:ring-secondary-600 focus:border-secondary-600 dark:focus:ring-secondary-500 dark:focus:border-secondary-500' : 'focus:ring-primary-600 focus:border-primary-600 dark:focus:ring-primary-500 dark:focus:border-primary-500' }}"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white {{ Auth::user()->area === 'DTH' ? 'focus:ring-secondary-600 focus:border-secondary-600 dark:focus:ring-secondary-500' : 'focus:ring-primary-600 focus:border-primary-600 dark:focus:ring-primary-500' }}"
                                 name="status" required>
                                 <option disabled>{{ __('Select status') }}</option>
                                 <option value="1" @if($user->status) selected @endif>{{ __('Active') }}</option>

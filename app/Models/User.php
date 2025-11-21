@@ -36,6 +36,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'status',
         'area',
         'can_switch_area',
+        'default_area',
     ];
 
     public const AREA_OTT = 'OTT';

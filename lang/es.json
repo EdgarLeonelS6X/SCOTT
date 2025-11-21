@@ -711,5 +711,6 @@
     "You cannot log in because your user is inactive. Please contact the administrator.": "No puedes iniciar sesión porque tu usuario está inactivo. Por favor, contacta al administrador.",
     "Invalid configuration!": "¡Configuración inválida!",
     "Cannot create an inactive user with area-switch permission.": "No se puede crear un usuario inactivo con permiso de cambio de área.",
-    "Only @stargroup.com.mx emails are allowed.": "Solo se permiten correos electrónicos @stargroup.com.mx."
+    "Only @stargroup.com.mx emails are allowed.": "Solo se permiten correos electrónicos @stargroup.com.mx.",
+    "Default area": "Área predeterminada"
 }
