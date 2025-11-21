@@ -33,7 +33,6 @@
         </div>
 
         <div class="flex items-center gap-2">
-            <x-area-switch />
             <x-theme-toggle />
             <x-user-dropdown />
         </div>

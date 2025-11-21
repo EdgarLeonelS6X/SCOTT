@@ -19,32 +19,104 @@
                     class="flex flex-col md:flex-row flex-wrap items-center text-lg font-bold text-gray-900 dark:text-white gap-4">
                     <span>{{ $user->name }}</span>
                 </h1>
-                <p class="text-sm text-gray-600 dark:text-gray-300 break-words">
-                    <i class="fa-solid fa-envelope mr-1"></i>
-                    {{ $user->email }}
+                <div
+                    class="text-sm text-gray-600 dark:text-gray-300 flex flex-col sm:flex-row items-center sm:items-center gap-2">
+                    <span class="flex items-center gap-2">
+                        <i class="fa-solid fa-envelope"></i>
+                        <span class="break-words">{{ $user->email }}</span>
+                    </span>
                     @php
                         $auth = auth()->user();
                         $isSelfFirstAdmin = $auth->id === 1 && $user->id === 1 && $auth->hasRole('master');
                     @endphp
-                    <button @if($isSelfFirstAdmin) disabled @else wire:click="toggleStatus" @endif type="button"
-                        class="ml-2.5 mt-2 sm:mt-0 inline-flex items-center px-2 py-1 rounded-full text-xs font-semibold focus:outline-none transition
-                        {{ $user->status ? ($isSelfFirstAdmin ? 'bg-gray-300 text-gray-500 dark:bg-gray-700 dark:text-gray-400' : 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-100') : ($isSelfFirstAdmin ? 'bg-red-300 text-red-500 dark:bg-red-700 dark:text-red-400' : 'bg-red-200 text-red-600 dark:bg-red-700 dark:text-red-300') }}">
-                        <i class="fa-solid {{ $user->status ? 'fa-circle-check' : 'fa-circle-xmark' }} mr-1"></i>
-                        {{ $user->status ? __('Active') : __('Inactive') }}
-                    </button>
-                    @if($userArea)
-                        <span
-                            class="ml-2.5 inline-flex items-center px-2 py-1 text-xs font-semibold rounded-full {{ $userAreaClasses }}">
-                            <i class="fa-solid {{ $userArea === 'DTH' ? 'fa-satellite-dish' : 'fa-cube' }} mr-1"></i>
-                            {{ $userArea }}
-                            <span
-                                class="ml-1 inline-flex items-center justify-center w-4 h-4 rounded-full bg-white text-gray-600 dark:bg-gray-700 dark:text-gray-300 border border-white/20 text-xs"
-                                title="{{ __('Switch') }}" aria-hidden="true">
-                                <i class="fa-solid fa-repeat text-[8px]"></i>
+                    <div
+                        class="flex items-center gap-2 w-full sm:w-auto sm:flex-shrink-0 justify-center sm:justify-start mt-[1px]">
+                        <div class="relative" x-data="{ tip: false }">
+                            <button @if($isSelfFirstAdmin) disabled @else wire:click="toggleStatus" @endif
+                                @mouseenter="tip = true" @mouseleave="tip = false" type="button"
+                                aria-pressed="{{ $user->status ? 'true' : 'false' }}"
+                                class="inline-flex items-center justify-center w-7 h-7 rounded-full focus:outline-none
+                                {{ $user->status ? ($isSelfFirstAdmin ? 'bg-gray-300 text-gray-500 dark:bg-gray-700 dark:text-gray-400' : 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-100') : ($isSelfFirstAdmin ? 'bg-red-300 text-red-500 dark:bg-red-700 dark:text-red-400' : 'bg-red-200 text-red-600 dark:bg-red-700 dark:text-red-300') }}">
+                                <i class="fa-solid {{ $user->status ? 'fa-user' : 'fa-circle-xmark' }} text-xs"></i>
+                            </button>
+                            <div x-show="tip" x-cloak x-transition:enter="transition ease-out duration-150"
+                                x-transition:enter-start="opacity-0 scale-95"
+                                x-transition:enter-end="opacity-100 scale-100"
+                                x-transition:leave="transition ease-in duration-100"
+                                x-transition:leave-start="opacity-100 scale-100"
+                                x-transition:leave-end="opacity-0 scale-95"
+                                class="absolute z-50 left-1/2 transform -translate-x-1/2 mt-2 w-max px-2 py-1 rounded-md text-xs text-white bg-gray-800 dark:bg-gray-100 dark:text-gray-900">
+                                {{ $user->status ? __('Active') : __('Inactive') }}
+                            </div>
+                        </div>
+
+                        @if($user->hasVerifiedEmail())
+                            <div class="relative" x-data="{ tip: false }">
+                                <span @mouseenter="tip = true" @mouseleave="tip = false"
+                                    class="inline-flex items-center justify-center w-7 h-7 rounded-full bg-green-100 text-green-700 dark:bg-green-800 dark:text-green-100 focus:outline-none">
+                                    <i class="fa-solid fa-envelope text-xs" aria-hidden="true"></i>
+                                </span>
+                                <div x-show="tip" x-cloak x-transition:enter="transition ease-out duration-150"
+                                    x-transition:enter-start="opacity-0 scale-95"
+                                    x-transition:enter-end="opacity-100 scale-100"
+                                    x-transition:leave="transition ease-in duration-100"
+                                    x-transition:leave-start="opacity-100 scale-100"
+                                    x-transition:leave-end="opacity-0 scale-95"
+                                    class="absolute z-50 left-1/2 transform -translate-x-1/2 mt-2 w-max px-2 py-1 rounded-md text-xs text-white bg-gray-800 dark:bg-gray-100 dark:text-gray-900">
+                                    {{ __('Email verified') }}
+                                </div>
+                            </div>
+                        @else
+                            <div class="relative" x-data="{ tip: false }">
+                                <span @mouseenter="tip = true" @mouseleave="tip = false"
+                                    class="inline-flex items-center justify-center w-7 h-7 rounded-full bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-100 focus:outline-none">
+                                    <i class="fa-solid fa-circle-xmark text-xs" aria-hidden="true"></i>
+                                </span>
+                                <div x-show="tip" x-cloak x-transition:enter="transition ease-out duration-150"
+                                    x-transition:enter-start="opacity-0 scale-95"
+                                    x-transition:enter-end="opacity-100 scale-100"
+                                    x-transition:leave="transition ease-in duration-100"
+                                    x-transition:leave-start="opacity-100 scale-100"
+                                    x-transition:leave-end="opacity-0 scale-95"
+                                    class="absolute z-50 left-1/2 transform -translate-x-1/2 mt-2 w-max px-2 py-1 rounded-md text-xs text-white bg-gray-800 dark:bg-gray-100 dark:text-gray-900">
+                                    {{ __('Email not verified') }}
+                                </div>
+                            </div>
+                        @endif
+
+                        <div class="relative" x-data="{ tip: false }">
+                            @php $canSwitch = $user->can_switch_area ?? false; @endphp
+                            <span @mouseenter="tip = true" @mouseleave="tip = false"
+                                class="inline-flex items-center justify-center w-7 h-7 rounded-full {{ $canSwitch ? 'bg-blue-100 text-blue-700 dark:bg-blue-800 dark:text-blue-100' : 'bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-200' }} focus:outline-none">
+                                <i class="fa-solid {{ $canSwitch ? 'fa-repeat' : 'fa-lock' }} text-xs"
+                                    aria-hidden="true"></i>
                             </span>
-                        </span>
-                    @endif
-                </p>
+                            <div x-show="tip" x-cloak x-transition:enter="transition ease-out duration-150"
+                                x-transition:enter-start="opacity-0 scale-95"
+                                x-transition:enter-end="opacity-100 scale-100"
+                                x-transition:leave="transition ease-in duration-100"
+                                x-transition:leave-start="opacity-100 scale-100"
+                                x-transition:leave-end="opacity-0 scale-95"
+                                class="absolute z-50 left-1/2 transform -translate-x-1/2 mt-2 w-max px-2 py-1 rounded-md text-xs text-white bg-gray-800 dark:bg-gray-100 dark:text-gray-900">
+                                {{ $canSwitch ? __('Can switch area') : __('Cannot switch area') }}
+                            </div>
+                        </div>
+
+                        @if($userArea)
+                            <div class="relative" x-data="{ tip: false }">
+                                <span @mouseenter="tip = true" @mouseleave="tip = false"
+                                    class="inline-flex items-center justify-center w-7 h-7 rounded-full {{ $userAreaClasses }}">
+                                    <i
+                                        class="fa-solid {{ $userArea === 'DTH' ? 'fa-satellite-dish' : 'fa-cube' }} text-xs"></i>
+                                </span>
+                                <div x-show="tip" x-cloak x-transition
+                                    class="absolute z-50 left-1/2 transform -translate-x-1/2 mt-2 w-max px-2 py-1 rounded-md text-xs text-white bg-gray-800 dark:bg-gray-100 dark:text-gray-900">
+                                    {{ $userArea }}
+                                </div>
+                            </div>
+                        @endif
+                    </div>
+                </div>
                 @php
                     $auth = auth()->user();
                     $isAuthMaster = $auth->hasRole('master');
@@ -114,33 +186,20 @@
             </div>
         </div>
 
-        <div class="text-sm text-center sm:text-right w-full sm:w-auto">
+        <div class="text-sm text-center sm:text-right w-full sm:w-auto mt-1">
             <div class="text-gray-500 dark:text-gray-300 flex items-center justify-center sm:justify-end gap-2">
                 <i class="fa-solid fa-calendar-day"></i>
                 <span>{{ __('Joined on') }} {{ $user->created_at->format('d M Y') }}</span>
             </div>
             <div class="mt-2 flex flex-col sm:flex-row gap-2 justify-center sm:justify-end items-center sm:items-end">
                 @php $auth = auth()->user(); @endphp
-                @if ($user->hasVerifiedEmail())
-                    <div
-                        class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-700 dark:bg-green-800 dark:text-green-100 gap-2">
-                        <i class="fa-solid fa-check-circle" aria-hidden="true"></i>
-                        <span>{{ __('Email verified') }}</span>
-                    </div>
-                @else
-                    <div
-                        class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-red-100 text-red-700 dark:bg-gray-700 dark:text-red-200 gap-2">
-                        <i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i>
-                        <span>{{ __('Email not verified') }}</span>
-                    </div>
-                @endif
                 @if ($auth && $auth->id === 1 && $auth->id !== $user->id)
                     @php
                         $resetBtnBg = $area === 'OTT' ? 'bg-primary-50 hover:bg-primary-100 dark:bg-primary-900' : ($area === 'DTH' ? 'bg-secondary-50 hover:bg-secondary-100 dark:bg-secondary-900' : 'bg-primary-50 hover:bg-primary-100 dark:bg-primary-900');
                         $resetBtnText = $area === 'OTT' ? 'text-primary-700 dark:text-primary-200' : ($area === 'DTH' ? 'text-secondary-700 dark:text-secondary-200' : 'text-primary-700 dark:text-primary-200');
                     @endphp
                     <button wire:click="sendResetPasswordEmail"
-                        class="inline-flex items-center gap-2 px-3 py-1 text-xs font-medium rounded-full {{ $resetBtnBg }} {{ $resetBtnText }}">
+                        class="inline-flex items-center mt-1 gap-2 px-3 py-1 text-xs font-medium rounded-full {{ $resetBtnBg }} {{ $resetBtnText }}">
                         <i class="fa-solid fa-envelope-circle-check" aria-hidden="true"></i>
                         <span>{{ __('Reset password') }}</span>
                     </button>
