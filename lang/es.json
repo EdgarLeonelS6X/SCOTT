@@ -712,5 +712,7 @@
     "Invalid configuration!": "¡Configuración inválida!",
     "Cannot create an inactive user with area-switch permission.": "No se puede crear un usuario inactivo con permiso de cambio de área.",
     "Only @stargroup.com.mx emails are allowed.": "Solo se permiten correos electrónicos @stargroup.com.mx.",
-    "Default area": "Área predeterminada"
+    "Default area": "Área predeterminada",
+    "Action not allowed": "Acción no permitida",
+    "You cannot switch area because your user is inactive.": "No puedes cambiar de área porque tu usuario está inactivo."
 }
