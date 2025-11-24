@@ -7,8 +7,9 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::table('stages', function (Blueprint $table) {
-            $table->enum('area', ['OTT', 'DTH'])->default('OTT')->after('name');
+            $table->enum('area', ['OTT', 'DTH'])->nullable()->after('name');
         });
+        DB::table('stages')->whereNull('area')->update(['area' => 'OTT']);
     }
 
     public function down(): void

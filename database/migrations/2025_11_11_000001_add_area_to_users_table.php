@@ -12,8 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->enum('area', ['OTT', 'DTH'])->default('OTT')->after('profile_photo_path');
+            $table->enum('area', ['OTT', 'DTH'])->nullable()->after('profile_photo_path');
         });
+        DB::table('users')->whereNull('area')->update(['area' => 'OTT']);
     }
 
     /**

@@ -11,6 +11,7 @@ class Channel extends Model
     protected $fillable = [
         "image_url",
         "number",
+        "area",
         "origin",
         "name",
         "url",

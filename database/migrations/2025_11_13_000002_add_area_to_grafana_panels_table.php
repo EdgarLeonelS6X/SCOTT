@@ -8,8 +8,9 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::table('grafana_panels', function (Blueprint $table) {
-            $table->string('area')->default('OTT')->after('name');
+            $table->string('area')->nullable()->after('name');
         });
+        DB::table('grafana_panels')->whereNull('area')->update(['area' => 'OTT']);
     }
 
     public function down(): void
