@@ -1,146 +1,115 @@
 <div class="w-full mx-auto bg-white dark:bg-gray-800 shadow-xl rounded-lg p-4 sm:p-6">
     @php
-        $area = Auth::user()?->area;
-        $primaryBtn = $area === 'OTT' ? 'bg-primary-600 hover:bg-primary-700' : ($area === 'DTH' ? 'bg-secondary-600 hover:bg-secondary-700' : 'bg-primary-600 hover:bg-primary-700');
-        $primaryBtnText = 'text-white';
+$area = Auth::user()?->area;
+$primaryBtn = $area === 'OTT' ? 'bg-primary-600 hover:bg-primary-700' : ($area === 'DTH' ? 'bg-secondary-600 hover:bg-secondary-700' : 'bg-primary-600 hover:bg-primary-700');
+$primaryBtnText = 'text-white';
     @endphp
     <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-6 pb-6">
         <div class="flex flex-col sm:flex-row items-center sm:items-start gap-4 w-full sm:w-auto">
             <img class="h-16 w-16 sm:h-20 sm:w-20 rounded-full object-cover shadow-md"
                 src="{{ $user->profile_photo_url }}" alt="{{ $user->name }}" />
-            <div class="text-center sm:text-left space-y-1 w-full">
+                <div class="text-center sm:text-left space-y-3 sm:space-y-1 w-full">
                 @php
-                    $userArea = $user->area ?? null;
-                    $userAreaClasses = $userArea === 'DTH'
-                        ? 'bg-secondary-200 text-secondary-800 dark:bg-secondary-700 dark:text-secondary-100'
-                        : ($userArea === 'OTT' ? 'bg-primary-200 text-primary-800 dark:bg-primary-700 dark:text-primary-100' : 'bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-200');
+$userArea = $user->area ?? null;
+$userAreaClasses = $userArea === 'DTH'
+    ? 'bg-secondary-200 text-secondary-800 dark:bg-secondary-700 dark:text-secondary-100'
+    : ($userArea === 'OTT' ? 'bg-primary-200 text-primary-800 dark:bg-primary-700 dark:text-primary-100' : 'bg-gray-200 text-gray-800 dark:bg-gray-700 dark:text-gray-100');
+
+$smallBadgeBase = 'inline-flex items-center justify-center w-7 h-7 rounded-full focus:outline-none';
+
+$statusActiveClasses = 'bg-green-200 text-green-800 dark:bg-green-900 dark:text-green-100';
+$statusInactiveClasses = 'bg-red-200 text-red-800 dark:bg-red-700 dark:text-red-300';
+
+$emailVerifiedClasses = $statusActiveClasses;
+$emailNotVerifiedClasses = 'bg-yellow-200 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-100';
+
+$canSwitchTrueClasses = 'bg-blue-200 text-blue-800 dark:bg-blue-900 dark:text-blue-100';
+$canSwitchFalseClasses = 'bg-gray-200 text-gray-800 dark:bg-gray-700 dark:text-gray-100';
+                @endphp
+                @php
+$roleName = null;
+if (method_exists($user, 'getRoleNames')) {
+    $roleName = $user->getRoleNames()->first() ?? null;
+} elseif (isset($user->roles) && $user->roles->first()) {
+    $roleName = $user->roles->first()->name ?? null;
+}
+$role = $user->roles->first()?->name;
+if ($user->id === 1) {
+    $badge = [
+        'label' => 'Developer',
+        'icon' => 'fa-code',
+        'bg' => 'bg-red-200',
+        'text' => 'text-red-800',
+        'dark_bg' => 'dark:bg-red-800',
+        'dark_text' => 'dark:text-red-100',
+    ];
+} elseif ($role === 'master') {
+    $badge = [
+        'label' => 'Master',
+        'icon' => 'fa-crown',
+        'bg' => 'bg-yellow-200',
+        'text' => 'text-yellow-800',
+        'dark_bg' => 'dark:bg-yellow-900',
+        'dark_text' => 'dark:text-yellow-100',
+    ];
+} elseif ($role === 'admin') {
+    $badge = [
+        'label' => 'Admin',
+        'icon' => 'fa-gear',
+        'bg' => 'bg-blue-200',
+        'text' => 'text-blue-800',
+        'dark_bg' => 'dark:bg-blue-900',
+        'dark_text' => 'dark:text-blue-100',
+    ];
+} elseif ($role === 'user') {
+    $badge = [
+        'label' => 'User',
+        'icon' => 'fa-user',
+        'bg' => 'bg-gray-200',
+        'text' => 'text-gray-800',
+        'dark_bg' => 'dark:bg-gray-700',
+        'dark_text' => 'dark:text-gray-100',
+    ];
+} else {
+    $badge = null;
+}
                 @endphp
                 <h1
                     class="flex flex-col md:flex-row flex-wrap items-center text-lg font-bold text-gray-900 dark:text-white gap-4">
-                    <span>{{ $user->name }}</span>
-                </h1>
-                <div
-                    class="text-sm text-gray-600 dark:text-gray-300 flex flex-col sm:flex-row items-center sm:items-center gap-2">
                     <span class="flex items-center gap-2">
+                        <span>{{ $user->name }}</span>
+                    </span>
+                </h1>
+                <div class="text-sm text-gray-600 dark:text-gray-300 flex flex-col space-y-2 sm:space-y-1">
+                    <span class="flex items-center justify-center sm:justify-start gap-2 mb-0.5 pt-0.5">
                         <i class="fa-solid fa-envelope"></i>
                         <span class="break-words">{{ $user->email }}</span>
                     </span>
-                    @php
-                        $auth = auth()->user();
-                        $isSelfFirstAdmin = $auth->id === 1 && $user->id === 1 && $auth->hasRole('master');
-                    @endphp
-                    <div
-                        class="flex items-center gap-2 w-full sm:w-auto sm:flex-shrink-0 justify-center sm:justify-start mt-[1px]">
-                        <div class="relative" x-data="{ tip: false }">
-                            <button @if($isSelfFirstAdmin) disabled @else wire:click="toggleStatus" @endif
-                                @mouseenter="tip = true" @mouseleave="tip = false" type="button"
-                                aria-pressed="{{ $user->status ? 'true' : 'false' }}"
-                                class="inline-flex items-center justify-center w-7 h-7 rounded-full focus:outline-none
-                                {{ $user->status ? ($isSelfFirstAdmin ? 'bg-gray-300 text-gray-500 dark:bg-gray-700 dark:text-gray-400' : 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-100') : ($isSelfFirstAdmin ? 'bg-red-300 text-red-500 dark:bg-red-700 dark:text-red-400' : 'bg-red-200 text-red-600 dark:bg-red-700 dark:text-red-300') }}">
-                                <i class="fa-solid {{ $user->status ? 'fa-user' : 'fa-circle-xmark' }} text-xs"></i>
-                            </button>
-                            <div x-show="tip" x-cloak x-transition:enter="transition ease-out duration-150"
-                                x-transition:enter-start="opacity-0 scale-95"
-                                x-transition:enter-end="opacity-100 scale-100"
-                                x-transition:leave="transition ease-in duration-100"
-                                x-transition:leave-start="opacity-100 scale-100"
-                                x-transition:leave-end="opacity-0 scale-95"
-                                class="absolute z-50 left-1/2 transform -translate-x-1/2 mt-2 w-max px-2 py-1 rounded-md text-xs text-white bg-gray-800 dark:bg-gray-100 dark:text-gray-900">
-                                {{ $user->status ? __('Active') : __('Inactive') }}
-                            </div>
-                        </div>
-
-                        @if($user->hasVerifiedEmail())
-                            <div class="relative" x-data="{ tip: false }">
-                                <span @mouseenter="tip = true" @mouseleave="tip = false"
-                                    class="inline-flex items-center justify-center w-7 h-7 rounded-full bg-green-100 text-green-700 dark:bg-green-800 dark:text-green-100 focus:outline-none">
-                                    <i class="fa-solid fa-envelope text-xs" aria-hidden="true"></i>
-                                </span>
-                                <div x-show="tip" x-cloak x-transition:enter="transition ease-out duration-150"
-                                    x-transition:enter-start="opacity-0 scale-95"
-                                    x-transition:enter-end="opacity-100 scale-100"
-                                    x-transition:leave="transition ease-in duration-100"
-                                    x-transition:leave-start="opacity-100 scale-100"
-                                    x-transition:leave-end="opacity-0 scale-95"
-                                    class="absolute z-50 left-1/2 transform -translate-x-1/2 mt-2 w-max px-2 py-1 rounded-md text-xs text-white bg-gray-800 dark:bg-gray-100 dark:text-gray-900">
-                                    {{ __('Email verified') }}
-                                </div>
-                            </div>
-                        @else
-                            <div class="relative" x-data="{ tip: false }">
-                                <span @mouseenter="tip = true" @mouseleave="tip = false"
-                                    class="inline-flex items-center justify-center w-7 h-7 rounded-full bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-100 focus:outline-none">
-                                    <i class="fa-solid fa-circle-xmark text-xs" aria-hidden="true"></i>
-                                </span>
-                                <div x-show="tip" x-cloak x-transition:enter="transition ease-out duration-150"
-                                    x-transition:enter-start="opacity-0 scale-95"
-                                    x-transition:enter-end="opacity-100 scale-100"
-                                    x-transition:leave="transition ease-in duration-100"
-                                    x-transition:leave-start="opacity-100 scale-100"
-                                    x-transition:leave-end="opacity-0 scale-95"
-                                    class="absolute z-50 left-1/2 transform -translate-x-1/2 mt-2 w-max px-2 py-1 rounded-md text-xs text-white bg-gray-800 dark:bg-gray-100 dark:text-gray-900">
-                                    {{ __('Email not verified') }}
-                                </div>
-                            </div>
-                        @endif
-
-                        <div class="relative" x-data="{ tip: false }">
-                            @php $canSwitch = $user->can_switch_area ?? false; @endphp
-                            <span @mouseenter="tip = true" @mouseleave="tip = false"
-                                class="inline-flex items-center justify-center w-7 h-7 rounded-full {{ $canSwitch ? 'bg-blue-100 text-blue-700 dark:bg-blue-800 dark:text-blue-100' : 'bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-200' }} focus:outline-none">
-                                <i class="fa-solid {{ $canSwitch ? 'fa-repeat' : 'fa-lock' }} text-xs"
-                                    aria-hidden="true"></i>
-                            </span>
-                            <div x-show="tip" x-cloak x-transition:enter="transition ease-out duration-150"
-                                x-transition:enter-start="opacity-0 scale-95"
-                                x-transition:enter-end="opacity-100 scale-100"
-                                x-transition:leave="transition ease-in duration-100"
-                                x-transition:leave-start="opacity-100 scale-100"
-                                x-transition:leave-end="opacity-0 scale-95"
-                                class="absolute z-50 left-1/2 transform -translate-x-1/2 mt-2 w-max px-2 py-1 rounded-md text-xs text-white bg-gray-800 dark:bg-gray-100 dark:text-gray-900">
-                                {{ $canSwitch ? __('Can switch area') : __('Cannot switch area') }}
-                            </div>
-                        </div>
-
-                        @if($userArea)
-                            <div class="relative" x-data="{ tip: false }">
-                                <span @mouseenter="tip = true" @mouseleave="tip = false"
-                                    class="inline-flex items-center justify-center w-7 h-7 rounded-full {{ $userAreaClasses }}">
-                                    <i
-                                        class="fa-solid {{ $userArea === 'DTH' ? 'fa-satellite-dish' : 'fa-cube' }} text-xs"></i>
-                                </span>
-                                <div x-show="tip" x-cloak x-transition
-                                    class="absolute z-50 left-1/2 transform -translate-x-1/2 mt-2 w-max px-2 py-1 rounded-md text-xs text-white bg-gray-800 dark:bg-gray-100 dark:text-gray-900">
-                                    {{ $userArea }}
-                                </div>
-                            </div>
-                        @endif
-                    </div>
                 </div>
                 @php
-                    $auth = auth()->user();
-                    $isAuthMaster = $auth->hasRole('master');
-                    $isAuthAdmin = $auth->hasRole('admin');
-                    $isAuthUser = $auth->hasRole('user');
+$auth = auth()->user();
+$isAuthMaster = $auth->hasRole('master');
+$isAuthAdmin = $auth->hasRole('admin');
+$isAuthUser = $auth->hasRole('user');
 
-                    $isTargetMaster = $user->hasRole('master');
-                    $isTargetAdmin = $user->hasRole('admin');
-                    $isTargetUser = $user->hasRole('user');
+$isTargetMaster = $user->hasRole('master');
+$isTargetAdmin = $user->hasRole('admin');
+$isTargetUser = $user->hasRole('user');
 
-                    $isSelf = $auth->id === $user->id;
-                    $isFirstMaster = $user->id === 1;
+$isSelf = $auth->id === $user->id;
+$isFirstMaster = $user->id === 1;
 
-                    $canSave =
-                        ($isFirstMaster && $isSelf) ||
-                        (!$isFirstMaster &&
-                            ($isAuthMaster ||
-                                ($isAuthAdmin && $isTargetUser && !$isSelf) ||
-                                ($isAuthAdmin && $isSelf) ||
-                                ($isAuthUser && $isSelf)));
+$canSave =
+    ($isFirstMaster && $isSelf) ||
+    (!$isFirstMaster &&
+        ($isAuthMaster ||
+            ($isAuthAdmin && $isTargetUser && !$isSelf) ||
+            ($isAuthAdmin && $isSelf) ||
+            ($isAuthUser && $isSelf)));
                 @endphp
-                <div class="w-full flex justify-center sm:justify-start">
+                <div class="w-full flex justify-center sm:justify-start mt-5 sm:mt-3">
                     @php
-                        $prefBtnText = $area === 'OTT' ? 'text-primary-600 hover:text-primary-700' : ($area === 'DTH' ? 'text-secondary-600 hover:text-secondary-700' : 'text-primary-600 hover:text-primary-700');
+$prefBtnText = $area === 'OTT' ? 'text-primary-600 hover:text-primary-700' : ($area === 'DTH' ? 'text-secondary-600 hover:text-secondary-700' : 'text-primary-600 hover:text-primary-700');
                     @endphp
                     <div x-data="{ open: false, canSave: {{ $canSave ? 'true' : 'false' }} }"
                         @preferences-saved.window="open = false" class="relative">
@@ -148,7 +117,7 @@
                                 'opacity-50': !canSave,
                                 '{{ $area === 'OTT' ? 'hover:text-primary-700' : ($area === 'DTH' ? 'hover:text-secondary-700' : 'hover:text-primary-700') }}': canSave
                             }" :disabled="!canSave" type="button"
-                            class="flex items-center justify-center sm:justify-start text-xs transition font-medium {{ $area === 'OTT' ? 'text-primary-600' : ($area === 'DTH' ? 'text-secondary-600' : 'text-primary-600') }}">
+                            class="mt-1.5 flex items-center justify-center sm:justify-start text-xs transition font-medium {{ $area === 'OTT' ? 'text-primary-600' : ($area === 'DTH' ? 'text-secondary-600' : 'text-primary-600') }}">
                             <i class="fa-solid fa-reply-all mr-2"></i>
                             <span>{{ __('Report mail preferences') }}</span>
                             <i :class="open ? 'fa-chevron-up' : 'fa-chevron-down'"
@@ -158,18 +127,18 @@
                             class="mt-2 bg-white dark:bg-gray-700 shadow-lg rounded-lg p-4 space-y-4 border dark:border-gray-600 absolute z-10 w-full sm:w-72 left-0 sm:left-auto sm:right-0">
                             <form wire:submit.prevent="saveReportPreferences" class="space-y-3">
                                 @php
-                                    $reportMailsList = [
-                                        'report_created' => __('Report Created'),
-                                        'report_updated' => __('Report Updated'),
-                                        'report_resolved' => __('Report Resolved'),
-                                        'report_functions_created' => __('Report Functions Created'),
-                                        'report_general_created' => __('General Report Created'),
-                                    ];
+$reportMailsList = [
+    'report_created' => __('Report Created'),
+    'report_updated' => __('Report Updated'),
+    'report_resolved' => __('Report Resolved'),
+    'report_functions_created' => __('Report Functions Created'),
+    'report_general_created' => __('General Report Created'),
+];
                                 @endphp
                                 @foreach ($reportMailsList as $key => $label)
                                     <x-label class="flex items-center gap-3 text-sm text-gray-700 dark:text-gray-300">
                                         <x-checkbox type="checkbox" wire:model.defer="reportMails.{{ $key }}" />
-                                        <span>{{ $label }}</span>
+                                        <span class="truncate leading-tight">{{ $label }}</span>
                                     </x-label>
                                 @endforeach
                                 <div class="flex justify-end pt-2">
@@ -191,18 +160,140 @@
                 <i class="fa-solid fa-calendar-day"></i>
                 <span>{{ __('Joined on') }} {{ $user->created_at->format('d M Y') }}</span>
             </div>
-            <div class="mt-2 flex flex-col sm:flex-row gap-2 justify-center sm:justify-end items-center sm:items-end">
-                @php $auth = auth()->user(); @endphp
-                @if ($auth && $auth->id === 1 && $auth->id !== $user->id)
-                    @php
-                        $resetBtnBg = $area === 'OTT' ? 'bg-primary-50 hover:bg-primary-100 dark:bg-primary-900' : ($area === 'DTH' ? 'bg-secondary-50 hover:bg-secondary-100 dark:bg-secondary-900' : 'bg-primary-50 hover:bg-primary-100 dark:bg-primary-900');
-                        $resetBtnText = $area === 'OTT' ? 'text-primary-700 dark:text-primary-200' : ($area === 'DTH' ? 'text-secondary-700 dark:text-secondary-200' : 'text-primary-700 dark:text-primary-200');
-                    @endphp
-                    <button wire:click="sendResetPasswordEmail"
-                        class="inline-flex items-center mt-1 gap-2 px-3 py-1 text-xs font-medium rounded-full {{ $resetBtnBg }} {{ $resetBtnText }}">
-                        <i class="fa-solid fa-envelope-circle-check" aria-hidden="true"></i>
-                        <span>{{ __('Reset password') }}</span>
+
+            <div class="mt-7 flex flex-wrap gap-3 justify-center sm:justify-end">
+                @php $auth = auth()->user();
+$isSelfFirstAdmin = $auth->id === 1 && $user->id === 1 && $auth->hasRole('master'); @endphp
+                @php
+$resetBtnBg = $area === 'OTT' ? 'bg-gray-50 hover:bg-gray-100 dark:bg-gray-900' : ($area === 'DTH' ? 'bg-gray-50 hover:bg-gray-100 dark:bg-gray-900' : 'bg-gray-50 hover:bg-gray-100 dark:bg-gray-900');
+$resetBtnText = $area === 'OTT' ? 'text-gray-700 dark:text-gray-200' : ($area === 'DTH' ? 'text-gray-700 dark:text-gray-200' : 'text-gray-700 dark:text-gray-200');
+                @endphp
+                @if($badge)
+                    <div class="relative" x-data="{ tip: false }">
+                        <span @mouseenter="tip = true" @mouseleave="tip = false"
+                            class="{{ $smallBadgeBase }} {{ $badge['bg'] }} {{ $badge['text'] }} {{ $badge['dark_bg'] }} {{ $badge['dark_text'] }}">
+                            <i class="fa-solid {{ $badge['icon'] }} text-xs" aria-hidden="true"></i>
+                        </span>
+                        <div x-show="tip" x-cloak x-transition:enter="transition ease-out duration-150"
+                            x-transition:enter-start="opacity-0 scale-95"
+                            x-transition:enter-end="opacity-100 scale-100"
+                            x-transition:leave="transition ease-in duration-100"
+                            x-transition:leave-start="opacity-100 scale-100"
+                            x-transition:leave-end="opacity-0 scale-95"
+                            class="absolute z-50 left-1/2 transform -translate-x-1/2 mt-2 w-max px-2 py-1 rounded-md text-xs text-white bg-gray-800 dark:bg-gray-100 dark:text-gray-900">
+                            {{ $badge['label'] }}
+                            @if (in_array($user->id, [2, 5, 7, 8]))
+                                ({{ __('Engineering') }})
+                            @endif
+                        </div>
+                    </div>
+                @endif
+                <div class="relative" x-data="{ tip: false }">
+                    <button @if($isSelfFirstAdmin) disabled @else wire:click="toggleStatus" @endif
+                        @mouseenter="tip = true" @mouseleave="tip = false" type="button"
+                        aria-pressed="{{ $user->status ? 'true' : 'false' }}"
+                        class="{{ $smallBadgeBase }} {{ $user->status ? $statusActiveClasses : $statusInactiveClasses }}">
+                        <i class="fa-solid {{ $user->status ? 'fa-user' : 'fa-circle-xmark' }} text-xs"></i>
                     </button>
+                    <div x-show="tip" x-cloak x-transition:enter="transition ease-out duration-150"
+                        x-transition:enter-start="opacity-0 scale-95"
+                        x-transition:enter-end="opacity-100 scale-100"
+                        x-transition:leave="transition ease-in duration-100"
+                        x-transition:leave-start="opacity-100 scale-100"
+                        x-transition:leave-end="opacity-0 scale-95"
+                        class="absolute z-50 left-1/2 transform -translate-x-1/2 mt-2 w-max px-2 py-1 rounded-md text-xs text-white bg-gray-800 dark:bg-gray-100 dark:text-gray-900">
+                        {{ $user->status ? __('Active') : __('Inactive') }}
+                    </div>
+                </div>
+                @if($user->hasVerifiedEmail())
+                    <div class="relative" x-data="{ tip: false }">
+                        <span @mouseenter="tip = true" @mouseleave="tip = false"
+                            class="{{ $smallBadgeBase }} {{ $emailVerifiedClasses }}">
+                            <i class="fa-solid fa-envelope text-xs" aria-hidden="true"></i>
+                        </span>
+                        <div x-show="tip" x-cloak x-transition:enter="transition ease-out duration-150"
+                            x-transition:enter-start="opacity-0 scale-95"
+                            x-transition:enter-end="opacity-100 scale-100"
+                            x-transition:leave="transition ease-in duration-100"
+                            x-transition:leave-start="opacity-100 scale-100"
+                            x-transition:leave-end="opacity-0 scale-95"
+                            class="absolute z-50 left-1/2 transform -translate-x-1/2 mt-2 w-max px-2 py-1 rounded-md text-xs text-white bg-gray-800 dark:bg-gray-100 dark:text-gray-900">
+                            {{ __('Email verified') }}
+                        </div>
+                    </div>
+                @else
+                    <div class="relative" x-data="{ tip: false }">
+                        <span @mouseenter="tip = true" @mouseleave="tip = false"
+                            class="{{ $smallBadgeBase }} {{ $emailNotVerifiedClasses }}">
+                            <i class="fa-solid fa-circle-xmark text-xs" aria-hidden="true"></i>
+                        </span>
+                        <div x-show="tip" x-cloak x-transition:enter="transition ease-out duration-150"
+                            x-transition:enter-start="opacity-0 scale-95"
+                            x-transition:enter-end="opacity-100 scale-100"
+                            x-transition:leave="transition ease-in duration-100"
+                            x-transition:leave-start="opacity-100 scale-100"
+                            x-transition:leave-end="opacity-0 scale-95"
+                            class="absolute z-50 left-1/2 transform -translate-x-1/2 mt-2 w-max px-2 py-1 rounded-md text-xs text-white bg-gray-800 dark:bg-gray-100 dark:text-gray-900">
+                            {{ __('Email not verified') }}
+                        </div>
+                    </div>
+                @endif
+                @if ($auth && $auth->id === 1 && $auth->id !== $user->id)
+                    <div class="relative" x-data="{ tip: false }">
+                        <button @mouseenter="tip = true" @mouseleave="tip = false" wire:click="sendResetPasswordEmail" type="button"
+                                class="{{ $smallBadgeBase }} {{ $canSwitchFalseClasses }}">
+                            <i class="fa-solid fa-key text-xs" aria-hidden="true"></i>
+                        </button>
+                        <div x-show="tip" x-cloak x-transition:enter="transition ease-out duration-150"
+                            x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100"
+                            x-transition:leave="transition ease-in duration-100" x-transition:leave-start="opacity-100 scale-100"
+                            x-transition:leave-end="opacity-0 scale-95"
+                            class="absolute z-50 left-1/2 transform -translate-x-1/2 mt-2 w-max px-2 py-1 rounded-md text-xs text-white bg-gray-800 dark:bg-gray-100 dark:text-gray-900">
+                            {{ __('Reset password') }}
+                        </div>
+                    </div>
+                @endif
+                <div class="relative" x-data="{ tip: false }">
+                    @php $canSwitch = $user->can_switch_area ?? false; @endphp
+                    <span @mouseenter="tip = true" @mouseleave="tip = false"
+                        class="{{ $smallBadgeBase }} {{ $canSwitch ? $canSwitchTrueClasses : $canSwitchFalseClasses }}">
+                        <i class="fa-solid {{ $canSwitch ? 'fa-repeat' : 'fa-lock' }} text-xs" aria-hidden="true"></i>
+                    </span>
+                    <div x-show="tip" x-cloak x-transition:enter="transition ease-out duration-150"
+                        x-transition:enter-start="opacity-0 scale-95"
+                        x-tranFsition:enter-end="opacity-100 scale-100"
+                        x-transition:leave="transition ease-in duration-100"
+                        x-transition:leave-start="opacity-100 scale-100"
+                        x-transition:leave-end="opacity-0 scale-95"
+                        class="absolute z-50 left-1/2 transform -translate-x-1/2 mt-2 w-max px-2 py-1 rounded-md text-xs text-white bg-gray-800 dark:bg-gray-100 dark:text-gray-900">
+                        {{ $canSwitch ? __('Can switch area') : __('Cannot switch area') }}
+                    </div>
+                </div>
+                @if($userArea)
+                    <div class="relative" x-data="{ tip: false }">
+                        @php
+    $isDefaultArea = isset($user->default_area) && $user->default_area === $userArea;
+    $defaultDotClasses = $userArea === 'DTH'
+        ? 'bg-secondary-600 dark:bg-secondary-300'
+        : 'bg-primary-600 dark:bg-primary-300';
+                        @endphp
+                        <span @mouseenter="tip = true" @mouseleave="tip = false"
+                            class="{{ $smallBadgeBase }} {{ $userAreaClasses }}">
+                            <i class="fa-solid {{ $userArea === 'DTH' ? 'fa-satellite-dish' : 'fa-cube' }} text-xs"></i>
+                        </span>
+                        @if($isDefaultArea)
+                            <span class="absolute top-0 right-0 transform translate-x-1/2 -translate-y-1/2 w-2 h-2 rounded-full {{ $defaultDotClasses }} ring-1 ring-white dark:ring-gray-800" aria-hidden="true"></span>
+                        @endif
+                        <div x-show="tip" x-cloak x-transition:enter="transition ease-out duration-150"
+                            x-transition:enter-start="opacity-0 scale-95"
+                            x-transition:enter-end="opacity-100 scale-100"
+                            x-transition:leave="transition ease-in duration-100"
+                            x-transition:leave-start="opacity-100 scale-100"
+                            x-transition:leave-end="opacity-0 scale-95"
+                            class="absolute z-50 left-1/2 transform -translate-x-1/2 mt-2 w-max px-2 py-1 rounded-md text-xs text-white bg-gray-800 dark:bg-gray-100 dark:text-gray-900">
+                            {{ $userArea }}
+                        </div>
+                    </div>
                 @endif
             </div>
         </div>
@@ -228,14 +319,14 @@
         </h2>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
             @php
-                $grouped = collect($allPermissions)->groupBy(fn($perm) => explode('.', $perm->name)[0]);
-                $icons = [
-                    'channels' => 'fa-tv',
-                    'stages' => 'fa-bars-staggered',
-                    'grafana' => 'fa-chart-pie',
-                    'roles' => 'fa-shield-halved',
-                    'permissions' => 'fa-key',
-                ];
+$grouped = collect($allPermissions)->groupBy(fn($perm) => explode('.', $perm->name)[0]);
+$icons = [
+    'channels' => 'fa-tv',
+    'stages' => 'fa-bars-staggered',
+    'grafana' => 'fa-chart-pie',
+    'roles' => 'fa-shield-halved',
+    'permissions' => 'fa-key',
+];
             @endphp
             @foreach ($grouped as $group => $perms)
                 @if (!in_array($group, ['roles', 'permissions']))
@@ -246,15 +337,15 @@
                         </h3>
                         <div class="space-y-2">
                             @php
-                                $sortedPerms = collect($perms)->sortBy(function ($p) use ($group) {
-                                    $parts = explode('.', $p->name, 2);
-                                    $action = $parts[1] ?? '';
-                                    return $action === 'view' ? 0 : 1;
-                                })->values();
+        $sortedPerms = collect($perms)->sortBy(function ($p) use ($group) {
+            $parts = explode('.', $p->name, 2);
+            $action = $parts[1] ?? '';
+            return $action === 'view' ? 0 : 1;
+        })->values();
                             @endphp
                             @foreach ($sortedPerms as $permission)
                                 @php
-                                    $primaryCheckbox = $area === 'OTT' ? 'text-primary-600 focus:ring-primary-500' : ($area === 'DTH' ? 'text-secondary-600 focus:ring-secondary-500' : 'text-primary-600 focus:ring-primary-500');
+            $primaryCheckbox = $area === 'OTT' ? 'text-primary-600 focus:ring-primary-500' : ($area === 'DTH' ? 'text-secondary-600 focus:ring-secondary-500' : 'text-primary-600 focus:ring-primary-500');
                                 @endphp
                                 <label class="flex items-center gap-2 {{ !$canEditPermissions ? 'opacity-50' : '' }}">
                                     <input type="checkbox" value="{{ $permission->name }}" wire:model="permissions"
@@ -279,7 +370,7 @@
                         @if(isset($grouped['roles']))
                             @foreach ($grouped['roles'] as $permission)
                                 @php
-                                    $primaryCheckbox = $area === 'OTT' ? 'text-primary-600 focus:ring-primary-500' : ($area === 'DTH' ? 'text-secondary-600 focus:ring-secondary-500' : 'text-primary-600 focus:ring-primary-500');
+            $primaryCheckbox = $area === 'OTT' ? 'text-primary-600 focus:ring-primary-500' : ($area === 'DTH' ? 'text-secondary-600 focus:ring-secondary-500' : 'text-primary-600 focus:ring-primary-500');
                                 @endphp
                                 <label class="flex items-center gap-2 {{ !$canEditPermissions ? 'opacity-50' : '' }}">
                                     <input type="checkbox" value="{{ $permission->name }}" wire:model="permissions"
@@ -294,7 +385,7 @@
                         @if(isset($grouped['permissions']))
                             @foreach ($grouped['permissions'] as $permission)
                                 @php
-                                    $primaryCheckbox = $area === 'OTT' ? 'text-primary-600 focus:ring-primary-500' : ($area === 'DTH' ? 'text-secondary-600 focus:ring-secondary-500' : 'text-primary-600 focus:ring-primary-500');
+            $primaryCheckbox = $area === 'OTT' ? 'text-primary-600 focus:ring-primary-500' : ($area === 'DTH' ? 'text-secondary-600 focus:ring-secondary-500' : 'text-primary-600 focus:ring-primary-500');
                                 @endphp
                                 <label class="flex items-center gap-2 {{ !$canEditPermissions ? 'opacity-50' : '' }}">
                                     <input type="checkbox" value="{{ $permission->name }}" wire:model="permissions"
