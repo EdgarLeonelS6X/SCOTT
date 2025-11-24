@@ -8,7 +8,7 @@ return new class extends Migration {
         Schema::table('channels', function (Blueprint $table) {
             $table->string('area')->nullable()->after('profiles');
         });
-        DB::table('channels')->whereNull('area')->update(['area' => 'OTT']);
+        DB::table('channels')->whereNull('area')->update(['area' => 'DTH/OTT']);
     }
 
     public function down() {
