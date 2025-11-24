@@ -20,6 +20,7 @@ class EditChannel extends Component
     public $status;
     public $image_url;
     public $new_image;
+    public $area;
     public $profiles = [];
 
     public function boot()
@@ -53,6 +54,7 @@ class EditChannel extends Component
         $this->category = $channel->category;
         $this->status = $channel->status;
         $this->image_url = $channel->image_url;
+        $this->area = $channel->area;
         $this->profiles = $channel->profiles ?? [];
     }
 
@@ -62,6 +64,7 @@ class EditChannel extends Component
             'number' => 'required|integer',
             'origin' => 'nullable|string',
             'name' => 'required|string',
+            'area' => 'required|string|in:OTT,DTH,DTH/OTT',
             'url' => 'nullable',
             'category' => 'required|string',
             'status' => 'required|numeric',
@@ -90,6 +93,7 @@ class EditChannel extends Component
         }
 
         $this->channel->update([
+            'area' => $this->area,
             'number' => $this->number,
             'origin' => $this->origin,
             'name' => $this->name,

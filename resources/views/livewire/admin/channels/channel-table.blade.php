@@ -92,10 +92,14 @@
                             <i class="ml-1 fa-solid fa-sort"></i>
                         </span>
                     </th>
+                    <th scope="col" class="px-4 py-3 min-w-[120px]">
+                        <i class="fa-solid fa-layer-group mr-1"></i>
+                        {{ __('Area') }}
+                    </th>
+                    </th>
                     <th scope="col" class="px-4 py-3 min-w-[100px]">
                         <i class="fa-solid fa-toggle-on mr-1"></i>
                         {{ __('Status') }}
-                    </th>
                     <th scope="col" class="px-4 py-3">
                         <span class="sr-only">
                             <i class="fa-solid fa-sliders-h mr-1"></i>
@@ -144,6 +148,37 @@
                                 @endswitch
                                 {{ __($channel->category) }}
                             </span>
+                        </td>
+                        <td class="px-4 py-2.5">
+                            @if($channel->area === 'DTH/OTT')
+                                <span
+                                    class="inline-flex items-center px-2 py-1 text-xs font-medium text-secondary-800 bg-secondary-200 dark:bg-secondary-800 dark:text-secondary-200 rounded-full mr-2">
+                                    <i class="fa-solid fa-satellite-dish mr-1.5"></i>
+                                    {{ __('DTH') }}
+                                </span>
+                                <span
+                                    class="inline-flex items-center px-2 py-1 text-xs font-medium text-primary-800 bg-primary-200 dark:bg-primary-800 dark:text-primary-200 rounded-full">
+                                    <i class="fa-solid fa-cube mr-1.5"></i>
+                                    {{ __('OTT') }}
+                                </span>
+                            @else
+                                <span
+                                    class="inline-flex items-center px-2 py-1 text-xs font-medium rounded-full
+                                        {{ $channel->area === 'DTH'
+                                            ? 'text-secondary-800 bg-secondary-200 dark:bg-secondary-800 dark:text-secondary-200'
+                                            : ($channel->area === 'OTT'
+                                                ? 'text-primary-800 bg-primary-200 dark:bg-primary-800 dark:text-primary-200'
+                                                : 'text-gray-800 bg-gray-200 dark:bg-gray-800 dark:text-gray-200') }}">
+                                    @if($channel->area === 'DTH')
+                                        <i class="fa-solid fa-satellite-dish mr-1.5"></i>
+                                    @elseif($channel->area === 'OTT')
+                                        <i class="fa-solid fa-cube mr-1.5"></i>
+                                    @else
+                                        <i class="fa-solid fa-layer-group mr-1.5"></i>
+                                    @endif
+                                    {{ $channel->area ?? __('N/A') }}
+                                </span>
+                            @endif
                         </td>
                         <td class="px-4 py-2.5">
                             @if ($channel->status === 1)

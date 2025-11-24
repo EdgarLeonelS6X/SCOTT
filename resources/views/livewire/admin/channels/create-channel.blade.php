@@ -86,7 +86,23 @@ use App\Enums\ChannelOrigin;
                         required autocomplete="url" placeholder="{{ __('Channel URL') }}" />
                 </div>
             </div>
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+                <div>
+                    <x-label for="area">
+                        <i class="fa-solid fa-layer-group mr-1"></i>
+                        {{ __('Area') }}
+                    </x-label>
+                    <select id="area" wire:model="area" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white
+                                                {{ Auth::user()?->area === 'DTH'
+    ? 'focus:ring-secondary-600 focus:border-secondary-600 dark:focus:ring-secondary-500 dark:focus:border-secondary-500'
+    : 'focus:ring-primary-600 focus:border-primary-600 dark:focus:ring-primary-500 dark:focus:border-primary-500' }}"
+                        required>
+                        <option value="" disabled>{{ __('Select area') }}</option>
+                        <option value="DTH">{{ __('DTH') }}</option>
+                        <option value="OTT">{{ __('OTT') }}</option>
+                        <option value="DTH/OTT">{{ __('DTH/OTT') }}</option>
+                    </select>
+                </div>
                 <div>
                     <x-label for="category">
                         <i class="fa-solid fa-list mr-1"></i>

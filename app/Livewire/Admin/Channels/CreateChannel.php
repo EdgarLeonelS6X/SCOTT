@@ -12,6 +12,7 @@ class CreateChannel extends Component
 
     public $image_url;
     public $number;
+    public $area = '';
     public $origin = '';
     public $name;
     public $url;
@@ -45,6 +46,7 @@ class CreateChannel extends Component
         $this->validate([
             'image_url' => 'required|unique:channels,image_url',
             'number' => 'required|integer',
+            'area' => 'required|string|in:OTT,DTH,DTH/OTT',
             'origin' => 'nullable|string',
             'name' => 'required|string',
             'url' => 'nullable',
@@ -57,6 +59,7 @@ class CreateChannel extends Component
         ], [], [
             'image_url' => __('channel image'),
             'number' => __('channel number'),
+            'area' => __('channel area'),
             'origin' => __('channel origin'),
             'name' => __('channel name'),
             'url' => __('channel URL'),
@@ -71,6 +74,7 @@ class CreateChannel extends Component
         $channel = Channel::create([
             'image_url' => 'channels/' . $imageName,
             'number' => $this->number,
+            'area' => $this->area,
             'origin' => $this->origin,
             'name' => $this->name,
             'url' => $this->url,
