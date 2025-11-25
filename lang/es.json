@@ -715,5 +715,6 @@
     "Default area": "Área predeterminada",
     "Action not allowed": "Acción no permitida",
     "You cannot switch area because your user is inactive.": "No puedes cambiar de área porque tu usuario está inactivo.",
-    "Cannot switch area": "No puede cambiar de área"
+    "Cannot switch area": "No puede cambiar de área",
+    "Image preview": "Vista previa de la imagen"
 }

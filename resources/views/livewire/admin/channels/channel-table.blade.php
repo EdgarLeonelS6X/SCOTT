@@ -80,7 +80,7 @@
                             <i class="ml-1 fa-solid fa-sort"></i>
                         </span>
                     </th>
-                    <th class="py-3 px-4 text-left cursor-pointer min-w-[250px] max-w-[250px]"
+                    <th class="py-3 px-4 text-left cursor-pointer min-w-[150px] max-w-[150px]"
                         wire:click="toggleCategoryFilter">
                         <i class="fa-solid fa-list mr-1"></i>
                         <span class="text-gray-500 dark:text-white">
@@ -92,12 +92,12 @@
                             <i class="ml-1 fa-solid fa-sort"></i>
                         </span>
                     </th>
-                    <th scope="col" class="px-4 py-3 min-w-[120px]">
-                        <i class="fa-solid fa-layer-group mr-1"></i>
+                    <th scope="col" class="px-4 py-3 min-w-[150px]">
+                        <i class="fa-solid fa-building mr-1"></i>
                         {{ __('Area') }}
                     </th>
                     </th>
-                    <th scope="col" class="px-4 py-3 min-w-[100px]">
+                    <th scope="col" class="px-4 py-3 min-w-[80px]">
                         <i class="fa-solid fa-toggle-on mr-1"></i>
                         {{ __('Status') }}
                     <th scope="col" class="px-4 py-3">

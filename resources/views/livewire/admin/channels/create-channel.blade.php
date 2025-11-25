@@ -89,11 +89,10 @@ use App\Enums\ChannelOrigin;
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
                 <div>
                     <x-label for="area">
-                        <i class="fa-solid fa-layer-group mr-1"></i>
+                        <i class="fa-solid fa-building mr-1"></i>
                         {{ __('Area') }}
                     </x-label>
-                    <select id="area" wire:model="area" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white
-                                                {{ Auth::user()?->area === 'DTH'
+                    <select id="area" wire:model="area" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white {{ Auth::user()?->area === 'DTH'
     ? 'focus:ring-secondary-600 focus:border-secondary-600 dark:focus:ring-secondary-500 dark:focus:border-secondary-500'
     : 'focus:ring-primary-600 focus:border-primary-600 dark:focus:ring-primary-500 dark:focus:border-primary-500' }}"
                         required>
@@ -141,19 +140,22 @@ use App\Enums\ChannelOrigin;
                     <i class="fa-solid fa-sliders mr-1"></i>
                     {{ __('Profiles (Mbps)') }}
                 </x-label>
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-2">
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 mt-2">
                     <div>
-                        <x-label for="profile_high" class="text-sm">{{ __('High') }}</x-label>
+                        <x-label for="profile_high" class="text-sm"><i
+                                class="fa-solid fa-arrow-up mr-1"></i>{{ __('High') }}</x-label>
                         <x-input id="profile_high" type="number" step="0.1" min="0" wire:model="profiles.high"
                             placeholder="{{ __('ex. 6') }}" />
                     </div>
                     <div>
-                        <x-label for="profile_medium" class="text-sm">{{ __('Medium') }}</x-label>
+                        <x-label for="profile_medium" class="text-sm"><i
+                                class="fa-solid fa-arrows-left-right mr-1"></i>{{ __('Medium') }}</x-label>
                         <x-input id="profile_medium" type="number" step="0.1" min="0" wire:model="profiles.medium"
                             placeholder="{{ __('ex. 3') }}" />
                     </div>
                     <div>
-                        <x-label for="profile_low" class="text-sm">{{ __('Low') }}</x-label>
+                        <x-label for="profile_low" class="text-sm"><i
+                                class="fa-solid fa-arrow-down mr-1"></i>{{ __('Low') }}</x-label>
                         <x-input id="profile_low" type="number" step="0.1" min="0" wire:model="profiles.low"
                             placeholder="{{ __('ex. 1.5') }}" />
                     </div>
