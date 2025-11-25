@@ -47,24 +47,33 @@
                         {{ $panel->name }}
                     </span>
                     @php
-                        $areaClasses = $panel->area === 'DTH'
-                            ? 'bg-secondary-200 text-secondary-800 dark:bg-secondary-700 dark:text-secondary-100'
-                            : 'bg-primary-200 text-primary-800 dark:bg-primary-700 dark:text-primary-100';
+                        $dthClasses = 'inline-flex items-center px-3 py-1 text-sm font-semibold rounded-full ' .
+                            'bg-secondary-200 text-secondary-800 dark:bg-secondary-700 dark:text-secondary-100 shadow transition duration-150';
+                        $ottClasses = 'inline-flex items-center px-3 py-1 text-sm font-semibold rounded-full ' .
+                            'bg-primary-200 text-primary-800 dark:bg-primary-700 dark:text-primary-100 shadow transition duration-150';
                     @endphp
-                    @if ($panel->area === 'OTT')
-                        <span
-                            class="inline-flex items-center px-3 py-1 text-sm font-semibold rounded-full {{ $areaClasses }} shadow transition duration-150"
-                            role="status" aria-label="Área OTT" title="Área OTT">
-                            <i class="fa-solid fa-cube mr-2"></i> OTT
-                        </span>
-                    @elseif ($panel->area === 'DTH')
-                        <span
-                            class="inline-flex items-center px-3 py-1 text-sm font-semibold rounded-full {{ $areaClasses }} shadow transition duration-150"
-                            role="status" aria-label="Área DTH" title="Área DTH">
-                            <i class="fa-solid fa-satellite-dish mr-2"></i> DTH
-                        </span>
+
+                    @if (in_array($panel->id, [1, 3]))
+                        <div class="flex items-center gap-3">
+                            <span class="{{ $dthClasses }}" role="status" aria-label="Área DTH" title="Área DTH">
+                                <i class="fa-solid fa-satellite-dish mr-2"></i> DTH
+                            </span>
+                            <span class="{{ $ottClasses }}" role="status" aria-label="Área OTT" title="Área OTT">
+                                <i class="fa-solid fa-cube mr-2"></i> OTT
+                            </span>
+                        </div>
                     @else
-                        <span class="text-sm text-gray-400 italic">{{ __('N/A') }}</span>
+                        @if ($panel->area === 'OTT')
+                            <span class="{{ $ottClasses }}" role="status" aria-label="Área OTT" title="Área OTT">
+                                <i class="fa-solid fa-cube mr-2"></i> OTT
+                            </span>
+                        @elseif ($panel->area === 'DTH')
+                            <span class="{{ $dthClasses }}" role="status" aria-label="Área DTH" title="Área DTH">
+                                <i class="fa-solid fa-satellite-dish mr-2"></i> DTH
+                            </span>
+                        @else
+                            <span class="text-sm text-gray-400 italic">{{ __('N/A') }}</span>
+                        @endif
                     @endif
                 </div>
             </div>

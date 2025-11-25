@@ -16,7 +16,16 @@ class UserController extends Controller
 {
     public function index()
     {
-        $users = User::orderBy('status', 'desc')->get();
+        $user = auth()->user();
+
+        $query = User::query();
+
+        if ($user && in_array($user->area, ['OTT', 'DTH'])) {
+            $query->where('area', $user->area);
+        }
+
+        $users = $query->orderBy('status', 'desc')->get();
+
         return view('admin.users.index', compact('users'));
     }
 

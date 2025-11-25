@@ -50,15 +50,20 @@
                         <i class="fa-solid fa-building mr-1"></i>
                         {{ __('Area') }}
                     </x-label>
-                    <select id="area" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white
-                            {{ Auth::user()?->area === 'DTH'
-    ? 'focus:ring-secondary-600 focus:border-secondary-600 dark:focus:ring-secondary-500 dark:focus:border-secondary-500'
-    : 'focus:ring-primary-600 focus:border-primary-600 dark:focus:ring-primary-500 dark:focus:border-primary-500' }}"
-                        name="area" required>
-                        <option disabled>{{ __('Select area') }}</option>
-                        <option value="OTT" @selected(old('area', $panel->area) == 'OTT')>{{ __('OTT') }}</option>
-                        <option value="DTH" @selected(old('area', $panel->area) == 'DTH')>{{ __('DTH') }}</option>
-                    </select>
+                    @if(isset($isShared) && $isShared)
+                        <input type="text" disabled
+                            class="bg-gray-100 border border-gray-300 text-gray-900 rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white cursor-not-allowed"
+                            value="{{ __('Shared in DTH and OTT') }}">
+                    @else
+                        <select id="area" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white {{ Auth::user()?->area === 'DTH'
+                        ? 'focus:ring-secondary-600 focus:border-secondary-600 dark:focus:ring-secondary-500 dark:focus:border-secondary-500'
+                        : 'focus:ring-primary-600 focus:border-primary-600 dark:focus:ring-primary-500 dark:focus:border-primary-500' }}"
+                            name="area" required>
+                            <option disabled>{{ __('Select area') }}</option>
+                            <option value="OTT" @selected(old('area', $panel->area) == 'OTT')>{{ __('OTT') }}</option>
+                            <option value="DTH" @selected(old('area', $panel->area) == 'DTH')>{{ __('DTH') }}</option>
+                        </select>
+                    @endif
                 </div>
                 <div class="mt-6">
                     <x-label for="url">

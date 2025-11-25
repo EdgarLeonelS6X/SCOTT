@@ -17,8 +17,14 @@ class StageController extends Controller
     public function index()
     {
         $this->authorize('viewAny', Stage::class);
+        $query = Stage::query();
 
-        $stages = Stage::orderBy('status', 'desc')->get();
+        $auth = auth()->user();
+        if ($auth && isset($auth->area) && in_array($auth->area, ['OTT', 'DTH'])) {
+            $query->where('area', $auth->area);
+        }
+
+        $stages = $query->orderBy('status', 'desc')->get();
 
         return view("admin.stages.index", compact("stages"));
     }

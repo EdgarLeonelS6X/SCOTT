@@ -13,20 +13,18 @@
     @if ($panels->count())
         @can('create', App\Models\GrafanaPanel::class)
             <x-slot name="action">
-                <a href="{{ route('admin.grafana.create') }}"
-                    class="hidden sm:block text-white {{ Auth::user()?->area === 'DTH'
+                <a href="{{ route('admin.grafana.create') }}" class="hidden sm:block text-white {{ Auth::user()?->area === 'DTH'
                     ? 'bg-secondary-700 hover:bg-secondary-800 focus:ring-4 focus:ring-secondary-300 dark:bg-secondary-600 dark:hover:bg-secondary-700 dark:focus:ring-secondary-800'
                     : 'bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800' }}
-                    font-medium rounded-lg text-sm px-5 py-2 focus:outline-none shadow-xl">
+                                            font-medium rounded-lg text-sm px-5 py-2 focus:outline-none shadow-xl">
                     <i class="fa-solid fa-plus mr-1"></i>
                     {{ __('Register new panel') }}
                 </a>
             </x-slot>
-            <a href="{{ route('admin.grafana.create') }}"
-                class="mb-4 sm:hidden block text-center text-white {{ Auth::user()?->area === 'DTH'
+            <a href="{{ route('admin.grafana.create') }}" class="mb-4 sm:hidden block text-center text-white {{ Auth::user()?->area === 'DTH'
                     ? 'bg-secondary-700 hover:bg-secondary-800 focus:ring-4 focus:ring-secondary-300 dark:bg-secondary-600 dark:hover:bg-secondary-700 dark:focus:ring-secondary-800'
                     : 'bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800' }}
-                    font-medium rounded-lg text-sm px-5 py-2 focus:outline-none shadow-xl">
+                                            font-medium rounded-lg text-sm px-5 py-2 focus:outline-none shadow-xl">
                 <i class="fa-solid fa-plus mr-1"></i>
                 {{ __('Register new panel') }}
             </a>
@@ -118,24 +116,35 @@
                                         @endif
                                     </span>
                                 </td>
-                                <td class="px-4 py-4 min-w-[80px] max-w-[120px] pl-4">
+                                <td class="px-4 py-4 min-w-[120px] max-w-[120px] pl-4">
                                     @php
-                                        $areaClasses = $panel->area === 'DTH'
-                                            ? 'bg-secondary-200 text-secondary-800 dark:bg-secondary-700 dark:text-secondary-100'
-                                            : 'bg-primary-200 text-primary-800 dark:bg-primary-700 dark:text-primary-100';
-                                       @endphp
-                                    @if ($panel->area === 'OTT')
-                                        <span
-                                            class="inline-flex items-center px-2 py-1 text-xs font-medium rounded-full {{ $areaClasses }}">
-                                            <i class="fa-solid fa-cube mr-1"></i> OTT
-                                        </span>
-                                    @elseif ($panel->area === 'DTH')
-                                        <span
-                                            class="inline-flex items-center px-2 py-1 text-xs font-medium rounded-full {{ $areaClasses }}">
-                                            <i class="fa-solid fa-satellite-dish mr-1"></i> DTH
-                                        </span>
+                                        $dthClasses = 'inline-flex items-center px-2 py-1 text-xs font-medium rounded-full ' .
+                                            'bg-secondary-200 text-secondary-800 dark:bg-secondary-700 dark:text-secondary-100';
+                                        $ottClasses = 'inline-flex items-center px-2 py-1 text-xs font-medium rounded-full ' .
+                                            'bg-primary-200 text-primary-800 dark:bg-primary-700 dark:text-primary-100';
+                                    @endphp
+
+                                    @if (in_array($panel->id, [1, 3]))
+                                        <div class="flex items-center gap-2">
+                                            <span class="{{ $dthClasses }}">
+                                                <i class="fa-solid fa-satellite-dish mr-1"></i> DTH
+                                            </span>
+                                            <span class="{{ $ottClasses }}">
+                                                <i class="fa-solid fa-cube mr-1"></i> OTT
+                                            </span>
+                                        </div>
                                     @else
-                                        <span class="text-xs text-gray-400 italic">{{ __('N/A') }}</span>
+                                        @if ($panel->area === 'OTT')
+                                            <span class="{{ $ottClasses }}">
+                                                <i class="fa-solid fa-cube mr-1"></i> OTT
+                                            </span>
+                                        @elseif ($panel->area === 'DTH')
+                                            <span class="{{ $dthClasses }}">
+                                                <i class="fa-solid fa-satellite-dish mr-1"></i> DTH
+                                            </span>
+                                        @else
+                                            <span class="text-xs text-gray-400 italic">{{ __('N/A') }}</span>
+                                        @endif
                                     @endif
                                 </td>
                                 <td class="px-4 py-4 flex items-center justify-center align-middle">
@@ -165,10 +174,11 @@
                 </div>
             </div>
             <div class="flex justify-center sm:justify-end">
-                <a href="{{ route('admin.grafana.create') }}" class="text-white {{ Auth::user()?->area === 'DTH'
+                <a href="{{ route('admin.grafana.create') }}"
+                    class="text-white {{ Auth::user()?->area === 'DTH'
             ? 'bg-secondary-700 hover:bg-secondary-800 focus:ring-4 focus:ring-secondary-300 dark:bg-secondary-600 dark:hover:bg-secondary-700 dark:focus:ring-secondary-800'
             : 'bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800' }}
-                                            font-medium rounded-lg text-sm px-5 py-2 focus:outline-none shadow-xl">
+                                                        font-medium rounded-lg text-sm px-5 py-2 focus:outline-none shadow-xl">
                     <i class="fa-solid fa-plus mr-1"></i>
                     {{ __('Register new panel') }}
                 </a>

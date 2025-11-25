@@ -18,13 +18,30 @@ class GrafanaController extends Controller
     {
         $this->authorize('viewAny', GrafanaPanel::class);
 
-        $panels = GrafanaPanel::all();
+        $user = auth()->user();
+
+        $query = GrafanaPanel::query();
+
+        if ($user && in_array($user->area, ['OTT', 'DTH'])) {
+            if ($user->area === 'DTH') {
+                $query->where(function ($q) {
+                    $q->where('area', 'DTH')
+                      ->orWhereIn('id', [1, 3]);
+                });
+            } else {
+                $query->where('area', $user->area);
+            }
+        }
+
+        $panels = $query->get();
 
         $panels = $panels->sortBy(function ($panel) {
-            if ($panel->id == 2)
+            if ($panel->id == 2) {
                 return 3;
-            if ($panel->id == 3)
+            }
+            if ($panel->id == 3) {
                 return 2;
+            }
             return $panel->id;
         })->values();
 
@@ -92,7 +109,9 @@ class GrafanaController extends Controller
 
         $this->authorize('edit', $panel);
 
-        return view('admin.grafana.edit', compact('panel'));
+        $isShared = in_array($panel->id, [1, 3]);
+
+        return view('admin.grafana.edit', compact('panel', 'isShared'));
     }
 
     /**
@@ -102,23 +121,44 @@ class GrafanaController extends Controller
     {
         $panel = GrafanaPanel::findOrFail($id);
 
-        $validated = $request->validate([
+        $isShared = in_array($panel->id, [1, 3]);
+
+        if ($isShared && $request->has('area')) {
+            session()->flash('swal', [
+                'icon' => 'error',
+                'title' => __('Invalid action!'),
+                'text' => __('You are not allowed to change the area of a shared panel.'),
+            ]);
+            return redirect()->back()->withInput();
+        }
+
+        $rules = [
             'name' => ['required', 'string', 'max:255'],
-            'area' => ['required', 'string', 'in:OTT,DTH'],
             'url' => ['required', 'string', 'max:255'],
             'api_url' => ['nullable', 'string', 'max:255'],
             'endpoint' => ['nullable', 'string', 'max:255'],
             'api_key' => ['nullable', 'string', 'max:255'],
-        ]);
+        ];
 
-        $panel->update([
+        if (! $isShared) {
+            $rules['area'] = ['required', 'string', 'in:OTT,DTH'];
+        }
+
+        $validated = $request->validate($rules);
+
+        $data = [
             'name' => $validated['name'],
-            'area' => $validated['area'],
             'url' => $validated['url'],
             'api_url' => $validated['api_url'] ?? null,
             'endpoint' => $validated['endpoint'] ?? null,
             'api_key' => $validated['api_key'] ?? null,
-        ]);
+        ];
+
+        if (! $isShared) {
+            $data['area'] = $validated['area'];
+        }
+
+        $panel->update($data);
 
         session()->flash('swal', [
             'icon' => 'success',

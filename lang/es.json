@@ -716,5 +716,8 @@
     "Action not allowed": "Acción no permitida",
     "You cannot switch area because your user is inactive.": "No puedes cambiar de área porque tu usuario está inactivo.",
     "Cannot switch area": "No puede cambiar de área",
-    "Image preview": "Vista previa de la imagen"
+    "Image preview": "Vista previa de la imagen",
+    "Shared in DTH and OTT": "Compartido en DTH y OTT",
+    "Invalid action!": "¡Acción inválida!",
+    "You are not allowed to change the area of a shared panel.": "No tienes permitido cambiar el área de un panel compartido."
 }
