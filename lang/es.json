@@ -719,5 +719,6 @@
     "Image preview": "Vista previa de la imagen",
     "Shared in DTH and OTT": "Compartido en DTH y OTT",
     "Invalid action!": "¡Acción inválida!",
-    "You are not allowed to change the area of a shared panel.": "No tienes permitido cambiar el área de un panel compartido."
+    "You are not allowed to change the area of a shared panel.": "No tienes permitido cambiar el área de un panel compartido.",
+    "Areas": "Áreas"
 }
