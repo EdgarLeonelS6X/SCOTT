@@ -5,7 +5,6 @@ namespace App\Livewire\Admin\Users;
 use Livewire\Component;
 use App\Models\User;
 
-
 class UserTable extends Component
 {
     public $areaFilter = 'all';
@@ -16,6 +15,12 @@ class UserTable extends Component
 
     public function toggleAreaFilter()
     {
+        $auth = auth()->user();
+
+        if (! $auth || $auth->id !== 1) {
+            return;
+        }
+
         $options = ['all', 'DTH', 'OTT'];
 
         $currentIndex = array_search($this->areaFilter, $options, true);
@@ -38,12 +43,18 @@ class UserTable extends Component
                 });
             }
         } else {
-            if ($user && in_array($user->default_area, ['OTT', 'DTH'])) {
-                $filter = $user->default_area;
-                $query->where(function ($q) use ($filter) {
-                    $q->where('default_area', $filter)
-                      ->orWhere('area', $filter);
-                });
+            if ($user) {
+                $viewerArea = $user->default_area ?? $user->area ?? null;
+
+                if (in_array($viewerArea, ['OTT', 'DTH'])) {
+                    $filter = $viewerArea;
+                    $query->where(function ($q) use ($filter) {
+                        $q->where('default_area', $filter)
+                          ->orWhere('area', $filter);
+                    });
+                } else {
+                    $query->whereRaw('1 = 0');
+                }
             }
         }
 

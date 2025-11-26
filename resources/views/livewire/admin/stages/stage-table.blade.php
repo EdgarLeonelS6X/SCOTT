@@ -1,28 +1,44 @@
 <div class="bg-white dark:bg-gray-800 relative shadow-2xl rounded-lg overflow-hidden">
     <div class="overflow-x-auto">
-        <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+        <table class="w-full table-fixed text-sm text-left text-gray-500 dark:text-gray-400">
             <thead class="text-xs dark:text-white uppercase dark:bg-gray-600 shadow-2xl">
                 <tr>
-                    <th scope="col" class="px-6 py-3">
+                    <th scope="col" class="px-6 py-3 w-[280px]">
                         <i class="fa-solid fa-bars-staggered mr-1"></i>
                         {{ __('Name') }}
                     </th>
-                    <th scope="col" class="px-6 py-3 cursor-pointer" wire:click="toggleAreaFilter">
-                        <i class="fa-solid fa-building mr-1"></i>
-                        <span class="text-gray-500 dark:text-white">
-                            @if ($areaFilter === 'all')
-                                {{ __('Areas') }}
-                            @else
-                                {{ $areaFilter }}
-                            @endif
-                            <i class="ml-1 fa-solid fa-sort"></i>
-                        </span>
-                    </th>
-                    <th scope="col" class="px-6 py-3">
+                    @php $auth = auth()->user(); @endphp
+                    @if ($auth && $auth->id === 1)
+                        <th scope="col" class="px-6 py-3 cursor-pointer w-[120px]" wire:click="toggleAreaFilter">
+                            <i class="fa-solid fa-building mr-1"></i>
+                            <span class="text-gray-500 dark:text-white">
+                                @if ($areaFilter === 'all')
+                                    {{ __('Areas') }}
+                                @else
+                                    {{ $areaFilter }}
+                                @endif
+                                <i class="ml-1 fa-solid fa-sort"></i>
+                            </span>
+                        </th>
+                    @else
+                        <th scope="col" class="px-6 py-3 w-[120px]">
+                            <i class="fa-solid fa-building mr-1"></i>
+                            <span class="text-gray-500 dark:text-white">
+                                @if ($auth && isset($auth->area) && in_array($auth->area, ['DTH','OTT']))
+                                    {{ $auth->area }}
+                                @elseif ($areaFilter === 'all')
+                                    {{ __('Areas') }}
+                                @else
+                                    {{ $areaFilter }}
+                                @endif
+                            </span>
+                        </th>
+                    @endif
+                    <th scope="col" class="px-6 py-3 w-[120px]">
                         <i class="fa-solid fa-toggle-on mr-1"></i>
                         {{ __('Status') }}
                     </th>
-                    <th scope="col" class="px-6 py-3">
+                    <th scope="col" class="px-6 py-3 w-[80px]">
                         <span class="sr-only">
                             <i class="fa-solid fa-sliders-h mr-1"></i>
                             {{ __('Options') }}
@@ -34,14 +50,14 @@
                 @forelse ($stages as $stage)
                     <tr onclick="window.location.href='{{ route('admin.stages.show', $stage) }}'"
                         class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-600 text-black dark:text-white cursor-pointer">
-                        <th scope="row" class="px-6 py-3 font-bold text-gray-900 whitespace-nowrap dark:text-white">
+                        <th scope="row" class="px-6 py-3 font-bold text-gray-900 whitespace-nowrap dark:text-white w-[280px] truncate overflow-hidden">
                             {{ __($stage->name) }}
                         </th>
-                        <td class="px-6 py-3 whitespace-nowrap">
+                        <td class="px-6 py-3 whitespace-nowrap w-[120px]">
                             @php
-    $areaClasses = $stage->area === 'DTH'
-        ? 'bg-secondary-200 text-secondary-800 dark:bg-secondary-700 dark:text-secondary-100'
-        : 'bg-primary-200 text-primary-800 dark:bg-primary-700 dark:text-primary-100';
+                                $areaClasses = $stage->area === 'DTH'
+                                    ? 'bg-secondary-200 text-secondary-800 dark:bg-secondary-700 dark:text-secondary-100'
+                                    : 'bg-primary-200 text-primary-800 dark:bg-primary-700 dark:text-primary-100';
                             @endphp
                             @if ($stage->area === 'OTT')
                                 <span
@@ -57,7 +73,7 @@
                                 <span class="text-xs text-gray-400 italic">{{ __('N/A') }}</span>
                             @endif
                         </td>
-                        <td class="px-6 py-3 whitespace-nowrap">
+                        <td class="px-6 py-3 whitespace-nowrap w-[120px]">
                             @if ($stage->status === 1)
                                 <span
                                     class="inline-flex items-center px-2 py-1 text-xs font-medium text-green-800 bg-green-200 rounded-full dark:bg-green-800 dark:text-green-200">
@@ -72,7 +88,7 @@
                                 </span>
                             @endif
                         </td>
-                        <td class="px-6 py-3 flex items-center justify-center">
+                        <td class="px-6 py-3 flex items-center justify-center w-[80px]">
                             <button id="stage-dropdown-button-{{ $stage->id }}"
                                 data-dropdown-toggle="stage-dropdown-{{ $stage->id }}" onclick="event.stopPropagation()"
                                 class="inline-flex items-center p-3 text-sm font-medium text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none dark:text-gray-400 dark:hover:text-gray-100"

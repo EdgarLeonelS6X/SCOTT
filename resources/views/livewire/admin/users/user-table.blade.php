@@ -15,18 +15,37 @@
                         <i class="fa-solid fa-shield-halved mr-1.5"></i>
                         {{ __('Role') }}
                     </th>
-                    <th class="py-3 px-6 whitespace-nowrap cursor-pointer min-w-[150px] max-w-[150px] w-[150px]"
-                        wire:click="toggleAreaFilter">
-                        <i class="fa-solid fa-building mr-1"></i>
-                        <span class="text-gray-500 dark:text-white">
-                            @if ($areaFilter === 'all')
-                                {{ __('Areas') }}
-                            @else
-                                {{ $areaFilter }}
-                            @endif
-                            <i class="ml-1 fa-solid fa-sort"></i>
-                        </span>
-                    </th>
+                    @php $authUser = auth()->user(); @endphp
+                    @if ($authUser && $authUser->id === 1)
+                        <th class="py-3 px-6 whitespace-nowrap cursor-pointer min-w-[150px] max-w-[150px] w-[150px]"
+                            wire:click="toggleAreaFilter">
+                            <i class="fa-solid fa-building mr-1"></i>
+                            <span class="text-gray-500 dark:text-white">
+                                @if ($areaFilter === 'all')
+                                    {{ __('Areas') }}
+                                @else
+                                    {{ $areaFilter }}
+                                @endif
+                                <i class="ml-1 fa-solid fa-sort"></i>
+                            </span>
+                        </th>
+                    @else
+                        <th class="py-3 px-6 whitespace-nowrap min-w-[150px] max-w-[150px] w-[150px]">
+                            <i class="fa-solid fa-building mr-1"></i>
+                            <span class="text-gray-500 dark:text-white">
+                                @php
+                                    $userArea = $authUser->default_area ?? $authUser->area ?? null;
+                                @endphp
+                                @if ($userArea && in_array($userArea, ['DTH','OTT']))
+                                    {{ $userArea }}
+                                @elseif ($areaFilter === 'all')
+                                    {{ __('Areas') }}
+                                @else
+                                    {{ $areaFilter }}
+                                @endif
+                            </span>
+                        </th>
+                    @endif
                     <th scope="col" class="px-6 py-3 whitespace-nowrap min-w-[120px] max-w-[120px] w-[120px]">
                         <i class="fa-solid fa-arrows-left-right mr-1.5"></i>
                         {{ __('Switch') }}

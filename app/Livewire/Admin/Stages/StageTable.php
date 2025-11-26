@@ -18,6 +18,12 @@ class StageTable extends Component
 
     public function toggleAreaFilter()
     {
+        $auth = auth()->user();
+
+        if (! $auth || $auth->id !== 1) {
+            return;
+        }
+
         $options = ['all', 'DTH', 'OTT'];
 
         $currentIndex = array_search($this->areaFilter, $options, true);
