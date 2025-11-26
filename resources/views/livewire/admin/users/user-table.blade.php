@@ -15,7 +15,7 @@
                         <i class="fa-solid fa-shield-halved mr-1.5"></i>
                         {{ __('Role') }}
                     </th>
-                    <th class="py-3 px-4 text-left cursor-pointer min-w-[120px] max-w-[120px] w-[120px]"
+                    <th class="py-3 px-6 whitespace-nowrap cursor-pointer min-w-[120px] max-w-[120px] w-[120px]"
                         wire:click="toggleAreaFilter">
                         <i class="fa-solid fa-building mr-1"></i>
                         <span class="text-gray-500 dark:text-white">
@@ -27,7 +27,7 @@
                             <i class="ml-1 fa-solid fa-sort"></i>
                         </span>
                     </th>
-                    <th scope="col" class="px-6 py-3 whitespace-nowrap text-center min-w-[120px] max-w-[120px] w-[120px]">
+                    <th scope="col" class="px-6 py-3 whitespace-nowrap min-w-[120px] max-w-[120px] w-[120px]">
                         <i class="fa-solid fa-arrows-left-right mr-1.5"></i>
                         {{ __('Switch') }}
                     </th>
