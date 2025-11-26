@@ -57,18 +57,18 @@
         </div>
     </div>
     <div class="overflow-x-auto">
-        <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+        <table class="w-full table-fixed text-sm text-left text-gray-500 dark:text-gray-400">
             <thead class="text-xs dark:text-white uppercase dark:bg-gray-600 shadow-2xl">
                 <tr>
-                    <th scope="col" class="px-4 py-3 min-w-[100px] max-w-[100px]">
+                    <th scope="col" class="px-4 py-3 w-[120px]">
                         <i class="fa-solid fa-image mr-1"></i>
                         {{ __('Image') }}
                     </th>
-                    <th scope="col" class="px-4 py-3 min-w-[250px] max-w-[250px]">
+                    <th scope="col" class="px-4 py-3 w-[275px]">
                         <i class="fa-solid fa-tv mr-1"></i>
                         {{ __('Channel') }}
                     </th>
-                    <th class="py-3 px-4 text-left cursor-pointer min-w-[150px] max-w-[150px]"
+                    <th class="py-3 px-4 text-left cursor-pointer w-[150px]"
                         wire:click="toggleOriginFilter">
                         <i class="fa-solid fa-arrow-right-arrow-left mr-1"></i>
                         <span class="text-gray-500 dark:text-white">
@@ -80,7 +80,7 @@
                             <i class="ml-1 fa-solid fa-sort"></i>
                         </span>
                     </th>
-                    <th class="py-3 px-4 text-left cursor-pointer min-w-[150px] max-w-[150px]"
+                    <th class="py-3 px-4 text-left cursor-pointer w-[225px]"
                         wire:click="toggleCategoryFilter">
                         <i class="fa-solid fa-list mr-1"></i>
                         <span class="text-gray-500 dark:text-white">
@@ -92,15 +92,23 @@
                             <i class="ml-1 fa-solid fa-sort"></i>
                         </span>
                     </th>
-                    <th scope="col" class="px-4 py-3 min-w-[150px]">
+                    <th scope="col" class="px-4 py-3 w-[150px] text-left cursor-pointer"
+                        wire:click="toggleAreaFilter">
                         <i class="fa-solid fa-building mr-1"></i>
-                        {{ __('Area') }}
+                        <span class="text-gray-500 dark:text-white">
+                            @if ($areaFilter && $areaFilter !== 'all')
+                                {{ $areaFilter }}
+                            @else
+                                {{ __('All Areas') }}
+                            @endif
+                            <i class="ml-1 fa-solid fa-sort"></i>
+                        </span>
                     </th>
-                    </th>
-                    <th scope="col" class="px-4 py-3 min-w-[80px]">
+                    <th scope="col" class="px-4 py-3 w-[150px]">
                         <i class="fa-solid fa-toggle-on mr-1"></i>
                         {{ __('Status') }}
-                    <th scope="col" class="px-4 py-3">
+                    </th>
+                    <th scope="col" class="px-4 py-3 w-[80px]">
                         <span class="sr-only">
                             <i class="fa-solid fa-sliders-h mr-1"></i>
                             {{ __('Options') }}
@@ -112,20 +120,20 @@
                 @forelse ($channels as $channel)
                     <tr onclick="window.location.href='{{ route('admin.channels.show', $channel) }}'"
                         class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-600 text-black dark:text-white cursor-pointer">
-                        <td class="px-4 py-2.5">
+                        <td class="px-4 py-3 w-[120px]">
                             <img src="{{ $channel->image_url ? asset('storage/' . $channel->image_url) : asset('img/no-image.png') }}"
                                 alt="{{ $channel->name }}" class="w-10 h-10 object-center object-contain rounded-sm">
                         </td>
                         <th scope="row"
-                            class="px-4 py-2.5 font-bold text-gray-900 whitespace-nowrap dark:text-white">
+                            class="px-4 py-2.5 font-bold text-gray-900 dark:text-white w-[275px] truncate overflow-hidden">
                             {{ $channel->number }} {{ $channel->name }}
                         </th>
-                        <td class="px-4 py-2.5">
+                        <td class="px-4 py-2.5 w-[150px] truncate whitespace-nowrap overflow-hidden">
                             {{ $channel->origin }}
                         </td>
-                        <td class="px-4 py-2.5">
+                        <td class="px-4 py-2.5 w-[225px]">
                             <span
-                                class="inline-flex items-center px-2 py-1 text-xs font-medium
+                                class="inline-flex items-center px-2 py-1 text-xs font-medium truncate whitespace-nowrap overflow-hidden
                                     {{ Auth::user()?->area === 'DTH'
                                         ? 'text-secondary-800 bg-secondary-200 dark:bg-secondary-800 dark:text-secondary-200'
                                         : 'text-primary-800 bg-primary-200 dark:bg-primary-800 dark:text-primary-200' }}
@@ -149,7 +157,7 @@
                                 {{ __($channel->category) }}
                             </span>
                         </td>
-                        <td class="px-4 py-2.5">
+                        <td class="px-4 py-2.5 w-[150px] truncate whitespace-nowrap overflow-hidden">
                             @if($channel->area === 'DTH/OTT')
                                 <span
                                     class="inline-flex items-center px-2 py-1 text-xs font-medium text-secondary-800 bg-secondary-200 dark:bg-secondary-800 dark:text-secondary-200 rounded-full mr-2">
@@ -180,7 +188,7 @@
                                 </span>
                             @endif
                         </td>
-                        <td class="px-4 py-2.5">
+                        <td class="px-4 py-2.5 w-[150px] whitespace-nowrap">
                             @if ($channel->status === 1)
                                 <span
                                     class="inline-flex items-center px-2 py-1 text-xs font-medium text-green-800 bg-green-200 rounded-full dark:bg-green-800 dark:text-green-200">
@@ -195,7 +203,7 @@
                                 </span>
                             @endif
                         </td>
-                        <td class="px-4 py-2.5 flex items-center justify-center">
+                        <td class="px-4 py-2.5 flex items-center justify-center w-[80px]">
                             <button
                                 @click="openDropdown = (openDropdown === {{ $channel->id }} ? null : {{ $channel->id }})"
                                 @click.stop
@@ -259,7 +267,7 @@
                     </tr>
                     @empty
                         <tr>
-                            <td colspan="7" class="bg-white dark:bg-gray-800 py-6 text-center">
+                            <td colspan="7" class="bg-white dark:bg-gray-800 pt-8 text-center">
                                 <i class="fa-solid fa-circle-info mr-1"></i>
                                 {{ __('There are no channels that match your search.') }}
                             </td>

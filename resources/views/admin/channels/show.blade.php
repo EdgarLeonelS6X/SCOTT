@@ -60,12 +60,51 @@
                         ">{{ $channel->number }}</span> {{ $channel->name }}
                     </h1>
                     <div class="mt-2 flex flex-wrap justify-center md:justify-start items-center gap-2">
+                        @if ($channel->status === 1)
+                            <span
+                                class="inline-flex items-center px-2 py-1 text-xs font-medium text-green-800 bg-green-200 rounded-full dark:bg-green-800 dark:text-green-200">
+                                <i class="fa-solid fa-check-circle mr-1.5"></i>
+                                {{ __('Active') }}
+                            </span>
+                        @else
+                            <span
+                                class="inline-flex items-center px-2 py-1 text-xs font-medium text-red-800 bg-red-200 rounded-full dark:bg-red-800 dark:text-red-200">
+                                <i class="fa-solid fa-times-circle mr-1.5"></i>
+                                {{ __('Inactive') }}
+                            </span>
+                        @endif
+                        @if($channel->area === 'DTH/OTT')
+                            <span
+                                class="inline-flex items-center px-2 py-1 text-xs font-medium text-secondary-800 bg-secondary-200 dark:bg-secondary-800 dark:text-secondary-200 rounded-full">
+                                <i class="fa-solid fa-satellite-dish mr-1"></i>
+                                {{ __('DTH') }}
+                            </span>
+                            <span
+                                class="inline-flex items-center px-2 py-1 text-xs font-medium text-primary-800 bg-primary-200 dark:bg-primary-800 dark:text-primary-200 rounded-full">
+                                <i class="fa-solid fa-cube mr-1"></i>
+                                {{ __('OTT') }}
+                            </span>
+                        @else
+                            <span
+                                class="inline-flex items-center px-2 py-1 text-xs font-medium rounded-full
+                                    {{ $channel->area === 'DTH'
+                                        ? 'text-secondary-800 bg-secondary-200 dark:bg-secondary-800 dark:text-secondary-200'
+                                        : ($channel->area === 'OTT'
+                                            ? 'text-primary-800 bg-primary-200 dark:bg-primary-800 dark:text-primary-200'
+                                            : 'text-gray-800 bg-gray-200 dark:bg-gray-800 dark:text-gray-200') }}">
+                                @if($channel->area === 'DTH')
+                                    <i class="fa-solid fa-satellite-dish mr-1"></i>
+                                @elseif($channel->area === 'OTT')
+                                    <i class="fa-solid fa-cube mr-1"></i>
+                                @else
+                                    <i class="fa-solid fa-layer-group mr-1"></i>
+                                @endif
+                                {{ $channel->area ?? __('N/A') }}
+                            </span>
+                        @endif
+
                         <span
-                            class="inline-flex items-center px-2 py-1 text-xs font-medium
-                                {{ Auth::user()?->area === 'DTH'
-                                    ? 'text-secondary-800 bg-secondary-200 dark:bg-secondary-800 dark:text-secondary-200'
-                                    : 'text-primary-800 bg-primary-200 dark:bg-primary-800 dark:text-primary-200' }}
-                                rounded-full">
+                            class="inline-flex items-center px-2 py-1 text-xs font-medium text-indigo-800 bg-indigo-200 dark:bg-indigo-800 dark:text-indigo-200 rounded-full">
                             @switch($channel->category)
                                 @case('Standard TV Channel')
                                     <i class="fa-solid fa-tv mr-1.5"></i>
@@ -84,19 +123,7 @@
                             @endswitch
                             {{ $channel->category }}
                         </span>
-                        @if ($channel->status === 1)
-                            <span
-                                class="inline-flex items-center px-2 py-1 text-xs font-medium text-green-800 bg-green-200 rounded-full dark:bg-green-800 dark:text-green-200">
-                                <i class="fa-solid fa-check-circle mr-1.5"></i>
-                                {{ __('Active') }}
-                            </span>
-                        @else
-                            <span
-                                class="inline-flex items-center px-2 py-1 text-xs font-medium text-red-800 bg-red-200 rounded-full dark:bg-red-800 dark:text-red-200">
-                                <i class="fa-solid fa-times-circle mr-1.5"></i>
-                                {{ __('Inactive') }}
-                            </span>
-                        @endif
+
                     </div>
                 </div>
                 <div class="order-0 md:order-none">

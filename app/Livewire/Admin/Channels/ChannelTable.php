@@ -16,7 +16,8 @@ class ChannelTable extends Component
     public $showInactive = false;
     public $originFilter = null;
     public $categoryFilter = null;
-    protected $queryString = ['search', 'showInactive', 'originFilter', 'categoryFilter'];
+    public $areaFilter = 'all';
+    protected $queryString = ['search', 'showInactive', 'originFilter', 'categoryFilter', 'areaFilter' => ['except' => 'all']];
 
     public function updatingSearch()
     {
@@ -52,6 +53,17 @@ class ChannelTable extends Component
             $currentIndex = array_search($this->categoryFilter, $categories);
             $this->categoryFilter = $categories[$currentIndex + 1] ?? null;
         }
+
+        $this->resetPage();
+    }
+
+    public function toggleAreaFilter()
+    {
+        $areas = ['all', 'DTH', 'OTT'];
+
+        $currentIndex = array_search($this->areaFilter, $areas, true);
+        $nextIndex = ($currentIndex === false) ? 1 : ($currentIndex + 1) % count($areas);
+        $this->areaFilter = $areas[$nextIndex];
 
         $this->resetPage();
     }
@@ -92,6 +104,34 @@ class ChannelTable extends Component
 
         if ($this->categoryFilter) {
             $query->where('category', $this->categoryFilter);
+        }
+
+        // Area filtering: when areaFilter is not 'all', show channels matching the selected area
+        // or shared channels marked as 'DTH/OTT'. If areaFilter is 'all', don't restrict.
+        if ($this->areaFilter && $this->areaFilter !== 'all') {
+            if (auth()->user()?->id === 1) {
+                // Super-user: filter by selected area
+                if ($this->areaFilter === 'DTH') {
+                    $query->where(function ($q) {
+                        $q->where('area', 'DTH')->orWhere('area', 'DTH/OTT');
+                    });
+                } else {
+                    $query->where(function ($q) {
+                        $q->where('area', 'OTT')->orWhere('area', 'DTH/OTT');
+                    });
+                }
+            } else {
+                // Non-super users: respect the selected filter too (only if toggled)
+                if ($this->areaFilter === 'DTH') {
+                    $query->where(function ($q) {
+                        $q->where('area', 'DTH')->orWhere('area', 'DTH/OTT');
+                    });
+                } else {
+                    $query->where(function ($q) {
+                        $q->where('area', 'OTT')->orWhere('area', 'DTH/OTT');
+                    });
+                }
+            }
         }
 
         $channels = $query->orderByDesc('status')->orderBy('number')->paginate(10);

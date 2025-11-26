@@ -15,7 +15,7 @@
                         <i class="fa-solid fa-shield-halved mr-1.5"></i>
                         {{ __('Role') }}
                     </th>
-                    <th class="py-3 px-6 whitespace-nowrap cursor-pointer min-w-[120px] max-w-[120px] w-[120px]"
+                    <th class="py-3 px-6 whitespace-nowrap cursor-pointer min-w-[150px] max-w-[150px] w-[150px]"
                         wire:click="toggleAreaFilter">
                         <i class="fa-solid fa-building mr-1"></i>
                         <span class="text-gray-500 dark:text-white">
@@ -40,7 +40,7 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach ($users as $user)
+                @forelse ($users as $user)
                     <tr onclick="window.location.href='{{ route('admin.users.show', $user) }}'"
                         class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-600 text-black dark:text-white cursor-pointer hover:bg-gray-100">
                         <td class="px-6 py-4 whitespace-nowrap flex items-center space-x-4 min-w-[300px] max-w-[300px] w-[300px]">
@@ -109,7 +109,7 @@
                                 <span class="text-xs text-gray-400 italic">{{ __('No role') }}</span>
                             @endif
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap min-w-[120px] max-w-[120px] w-[120px]">
+                        <td class="px-6 py-4 whitespace-nowrap min-w-[150px] max-w-[150px] w-[150px]">
                             @php
                                 $defaultArea = $user->default_area ?? $user->area;
                                 $currentArea = $user->area ?? null;
@@ -174,7 +174,14 @@
                             <i class="fa-solid fa-chevron-right text-lg text-gray-400"></i>
                         </td>
                     </tr>
-                @endforeach
+                @empty
+                    <tr>
+                        <td colspan="7" class="bg-white dark:bg-gray-800 py-6 text-center">
+                            <i class="fa-solid fa-circle-info mr-1"></i>
+                            {{ __('There are no users registered for this area.') }}
+                        </td>
+                    </tr>
+                @endforelse
             </tbody>
         </table>
     </div>
