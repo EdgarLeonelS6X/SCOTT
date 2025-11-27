@@ -23,4 +23,4 @@ Route::resource('/stages', StageController::class)
 Route::resource('/grafana', GrafanaController::class)
     ->middleware(['auth', 'verified', 'can:viewAny,App\Models\GrafanaPanel']);
 
-Route::get('/user/switch-area/{area}', [UserController::class, 'switchArea'])->name('user.switch-area')->middleware(['auth', 'verified']);
+Route::match(['get','post'], '/user/switch-area/{area}', [UserController::class, 'switchArea'])->name('user.switch-area')->middleware(['auth', 'verified']);

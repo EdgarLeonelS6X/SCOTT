@@ -37,3 +37,7 @@ Route::post('/language/switch', [LanguageController::class, 'switchLanguage'])
     ->middleware([CheckUserStatus::class])
     ->name('language.switch');
 
+if (file_exists(__DIR__ . '/admin.php')) {
+    require __DIR__ . '/admin.php';
+}
+

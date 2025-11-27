@@ -53,16 +53,25 @@
                 {{ __('Dashboard') }}
             </x-dropdown-link>
 
-            <x-dropdown-link
-                href="{{ route('admin.user.switch-area', ['area' => Auth::user()?->area === 'OTT' ? 'DTH' : 'OTT']) }}"
-                class="group">
-                <i @class([
-                    'fa-solid fa-arrows-rotate mr-2 text-gray-400 transition',
-                    'group-hover:text-primary-500' => Auth::user()->area === 'OTT',
-                    'group-hover:text-secondary-500' => Auth::user()->area === 'DTH',
-                ])></i>
-                {{ Auth::user()?->area === 'OTT' ? __('Switch to DTH') : __('Switch to OTT') }}
-            </x-dropdown-link>
+            @php
+                $authUser = Auth::user();
+                $canSwitch = $authUser && ($authUser->can_switch_area ?? false) && ($authUser->status ?? false);
+                $nextArea = $authUser?->area === 'OTT' ? 'DTH' : 'OTT';
+            @endphp
+
+            @if ($canSwitch)
+                <form method="POST" action="{{ route('user.switch-area', ['area' => $nextArea]) }}" x-data>
+                    @csrf
+                    <x-dropdown-link href="#" @click.prevent="$root.submit();" class="group">
+                        <i @class([
+                            'fa-solid fa-arrows-rotate mr-2 text-gray-400 transition',
+                            'group-hover:text-primary-500' => $authUser->area === 'OTT',
+                            'group-hover:text-secondary-500' => $authUser->area === 'DTH',
+                        ])></i>
+                        {{ $authUser?->area === 'OTT' ? __('Switch to DTH') : __('Switch to OTT') }}
+                    </x-dropdown-link>
+                </form>
+            @endif
 
             @if (Laravel\Jetstream\Jetstream::hasApiFeatures())
                 <x-dropdown-link href="{{ route('api-tokens.index') }}" class="group">
