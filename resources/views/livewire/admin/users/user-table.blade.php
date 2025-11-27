@@ -3,15 +3,15 @@
         <table class="min-w-full table-fixed text-sm text-left text-gray-500 dark:text-gray-400">
             <thead class="text-xs dark:text-white uppercase dark:bg-gray-600 shadow-2xl">
                 <tr>
-                    <th scope="col" class="px-6 py-3 whitespace-nowrap min-w-[300px] max-w-[300px] w-[300px]">
+                    <th scope="col" class="px-6 py-3 whitespace-nowrap min-w-[290px] max-w-[290px] w-[290px]">
                         <i class="fa-solid fa-user mr-1.5"></i>
                         {{ __('User') }}
                     </th>
-                    <th scope="col" class="px-6 py-3 whitespace-nowrap min-w-[220px] max-w-[220px] w-[220px]">
+                    <th scope="col" class="px-6 py-3 whitespace-nowrap min-w-[230px] max-w-[230px] w-[230px]">
                         <i class="fa-solid fa-envelope mr-1.5"></i>
                         {{ __('Email') }}
                     </th>
-                    <th scope="col" class="px-6 py-3 whitespace-nowrap min-w-[140px] max-w-[140px] w-[140px]">
+                    <th scope="col" class="px-6 py-3 whitespace-nowrap min-w-[150px] max-w-[150px] w-[150px]">
                         <i class="fa-solid fa-shield-halved mr-1.5"></i>
                         {{ __('Role') }}
                     </th>
@@ -46,7 +46,7 @@
                             </span>
                         </th>
                     @endif
-                    <th scope="col" class="px-6 py-3 whitespace-nowrap min-w-[120px] max-w-[120px] w-[120px]">
+                    <th scope="col" class="px-6 py-3 whitespace-nowrap min-w-[90px] max-w-[90px] w-[90px]">
                         <i class="fa-solid fa-arrows-left-right mr-1.5"></i>
                         {{ __('Switch') }}
                     </th>
@@ -62,17 +62,17 @@
                 @forelse ($users as $user)
                     <tr onclick="window.location.href='{{ route('admin.users.show', $user) }}'"
                         class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-600 text-black dark:text-white cursor-pointer hover:bg-gray-100">
-                        <td class="px-6 py-4 whitespace-nowrap flex items-center space-x-4 min-w-[300px] max-w-[300px] w-[300px]">
+                        <td class="px-6 py-4 whitespace-nowrap flex items-center space-x-4 min-w-[290px] max-w-[290px] w-[290px]">
                             <button class="flex text-sm rounded-full shadow-2xl cursor-default">
                                 <img class="h-8 w-8 rounded-full object-cover" src="{{ $user->profile_photo_url }}"
                                     alt="{{ $user->name }}" />
                             </button>
-                            <span class="font-semibold text-gray-900 dark:text-white truncate block max-w-[300px]">{{ $user->name }}</span>
+                            <span class="font-semibold text-gray-900 dark:text-white truncate block max-w-[290px]">{{ $user->name }}</span>
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap min-w-[220px] max-w-[220px] w-[220px]">
-                            <span class="text-gray-700 dark:text-gray-300 truncate block max-w-[200px]">{{ $user->email }}</span>
+                        <td class="px-6 py-4 whitespace-nowrap min-w-[230px] max-w-[230px] w-[230px]">
+                            <span class="text-gray-700 dark:text-gray-300 truncate block max-w-[230px]">{{ $user->email }}</span>
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap min-w-[140px] max-w-[140px] w-[140px]">
+                        <td class="px-6 py-4 whitespace-nowrap min-w-[150px] max-w-[150px] w-[150px]">
                             @php
                                 $role = $user->roles->first()?->name;
                                 if ($user->id === 1) {
@@ -161,7 +161,7 @@
                                 <span class="text-xs text-gray-400 italic">{{ __('N/A') }}</span>
                             @endif
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap min-w-[120px] max-w-[120px] w-[120px]">
+                        <td class="px-6 py-4 whitespace-nowrap min-w-[90px] max-w-[90px] w-[90px]">
                             @if ($user->can_switch_area)
                                 <span
                                     class="inline-flex items-center px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-100">

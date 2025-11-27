@@ -128,7 +128,7 @@
                                 @endif
                             @endif
                         </td>
-                        <td class="px-4 py-4 flex items-center justify-center align-middle">
+                        <td class="px-4 py-4 flex items-center justify-end align-middle w-full">
                             <span class="flex items-center h-full justify-center"
                                 style="height: 100%; min-height: 24px;">
                                 <i class="fa-solid fa-chevron-right transition-colors text-gray-300 group-hover:text-gray-700 dark:text-gray-500 dark:group-hover:text-gray-400"

@@ -92,7 +92,7 @@
                             <i class="ml-1 fa-solid fa-sort"></i>
                         </span>
                     </th>
-                    <th scope="col" class="px-4 py-3 w-[150px] text-left cursor-pointer"
+                    <th scope="col" class="px-4 py-3 w-[225px] text-left cursor-pointer"
                         wire:click="toggleAreaFilter">
                         <i class="fa-solid fa-building mr-1"></i>
                         <span class="text-gray-500 dark:text-white">
@@ -203,7 +203,7 @@
                                 </span>
                             @endif
                         </td>
-                        <td class="px-4 py-2.5 flex items-center justify-center w-[80px]">
+                        <td class="px-4 py-2.5 flex items-center justify-end w-full">
                             <button
                                 @click="openDropdown = (openDropdown === {{ $channel->id }} ? null : {{ $channel->id }})"
                                 @click.stop

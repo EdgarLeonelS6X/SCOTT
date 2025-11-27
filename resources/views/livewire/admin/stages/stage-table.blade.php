@@ -3,13 +3,13 @@
         <table class="w-full table-fixed text-sm text-left text-gray-500 dark:text-gray-400">
             <thead class="text-xs dark:text-white uppercase dark:bg-gray-600 shadow-2xl">
                 <tr>
-                    <th scope="col" class="px-6 py-3 w-[280px]">
+                    <th scope="col" class="px-6 py-3 w-[350px]">
                         <i class="fa-solid fa-bars-staggered mr-1"></i>
                         {{ __('Name') }}
                     </th>
                     @php $auth = auth()->user(); @endphp
                     @if ($auth && $auth->id === 1)
-                        <th scope="col" class="px-6 py-3 cursor-pointer w-[120px]" wire:click="toggleAreaFilter">
+                        <th scope="col" class="px-6 py-3 cursor-pointer w-[250px]" wire:click="toggleAreaFilter">
                             <i class="fa-solid fa-building mr-1"></i>
                             <span class="text-gray-500 dark:text-white">
                                 @if ($areaFilter === 'all')
@@ -21,7 +21,7 @@
                             </span>
                         </th>
                     @else
-                        <th scope="col" class="px-6 py-3 w-[120px]">
+                        <th scope="col" class="px-6 py-3 w-[250px]">
                             <i class="fa-solid fa-building mr-1"></i>
                             <span class="text-gray-500 dark:text-white">
                                 @if ($auth && isset($auth->area) && in_array($auth->area, ['DTH','OTT']))
@@ -34,11 +34,11 @@
                             </span>
                         </th>
                     @endif
-                    <th scope="col" class="px-6 py-3 w-[120px]">
+                    <th scope="col" class="px-6 py-3 w-[280px]">
                         <i class="fa-solid fa-toggle-on mr-1"></i>
                         {{ __('Status') }}
                     </th>
-                    <th scope="col" class="px-6 py-3 w-[80px]">
+                    <th scope="col" class="px-6 py-3 w-[120px]">
                         <span class="sr-only">
                             <i class="fa-solid fa-sliders-h mr-1"></i>
                             {{ __('Options') }}
@@ -88,7 +88,7 @@
                                 </span>
                             @endif
                         </td>
-                        <td class="px-6 py-3 flex items-center justify-center w-[80px]">
+                        <td class="px-6 py-3 flex items-center justify-end w-full">
                             <button id="stage-dropdown-button-{{ $stage->id }}"
                                 data-dropdown-toggle="stage-dropdown-{{ $stage->id }}" onclick="event.stopPropagation()"
                                 class="inline-flex items-center p-3 text-sm font-medium text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none dark:text-gray-400 dark:hover:text-gray-100"
