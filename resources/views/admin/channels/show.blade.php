@@ -134,61 +134,61 @@
             </div>
 
             <div class="space-y-4">
+            <div>
+                <x-label for="name">
+                    <i class="fa-solid fa-tv mr-1"></i>
+                    {{ __('Name') }}
+                </x-label>
+                <x-input id="name" class="block mt-1 w-full" type="text" wire:model="name"
+                    value="{{ $channel->name }}" disabled />
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                    <x-label for="name">
-                        <i class="fa-solid fa-tv mr-1"></i>
-                        {{ __('Name') }}
+                    <x-label for="number">
+                        <i class="fa-solid fa-hashtag mr-1"></i>
+                        {{ __('Number') }}
                     </x-label>
-                    <x-input id="name" class="block mt-1 w-full" type="text" wire:model="name"
-                        value="{{ $channel->name }}" disabled />
+                    <x-input id="number" class="block mt-1 w-full" type="number" wire:model="number"
+                        value="{{ $channel->number }}" disabled />
                 </div>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                        <x-label for="number">
-                            <i class="fa-solid fa-hashtag mr-1"></i>
-                            {{ __('Number') }}
-                        </x-label>
-                        <x-input id="number" class="block mt-1 w-full" type="number" wire:model="number"
-                            value="{{ $channel->number }}" disabled />
-                    </div>
-                    <div>
-                        <x-label for="origin">
-                            <i class="fa-solid fa-arrow-right-arrow-left mr-1"></i>
-                            {{ __('Origin') }}
-                        </x-label>
-                        <x-input id="origin" class="block mt-1 w-full" type="text" wire:model="origin"
-                            value="{{ $channel->origin }}" disabled />
-                    </div>
+                <div>
+                    <x-label for="origin">
+                        <i class="fa-solid fa-arrow-right-arrow-left mr-1"></i>
+                        {{ __('Origin') }}
+                    </x-label>
+                    <x-input id="origin" class="block mt-1 w-full" type="text" wire:model="origin"
+                        value="{{ $channel->origin }}" disabled />
                 </div>
-                    <div class="mt-4">
-                        <x-label>
-                            <i class="fa-solid fa-sliders mr-1"></i>
-                            {{ __('Profiles (Mbps)') }}
-                        </x-label>
-                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-2">
-                            <div>
-                                <x-label class="text-sm">{{ __('High') }}</x-label>
-                                <x-input type="number" step="0.1" min="0"
-                                    value="{{ !empty($channel->profiles['high']) ? $channel->profiles['high'] : '' }}"
-                                    placeholder="{{ empty($channel->profiles['high']) ? __('No info') : '' }}"
-                                    disabled />
-                            </div>
-                            <div>
-                                <x-label class="text-sm">{{ __('Medium') }}</x-label>
-                                <x-input type="number" step="0.1" min="0"
-                                    value="{{ !empty($channel->profiles['medium']) ? $channel->profiles['medium'] : '' }}"
-                                    placeholder="{{ empty($channel->profiles['medium']) ? __('No info') : '' }}"
-                                    disabled />
-                            </div>
-                            <div>
-                                <x-label class="text-sm">{{ __('Low') }}</x-label>
-                                <x-input type="number" step="0.1" min="0"
-                                    value="{{ !empty($channel->profiles['low']) ? $channel->profiles['low'] : '' }}"
-                                    placeholder="{{ empty($channel->profiles['low']) ? __('No info') : '' }}"
-                                    disabled />
-                            </div>
+            </div>
+                <div class="mt-4">
+                    <x-label>
+                        <i class="fa-solid fa-sliders mr-1"></i>
+                        {{ __('Profiles (Mbps)') }}
+                    </x-label>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-2">
+                        <div>
+                            <x-label for="profile_high" class="text-sm"><i class="fa-solid fa-arrow-up mr-1"></i>{{ __('High') }}</x-label>
+                            <x-input type="number" step="0.1" min="0"
+                                value="{{ !empty($channel->profiles['high']) ? $channel->profiles['high'] : '' }}"
+                                placeholder="{{ empty($channel->profiles['high']) ? __('No info') : '' }}"
+                                disabled />
+                        </div>
+                        <div>
+                            <x-label for="profile_medium" class="text-sm"><i class="fa-solid fa-arrows-left-right mr-1"></i>{{ __('Medium') }}</x-label>
+                            <x-input type="number" step="0.1" min="0"
+                                value="{{ !empty($channel->profiles['medium']) ? $channel->profiles['medium'] : '' }}"
+                                placeholder="{{ empty($channel->profiles['medium']) ? __('No info') : '' }}"
+                                disabled />
+                        </div>
+                        <div>
+                            <x-label for="profile_low" class="text-sm"><i class="fa-solid fa-arrow-down mr-1"></i>{{ __('Low') }}</x-label>
+                            <x-input type="number" step="0.1" min="0"
+                                value="{{ !empty($channel->profiles['low']) ? $channel->profiles['low'] : '' }}"
+                                placeholder="{{ empty($channel->profiles['low']) ? __('No info') : '' }}"
+                                disabled />
                         </div>
                     </div>
+                </div>
             </div>
         </div>
     </div>
