@@ -114,6 +114,7 @@ class CreateHourlyReport extends Component
                 'type' => 'Hourly',
                 'category' => $categoryNames,
                 'reported_by' => Auth::user()->id,
+                'area' => Auth::user()->area ?? Report::AREA_OTT,
                 'status' => 'Reported',
             ]);
 

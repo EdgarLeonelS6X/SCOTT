@@ -8,6 +8,14 @@ class Report extends Model
 {
     public $timestamps = true;
 
+    public const AREA_OTT = 'OTT';
+    public const AREA_DTH = 'DTH';
+
+    public static function getAreas(): array
+    {
+        return [self::AREA_OTT, self::AREA_DTH];
+    }
+
     protected $fillable = [
         'type',
         'category',
@@ -17,6 +25,7 @@ class Report extends Model
         'reviewed_by',
         'attended_by',
         'status',
+        'area',
     ];
 
     public function channel()

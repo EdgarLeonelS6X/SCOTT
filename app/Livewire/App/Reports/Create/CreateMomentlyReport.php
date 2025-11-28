@@ -92,6 +92,7 @@ class CreateMomentlyReport extends Component
                 'reported_by' => Auth::user()->id,
                 'reviewed_by' => $this->reportData['reviewed_by'],
                 'attended_by' => null,
+                'area' => Auth::user()->area ?? Report::AREA_OTT,
                 'status' => 'Revision',
             ]);
 

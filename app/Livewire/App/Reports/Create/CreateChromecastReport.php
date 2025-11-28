@@ -34,6 +34,7 @@ class CreateChromecastReport extends Component
                 'category' => 'Chromecast',
                 'type' => 'Functions',
                 'reported_by' => Auth::id(),
+                'area' => Auth::user()->area ?? Report::AREA_OTT,
                 'status' => 'Reported',
             ]);
 

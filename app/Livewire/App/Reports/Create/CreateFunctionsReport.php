@@ -226,6 +226,7 @@ class CreateFunctionsReport extends Component
                 'type' => 'Functions',
                 'category' => implode(', ', array_column($this->categories, 'name')),
                 'reported_by' => Auth::user()->id,
+                'area' => Auth::user()->area ?? Report::AREA_OTT,
                 'status' => 'Reported',
             ]);
 

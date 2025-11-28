@@ -111,6 +111,7 @@ class CreateProfileReport extends Component
                 'category' => 'Speed Profiles',
                 'duration' => null,
                 'reported_by' => Auth::user()->id,
+                'area' => Auth::user()->area ?? Report::AREA_OTT,
                 'reviewed_by' => $this->reportData['reviewed_by'],
                 'status' => 'Reported',
             ]);
