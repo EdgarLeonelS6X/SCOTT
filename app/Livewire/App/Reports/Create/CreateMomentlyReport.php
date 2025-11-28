@@ -176,8 +176,20 @@ class CreateMomentlyReport extends Component
 
     public function render()
     {
+        $userArea = Auth::user()->area ?? Report::AREA_OTT;
+
+        $channelsQuery = Channel::where('status', '1');
+
+        if ($userArea === Report::AREA_OTT) {
+            $channelsQuery->whereNotIn('category', ['Learning TV Channel', 'Radio TV Channel (DTH)']);
+        } elseif ($userArea === Report::AREA_DTH) {
+            $channelsQuery->where('category', '!=', 'FAST');
+        }
+
+        $channels = $channelsQuery->orderBy('number')->get();
+
         return view('livewire.app.reports.create.create-momently-report', [
-            'channels' => Channel::where('status', '1')->orderBy('number')->get(),
+            'channels' => $channels,
             'stages' => Stage::all(),
         ]);
     }
