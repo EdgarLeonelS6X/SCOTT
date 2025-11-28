@@ -106,24 +106,35 @@
                         <span
                             class="inline-flex items-center px-2 py-1 text-xs font-medium text-indigo-800 bg-indigo-200 dark:bg-indigo-800 dark:text-indigo-200 rounded-full">
                             @switch($channel->category)
-                                @case('Standard TV Channel')
-                                    <i class="fa-solid fa-tv mr-1.5"></i>
-                                @break
+                                    @case('Standard TV Channel')
+                                        <i class="fa-solid fa-tv mr-1.5"></i>
+                                    @break
 
-                                @case('Stingray Music')
-                                    <i class="fa-solid fa-music mr-1.5"></i>
-                                @break
+                                    @case('Stingray Music')
+                                        <i class="fa-solid fa-music mr-1.5"></i>
+                                    @break
 
-                                @case('RESTART/CUTV')
-                                    <i class="fa-solid fa-repeat mr-1.5"></i>
-                                @break
+                                    @case('RESTART/CUTV')
+                                        <i class="fa-solid fa-repeat mr-1.5"></i>
+                                    @break
 
-                                @default
-                                    <i class="fa-solid fa-layer-group mr-1.5"></i>
-                            @endswitch
-                            {{ $channel->category }}
+                                    @case('FAST')
+                                        <i class="fa-solid fa-bolt mr-1.5"></i>
+                                    @break
+
+                                    @case('Radio TV Channel')
+                                        <i class="fa-solid fa-radio mr-1.5 pb-[1px]"></i>
+                                    @break
+
+                                    @case('Learning TV Channel')
+                                        <i class="fa-solid fa-book-open mr-1.5"></i>
+                                    @break
+
+                                    @default
+                                        <i class="fa-solid fa-layer-group mr-1.5"></i>
+                                @endswitch
+                            {{ __($channel->category) }}
                         </span>
-
                     </div>
                 </div>
                 <div class="order-0 md:order-none">

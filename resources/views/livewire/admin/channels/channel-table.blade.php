@@ -151,6 +151,18 @@
                                         <i class="fa-solid fa-repeat mr-1.5"></i>
                                     @break
 
+                                    @case('FAST')
+                                        <i class="fa-solid fa-bolt mr-1.5"></i>
+                                    @break
+
+                                    @case('Radio TV Channel')
+                                        <i class="fa-solid fa-radio mr-1.5 pb-[1px]"></i>
+                                    @break
+
+                                    @case('Learning TV Channel')
+                                        <i class="fa-solid fa-book-open mr-1.5"></i>
+                                    @break
+
                                     @default
                                         <i class="fa-solid fa-layer-group mr-1.5"></i>
                                 @endswitch

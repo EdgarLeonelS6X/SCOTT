@@ -631,7 +631,7 @@
     "Hourly": "General",
     "ORIGIN": "ORIGEN",
     "ENGINEERS": "INGENIEROS",
-    "Standard TV Channel": "Canal de TV estándar",
+    "Standard TV Channel": "Canal de TV Estándar",
     "There are no channels registered in the database.": "No hay canales registrados en la base de datos.",
     "There are no stages registered in the database.": "No hay etapas registradas en la base de datos.",
     "ORIGIN CEF": "ORIGEN CEF",
@@ -724,5 +724,7 @@
     "There are no users registered for this area.": "No hay usuarios registrados para esta área.",
     "All Areas": "Áreas",
     "There are no stages that match your search.": "No hay etapas que coincidan con su búsqueda.",
-    "November": "Noviembre"
+    "November": "Noviembre",
+    "Radio TV Channel": "Canal de TV Radio",
+    "Learning TV Channel": "Canal de TV Aprende"
 }
