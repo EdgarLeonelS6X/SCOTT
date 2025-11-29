@@ -16,9 +16,10 @@ class ReportMomentlyTable extends Component
 
     public $search = '';
     public $order = 'desc';
+    public $areaFilter = 'all';
     public $selectedReport = null;
     public $showModal = false;
-    protected $queryString = ['search'];
+    protected $queryString = ['search', 'areaFilter' => ['except' => 'all']];
     protected $listeners = [
         'reportCreated' => '$refresh',
         'markAsSolvedFromModal',
@@ -27,6 +28,22 @@ class ReportMomentlyTable extends Component
 
     public function updatingSearch()
     {
+        $this->resetPage();
+    }
+
+    public function toggleAreaFilter()
+    {
+        $auth = auth()->user();
+
+        if (! $auth || $auth->id !== 1) {
+            return;
+        }
+
+        $options = ['all', 'DTH', 'OTT'];
+
+        $currentIndex = array_search($this->areaFilter, $options, true);
+
+        $this->areaFilter = $options[($currentIndex === false ? 0 : ($currentIndex + 1) % count($options))];
         $this->resetPage();
     }
 
@@ -110,7 +127,7 @@ class ReportMomentlyTable extends Component
 
     public function render()
     {
-        $reports = Report::where('type', 'Momentary')
+        $query = Report::where('type', 'Momentary')
             ->where('status', 'Revision')
             ->where(function ($query) {
                 $query->where('category', 'like', '%' . $this->search . '%')
@@ -124,7 +141,31 @@ class ReportMomentlyTable extends Component
             })
             ->with(['reportDetails.channel', 'reportedBy', 'attendedBy'])
             ->orderBy('created_at', $this->order)
-            ->paginate(5);
+        ;
+
+        $auth = auth()->user();
+
+        if ($auth && $auth->id === 1) {
+            if (in_array($this->areaFilter, ['OTT', 'DTH'])) {
+                $filter = $this->areaFilter;
+                $allowed = [$filter, 'DTH/OTT'];
+                $query->whereIn('area', $allowed);
+            }
+        } else {
+            if ($auth) {
+                $viewerArea = $auth->default_area ?? $auth->area ?? null;
+                if (in_array($viewerArea, ['OTT', 'DTH'])) {
+                    $allowed = [$viewerArea, 'DTH/OTT'];
+                    $query->whereIn('area', $allowed);
+                } else {
+                    $query->whereRaw('1 = 0');
+                }
+            } else {
+                $query->whereRaw('1 = 0');
+            }
+        }
+
+        $reports = $query->paginate(5);
 
         $reports->getCollection()->transform(function ($report) {
             $report->formatted_date = $this->formatDate($report->created_at);

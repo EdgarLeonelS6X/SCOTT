@@ -28,83 +28,129 @@
             </div>
         </div>
         <div class="overflow-x-auto">
-            @if ($reports->isEmpty())
-                <div class="mt-4 text-center">
-                    <span class="text-gray-500 dark:text-gray-300">
-                        <i class="fa-solid fa-circle-info mr-1"></i>
-                        {{ __('There are no reports available at this time.') }}
-                    </span>
-                </div>
-            @else
-                <table class="w-full min-w-[640px] text-sm text-left text-gray-500 dark:text-gray-400">
-                    <thead class="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-gray-600 dark:text-white">
-                        <tr>
-                            <th class="py-3 px-4 text-left whitespace-nowrap">
-                                <i class="fa-solid fa-folder mr-1"></i> {{ __('Report') }}
-                            </th>
-                            <th class="py-3 px-4 text-left whitespace-nowrap">
-                                <i class="fa-solid fa-layer-group mr-1"></i> {{ __('Channels') }}
-                            </th>
-                            <th class="py-3 px-4 text-left whitespace-nowrap">
-                                <i class="fa-solid fa-user-group mr-1"></i> {{ __('Under review by') }}
-                            </th>
-                            <th wire:click="toggleOrder"
-                                class="py-3 px-4 text-left flex items-center cursor-pointer whitespace-nowrap">
-                                <i class="fa-solid fa-calendar mr-1"></i> {{ __('It was reported ago') }}
-                                <i class="fa-solid {{ $order === 'asc' ? 'fa-sort-up' : 'fa-sort-down' }} ml-1"></i>
-                            </th>
-                            <th class="px-4 py-3 text-center">
-                                <span class="sr-only">
-                                    <i class="fa-solid fa-sliders-h mr-1"></i> {{ __('Options') }}
+            <table class="w-full min-w-[640px] text-sm text-left text-gray-500 dark:text-gray-400">
+                <thead class="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-gray-600 dark:text-white">
+                    <tr>
+                        <th class="py-3 px-4 w-[240px] text-left whitespace-nowrap">
+                            <i class="fa-solid fa-folder mr-1"></i> {{ __('Report') }}
+                        </th>
+                        <th class="py-3 px-4 w-[150px] text-left whitespace-nowrap">
+                            <i class="fa-solid fa-layer-group mr-1"></i> {{ __('Channels') }}
+                        </th>
+                        @if(auth()->user() && auth()->user()->id === 1)
+                            <th scope="col" class="px-4 py-3 w-[120px] text-left cursor-pointer" wire:click="toggleAreaFilter">
+                                <i class="fa-solid fa-building mr-1"></i>
+                                <span class="text-gray-500 dark:text-white">
+                                    @if ($areaFilter && $areaFilter !== 'all')
+                                        {{ $areaFilter }}
+                                    @else
+                                        {{ __('All Areas') }}
+                                    @endif
+                                    <i class="ml-1 fa-solid fa-sort"></i>
                                 </span>
                             </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($reports as $report)
-                            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-600 text-black dark:text-white cursor-pointer"
-                                wire:click="openReportDetails({{ $report->id }})">
-                                <td
-                                    class="py-3 px-4 font-bold leading-tight truncate whitespace-nowrap overflow-hidden text-ellipsis max-w-[8rem] sm:max-w-xs">
-                                    {{ $report->category }}
-                                </td>
-                                <td class="px-4 py-3 whitespace-nowrap">
-                                    <div class="flex items-center space-x-3">
-                                        @foreach ($report->reportDetails->sortBy(fn($detail) => $detail->channel->number)->take(3) as $detail)
-                                            <div class="relative w-8 h-8 overflow-hidden">
-                                                <img class="w-full h-full object-contain object-center"
-                                                    src="{{ $detail->channel->image }}" alt="{{ $detail->channel->name }}"
-                                                    title="{{ $detail->channel->number }} {{ $detail->channel->name }}">
-                                            </div>
-                                        @endforeach
-                                        @if ($report->reportDetails->count() > 3)
-                                            <span
-                                                class="flex items-center justify-center w-8 h-8 text-xs font text-white bg-primary-700 rounded-full shadow-md">
-                                                +{{ $report->reportDetails->count() - 3 }}
-                                            </span>
+                        @else
+                            <th scope="col" class="px-4 py-3 w-[120px] text-left">
+                                <i class="fa-solid fa-building mr-1"></i>
+                                <span class="text-gray-500 dark:text-white">{{ __('Area') }}</span>
+                            </th>
+                        @endif
+                        <th class="py-3 px-4 w-[150px] text-left whitespace-nowrap">
+                            <i class="fa-solid fa-user-group mr-1"></i> {{ __('Under review by') }}
+                        </th>
+                        <th wire:click="toggleOrder" class="py-3 px-4 w-[180px] text-left flex items-center cursor-pointer whitespace-nowrap">
+                            <i class="fa-solid fa-calendar mr-1"></i> {{ __('It was reported ago') }}
+                            <i class="fa-solid {{ $order === 'asc' ? 'fa-sort-up' : 'fa-sort-down' }} ml-1"></i>
+                        </th>
+                        <th class="px-4 py-3 w-[80px] text-center">
+                            <span class="sr-only">
+                                <i class="fa-solid fa-sliders-h mr-1"></i> {{ __('Options') }}
+                            </span>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse ($reports as $report)
+                        <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-600 text-black dark:text-white cursor-pointer"
+                            wire:click="openReportDetails({{ $report->id }})">
+                            <td
+                                class="py-3 px-4 w-[240px] font-bold leading-tight truncate whitespace-nowrap overflow-hidden text-ellipsis">
+                                {{ $report->category }}
+                            </td>
+                            <td class="px-4 py-3 w-[150px] whitespace-nowrap">
+                                <div class="flex items-center space-x-3">
+                                    @foreach ($report->reportDetails->sortBy(fn($detail) => $detail->channel->number)->take(3) as $detail)
+                                        <div class="relative w-8 h-8 overflow-hidden">
+                                            <img class="w-full h-full object-contain object-center"
+                                                src="{{ $detail->channel->image }}" alt="{{ $detail->channel->name }}"
+                                                title="{{ $detail->channel->number }} {{ $detail->channel->name }}">
+                                        </div>
+                                    @endforeach
+                                    @if ($report->reportDetails->count() > 3)
+                                        <span
+                                            class="flex items-center justify-center w-8 h-8 text-xs font text-white bg-primary-700 rounded-full shadow-md">
+                                            +{{ $report->reportDetails->count() - 3 }}
+                                        </span>
+                                    @endif
+                                </div>
+                            </td>
+                            <td class="px-4 py-2.5 w-[120px] truncate whitespace-nowrap overflow-hidden">
+                                @if($report->area === 'DTH/OTT')
+                                    <span
+                                        class="inline-flex items-center px-2 py-1 text-xs font-medium text-secondary-800 bg-secondary-200 dark:bg-secondary-800 dark:text-secondary-200 rounded-full mr-2">
+                                        <i class="fa-solid fa-satellite-dish mr-1.5"></i>
+                                        {{ __('DTH') }}
+                                    </span>
+                                    <span
+                                        class="inline-flex items-center px-2 py-1 text-xs font-medium text-primary-800 bg-primary-200 dark:bg-primary-800 dark:text-primary-200 rounded-full">
+                                        <i class="fa-solid fa-cube mr-1.5"></i>
+                                        {{ __('OTT') }}
+                                    </span>
+                                @else
+                                    <span
+                                        class="inline-flex items-center px-2 py-1 text-xs font-medium rounded-full
+                                            {{ $report->area === 'DTH'
+                                        ? 'text-secondary-800 bg-secondary-200 dark:bg-secondary-800 dark:text-secondary-200'
+                                        : ($report->area === 'OTT'
+                                            ? 'text-primary-800 bg-primary-200 dark:bg-primary-800 dark:text-primary-200'
+                                            : 'text-gray-800 bg-gray-200 dark:bg-gray-800 dark:text-gray-200') }}">
+                                        @if($report->area === 'DTH')
+                                            <i class="fa-solid fa-satellite-dish mr-1.5"></i>
+                                        @elseif($report->area === 'OTT')
+                                            <i class="fa-solid fa-cube mr-1.5"></i>
+                                        @else
+                                            <i class="fa-solid fa-layer-group mr-1.5"></i>
                                         @endif
-                                    </div>
-                                </td>
-                                <td class="py-3 px-4 whitespace-nowrap">
-                                    <span
-                                        class="inline-flex items-center px-2 py-1 text-sm font-medium text-yellow-800 bg-yellow-200 dark:bg-yellow-800 dark:text-yellow-200 rounded-full">
-                                        <i class="fa-solid fa-user mr-1.5"></i> {{ __($report->reviewed_by) }}
+                                        {{ $report->area ?? __('N/A') }}
                                     </span>
-                                </td>
-                                <td class="py-3 px-4 whitespace-nowrap">
-                                    <span
-                                        class="inline-flex items-center px-2 py-1 text-sm font-medium text-blue-800 bg-blue-200 dark:bg-blue-800 dark:text-blue-200 rounded-full">
-                                        <i class="fa-solid fa-clock mr-1.5"></i> {{ $report->formatted_date }}
-                                    </span>
-                                </td>
-                                <td class="py-3 px-4 text-center whitespace-nowrap">
-                                    <i class="fa-solid fa-chevron-right text-gray-600 dark:text-gray-300"></i>
-                                </td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            @endif
+                                @endif
+                            </td>
+                            <td class="py-3 px-4 w-[150px] whitespace-nowrap">
+                                <span
+                                    class="inline-flex items-center px-2 py-1 text-sm font-medium text-yellow-800 bg-yellow-200 dark:bg-yellow-800 dark:text-yellow-200 rounded-full">
+                                    <i class="fa-solid fa-user mr-1.5"></i> {{ __($report->reviewed_by) }}
+                                </span>
+                            </td>
+                            <td class="py-3 px-4 w-[180px] whitespace-nowrap">
+                                <span
+                                    class="inline-flex items-center px-2 py-1 text-sm font-medium text-blue-800 bg-blue-200 dark:bg-blue-800 dark:text-blue-200 rounded-full">
+                                    <i class="fa-solid fa-clock mr-1.5"></i> {{ $report->formatted_date }}
+                                </span>
+                            </td>
+                            <td class="py-3 px-4 w-[80px] text-center whitespace-nowrap">
+                                <i class="fa-solid fa-chevron-right text-gray-600 dark:text-gray-300"></i>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="6" class="py-4 pt-10 text-center bg-white dark:bg-gray-800 text-gray-500 dark:text-gray-300">
+                                <i class="fa-solid fa-circle-info mr-1"></i>
+                                {{ __('There are no reports available at this time.') }}
+                            </td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
         </div>
         <div class="p-4">
             {{ $reports->links() }}
