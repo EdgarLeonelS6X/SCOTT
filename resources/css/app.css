@@ -6,9 +6,6 @@
     display: none;
 }
 
-/* Reusable fixed column width helpers for tables
-   Use in table headers / cells to avoid layout reflow when filters change.
-   Example: <th class="col-w-120"> or <td class="col-w-180"> */
 .col-w-60 { width: 60px; min-width: 60px; }
 .col-w-80 { width: 80px; min-width: 80px; }
 .col-w-100 { width: 100px; min-width: 100px; }
