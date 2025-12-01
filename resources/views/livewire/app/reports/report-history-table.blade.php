@@ -95,15 +95,33 @@
         <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
             <thead class="text-xs dark:text-white uppercase dark:bg-gray-600 shadow-2xl">
                 <tr>
-                    <th class="py-3 px-4 pl-2 sm:pl-4 text-left whitespace-nowrap">
+                    <th class="py-3 px-4 pl-2 sm:pl-4 text-left whitespace-nowrap w-[100px]">
                         <i class="fa-solid fa-flag mr-1"></i>
                         {{ __('Folio') }}
                     </th>
-                    <th class="py-3 px-2 text-left w-48 min-w-[200px] sm:min-w-[300px] md:min-w-[360px]">
+                    <th class="py-3 px-4 text-left w-96">
                         <i class="fa-solid fa-folder mr-1"></i>
                         {{ __('Report') }}
                     </th>
-                    <th class="py-3 px-2 text-left w-28 min-w-[150px] sm:min-w-[150px] cursor-pointer"
+                    @if(auth()->user() && auth()->user()->id === 1)
+                        <th scope="col" class="px-4 py-3 w-[120px] text-left cursor-pointer" wire:click="toggleAreaFilter">
+                            <i class="fa-solid fa-building mr-1"></i>
+                            <span class="text-gray-500 dark:text-white">
+                                @if ($areaFilter && $areaFilter !== 'all')
+                                    {{ $areaFilter }}
+                                @else
+                                    {{ __('All Areas') }}
+                                @endif
+                                <i class="ml-1 fa-solid fa-sort"></i>
+                            </span>
+                        </th>
+                    @else
+                        <th scope="col" class="px-4 py-3 w-[120px] text-left">
+                            <i class="fa-solid fa-building mr-1"></i>
+                            <span class="text-gray-500 dark:text-white">{{ __('Area') }}</span>
+                        </th>
+                    @endif
+                    <th class="py-3 px-4 text-left cursor-pointer w-[120px]"
                         wire:click="toggleTypeFilter">
                         <i class="fa-solid fa-list mr-1"></i>
                         <span class="text-gray-500 dark:text-white truncate">
@@ -115,7 +133,7 @@
                             <i class="ml-1 fa-solid fa-sort"></i>
                         </span>
                     </th>
-                    <th class="py-3 px-2 text-left w-28 min-w-[150px] sm:min-w-[150px] cursor-pointer"
+                    <th class="py-3 px-4 text-left w-[120px] cursor-pointer"
                         wire:click="toggleStatusFilter">
                         <i class="fa-solid fa-circle-check mr-1"></i>
                         <span class="text-gray-500 dark:text-white truncate">
@@ -127,7 +145,7 @@
                             <i class="ml-1 fa-solid fa-sort"></i>
                         </span>
                     </th>
-                    <th class="py-3 px-2 text-left cursor-pointer whitespace-nowrap min-w-[150px] sm:min-w-[150px]"
+                    <th class="py-3 px-4 text-left cursor-pointer whitespace-nowrap w-[180px]"
                         wire:click="setOrder('created_at')">
                         <i class="fa-solid fa-calendar mr-1"></i>
                         {{ __('Datetime') }}
@@ -140,7 +158,7 @@
                             @endif
                         </button>
                     </th>
-                    <th class="py-3 px-2 text-left min-w-[260px] sm:min-w-[260px] md:min-w-[315px] cursor-pointer"
+                    <th class="py-3 px-4 text-left w-[350px] cursor-pointer"
                         wire:click="toggleUserFilter">
                         <i class="fa-solid fa-user mr-1"></i>
                         <span class="text-gray-500 dark:text-white truncate">
@@ -163,7 +181,7 @@
             <tbody>
                 @if ($reports->isEmpty())
                     <tr>
-                        <td colspan="7" class="bg-white dark:bg-gray-800 text-center py-6 pb-3">
+                        <td colspan="8" class="bg-white dark:bg-gray-800 text-center py-6 pb-3">
                             <div class="text-gray-500 dark:text-gray-300">
                                 <i class="fa-solid fa-circle-info mr-1"></i>
                                 {{ __('No reports found with the current filters.') }}
@@ -180,6 +198,35 @@
                             <td title="{{ $report->category }}"
                                 class="px-2 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm font-bold leading-tight truncate whitespace-nowrap overflow-hidden text-ellipsis max-w-[8rem] sm:max-w-xs">
                                 {{ $report->category }}
+                            </td>
+                            <td class="px-4 py-2.5 w-[120px] truncate whitespace-nowrap overflow-hidden">
+                                @if($report->area === 'DTH/OTT')
+                                    <span
+                                        class="inline-flex items-center px-2 py-1 text-xs font-medium text-secondary-800 bg-secondary-200 dark:bg-secondary-800 dark:text-secondary-200 rounded-full mr-2">
+                                        <i class="fa-solid fa-satellite-dish mr-1.5"></i>
+                                        {{ __('DTH') }}
+                                    </span>
+                                    <span
+                                        class="inline-flex items-center px-2 py-1 text-xs font-medium text-primary-800 bg-primary-200 dark:bg-primary-800 dark:text-primary-200 rounded-full">
+                                        <i class="fa-solid fa-cube mr-1.5"></i>
+                                        {{ __('OTT') }}
+                                    </span>
+                                @else
+                                    <span class="inline-flex items-center px-2 py-1 text-xs font-medium rounded-full {{ $report->area === 'DTH'
+                                        ? 'text-secondary-800 bg-secondary-200 dark:bg-secondary-800 dark:text-secondary-200'
+                                        : ($report->area === 'OTT'
+                                        ? 'text-primary-800 bg-primary-200 dark:bg-primary-800 dark:text-primary-200'
+                                        : 'text-gray-800 bg-gray-200 dark:bg-gray-800 dark:text-gray-200') }}">
+                                        @if($report->area === 'DTH')
+                                            <i class="fa-solid fa-satellite-dish mr-1.5"></i>
+                                        @elseif($report->area === 'OTT')
+                                            <i class="fa-solid fa-cube mr-1.5"></i>
+                                        @else
+                                            <i class="fa-solid fa-layer-group mr-1.5"></i>
+                                        @endif
+                                        {{ $report->area ?? __('N/A') }}
+                                    </span>
+                                @endif
                             </td>
                             <td class="px-2 sm:px-4 py-2 sm:py-3">
                                 @if ($report->type === 'Momentary')
@@ -237,7 +284,7 @@
                                     {{ $report->reportedBy->name }}
                                 </span>
                             </td>
-                            <td class="px-2 sm:px-4 py-2 sm:py-3 text-center">
+                            <td class="px-2 sm:px-4 py-2 sm:py-3 text-end justify-end">
                                 <i class="fa-solid fa-chevron-right text-gray-600 dark:text-gray-300"></i>
                             </td>
                         </tr>

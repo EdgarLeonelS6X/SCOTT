@@ -5,3 +5,20 @@
 [x-cloak] {
     display: none;
 }
+
+/* Reusable fixed column width helpers for tables
+   Use in table headers / cells to avoid layout reflow when filters change.
+   Example: <th class="col-w-120"> or <td class="col-w-180"> */
+.col-w-60 { width: 60px; min-width: 60px; }
+.col-w-80 { width: 80px; min-width: 80px; }
+.col-w-100 { width: 100px; min-width: 100px; }
+.col-w-120 { width: 120px; min-width: 120px; }
+.col-w-150 { width: 150px; min-width: 150px; }
+.col-w-180 { width: 180px; min-width: 180px; }
+.col-w-200 { width: 200px; min-width: 200px; }
+.col-w-260 { width: 260px; min-width: 260px; }
+.col-w-300 { width: 300px; min-width: 300px; }
+.col-w-350 { width: 350px; min-width: 350px; }
+
+.col-truncate { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+

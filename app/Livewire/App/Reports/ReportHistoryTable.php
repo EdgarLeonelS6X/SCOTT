@@ -16,6 +16,7 @@ class ReportHistoryTable extends Component
     public $search = '';
     public $orderField = 'created_at';
     public $orderDirection = 'desc';
+    public $areaFilter = 'all';
     public $statusFilter = null;
     public $selectedUser = null;
     public $typeFilter = null;
@@ -27,7 +28,7 @@ class ReportHistoryTable extends Component
     public $currentTypeIndex = -1;
     public $currentStatusIndex = -1;
     public $currentUserIndex = -1;
-    protected $queryString = ['search', 'orderField', 'orderDirection'];
+    protected $queryString = ['search', 'orderField', 'orderDirection', 'areaFilter' => ['except' => 'all']];
 
     public function mount()
     {
@@ -127,6 +128,22 @@ class ReportHistoryTable extends Component
             : $this->userOptions[$this->currentUserIndex];
     }
 
+    public function toggleAreaFilter()
+    {
+        $auth = auth()->user();
+
+        if (! $auth || $auth->id !== 1) {
+            return;
+        }
+
+        $options = ['all', 'DTH', 'OTT'];
+
+        $currentIndex = array_search($this->areaFilter, $options, true);
+
+        $this->areaFilter = $options[($currentIndex === false ? 0 : ($currentIndex + 1) % count($options))];
+        $this->resetPage();
+    }
+
     protected function filteredQuery()
     {
         $query = Report::query()
@@ -159,6 +176,20 @@ class ReportHistoryTable extends Component
             $start = \Carbon\Carbon::createFromFormat('Y-m-d', $this->startDate)->startOfDay();
             $end = \Carbon\Carbon::createFromFormat('Y-m-d', $this->endDate)->endOfDay();
             $query->whereBetween('created_at', [$start, $end]);
+        }
+
+        $auth = auth()->user();
+
+        if ($auth && $auth->id === 1) {
+            if ($this->areaFilter && in_array($this->areaFilter, ['DTH', 'OTT'], true)) {
+                $query->whereIn('area', [$this->areaFilter, 'DTH/OTT']);
+            }
+        } else {
+            if ($auth && ($viewerArea = ($auth->default_area ?? $auth->area))) {
+                $query->whereIn('area', [$viewerArea, 'DTH/OTT']);
+            } else {
+                $query->whereRaw('1 = 0');
+            }
         }
 
         return $query;
