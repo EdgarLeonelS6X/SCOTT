@@ -51,44 +51,28 @@
                                 }
                             @endphp
 
+                            <span class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg {{ $areaBadgeClass }} text-xs font-medium uppercase tracking-wide mr-2" title="{{ $report->area ?? '' }}" aria-label="Area {{ $report->area ?? '' }}">
+                                <i class="fa-solid {{ $areaIcon }} text-xs leading-none" aria-hidden="true"></i>
+                                <span class="leading-none">{{ $report->area ?? '' }}</span>
+                            </span>
+
                             @if ($report->type === 'Momentary')
-                                <span
-                                    class="inline-flex items-center justify-between text-xs font-medium text-white bg-red-500 dark:bg-red-600 px-3 py-1 rounded-lg shadow-2xl gap-3">
-                                    <span class="flex items-center gap-2">
-                                        <i class="fa-solid fa-triangle-exclamation"></i>
-                                        <span>{{ __($report->type) }}</span>
-                                    </span>
-                                    <span class="inline-flex items-center gap-1 px-2.5 h-5 rounded-full {{ $areaBadgeClass }} text-[10px] font-semibold uppercase tracking-wide" title="{{ $report->area ?? '' }}" aria-label="Area {{ $report->area ?? '' }}">
-                                        <span class="leading-none">{{ $report->area ?? '' }}</span>
-                                        <i class="fa-solid {{ $areaIcon }} text-[10px] leading-none" aria-hidden="true"></i>
-                                    </span>
+                                <span class="inline-flex items-center text-xs font-medium text-white bg-red-500 dark:bg-red-600 px-3 py-1 rounded-lg shadow-2xl gap-2">
+                                    <i class="fa-solid fa-triangle-exclamation"></i>
+                                    <span>{{ __($report->type) }}</span>
                                 </span>
                             @elseif ($report->type === 'Hourly')
-                                <span
-                                    class="inline-flex items-center justify-between text-xs font-medium text-white bg-green-500 dark:bg-green-600 px-3 py-1 rounded-lg shadow-2xl gap-3">
-                                    <span class="flex items-center gap-2">
-                                        <i class="fa-solid fa-clock"></i>
-                                        <span>{{ __($report->type) }}</span>
-                                    </span>
-                                    <span class="inline-flex items-center gap-1 px-2.5 h-5 rounded-full {{ $areaBadgeClass }} text-[10px] font-semibold uppercase tracking-wide" title="{{ $report->area ?? '' }}" aria-label="Area {{ $report->area ?? '' }}">
-                                        <span class="leading-none">{{ $report->area ?? '' }}</span>
-                                        <i class="fa-solid {{ $areaIcon }} text-[10px] leading-none" aria-hidden="true"></i>
-                                    </span>
+                                <span class="inline-flex items-center text-xs font-medium text-white bg-green-500 dark:bg-green-600 px-3 py-1 rounded-lg shadow-2xl gap-2">
+                                    <i class="fa-solid fa-clock"></i>
+                                    <span>{{ __($report->type) }}</span>
                                 </span>
                             @else
-                                <span
-                                    class="inline-flex items-center justify-between text-xs font-medium text-white bg-blue-500 dark:bg-blue-600 px-3 py-1 rounded-lg shadow-2xl gap-3">
-                                    <span class="flex items-center gap-2">
-                                        <i class="fa-solid fa-forward"></i>
-                                        <span>{{ __($report->type) }}</span>
-                                    </span>
-                                    <span class="inline-flex items-center gap-1 px-2.5 h-5 rounded-full {{ $areaBadgeClass }} text-[10px] font-semibold uppercase tracking-wide" title="{{ $report->area ?? '' }}" aria-label="Area {{ $report->area ?? '' }}">
-                                        <span class="leading-none">{{ $report->area ?? '' }}</span>
-                                        <i class="fa-solid {{ $areaIcon }} text-[10px] leading-none" aria-hidden="true"></i>
-                                    </span>
+                                <span class="inline-flex items-center text-xs font-medium text-white bg-blue-500 dark:bg-blue-600 px-3 py-1 rounded-lg shadow-2xl gap-2">
+                                    <i class="fa-solid fa-forward"></i>
+                                    <span>{{ __($report->type) }}</span>
                                 </span>
                             @endif
-                            <span class="text-sm font-medium text-gray-600 dark:text-gray-300 mx-2">
+                            <span class="text-sm font-medium text-gray-600 dark:text-gray-300 mx-0 md:mx-2">
                                 {{ __('Folio') }} #{{ $report->id }}
                             </span>
                             @if ($report->type === 'Momentary' && $report->status === 'Revision')
