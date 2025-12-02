@@ -30,20 +30,62 @@
                     <div
                         class="flex flex-col sm:flex-row sm:items-center justify-between sm:justify-end gap-2 w-full sm:w-auto">
                         <div class="flex flex-wrap justify-between sm:justify-start items-center gap-2">
+                            @php
+                                $areaIcon = null;
+                                if ($report->area === 'DTH') {
+                                    $areaIcon = 'fa-satellite-dish';
+                                } elseif ($report->area === 'OTT') {
+                                    $areaIcon = 'fa-cube';
+                                } elseif ($report->area === 'DTH/OTT') {
+                                    $areaIcon = 'fa-layer-group';
+                                } else {
+                                    $areaIcon = 'fa-layer-group';
+                                }
+                                $areaBadgeClass = 'bg-gray-200 text-gray-800 dark:bg-gray-700 dark:text-gray-200 ring-0';
+                                if ($report->area === 'DTH') {
+                                    $areaBadgeClass = 'bg-indigo-600 text-white dark:bg-indigo-700 dark:text-white ring-1 ring-white/10';
+                                } elseif ($report->area === 'OTT') {
+                                    $areaBadgeClass = 'bg-pink-600 text-white dark:bg-pink-700 dark:text-white ring-1 ring-white/10';
+                                } elseif ($report->area === 'DTH/OTT') {
+                                    $areaBadgeClass = 'bg-secondary-600 text-white dark:bg-secondary-700 dark:text-white ring-1 ring-white/10';
+                                }
+                            @endphp
+
                             @if ($report->type === 'Momentary')
                                 <span
-                                    class="text-xs font-medium text-white bg-red-500 dark:bg-red-600 px-3 py-1 rounded-lg shadow-2xl">
-                                    <i class="fa-solid fa-triangle-exclamation mr-1"></i> {{ __($report->type) }}
+                                    class="inline-flex items-center justify-between text-xs font-medium text-white bg-red-500 dark:bg-red-600 px-3 py-1 rounded-lg shadow-2xl gap-3">
+                                    <span class="flex items-center gap-2">
+                                        <i class="fa-solid fa-triangle-exclamation"></i>
+                                        <span>{{ __($report->type) }}</span>
+                                    </span>
+                                    <span class="inline-flex items-center gap-1 px-2.5 h-5 rounded-full {{ $areaBadgeClass }} text-[10px] font-semibold uppercase tracking-wide" title="{{ $report->area ?? '' }}" aria-label="Area {{ $report->area ?? '' }}">
+                                        <span class="leading-none">{{ $report->area ?? '' }}</span>
+                                        <i class="fa-solid {{ $areaIcon }} text-[10px] leading-none" aria-hidden="true"></i>
+                                    </span>
                                 </span>
                             @elseif ($report->type === 'Hourly')
                                 <span
-                                    class="text-xs font-medium text-white bg-green-500 dark:bg-green-600 px-3 py-1 rounded-lg shadow-2xl">
-                                    <i class="fa-solid fa-clock mr-1"></i> {{ __($report->type) }}
+                                    class="inline-flex items-center justify-between text-xs font-medium text-white bg-green-500 dark:bg-green-600 px-3 py-1 rounded-lg shadow-2xl gap-3">
+                                    <span class="flex items-center gap-2">
+                                        <i class="fa-solid fa-clock"></i>
+                                        <span>{{ __($report->type) }}</span>
+                                    </span>
+                                    <span class="inline-flex items-center gap-1 px-2.5 h-5 rounded-full {{ $areaBadgeClass }} text-[10px] font-semibold uppercase tracking-wide" title="{{ $report->area ?? '' }}" aria-label="Area {{ $report->area ?? '' }}">
+                                        <span class="leading-none">{{ $report->area ?? '' }}</span>
+                                        <i class="fa-solid {{ $areaIcon }} text-[10px] leading-none" aria-hidden="true"></i>
+                                    </span>
                                 </span>
                             @else
                                 <span
-                                    class="text-xs font-medium text-white bg-blue-500 dark:bg-blue-600 px-3 py-1 rounded-lg shadow-2xl">
-                                    <i class="fa-solid fa-forward mr-1"></i> {{ __($report->type) }}
+                                    class="inline-flex items-center justify-between text-xs font-medium text-white bg-blue-500 dark:bg-blue-600 px-3 py-1 rounded-lg shadow-2xl gap-3">
+                                    <span class="flex items-center gap-2">
+                                        <i class="fa-solid fa-forward"></i>
+                                        <span>{{ __($report->type) }}</span>
+                                    </span>
+                                    <span class="inline-flex items-center gap-1 px-2.5 h-5 rounded-full {{ $areaBadgeClass }} text-[10px] font-semibold uppercase tracking-wide" title="{{ $report->area ?? '' }}" aria-label="Area {{ $report->area ?? '' }}">
+                                        <span class="leading-none">{{ $report->area ?? '' }}</span>
+                                        <i class="fa-solid {{ $areaIcon }} text-[10px] leading-none" aria-hidden="true"></i>
+                                    </span>
                                 </span>
                             @endif
                             <span class="text-sm font-medium text-gray-600 dark:text-gray-300 mx-2">
