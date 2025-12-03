@@ -73,6 +73,13 @@ if ($report->area === 'DTH') {
                         </div>
                     </div>
                 </div>
+                @php
+                    $userArea = strtolower(trim((string) (Auth::user()?->area ??  '')));
+                    $editBtnClasses = $userArea === 'dth'
+                        ? 'inline-flex w-full sm:w-auto items-center justify-center gap-2 px-4 py-2 bg-secondary-100 dark:bg-secondary-900 text-secondary-700 dark:text-secondary-300 hover:bg-secondary-200 dark:hover:bg-secondary-800 border border-secondary-200 dark:border-secondary-700 rounded-lg'
+                        : 'inline-flex w-full sm:w-auto items-center justify-center gap-2 px-4 py-2 bg-primary-100 dark:bg-primary-900 text-primary-700 dark:text-primary-200 hover:bg-primary-200 dark:hover:bg-primary-800 border border-primary-200 dark:border-primary-700 rounded-lg';
+                @endphp
+
                 <div class="flex flex-col sm:flex-row items-center gap-2 justify-center sm:justify-start w-full sm:w-auto space-y-2 sm:space-y-0">
                     <a href="{{ route('reports.index') }}"
                         class="inline-flex w-full sm:w-auto items-center justify-center gap-2 px-4 py-2 mr-0 md:mr-2 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg border border-gray-300 dark:border-gray-600 hover:bg-gray-200 dark:hover:bg-gray-600 shadow-2xl">
@@ -81,8 +88,7 @@ if ($report->area === 'DTH') {
                     </a>
 
                     @if ($report->type === 'Momentary' && $report->status === 'Revision')
-                        <a href="{{ route('reports.edit', ['report' => $report->id]) }}"
-                            class="inline-flex w-full sm:w-auto items-center justify-center gap-2 px-4 py-2 bg-primary-100 dark:bg-primary-900 text-primary-700 dark:text-primary-200 hover:bg-primary-200 dark:hover:bg-primary-800 border border-primary-200 dark:border-primary-700 rounded-lg">
+                        <a href="{{ route('reports.edit', ['report' => $report->id]) }}" class="{{ $editBtnClasses }}">
                             <i class="fa-solid fa-pen-to-square text-xs"></i>
                             <span class="text-sm font-medium">{{ __('Edit') }}</span>
                         </a>
