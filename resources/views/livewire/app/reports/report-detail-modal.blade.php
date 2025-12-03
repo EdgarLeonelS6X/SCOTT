@@ -12,22 +12,37 @@
             <div
                 class="flex flex-col sm:flex-row sm:items-center justify-between sm:justify-end gap-2 w-full sm:w-auto">
                 <div class="flex flex-wrap justify-between sm:justify-start items-center gap-2">
+                    @php $area = $selectedReport->area ?? null; @endphp
+                    <span
+                        class="inline-flex items-center px-2 py-1 mr-2 text-xs font-medium rounded-lg {{ $area === 'DTH' ? 'text-secondary-800 bg-secondary-200 dark:bg-secondary-800 dark:text-secondary-200' : ($area === 'OTT' ? 'text-primary-800 bg-primary-200 dark:bg-primary-800 dark:text-primary-200' : 'text-gray-800 bg-gray-200 dark:bg-gray-800 dark:text-gray-200') }}"
+                        title="{{ $area ?? __('N/A') }}">
+                        @if($area === 'DTH')
+                            <i class="fa-solid fa-satellite-dish mr-1.5"></i>
+                        @elseif($area === 'OTT')
+                            <i class="fa-solid fa-cube mr-1.5"></i>
+                        @else
+                            <i class="fa-solid fa-layer-group mr-1.5"></i>
+                        @endif
+                        {{ $area ?? __('N/A') }}
+                    </span>
+
                     <span
                         class="text-xs font-medium text-white bg-red-500 dark:bg-red-600 px-3 py-1 rounded-lg shadow-2xl">
                         <i class="fa-solid fa-triangle-exclamation mr-1"></i>
                         {{ __($selectedReport->type) }}
                     </span>
+
                     <span class="text-sm font-medium text-gray-500 dark:text-gray-400 ml-2">
                         {{ __('Folio') }} #{{ $selectedReport->id }}
                     </span>
                 </div>
-                <div class="flex items-center hidden md:block">
+                <div class="hidden md:flex md:items-center">
                     <a href="{{ route('reports.show', ['report' => $selectedReport->id]) }}"
                         class="inline-flex items-center px-2 py-1 text-xs font-semibold rounded-lg bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-200 hover:bg-blue-200 dark:hover:bg-blue-800 border border-blue-200 dark:border-blue-700 mx-2 transition">
                         <i class="fa-solid fa-eye mr-1"></i> {{ __('Show') }}
                     </a>
                     <a href="{{ route('reports.edit', ['report' => $selectedReport->id]) }}"
-                        class="inline-flex items-center px-2 py-1 text-xs font-semibold rounded-lg bg-primary-100 dark:bg-primary-900 text-primary-700 dark:text-primary-200 hover:bg-primary-200 dark:hover:bg-primary-800 border border-primary-200 dark:border-primary-700 ml-1 transition">
+                        class="inline-flex items-center px-2 py-1 text-xs font-semibold rounded-lg bg-primary-100 dark:bg-primary-900 text-primary-700 dark:text-primary-200 hover:bg-primary-200 dark:hover:bg-primary-800 border border-primary-200 dark:border-primary-700 ml-2 transition">
                         <i class="fa-solid fa-pen-to-square mr-1"></i> {{ __('Edit') }}
                     </a>
                 </div>

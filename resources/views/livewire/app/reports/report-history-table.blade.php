@@ -95,7 +95,7 @@
         <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
             <thead class="text-xs dark:text-white uppercase dark:bg-gray-600 shadow-2xl">
                 <tr>
-                    <th class="py-3 px-4 pl-2 sm:pl-4 text-left whitespace-nowrap w-[100px]">
+                    <th class="py-3 px-4 text-left whitespace-nowrap w-[100px]">
                         <i class="fa-solid fa-flag mr-1"></i>
                         {{ __('Folio') }}
                     </th>
@@ -104,8 +104,8 @@
                         {{ __('Report') }}
                     </th>
                     @if(auth()->user() && auth()->user()->id === 1)
-                        <th scope="col" class="px-4 py-3 w-[120px] text-left cursor-pointer" wire:click="toggleAreaFilter">
-                            <i class="fa-solid fa-building mr-1"></i>
+                        <th class="px-4 py-3 w-[120px] cursor-pointer inline-flex" wire:click="toggleAreaFilter">
+                            <i class="fa-solid fa-building mr-1.5"></i>
                             <span class="text-gray-500 dark:text-white">
                                 @if ($areaFilter && $areaFilter !== 'all')
                                     {{ $areaFilter }}
@@ -116,7 +116,7 @@
                             </span>
                         </th>
                     @else
-                        <th scope="col" class="px-4 py-3 w-[120px] text-left">
+                        <th class="px-4 py-3 w-[140px]">
                             <i class="fa-solid fa-building mr-1"></i>
                             <span class="text-gray-500 dark:text-white">{{ __('Area') }}</span>
                         </th>
@@ -190,104 +190,91 @@
                     </tr>
                 @else
                     @foreach ($reports as $report)
-                        <tr onclick="window.location='{{ route('reports.show', $report->id) }}'"
-                            class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-600 text-black dark:text-white cursor-pointer">
-                            <td class="px-2 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm font-bold whitespace-nowrap">
-                                {{ $report->id }}
-                            </td>
-                            <td title="{{ $report->category }}"
-                                class="px-2 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm font-bold leading-tight truncate whitespace-nowrap overflow-hidden text-ellipsis max-w-[8rem] sm:max-w-xs">
-                                {{ $report->category }}
-                            </td>
-                            <td class="px-4 py-2.5 w-[120px] truncate whitespace-nowrap overflow-hidden">
-                                @if($report->area === 'DTH/OTT')
-                                    <span
-                                        class="inline-flex items-center px-2 py-1 text-xs font-medium text-secondary-800 bg-secondary-200 dark:bg-secondary-800 dark:text-secondary-200 rounded-full mr-2">
-                                        <i class="fa-solid fa-satellite-dish mr-1.5"></i>
-                                        {{ __('DTH') }}
-                                    </span>
-                                    <span
-                                        class="inline-flex items-center px-2 py-1 text-xs font-medium text-primary-800 bg-primary-200 dark:bg-primary-800 dark:text-primary-200 rounded-full">
-                                        <i class="fa-solid fa-cube mr-1.5"></i>
-                                        {{ __('OTT') }}
-                                    </span>
-                                @else
-                                    <span class="inline-flex items-center px-2 py-1 text-xs font-medium rounded-full {{ $report->area === 'DTH'
-                                        ? 'text-secondary-800 bg-secondary-200 dark:bg-secondary-800 dark:text-secondary-200'
-                                        : ($report->area === 'OTT'
-                                        ? 'text-primary-800 bg-primary-200 dark:bg-primary-800 dark:text-primary-200'
-                                        : 'text-gray-800 bg-gray-200 dark:bg-gray-800 dark:text-gray-200') }}">
-                                        @if($report->area === 'DTH')
-                                            <i class="fa-solid fa-satellite-dish mr-1.5"></i>
-                                        @elseif($report->area === 'OTT')
-                                            <i class="fa-solid fa-cube mr-1.5"></i>
-                                        @else
-                                            <i class="fa-solid fa-layer-group mr-1.5"></i>
-                                        @endif
-                                        {{ $report->area ?? __('N/A') }}
-                                    </span>
-                                @endif
-                            </td>
-                            <td class="px-2 sm:px-4 py-2 sm:py-3">
-                                @if ($report->type === 'Momentary')
-                                    <span
-                                        class="inline-flex items-center px-2 py-1 text-xs sm:text-sm font-medium rounded-full text-red-800 bg-red-200 dark:bg-red-800 dark:text-red-200 whitespace-nowrap">
-                                        <i class="fa-solid fa-triangle-exclamation mr-1"></i>
-                                        {{ __($report->type) }}
-                                    </span>
-                                @elseif ($report->type === 'Hourly')
-                                    <span
-                                        class="inline-flex items-center px-2 py-1 text-xs sm:text-sm font-medium rounded-full text-green-800 bg-green-200 dark:bg-green-800 dark:text-green-200 whitespace-nowrap">
-                                        <i class="fa-solid fa-clock mr-1"></i>
-                                        {{ __($report->type) }}
-                                    </span>
-                                @else
-                                    <span
-                                        class="inline-flex items-center px-2 py-1 text-xs sm:text-sm font-medium rounded-full text-blue-800 bg-blue-200 dark:bg-blue-800 dark:text-blue-200 whitespace-nowrap">
-                                        <i class="fa-solid fa-forward mr-1"></i>
-                                        {{ __($report->type) }}
-                                    </span>
-                                @endif
-                            </td>
-                            <td class="px-2 sm:px-4 py-2 sm:py-3">
-                                @if ($report->type === 'Momentary')
-                                    <span
-                                        class="inline-flex items-center px-2 py-1 text-xs sm:text-sm font-medium rounded-full
-                                         {{ $report->status === 'Resolved' ? 'text-green-800 bg-green-200 dark:bg-green-800 dark:text-green-200' : 'text-yellow-800 bg-yellow-200 dark:bg-yellow-800 dark:text-yellow-200' }} whitespace-nowrap">
-                                        @if ($report->status === 'Resolved')
-                                            <i class="fa-solid fa-circle-check mr-1"></i>
-                                        @elseif ($report->status === 'Revision')
-                                            <i class="fa-solid fa-magnifying-glass mr-1"></i>
-                                        @endif
-                                        {{ __($report->status) }}
-                                    </span>
-                                @else
-                                    <span
-                                        class="inline-flex items-center px-2 py-1 text-xs sm:text-sm font-medium rounded-full text-gray-800 bg-gray-200 dark:bg-gray-700 dark:text-gray-200 whitespace-nowrap">
-                                        <i class="fa-solid fa-folder mr-1"></i>
-                                        {{ __($report->status) }}
-                                    </span>
-                                @endif
-                            </td>
-                            <td class="px-2 sm:px-4 py-2 sm:py-3">
-                                <span
-                                    class="inline-flex items-center px-2 py-1 text-xs sm:text-sm font-medium text-blue-800 bg-blue-200 dark:bg-blue-800 dark:text-blue-200 rounded-full whitespace-nowrap">
-                                    <i class="fa-solid fa-clock mr-1"></i>
-                                    {{ $report->created_at->format('d/m/Y h:i A') }}
-                                </span>
-                            </td>
-                            <td class="px-2 sm:px-4 py-2 sm:py-3 flex items-center">
-                                <img src="{{ $report->reportedBy->profile_photo_url }}"
-                                    alt="{{ $report->reportedBy->name }}"
-                                    class="w-6 h-6 sm:w-8 sm:h-8 rounded-full mr-2 shadow-2xl">
-                                <span class="text-xs sm:text-sm truncate max-w-[8rem] sm:max-w-none">
-                                    {{ $report->reportedBy->name }}
-                                </span>
-                            </td>
-                            <td class="px-2 sm:px-4 py-2 sm:py-3 text-end justify-end">
-                                <i class="fa-solid fa-chevron-right text-gray-600 dark:text-gray-300"></i>
-                            </td>
-                        </tr>
+                                    <tr onclick="window.location='{{ route('reports.show', $report->id) }}'"
+                                        class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-600 text-black dark:text-white cursor-pointer">
+                                        <td class="py-3 px-4 text-xs font-bold whitespace-nowrap">
+                                            {{ $report->id }}
+                                        </td>
+                                        <td title="{{ $report->category }}"
+                                            class="py-3 px-4 text-xs font-bold leading-tight truncate whitespace-nowrap overflow-hidden text-ellipsis sm:max-w-xs">
+                                            {{ $report->category }}
+                                        </td>
+                                        <td class="py-3 px-4 w-[120px]">
+                                            <span class="inline-flex items-center px-2 py-1 text-xs sm:text-sm font-medium rounded-full {{ $report->area === 'DTH'
+                        ? 'text-secondary-800 bg-secondary-200 dark:bg-secondary-800 dark:text-secondary-200'
+                        : ($report->area === 'OTT'
+                            ? 'text-primary-800 bg-primary-200 dark:bg-primary-800 dark:text-primary-200'
+                            : 'text-gray-800 bg-gray-200 dark:bg-gray-800 dark:text-gray-200') }}">
+                                                @if($report->area === 'DTH')
+                                                    <i class="fa-solid fa-satellite-dish mr-1.5"></i>
+                                                @elseif($report->area === 'OTT')
+                                                    <i class="fa-solid fa-cube mr-1.5"></i>
+                                                @else
+                                                    <i class="fa-solid fa-layer-group mr-1.5"></i>
+                                                @endif
+                                                {{ $report->area ?? __('N/A') }}
+                                            </span>
+                                        </td>
+                                        <td class="py-3 px-4 w-[120px]">
+                                            @if ($report->type === 'Momentary')
+                                                <span
+                                                    class="inline-flex items-center px-2 py-1 text-xs sm:text-sm font-medium rounded-full text-red-800 bg-red-200 dark:bg-red-800 dark:text-red-200 whitespace-nowrap">
+                                                    <i class="fa-solid fa-triangle-exclamation mr-1"></i>
+                                                    {{ __($report->type) }}
+                                                </span>
+                                            @elseif ($report->type === 'Hourly')
+                                                <span
+                                                    class="inline-flex items-center px-2 py-1 text-xs sm:text-sm font-medium rounded-full text-green-800 bg-green-200 dark:bg-green-800 dark:text-green-200 whitespace-nowrap">
+                                                    <i class="fa-solid fa-clock mr-1"></i>
+                                                    {{ __($report->type) }}
+                                                </span>
+                                            @else
+                                                <span
+                                                    class="inline-flex items-center px-2 py-1 text-xs sm:text-sm font-medium rounded-full text-blue-800 bg-blue-200 dark:bg-blue-800 dark:text-blue-200 whitespace-nowrap">
+                                                    <i class="fa-solid fa-forward mr-1"></i>
+                                                    {{ __($report->type) }}
+                                                </span>
+                                            @endif
+                                        </td>
+                                        <td class="py-3 px-4 w-[120px]">
+                                            @if ($report->type === 'Momentary')
+                                                <span
+                                                    class="inline-flex items-center px-2 py-1 text-xs sm:text-sm font-medium rounded-full
+                                                        {{ $report->status === 'Resolved' ? 'text-green-800 bg-green-200 dark:bg-green-800 dark:text-green-200' : 'text-yellow-800 bg-yellow-200 dark:bg-yellow-800 dark:text-yellow-200' }} whitespace-nowrap">
+                                                    @if ($report->status === 'Resolved')
+                                                        <i class="fa-solid fa-circle-check mr-1"></i>
+                                                    @elseif ($report->status === 'Revision')
+                                                        <i class="fa-solid fa-magnifying-glass mr-1"></i>
+                                                    @endif
+                                                    {{ __($report->status) }}
+                                                </span>
+                                            @else
+                                                <span
+                                                    class="inline-flex items-center px-2 py-1 text-xs sm:text-sm font-medium rounded-full text-gray-800 bg-gray-200 dark:bg-gray-700 dark:text-gray-200 whitespace-nowrap">
+                                                    <i class="fa-solid fa-folder mr-1"></i>
+                                                    {{ __($report->status) }}
+                                                </span>
+                                            @endif
+                                        </td>
+                                        <td class="py-3 px-4 whitespace-nowrap">
+                                            <span
+                                                class="inline-flex items-center px-2 py-1 text-xs sm:text-sm font-medium text-blue-800 bg-blue-200 dark:bg-blue-800 dark:text-blue-200 rounded-full whitespace-nowrap">
+                                                <i class="fa-solid fa-clock mr-1"></i>
+                                                {{ $report->created_at->format('d/m/Y h:i A') }}
+                                            </span>
+                                        </td>
+                                        <td class="py-3 px-4 flex items-center w-[350px]">
+                                            <img src="{{ $report->reportedBy->profile_photo_url }}"
+                                                alt="{{ $report->reportedBy->name }}"
+                                                class="w-6 h-6 sm:w-8 sm:h-8 rounded-full mr-2 shadow-2xl">
+                                            <span class="text-xs truncate">
+                                                {{ $report->reportedBy->name }}
+                                            </span>
+                                        </td>
+                                        <td class="px-2 sm:px-4 py-2 sm:py-3 text-end justify-end">
+                                            <i class="fa-solid fa-chevron-right text-gray-600 dark:text-gray-300"></i>
+                                        </td>
+                                    </tr>
                     @endforeach
                 @endif
             </tbody>
