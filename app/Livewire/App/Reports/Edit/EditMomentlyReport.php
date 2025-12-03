@@ -22,6 +22,16 @@ class EditMomentlyReport extends Component
 
     public function mount(Report $report)
     {
+        $currentUser = auth()->user();
+        $userArea = strtolower(trim($currentUser->area ?? ''));
+        $reportArea = strtolower(trim($report->area ?? ''));
+
+        if (($currentUser->id ?? null) !== 1) {
+            if ($report->status !== 'Revision' && $userArea !== $reportArea) {
+                abort(403);
+            }
+        }
+
         $this->report = $report;
         $this->stages = Stage::where('status', '1')->get();
 

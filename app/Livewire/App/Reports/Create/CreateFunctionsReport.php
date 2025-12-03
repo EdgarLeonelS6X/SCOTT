@@ -222,11 +222,16 @@ class CreateFunctionsReport extends Component
                 }
             }
 
+            $userArea = Auth::user()->area ?? null;
+            if (empty($userArea)) {
+                throw ValidationException::withMessages(['area' => __('Unable to determine user area. Please set your area before creating reports.')]);
+            }
+
             $report = Report::create([
                 'type' => 'Functions',
                 'category' => implode(', ', array_column($this->categories, 'name')),
                 'reported_by' => Auth::user()->id,
-                'area' => Auth::user()->area ?? Report::AREA_OTT,
+                'area' => $userArea,
                 'status' => 'Reported',
             ]);
 

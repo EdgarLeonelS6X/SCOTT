@@ -44,9 +44,20 @@ class ReportController extends Controller
      */
     public function edit(Report $report)
     {
-        if ($report->status !== 'Revision') {
+        $currentUser = auth()->user();
+        if (empty($currentUser)) {
             abort(403);
         }
+
+        $userArea = strtolower(trim($currentUser->area ?? ''));
+        $reportArea = strtolower(trim($report->area ?? ''));
+
+        if (($currentUser->id ?? null) !== 1) {
+            if ($report->status !== 'Revision' && $userArea !== $reportArea) {
+                abort(403);
+            }
+        }
+
         return view('app.reports.edit', [
             'report' => $report
         ]);

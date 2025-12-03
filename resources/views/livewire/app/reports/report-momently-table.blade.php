@@ -45,7 +45,7 @@
                         </th>
                         @if(auth()->user() && auth()->user()->id === 1)
                             <th scope="col" class="px-4 py-3 w-[120px] text-left cursor-pointer inline-flex" wire:click="toggleAreaFilter">
-                                <i class="fa-solid fa-building mr-1"></i>
+                                <i class="fa-solid fa-building mr-1.5"></i>
                                 <span class="text-gray-500 dark:text-white">
                                     @if ($areaFilter && $areaFilter !== 'all')
                                         {{ $areaFilter }}
@@ -57,7 +57,7 @@
                             </th>
                         @else
                             <th scope="col" class="px-4 py-3 w-[120px] text-left inline-flex">
-                                <i class="fa-solid fa-building mr-1"></i>
+                                <i class="fa-solid fa-building mr-1.5"></i>
                                 <span class="text-gray-500 dark:text-white">{{ __('Area') }}</span>
                             </th>
                         @endif

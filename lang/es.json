@@ -727,5 +727,6 @@
     "Radio TV Channel": "Canal de TV Radio",
     "Learning TV Channel": "Canal de TV Aprende",
     "Radio TV Channel (DTH)": "Canal de TV Radio (DTH)",
-    "Devices": "Dispositivos"
+    "Devices": "Dispositivos",
+    "Unable to determine user area. Please set your area before creating reports.": "No se puede determinar el área del usuario. Por favor, establezca su área antes de crear informes."
 }

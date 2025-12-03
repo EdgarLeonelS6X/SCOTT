@@ -153,7 +153,7 @@ class ReportMomentlyTable extends Component
             }
         } else {
             if ($auth) {
-                $viewerArea = $auth->default_area ?? $auth->area ?? null;
+                $viewerArea = $auth->area ?? null;
                 if (in_array($viewerArea, ['OTT', 'DTH'])) {
                     $allowed = [$viewerArea, 'DTH/OTT'];
                     $query->whereIn('area', $allowed);

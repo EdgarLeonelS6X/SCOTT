@@ -3,21 +3,21 @@
         <table class="min-w-full table-fixed text-sm text-left text-gray-500 dark:text-gray-400">
             <thead class="text-xs dark:text-white uppercase dark:bg-gray-600 shadow-2xl">
                 <tr>
-                    <th scope="col" class="px-6 py-3 whitespace-nowrap min-w-[290px] max-w-[290px] w-[290px]">
+                    <th scope="col" class="px-6 py-3 whitespace-nowrap w-[290px]">
                         <i class="fa-solid fa-user mr-1.5"></i>
                         {{ __('User') }}
                     </th>
-                    <th scope="col" class="px-6 py-3 whitespace-nowrap min-w-[230px] max-w-[230px] w-[230px]">
+                    <th scope="col" class="px-6 py-3 whitespace-nowrap w-[230px]">
                         <i class="fa-solid fa-envelope mr-1.5"></i>
                         {{ __('Email') }}
                     </th>
-                    <th scope="col" class="px-6 py-3 whitespace-nowrap min-w-[150px] max-w-[150px] w-[150px]">
+                    <th scope="col" class="px-6 py-3 whitespace-nowrap w-[150px]">
                         <i class="fa-solid fa-shield-halved mr-1.5"></i>
                         {{ __('Role') }}
                     </th>
                     @php $authUser = auth()->user(); @endphp
                     @if ($authUser && $authUser->id === 1)
-                        <th class="py-3 px-6 whitespace-nowrap cursor-pointer min-w-[150px] max-w-[150px] w-[150px]"
+                        <th class="py-3 px-6 whitespace-nowrap cursor-pointer w-[150px]"
                             wire:click="toggleAreaFilter">
                             <i class="fa-solid fa-building mr-1"></i>
                             <span class="text-gray-500 dark:text-white">
@@ -30,7 +30,7 @@
                             </span>
                         </th>
                     @else
-                        <th class="py-3 px-6 whitespace-nowrap min-w-[150px] max-w-[150px] w-[150px]">
+                        <th class="py-3 px-6 whitespace-nowrap w-[200px]">
                             <i class="fa-solid fa-building mr-1"></i>
                             <span class="text-gray-500 dark:text-white">
                                 @php
@@ -46,15 +46,15 @@
                             </span>
                         </th>
                     @endif
-                    <th scope="col" class="px-6 py-3 whitespace-nowrap min-w-[90px] max-w-[90px] w-[90px]">
+                    <th scope="col" class="px-6 py-3 whitespace-nowrap w-[90px]">
                         <i class="fa-solid fa-arrows-left-right mr-1.5"></i>
                         {{ __('Switch') }}
                     </th>
-                    <th scope="col" class="px-6 py-3 whitespace-nowrap min-w-[120px] max-w-[120px] w-[120px]">
+                    <th scope="col" class="px-6 py-3 whitespace-nowrap w-[120px]">
                         <i class="fa-solid fa-toggle-on mr-1.5"></i>
                         {{ __('Status') }}
                     </th>
-                    <th scope="col" class="px-6 py-3 text-center whitespace-nowrap min-w-[40px] max-w-[40px] w-[40px]">
+                    <th scope="col" class="px-6 py-3 text-center whitespace-nowrap w-[40px]">
                     </th>
                 </tr>
             </thead>
@@ -62,17 +62,17 @@
                 @forelse ($users as $user)
                     <tr onclick="window.location.href='{{ route('admin.users.show', $user) }}'"
                         class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-600 text-black dark:text-white cursor-pointer hover:bg-gray-100">
-                        <td class="px-6 py-4 whitespace-nowrap flex items-center space-x-4 min-w-[290px] max-w-[290px] w-[290px]">
+                        <td class="px-6 py-4 whitespace-nowrap flex items-center space-x-4">
                             <button class="flex text-sm rounded-full shadow-2xl cursor-default">
                                 <img class="h-8 w-8 rounded-full object-cover" src="{{ $user->profile_photo_url }}"
                                     alt="{{ $user->name }}" />
                             </button>
                             <span class="font-semibold text-gray-900 dark:text-white truncate block max-w-[290px]">{{ $user->name }}</span>
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap min-w-[230px] max-w-[230px] w-[230px]">
+                        <td class="px-6 py-4 whitespace-nowrap">
                             <span class="text-gray-700 dark:text-gray-300 truncate block max-w-[230px]">{{ $user->email }}</span>
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap min-w-[150px] max-w-[150px] w-[150px]">
+                        <td class="px-6 py-4 whitespace-nowrap">
                             @php
                                 $role = $user->roles->first()?->name;
                                 if ($user->id === 1) {
@@ -128,7 +128,7 @@
                                 <span class="text-xs text-gray-400 italic">{{ __('No role') }}</span>
                             @endif
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap min-w-[150px] max-w-[150px] w-[150px]">
+                        <td class="px-6 py-4 whitespace-nowrap">
                             @php
                                 $defaultArea = $user->default_area ?? $user->area;
                                 $currentArea = $user->area ?? null;
@@ -161,7 +161,7 @@
                                 <span class="text-xs text-gray-400 italic">{{ __('N/A') }}</span>
                             @endif
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap min-w-[90px] max-w-[90px] w-[90px]">
+                        <td class="px-6 py-4 whitespace-nowrap">
                             @if ($user->can_switch_area)
                                 <span
                                     class="inline-flex items-center px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-100">
@@ -176,7 +176,7 @@
                                 </span>
                             @endif
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap min-w-[120px] max-w-[120px] w-[120px]">
+                        <td class="px-6 py-4 whitespace-nowrap">
                             @if ($user->status)
                                 <span
                                     class="inline-flex items-center px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-100">
@@ -189,7 +189,7 @@
                                 </span>
                             @endif
                         </td>
-                        <td class="px-6 py-4 text-center whitespace-nowrap min-w-[40px] max-w-[40px] w-[40px]">
+                        <td class="px-6 py-4 text-center whitespace-nowrap">
                             <i class="fa-solid fa-chevron-right text-lg text-gray-400"></i>
                         </td>
                     </tr>
