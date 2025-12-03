@@ -6,7 +6,7 @@
                 <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
                     <i class="fa-solid fa-magnifying-glass text-gray-400"></i>
                 </div>
-                <x-input type="text" id="simple-search" wire:model.live="search"
+                <x-input type="text" id="simple-search" wire:model.live="search" autocomplete="off"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full pl-10 p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                     placeholder="{{ __('Search') }}" autofocus />
             </form>
@@ -206,11 +206,11 @@
                                     ? 'text-primary-800 bg-primary-200 dark:bg-primary-800 dark:text-primary-200'
                                     : 'text-gray-800 bg-gray-200 dark:bg-gray-800 dark:text-gray-200') }}">
                                     @if($report->area === 'DTH')
-                                        <i class="fa-solid fa-satellite-dish mr-1.5"></i>
+                                        <i class="fa-solid fa-satellite-dish mr-1.5 pt-[1px]"></i>
                                     @elseif($report->area === 'OTT')
-                                        <i class="fa-solid fa-cube mr-1.5"></i>
+                                        <i class="fa-solid fa-cube mr-1.5 pt-[1px]"></i>
                                     @else
-                                        <i class="fa-solid fa-layer-group mr-1.5"></i>
+                                        <i class="fa-solid fa-layer-group mr-1.5 pt-[1px]"></i>
                                     @endif
                                     {{ $report->area ?? __('N/A') }}
                                 </span>
@@ -219,19 +219,19 @@
                                 @if ($report->type === 'Momentary')
                                     <span
                                         class="inline-flex items-center px-2 py-1 text-xs sm:text-sm font-medium rounded-full text-red-800 bg-red-200 dark:bg-red-800 dark:text-red-200 whitespace-nowrap">
-                                        <i class="fa-solid fa-triangle-exclamation mr-1"></i>
+                                        <i class="fa-solid fa-triangle-exclamation mr-1.5 pt-[1px]"></i>
                                         {{ __($report->type) }}
                                     </span>
                                 @elseif ($report->type === 'Hourly')
                                     <span
                                         class="inline-flex items-center px-2 py-1 text-xs sm:text-sm font-medium rounded-full text-green-800 bg-green-200 dark:bg-green-800 dark:text-green-200 whitespace-nowrap">
-                                        <i class="fa-solid fa-clock mr-1"></i>
+                                        <i class="fa-solid fa-clock mr-1.5 pt-[1px]"></i>
                                         {{ __($report->type) }}
                                     </span>
                                 @else
                                     <span
                                         class="inline-flex items-center px-2 py-1 text-xs sm:text-sm font-medium rounded-full text-blue-800 bg-blue-200 dark:bg-blue-800 dark:text-blue-200 whitespace-nowrap">
-                                        <i class="fa-solid fa-forward mr-1"></i>
+                                        <i class="fa-solid fa-forward mr-1.5 pt-[1px]"></i>
                                         {{ __($report->type) }}
                                     </span>
                                 @endif
@@ -242,16 +242,16 @@
                                         class="inline-flex items-center px-2 py-1 text-xs sm:text-sm font-medium rounded-full
                                             {{ $report->status === 'Resolved' ? 'text-green-800 bg-green-200 dark:bg-green-800 dark:text-green-200' : 'text-yellow-800 bg-yellow-200 dark:bg-yellow-800 dark:text-yellow-200' }} whitespace-nowrap">
                                         @if ($report->status === 'Resolved')
-                                            <i class="fa-solid fa-circle-check mr-1"></i>
+                                            <i class="fa-solid fa-circle-check mr-1.5 pt-[1px]"></i>
                                         @elseif ($report->status === 'Revision')
-                                            <i class="fa-solid fa-magnifying-glass mr-1"></i>
+                                            <i class="fa-solid fa-magnifying-glass mr-1.5 pt-[1px]"></i>
                                         @endif
                                         {{ __($report->status) }}
                                     </span>
                                 @else
                                     <span
                                         class="inline-flex items-center px-2 py-1 text-xs sm:text-sm font-medium rounded-full text-gray-800 bg-gray-200 dark:bg-gray-700 dark:text-gray-200 whitespace-nowrap">
-                                        <i class="fa-solid fa-folder mr-1"></i>
+                                        <i class="fa-solid fa-folder mr-1.5 pt-[1px]"></i>
                                         {{ __($report->status) }}
                                     </span>
                                 @endif
@@ -259,7 +259,7 @@
                             <td class="py-3 px-4 whitespace-nowrap">
                                 <span
                                     class="inline-flex items-center px-2 py-1 text-xs sm:text-sm font-medium text-blue-800 bg-blue-200 dark:bg-blue-800 dark:text-blue-200 rounded-full whitespace-nowrap">
-                                    <i class="fa-solid fa-clock mr-1"></i>
+                                    <i class="fa-solid fa-clock mr-1.5 pt-[1px]"></i>
                                     {{ $report->created_at->format('d/m/Y h:i A') }}
                                 </span>
                             </td>

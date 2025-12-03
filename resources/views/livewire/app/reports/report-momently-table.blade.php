@@ -13,9 +13,9 @@
                                     clip-rule="evenodd" />
                             </svg>
                         </div>
-                        <input type="text" id="simple-search" wire:model.live="search"
+                        <x-input type="text" id="simple-search" wire:model.live="search" autocomplete="off"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full pl-10 p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                            placeholder="{{ __('Search') }}" required autofocus>
+                            placeholder="{{ __('Search') }}" required autofocus />
                     </div>
                 </form>
             </div>
@@ -112,8 +112,6 @@
                                         <i class="fa-solid fa-satellite-dish mr-1.5"></i>
                                     @elseif($report->area === 'OTT')
                                         <i class="fa-solid fa-cube mr-1.5"></i>
-                                    @else
-                                        <i class="fa-solid fa-layer-group mr-1.5"></i>
                                     @endif
                                     {{ $report->area ?? __('N/A') }}
                                 </span>
@@ -127,7 +125,7 @@
                             <td class="py-3 px-4 w-[180px] whitespace-nowrap">
                                 <span
                                     class="inline-flex items-center px-2 py-1 text-sm font-medium text-blue-800 bg-blue-200 dark:bg-blue-800 dark:text-blue-200 rounded-full">
-                                    <i class="fa-solid fa-clock mr-1.5"></i> {{ $report->formatted_date }}
+                                    <i class="fa-solid fa-clock mr-1.5 pt-[1px]"></i> {{ $report->formatted_date }}
                                 </span>
                             </td>
                             <td class="py-3 px-4 w-[80px] text-center whitespace-nowrap">

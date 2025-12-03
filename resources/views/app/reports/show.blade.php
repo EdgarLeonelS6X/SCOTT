@@ -32,18 +32,18 @@
                         class="flex flex-col sm:flex-row sm:items-center justify-between sm:justify-end gap-2 w-full sm:w-auto">
                         <div class="flex flex-nowrap sm:flex-wrap justify-between sm:justify-start items-center gap-2">
                             @php
-$areaIcon = null;
-if ($report->area === 'DTH') {
-    $areaIcon = 'fa-satellite-dish';
-} elseif ($report->area === 'OTT') {
-    $areaIcon = 'fa-cube';
-}
-$areaBadgeClass = 'bg-gray-200 text-gray-800 dark:bg-gray-700 dark:text-gray-200';
-if ($report->area === 'DTH') {
-    $areaBadgeClass = 'bg-secondary-600 text-white dark:bg-secondary-700 dark:text-white';
-} elseif ($report->area === 'OTT') {
-    $areaBadgeClass = 'bg-primary-600 text-white dark:bg-primary-700 dark:text-white';
-}
+                                $areaIcon = null;
+                                if ($report->area === 'DTH') {
+                                    $areaIcon = 'fa-satellite-dish';
+                                } elseif ($report->area === 'OTT') {
+                                    $areaIcon = 'fa-cube';
+                                }
+                                $areaBadgeClass = 'text-gray-800 bg-gray-200 dark:bg-gray-700 dark:text-gray-200';
+                                if ($report->area === 'DTH') {
+                                    $areaBadgeClass = 'text-secondary-800 bg-secondary-200 dark:bg-secondary-800 dark:text-secondary-200';
+                                } elseif ($report->area === 'OTT') {
+                                    $areaBadgeClass = 'text-primary-800 bg-primary-200 dark:bg-primary-800 dark:text-primary-200';
+                                }
                             @endphp
 
                             <span class="inline-flex items-center gap-1 px-2 py-1 rounded-md md:rounded-lg {{ $areaBadgeClass }} text-[10px] font-medium uppercase tracking-wide md:px-3 md:py-1.5 md:text-xs md:mr-2 flex-shrink-0" title="{{ $report->area ?? '' }}" aria-label="Area {{ $report->area ?? '' }}">
@@ -52,17 +52,17 @@ if ($report->area === 'DTH') {
                             </span>
 
                             @if ($report->type === 'Momentary')
-                                <span class="inline-flex items-center text-[10px] font-medium text-white bg-red-500 dark:bg-red-600 px-2 py-0.5 rounded-md shadow-2xl gap-1 md:px-3 md:py-1 md:rounded-lg md:gap-2 md:text-xs flex-shrink-0">
+                                <span class="inline-flex items-center text-[10px] font-medium text-red-800 bg-red-200 dark:bg-red-800 dark:text-red-200 px-2 py-0.5 rounded-md shadow-sm gap-1 md:px-3 md:py-1 md:rounded-lg md:gap-2 md:text-xs flex-shrink-0">
                                     <i class="fa-solid fa-triangle-exclamation text-[10px] md:text-xs"></i>
                                     <span>{{ __($report->type) }}</span>
                                 </span>
                             @elseif ($report->type === 'Hourly')
-                                <span class="inline-flex items-center text-[10px] font-medium text-white bg-green-500 dark:bg-green-600 px-2 py-0.5 rounded-md shadow-2xl gap-1 md:px-3 md:py-1 md:rounded-lg md:gap-2 md:text-xs flex-shrink-0">
+                                <span class="inline-flex items-center text-[10px] font-medium text-green-800 bg-green-200 dark:bg-green-800 dark:text-green-200 px-2 py-0.5 rounded-md shadow-sm gap-1 md:px-3 md:py-1 md:rounded-lg md:gap-2 md:text-xs flex-shrink-0">
                                     <i class="fa-solid fa-clock text-[10px] md:text-xs"></i>
                                     <span>{{ __($report->type) }}</span>
                                 </span>
                             @else
-                                <span class="inline-flex items-center text-[10px] font-medium text-white bg-blue-500 dark:bg-blue-600 px-2 py-0.5 rounded-md shadow-2xl gap-1 md:px-3 md:py-1 md:rounded-lg md:gap-2 md:text-xs flex-shrink-0">
+                                <span class="inline-flex items-center text-[10px] font-medium text-blue-800 bg-blue-200 dark:bg-blue-800 dark:text-blue-200 px-2 py-0.5 rounded-md shadow-sm gap-1 md:px-3 md:py-1 md:rounded-lg md:gap-2 md:text-xs flex-shrink-0">
                                     <i class="fa-solid fa-forward text-[10px] md:text-xs"></i>
                                     <span>{{ __($report->type) }}</span>
                                 </span>
@@ -73,13 +73,6 @@ if ($report->area === 'DTH') {
                         </div>
                     </div>
                 </div>
-                @php
-                    $userArea = strtolower(trim((string) (Auth::user()?->area ??  '')));
-                    $editBtnClasses = $userArea === 'dth'
-                        ? 'inline-flex w-full sm:w-auto items-center justify-center gap-2 px-4 py-2 bg-secondary-100 dark:bg-secondary-900 text-secondary-700 dark:text-secondary-300 hover:bg-secondary-200 dark:hover:bg-secondary-800 border border-secondary-200 dark:border-secondary-700 rounded-lg'
-                        : 'inline-flex w-full sm:w-auto items-center justify-center gap-2 px-4 py-2 bg-primary-100 dark:bg-primary-900 text-primary-700 dark:text-primary-200 hover:bg-primary-200 dark:hover:bg-primary-800 border border-primary-200 dark:border-primary-700 rounded-lg';
-                @endphp
-
                 <div class="flex flex-col sm:flex-row items-center gap-2 justify-center sm:justify-start w-full sm:w-auto space-y-2 sm:space-y-0">
                     <a href="{{ route('reports.index') }}"
                         class="inline-flex w-full sm:w-auto items-center justify-center gap-2 px-4 py-2 mr-0 md:mr-2 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg border border-gray-300 dark:border-gray-600 hover:bg-gray-200 dark:hover:bg-gray-600 shadow-2xl">
@@ -88,7 +81,7 @@ if ($report->area === 'DTH') {
                     </a>
 
                     @if ($report->type === 'Momentary' && $report->status === 'Revision')
-                        <a href="{{ route('reports.edit', ['report' => $report->id]) }}" class="{{ $editBtnClasses }}">
+                        <a href="{{ route('reports.edit', ['report' => $report->id]) }}" class="inline-flex w-full sm:w-auto items-center justify-center gap-2 px-4 py-2 bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-200 hover:bg-blue-200 dark:hover:bg-blue-800 border border-blue-200 dark:border-blue-700 rounded-lg">
                             <i class="fa-solid fa-pen-to-square text-xs"></i>
                             <span class="text-sm font-medium">{{ __('Edit') }}</span>
                         </a>
