@@ -94,36 +94,23 @@
                                     @endif
                                 </div>
                             </td>
-                            <td class="px-4 py-2.5 w-[120px] truncate whitespace-nowrap overflow-hidden">
-                                @if($report->area === 'DTH/OTT')
-                                    <span
-                                        class="inline-flex items-center px-2 py-1 text-xs font-medium text-secondary-800 bg-secondary-200 dark:bg-secondary-800 dark:text-secondary-200 rounded-full mr-2">
+                            <td class="px-4 py-3 w-[120px] truncate whitespace-nowrap overflow-hidden">
+                                <span
+                                    class="inline-flex items-center px-2 py-1 text-sm font-medium rounded-full
+                                        {{ $report->area === 'DTH'
+                                    ? 'text-secondary-800 bg-secondary-200 dark:bg-secondary-800 dark:text-secondary-200'
+                                    : ($report->area === 'OTT'
+                                        ? 'text-primary-800 bg-primary-200 dark:bg-primary-800 dark:text-primary-200'
+                                        : 'text-gray-800 bg-gray-200 dark:bg-gray-800 dark:text-gray-200') }}">
+                                    @if($report->area === 'DTH')
                                         <i class="fa-solid fa-satellite-dish mr-1.5"></i>
-                                        {{ __('DTH') }}
-                                    </span>
-                                    <span
-                                        class="inline-flex items-center px-2 py-1 text-xs font-medium text-primary-800 bg-primary-200 dark:bg-primary-800 dark:text-primary-200 rounded-full">
+                                    @elseif($report->area === 'OTT')
                                         <i class="fa-solid fa-cube mr-1.5"></i>
-                                        {{ __('OTT') }}
-                                    </span>
-                                @else
-                                    <span
-                                        class="inline-flex items-center px-2 py-1 text-xs font-medium rounded-full
-                                            {{ $report->area === 'DTH'
-                                        ? 'text-secondary-800 bg-secondary-200 dark:bg-secondary-800 dark:text-secondary-200'
-                                        : ($report->area === 'OTT'
-                                            ? 'text-primary-800 bg-primary-200 dark:bg-primary-800 dark:text-primary-200'
-                                            : 'text-gray-800 bg-gray-200 dark:bg-gray-800 dark:text-gray-200') }}">
-                                        @if($report->area === 'DTH')
-                                            <i class="fa-solid fa-satellite-dish mr-1.5"></i>
-                                        @elseif($report->area === 'OTT')
-                                            <i class="fa-solid fa-cube mr-1.5"></i>
-                                        @else
-                                            <i class="fa-solid fa-layer-group mr-1.5"></i>
-                                        @endif
-                                        {{ $report->area ?? __('N/A') }}
-                                    </span>
-                                @endif
+                                    @else
+                                        <i class="fa-solid fa-layer-group mr-1.5"></i>
+                                    @endif
+                                    {{ $report->area ?? __('N/A') }}
+                                </span>
                             </td>
                             <td class="py-3 px-4 w-[150px] whitespace-nowrap">
                                 <span
