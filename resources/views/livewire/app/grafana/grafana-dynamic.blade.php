@@ -5,8 +5,8 @@
                 <i class="fa-solid fa-diagram-project text-primary-600"></i>
                 {{ $grafanaPanel?->name }}
             </h2>
-            <span class="text-xs text-gray-400 dark:text-gray-500 md:flex items-center gap-1">
-                {{ __('Auto-refresh 5s') }}
+            <span class="flex items-center gap-1 text-xs text-gray-400 dark:text-gray-500">
+                <span class="hidden md:inline">{{ __('Auto-refresh 5s') }}</span>
                 @php
                     $isShowView = request()->route() && str_contains(request()->route()->getName(), 'admin.grafana.show');
                 @endphp
