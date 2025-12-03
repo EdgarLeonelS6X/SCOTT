@@ -1,8 +1,8 @@
 <div class="w-full mx-auto bg-white dark:bg-gray-800 shadow-xl rounded-lg p-4 sm:p-6">
     @php
-$area = Auth::user()?->area;
-$primaryBtn = $area === 'OTT' ? 'bg-primary-600 hover:bg-primary-700' : ($area === 'DTH' ? 'bg-secondary-600 hover:bg-secondary-700' : 'bg-primary-600 hover:bg-primary-700');
-$primaryBtnText = 'text-white';
+        $area = Auth::user()?->area;
+        $primaryBtn = $area === 'OTT' ? 'bg-primary-600 hover:bg-primary-700' : ($area === 'DTH' ? 'bg-secondary-600 hover:bg-secondary-700' : 'bg-primary-600 hover:bg-primary-700');
+        $primaryBtnText = 'text-white';
     @endphp
     <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-6 pb-6">
         <div class="flex flex-col sm:flex-row items-center sm:items-start gap-4 w-full sm:w-auto">
@@ -10,69 +10,69 @@ $primaryBtnText = 'text-white';
                 src="{{ $user->profile_photo_url }}" alt="{{ $user->name }}" />
                 <div class="text-center sm:text-left space-y-3 sm:space-y-1 w-full">
                 @php
-$userArea = $user->area ?? null;
-$userAreaClasses = $userArea === 'DTH'
-    ? 'bg-secondary-200 text-secondary-800 dark:bg-secondary-700 dark:text-secondary-100'
-    : ($userArea === 'OTT' ? 'bg-primary-200 text-primary-800 dark:bg-primary-700 dark:text-primary-100' : 'bg-gray-200 text-gray-800 dark:bg-gray-700 dark:text-gray-100');
+                    $userArea = $user->area ?? null;
+                    $userAreaClasses = $userArea === 'DTH'
+                        ? 'bg-secondary-200 text-secondary-800 dark:bg-secondary-700 dark:text-secondary-100'
+                        : ($userArea === 'OTT' ? 'bg-primary-200 text-primary-800 dark:bg-primary-700 dark:text-primary-100' : 'bg-gray-200 text-gray-800 dark:bg-gray-700 dark:text-gray-100');
 
-$smallBadgeBase = 'inline-flex items-center justify-center w-7 h-7 rounded-full focus:outline-none';
+                    $smallBadgeBase = 'inline-flex items-center justify-center w-7 h-7 rounded-full focus:outline-none';
 
-$statusActiveClasses = 'bg-green-200 text-green-800 dark:bg-green-900 dark:text-green-100';
-$statusInactiveClasses = 'bg-red-200 text-red-800 dark:bg-red-700 dark:text-red-300';
+                    $statusActiveClasses = 'bg-green-200 text-green-800 dark:bg-green-900 dark:text-green-100';
+                    $statusInactiveClasses = 'bg-red-200 text-red-800 dark:bg-red-700 dark:text-red-300';
 
-$emailVerifiedClasses = $statusActiveClasses;
-$emailNotVerifiedClasses = 'bg-yellow-200 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-100';
+                    $emailVerifiedClasses = $statusActiveClasses;
+                    $emailNotVerifiedClasses = 'bg-yellow-200 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-100';
 
-$canSwitchTrueClasses = 'bg-blue-200 text-blue-800 dark:bg-blue-900 dark:text-blue-100';
-$canSwitchFalseClasses = 'bg-gray-200 text-gray-800 dark:bg-gray-700 dark:text-gray-100';
-                @endphp
-                @php
-$roleName = null;
-if (method_exists($user, 'getRoleNames')) {
-    $roleName = $user->getRoleNames()->first() ?? null;
-} elseif (isset($user->roles) && $user->roles->first()) {
-    $roleName = $user->roles->first()->name ?? null;
-}
-$role = $user->roles->first()?->name;
-if ($user->id === 1) {
-    $badge = [
-        'label' => 'Developer',
-        'icon' => 'fa-code',
-        'bg' => 'bg-red-200',
-        'text' => 'text-red-800',
-        'dark_bg' => 'dark:bg-red-800',
-        'dark_text' => 'dark:text-red-100',
-    ];
-} elseif ($role === 'master') {
-    $badge = [
-        'label' => 'Master',
-        'icon' => 'fa-crown',
-        'bg' => 'bg-yellow-200',
-        'text' => 'text-yellow-800',
-        'dark_bg' => 'dark:bg-yellow-900',
-        'dark_text' => 'dark:text-yellow-100',
-    ];
-} elseif ($role === 'admin') {
-    $badge = [
-        'label' => 'Admin',
-        'icon' => 'fa-gear',
-        'bg' => 'bg-blue-200',
-        'text' => 'text-blue-800',
-        'dark_bg' => 'dark:bg-blue-900',
-        'dark_text' => 'dark:text-blue-100',
-    ];
-} elseif ($role === 'user') {
-    $badge = [
-        'label' => 'User',
-        'icon' => 'fa-user',
-        'bg' => 'bg-gray-200',
-        'text' => 'text-gray-800',
-        'dark_bg' => 'dark:bg-gray-700',
-        'dark_text' => 'dark:text-gray-100',
-    ];
-} else {
-    $badge = null;
-}
+                    $canSwitchTrueClasses = 'bg-blue-200 text-blue-800 dark:bg-blue-900 dark:text-blue-100';
+                    $canSwitchFalseClasses = 'bg-gray-200 text-gray-800 dark:bg-gray-700 dark:text-gray-100';
+                                    @endphp
+                                    @php
+                    $roleName = null;
+                    if (method_exists($user, 'getRoleNames')) {
+                        $roleName = $user->getRoleNames()->first() ?? null;
+                    } elseif (isset($user->roles) && $user->roles->first()) {
+                        $roleName = $user->roles->first()->name ?? null;
+                    }
+                    $role = $user->roles->first()?->name;
+                    if ($user->id === 1) {
+                        $badge = [
+                            'label' => 'Developer',
+                            'icon' => 'fa-code',
+                            'bg' => 'bg-red-200',
+                            'text' => 'text-red-800',
+                            'dark_bg' => 'dark:bg-red-800',
+                            'dark_text' => 'dark:text-red-100',
+                        ];
+                    } elseif ($role === 'master') {
+                        $badge = [
+                            'label' => 'Master',
+                            'icon' => 'fa-crown',
+                            'bg' => 'bg-yellow-200',
+                            'text' => 'text-yellow-800',
+                            'dark_bg' => 'dark:bg-yellow-900',
+                            'dark_text' => 'dark:text-yellow-100',
+                        ];
+                    } elseif ($role === 'admin') {
+                        $badge = [
+                            'label' => 'Admin',
+                            'icon' => 'fa-gear',
+                            'bg' => 'bg-blue-200',
+                            'text' => 'text-blue-800',
+                            'dark_bg' => 'dark:bg-blue-900',
+                            'dark_text' => 'dark:text-blue-100',
+                        ];
+                    } elseif ($role === 'user') {
+                        $badge = [
+                            'label' => 'User',
+                            'icon' => 'fa-user',
+                            'bg' => 'bg-gray-200',
+                            'text' => 'text-gray-800',
+                            'dark_bg' => 'dark:bg-gray-700',
+                            'dark_text' => 'dark:text-gray-100',
+                        ];
+                    } else {
+                        $badge = null;
+                    }
                 @endphp
                 <h1
                     class="flex flex-col md:flex-row flex-wrap items-center text-lg font-bold text-gray-900 dark:text-white gap-4">
@@ -87,29 +87,29 @@ if ($user->id === 1) {
                     </span>
                 </div>
                 @php
-$auth = auth()->user();
-$isAuthMaster = $auth->hasRole('master');
-$isAuthAdmin = $auth->hasRole('admin');
-$isAuthUser = $auth->hasRole('user');
+                    $auth = auth()->user();
+                    $isAuthMaster = $auth->hasRole('master');
+                    $isAuthAdmin = $auth->hasRole('admin');
+                    $isAuthUser = $auth->hasRole('user');
 
-$isTargetMaster = $user->hasRole('master');
-$isTargetAdmin = $user->hasRole('admin');
-$isTargetUser = $user->hasRole('user');
+                    $isTargetMaster = $user->hasRole('master');
+                    $isTargetAdmin = $user->hasRole('admin');
+                    $isTargetUser = $user->hasRole('user');
 
-$isSelf = $auth->id === $user->id;
-$isFirstMaster = $user->id === 1;
+                    $isSelf = $auth->id === $user->id;
+                    $isFirstMaster = $user->id === 1;
 
-$canSave =
-    ($isFirstMaster && $isSelf) ||
-    (!$isFirstMaster &&
-        ($isAuthMaster ||
-            ($isAuthAdmin && $isTargetUser && !$isSelf) ||
-            ($isAuthAdmin && $isSelf) ||
-            ($isAuthUser && $isSelf)));
+                    $canSave =
+                        ($isFirstMaster && $isSelf) ||
+                        (!$isFirstMaster &&
+                            ($isAuthMaster ||
+                                ($isAuthAdmin && $isTargetUser && !$isSelf) ||
+                                ($isAuthAdmin && $isSelf) ||
+                                ($isAuthUser && $isSelf)));
                 @endphp
                 <div class="w-full flex justify-center sm:justify-start mt-5 sm:mt-3">
                     @php
-$prefBtnText = $area === 'OTT' ? 'text-primary-600 hover:text-primary-700' : ($area === 'DTH' ? 'text-secondary-600 hover:text-secondary-700' : 'text-primary-600 hover:text-primary-700');
+                        $prefBtnText = $area === 'OTT' ? 'text-primary-600 hover:text-primary-700' : ($area === 'DTH' ? 'text-secondary-600 hover:text-secondary-700' : 'text-primary-600 hover:text-primary-700');
                     @endphp
                     <div x-data="{ open: false, canSave: {{ $canSave ? 'true' : 'false' }} }"
                         @preferences-saved.window="open = false" class="relative">
@@ -127,13 +127,13 @@ $prefBtnText = $area === 'OTT' ? 'text-primary-600 hover:text-primary-700' : ($a
                             class="mt-2 bg-white dark:bg-gray-700 shadow-lg rounded-lg p-4 space-y-4 border dark:border-gray-600 absolute z-10 w-full sm:w-72 left-0 sm:left-auto sm:right-0">
                             <form wire:submit.prevent="saveReportPreferences" class="space-y-3">
                                 @php
-$reportMailsList = [
-    'report_created' => __('Report Created'),
-    'report_updated' => __('Report Updated'),
-    'report_resolved' => __('Report Resolved'),
-    'report_functions_created' => __('Report Functions Created'),
-    'report_general_created' => __('General Report Created'),
-];
+                                    $reportMailsList = [
+                                        'report_created' => __('Report Created'),
+                                        'report_updated' => __('Report Updated'),
+                                        'report_resolved' => __('Report Resolved'),
+                                        'report_functions_created' => __('Report Functions Created'),
+                                        'report_general_created' => __('General Report Created'),
+                                    ];
                                 @endphp
                                 @foreach ($reportMailsList as $key => $label)
                                     <x-label class="flex items-center gap-3 text-sm text-gray-700 dark:text-gray-300">
@@ -272,13 +272,15 @@ $resetBtnText = $area === 'OTT' ? 'text-gray-700 dark:text-gray-200' : ($area ==
                 @if($userArea)
                     <div class="relative" x-data="{ tip: false }">
                         @php
-    $isDefaultArea = isset($user->default_area) && $user->default_area === $userArea;
-    $defaultDotClasses = $userArea === 'DTH'
-        ? 'bg-secondary-600 dark:bg-secondary-300'
-        : 'bg-primary-600 dark:bg-primary-300';
+                            $isDefaultArea = isset($user->default_area) && $user->default_area === $userArea;
+                            $defaultDotClasses = $userArea === 'DTH'
+                                ? 'bg-secondary-600 dark:bg-secondary-300'
+                                : 'bg-primary-600 dark:bg-primary-300';
                         @endphp
+                        @php $authUser = auth()->user(); @endphp
                         <span @mouseenter="tip = true" @mouseleave="tip = false"
-                            class="{{ $smallBadgeBase }} {{ $userAreaClasses }}">
+                            @if($authUser && $authUser->id === 1) wire:click="toggleArea" @endif
+                            class="{{ $smallBadgeBase }} {{ $userAreaClasses }} {{ ($authUser && $authUser->id === 1) ? 'cursor-pointer' : '' }}">
                             <i class="fa-solid {{ $userArea === 'DTH' ? 'fa-satellite-dish' : 'fa-cube' }} text-xs"></i>
                         </span>
                         @if($isDefaultArea)
@@ -319,14 +321,14 @@ $resetBtnText = $area === 'OTT' ? 'text-gray-700 dark:text-gray-200' : ($area ==
         </h2>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
             @php
-$grouped = collect($allPermissions)->groupBy(fn($perm) => explode('.', $perm->name)[0]);
-$icons = [
-    'channels' => 'fa-tv',
-    'stages' => 'fa-bars-staggered',
-    'grafana' => 'fa-chart-pie',
-    'roles' => 'fa-shield-halved',
-    'permissions' => 'fa-key',
-];
+                $grouped = collect($allPermissions)->groupBy(fn($perm) => explode('.', $perm->name)[0]);
+                $icons = [
+                    'channels' => 'fa-tv',
+                    'stages' => 'fa-bars-staggered',
+                    'grafana' => 'fa-chart-pie',
+                    'roles' => 'fa-shield-halved',
+                    'permissions' => 'fa-key',
+                ];
             @endphp
             @foreach ($grouped as $group => $perms)
                 @if (!in_array($group, ['roles', 'permissions']))
@@ -337,15 +339,15 @@ $icons = [
                         </h3>
                         <div class="space-y-2">
                             @php
-        $sortedPerms = collect($perms)->sortBy(function ($p) use ($group) {
-            $parts = explode('.', $p->name, 2);
-            $action = $parts[1] ?? '';
-            return $action === 'view' ? 0 : 1;
-        })->values();
+                                $sortedPerms = collect($perms)->sortBy(function ($p) use ($group) {
+                                    $parts = explode('.', $p->name, 2);
+                                    $action = $parts[1] ?? '';
+                                    return $action === 'view' ? 0 : 1;
+                                })->values();
                             @endphp
                             @foreach ($sortedPerms as $permission)
                                 @php
-            $primaryCheckbox = $area === 'OTT' ? 'text-primary-600 focus:ring-primary-500' : ($area === 'DTH' ? 'text-secondary-600 focus:ring-secondary-500' : 'text-primary-600 focus:ring-primary-500');
+                                    $primaryCheckbox = $area === 'OTT' ? 'text-primary-600 focus:ring-primary-500' : ($area === 'DTH' ? 'text-secondary-600 focus:ring-secondary-500' : 'text-primary-600 focus:ring-primary-500');
                                 @endphp
                                 <label class="flex items-center gap-2 {{ !$canEditPermissions ? 'opacity-50' : '' }}">
                                     <input type="checkbox" value="{{ $permission->name }}" wire:model="permissions"
@@ -370,7 +372,7 @@ $icons = [
                         @if(isset($grouped['roles']))
                             @foreach ($grouped['roles'] as $permission)
                                 @php
-            $primaryCheckbox = $area === 'OTT' ? 'text-primary-600 focus:ring-primary-500' : ($area === 'DTH' ? 'text-secondary-600 focus:ring-secondary-500' : 'text-primary-600 focus:ring-primary-500');
+                                    $primaryCheckbox = $area === 'OTT' ? 'text-primary-600 focus:ring-primary-500' : ($area === 'DTH' ? 'text-secondary-600 focus:ring-secondary-500' : 'text-primary-600 focus:ring-primary-500');
                                 @endphp
                                 <label class="flex items-center gap-2 {{ !$canEditPermissions ? 'opacity-50' : '' }}">
                                     <input type="checkbox" value="{{ $permission->name }}" wire:model="permissions"
@@ -385,7 +387,7 @@ $icons = [
                         @if(isset($grouped['permissions']))
                             @foreach ($grouped['permissions'] as $permission)
                                 @php
-            $primaryCheckbox = $area === 'OTT' ? 'text-primary-600 focus:ring-primary-500' : ($area === 'DTH' ? 'text-secondary-600 focus:ring-secondary-500' : 'text-primary-600 focus:ring-primary-500');
+                                    $primaryCheckbox = $area === 'OTT' ? 'text-primary-600 focus:ring-primary-500' : ($area === 'DTH' ? 'text-secondary-600 focus:ring-secondary-500' : 'text-primary-600 focus:ring-primary-500');
                                 @endphp
                                 <label class="flex items-center gap-2 {{ !$canEditPermissions ? 'opacity-50' : '' }}">
                                     <input type="checkbox" value="{{ $permission->name }}" wire:model="permissions"

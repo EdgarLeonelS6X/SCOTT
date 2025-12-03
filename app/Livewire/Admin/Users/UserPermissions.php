@@ -53,6 +53,11 @@ class UserPermissions extends Component
 
         $auth = auth()->user();
 
+        // Ensure we have an authenticated user; abort early to avoid calling methods on null
+        if (! $auth) {
+            abort(403);
+        }
+
         $isAuthMaster = $auth->hasRole('master');
         $isAuthAdmin = $auth->hasRole('admin');
         $isTargetAdmin = $user->hasRole('admin');
@@ -238,7 +243,7 @@ class UserPermissions extends Component
         if ($auth->id !== 1 || $this->user->id === 1) {
             $this->dispatch('swal', [
                 'icon' => 'error',
-                'title' => __('Access Denied'),
+                'title' => __('Access denied'),
                 'text' => __('You are not authorized to send a password reset email to this user.'),
             ]);
             return;
@@ -258,6 +263,34 @@ class UserPermissions extends Component
                 'text' => __('There was a problem sending the password reset email.'),
             ]);
         }
+    }
+
+    public function toggleArea()
+    {
+        $auth = auth()->user();
+
+        if (! $auth || $auth->id !== 1) {
+            $this->dispatch('swal', [
+                'icon' => 'error',
+                'title' => __('Access denied'),
+                'text' => __('You are not authorized to change this user area.'),
+            ]);
+            return;
+        }
+
+        $current = $this->user->area ?? null;
+        $new = $current === 'DTH' ? 'OTT' : 'DTH';
+
+        $this->user->area = $new;
+        $this->user->save();
+
+        $this->dispatch('swal', [
+            'icon' => 'success',
+            'title' => __('Well done!'),
+            'text' => __('User area changed to') . ' ' . $new . '.',
+        ]);
+
+        $this->dispatch('userAreaChanged', ['userId' => $this->user->id, 'area' => $new]);
     }
 
     public function render()

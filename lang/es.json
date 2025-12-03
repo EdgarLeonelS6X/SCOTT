@@ -507,7 +507,6 @@
     "Permissions updated successfully.": "Permisos actualizados con éxito.",
     "Not allowed": "No permitido",
     "Some permissions were not allowed and have been excluded.": "Algunos permisos no fueron permitidos y han sido excluidos.",
-    "Access Denied": "Acceso Denegado",
     "You are not authorized to perform this action.": "No estás autorizado para realizar esta acción.",
     "New stage created successfully.": "Nueva etapa creada con éxito.",
     "Stage updated successfully.": "Etapa actualizada con éxito.",
@@ -728,5 +727,8 @@
     "Learning TV Channel": "Canal de TV Aprende",
     "Radio TV Channel (DTH)": "Canal de TV Radio (DTH)",
     "Devices": "Dispositivos",
-    "Unable to determine user area. Please set your area before creating reports.": "No se puede determinar el área del usuario. Por favor, establezca su área antes de crear informes."
+    "Unable to determine user area. Please set your area before creating reports.": "No se puede determinar el área del usuario. Por favor, establezca su área antes de crear informes.",
+    "You are not authorized to change this user area.": "No estás autorizado para cambiar el área de este usuario.",
+    "Area updated": "Área actualizada",
+    "User area changed to": "Área del usuario cambiada a"
 }
