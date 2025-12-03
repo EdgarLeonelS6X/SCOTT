@@ -1,19 +1,19 @@
 <x-app-layout :breadcrumbs="[
-    [
-        'name' => __('Home'),
-        'icon' => 'fa-solid fa-house',
-        'route' => route('dashboard'),
-    ],
-    [
-        'name' => __('Reports'),
-        'icon' => 'fa-solid fa-paste',
-        'route' => route('reports.index'),
-    ],
-    [
-        'name' => __('Report'),
-        'icon' => 'fa-solid fa-circle-info',
-    ],
-]">
+        [
+            'name' => __('Home'),
+            'icon' => 'fa-solid fa-house',
+            'route' => route('dashboard'),
+        ],
+        [
+            'name' => __('Reports'),
+            'icon' => 'fa-solid fa-paste',
+            'route' => route('reports.index'),
+        ],
+        [
+            'name' => __('Report'),
+            'icon' => 'fa-solid fa-circle-info',
+        ],
+    ]">
 
     <div class="px-6 mx-auto h-auto">
         <div class="w-full bg-white dark:bg-gray-800 p-6 rounded-lg shadow-2xl mx-auto mb-4">
@@ -23,80 +23,71 @@
                     <div class="flex items-center gap-4">
                         <i class="fa-solid fa-file-alt text-gray-800 dark:text-gray-100 text-2xl"></i>
                         <span
-                            class="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white leading-tight truncate max-w-[150px] sm:max-w-2xl overflow-hidden whitespace-nowrap">
+                            class="block sm:inline-block text-lg sm:text-xl font-semibold text-gray-900 dark:text-white leading-tight truncate max-w-[200px] sm:max-w-[520px] overflow-hidden"
+                            title="{{ $report->category }}">
                             {{ $report->category }}
                         </span>
                     </div>
                     <div
                         class="flex flex-col sm:flex-row sm:items-center justify-between sm:justify-end gap-2 w-full sm:w-auto">
-                        <div class="flex flex-wrap justify-between sm:justify-start items-center gap-2">
+                        <div class="flex flex-nowrap sm:flex-wrap justify-between sm:justify-start items-center gap-2">
                             @php
-                                $areaIcon = null;
-                                if ($report->area === 'DTH') {
-                                    $areaIcon = 'fa-satellite-dish';
-                                } elseif ($report->area === 'OTT') {
-                                    $areaIcon = 'fa-cube';
-                                } elseif ($report->area === 'DTH/OTT') {
-                                    $areaIcon = 'fa-layer-group';
-                                } else {
-                                    $areaIcon = 'fa-layer-group';
-                                }
-                                $areaBadgeClass = 'bg-gray-200 text-gray-800 dark:bg-gray-700 dark:text-gray-200 ring-0';
-                                if ($report->area === 'DTH') {
-                                    $areaBadgeClass = 'bg-indigo-600 text-white dark:bg-indigo-700 dark:text-white ring-1 ring-white/10';
-                                } elseif ($report->area === 'OTT') {
-                                    $areaBadgeClass = 'bg-pink-600 text-white dark:bg-pink-700 dark:text-white ring-1 ring-white/10';
-                                } elseif ($report->area === 'DTH/OTT') {
-                                    $areaBadgeClass = 'bg-secondary-600 text-white dark:bg-secondary-700 dark:text-white ring-1 ring-white/10';
-                                }
+$areaIcon = null;
+if ($report->area === 'DTH') {
+    $areaIcon = 'fa-satellite-dish';
+} elseif ($report->area === 'OTT') {
+    $areaIcon = 'fa-cube';
+}
+$areaBadgeClass = 'bg-gray-200 text-gray-800 dark:bg-gray-700 dark:text-gray-200';
+if ($report->area === 'DTH') {
+    $areaBadgeClass = 'bg-secondary-600 text-white dark:bg-secondary-700 dark:text-white';
+} elseif ($report->area === 'OTT') {
+    $areaBadgeClass = 'bg-primary-600 text-white dark:bg-primary-700 dark:text-white';
+}
                             @endphp
 
-                            <span class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg {{ $areaBadgeClass }} text-xs font-medium uppercase tracking-wide mr-2" title="{{ $report->area ?? '' }}" aria-label="Area {{ $report->area ?? '' }}">
-                                <i class="fa-solid {{ $areaIcon }} text-xs leading-none" aria-hidden="true"></i>
+                            <span class="inline-flex items-center gap-1 px-2 py-1 rounded-md md:rounded-lg {{ $areaBadgeClass }} text-[10px] font-medium uppercase tracking-wide md:px-3 md:py-1.5 md:text-xs md:mr-2 flex-shrink-0" title="{{ $report->area ?? '' }}" aria-label="Area {{ $report->area ?? '' }}">
+                                <i class="fa-solid {{ $areaIcon }} text-[10px] md:text-xs leading-none" aria-hidden="true"></i>
                                 <span class="leading-none">{{ $report->area ?? '' }}</span>
                             </span>
 
                             @if ($report->type === 'Momentary')
-                                <span class="inline-flex items-center text-xs font-medium text-white bg-red-500 dark:bg-red-600 px-3 py-1 rounded-lg shadow-2xl gap-2">
-                                    <i class="fa-solid fa-triangle-exclamation"></i>
+                                <span class="inline-flex items-center text-[10px] font-medium text-white bg-red-500 dark:bg-red-600 px-2 py-0.5 rounded-md shadow-2xl gap-1 md:px-3 md:py-1 md:rounded-lg md:gap-2 md:text-xs flex-shrink-0">
+                                    <i class="fa-solid fa-triangle-exclamation text-[10px] md:text-xs"></i>
                                     <span>{{ __($report->type) }}</span>
                                 </span>
                             @elseif ($report->type === 'Hourly')
-                                <span class="inline-flex items-center text-xs font-medium text-white bg-green-500 dark:bg-green-600 px-3 py-1 rounded-lg shadow-2xl gap-2">
-                                    <i class="fa-solid fa-clock"></i>
+                                <span class="inline-flex items-center text-[10px] font-medium text-white bg-green-500 dark:bg-green-600 px-2 py-0.5 rounded-md shadow-2xl gap-1 md:px-3 md:py-1 md:rounded-lg md:gap-2 md:text-xs flex-shrink-0">
+                                    <i class="fa-solid fa-clock text-[10px] md:text-xs"></i>
                                     <span>{{ __($report->type) }}</span>
                                 </span>
                             @else
-                                <span class="inline-flex items-center text-xs font-medium text-white bg-blue-500 dark:bg-blue-600 px-3 py-1 rounded-lg shadow-2xl gap-2">
-                                    <i class="fa-solid fa-forward"></i>
+                                <span class="inline-flex items-center text-[10px] font-medium text-white bg-blue-500 dark:bg-blue-600 px-2 py-0.5 rounded-md shadow-2xl gap-1 md:px-3 md:py-1 md:rounded-lg md:gap-2 md:text-xs flex-shrink-0">
+                                    <i class="fa-solid fa-forward text-[10px] md:text-xs"></i>
                                     <span>{{ __($report->type) }}</span>
                                 </span>
                             @endif
-                            <span class="text-sm font-medium text-gray-600 dark:text-gray-300 mx-0 md:mx-2">
+                            <span class="text-xs md:text-sm font-medium text-gray-600 dark:text-gray-300 mx-0 md:mx-2 whitespace-nowrap truncate max-w-[90px] md:max-w-[110px]">
                                 {{ __('Folio') }} #{{ $report->id }}
                             </span>
-                            @if ($report->type === 'Momentary' && $report->status === 'Revision')
-                                <a href="{{ route('reports.edit', ['report' => $report->id]) }}"
-                                    class="hidden md:block items-center gap-1 px-2 py-1 text-xs font-medium rounded-lg bg-primary-50 dark:bg-primary-900 text-primary-600 dark:text-primary-300 hover:bg-primary-100 dark:hover:bg-primary-800">
-                                    <i class="fa-solid fa-pencil-alt text-xs"></i>
-                                    <span>{{ __('Edit this report') }}</span>
-                                </a>
-                            @endif
                         </div>
                     </div>
                 </div>
-                @if ($report->type === 'Momentary' && $report->status === 'Revision')
-                    <a href="{{ route('reports.edit', ['report' => $report->id]) }}"
-                        class="md:hidden sm:block inline-flex items-center gap-2 px-4 py-2 bg-primary-100 dark:bg-primary-700 text-primary-700 dark:text-primary-300 rounded-lg border border-primary-300 dark:border-primary-600 hover:bg-primary-200 dark:hover:bg-primary-600 shadow-2xl w-full sm:w-auto justify-center sm:justify-start">
-                        <i class="fa-solid fa-pencil-alt text-xs"></i>
-                        <span class="text-sm font-medium">{{ __('Edit this report') }}</span>
+                <div class="flex flex-col sm:flex-row items-center gap-2 justify-center sm:justify-start w-full sm:w-auto space-y-2 sm:space-y-0">
+                    <a href="{{ route('reports.index') }}"
+                        class="inline-flex w-full sm:w-auto items-center justify-center gap-2 px-4 py-2 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg border border-gray-300 dark:border-gray-600 hover:bg-gray-200 dark:hover:bg-gray-600 shadow-2xl">
+                        <i class="fa-solid fa-arrow-left"></i>
+                        <span class="text-sm font-medium">{{ __('Go back') }}</span>
                     </a>
-                @endif
-                <a href="{{ route('reports.index') }}"
-                    class="flex items-center gap-2 px-4 py-2 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg border border-gray-300 dark:border-gray-600 hover:bg-gray-200 dark:hover:bg-gray-600 shadow-2xl w-full sm:w-auto justify-center sm:justify-start">
-                    <i class="fa-solid fa-arrow-left"></i>
-                    <span class="text-sm font-medium">{{ __('Go back') }}</span>
-                </a>
+
+                    @if ($report->type === 'Momentary' && $report->status === 'Revision')
+                        <a href="{{ route('reports.edit', ['report' => $report->id]) }}"
+                            class="inline-flex w-full sm:w-auto items-center justify-center gap-2 px-4 py-2 bg-primary-100 dark:bg-primary-900 text-primary-700 dark:text-primary-200 hover:bg-primary-200 dark:hover:bg-primary-800 border border-primary-200 dark:border-primary-700 rounded-lg">
+                            <i class="fa-solid fa-pen-to-square text-xs"></i>
+                            <span class="text-sm font-medium">{{ __('Edit') }}</span>
+                        </a>
+                    @endif
+                </div>
             </div>
             <div
                 class="p-5 rounded-xl shadow-md transition-transform hover:scale-[1.02]
@@ -307,16 +298,16 @@
                 <x-report-profile-table :report="$report" />
             @else
                 @php
-                    $fixedCategories = [];
-                    if ($report->type === 'Hourly') {
-                        $fixedCategories = ['CDN TELMEX', 'CDN CEF+', 'STINGRAY'];
-                    } elseif ($report->type === 'Functions') {
-                        $fixedCategories = ['RESTART', 'CUTV', 'EPG', 'PC'];
-                    }
+    $fixedCategories = [];
+    if ($report->type === 'Hourly') {
+        $fixedCategories = ['CDN TELMEX', 'CDN CEF+', 'STINGRAY'];
+    } elseif ($report->type === 'Functions') {
+        $fixedCategories = ['RESTART', 'CUTV', 'EPG', 'PC'];
+    }
 
-                    $dynamicCategories = $report->reportDetails->pluck('subcategory')->unique()->toArray();
+    $dynamicCategories = $report->reportDetails->pluck('subcategory')->unique()->toArray();
 
-                    $allCategories = collect($fixedCategories)->merge($dynamicCategories)->unique()->values()->toArray();
+    $allCategories = collect($fixedCategories)->merge($dynamicCategories)->unique()->values()->toArray();
                 @endphp
                 @if ($report->type === 'Hourly' || $report->type === 'Functions')
                     @foreach ($allCategories as $fixedCategory)
@@ -338,8 +329,10 @@
                                 </div>
                                 <span
                                     class="bg-primary-100 text-primary-800 text-sm font-medium py-1 px-3 rounded-full text-center sm:text-left w-full sm:w-auto">
-                                    @if (in_array($fixedCategory, $allCategories) &&
-                                            $report->reportDetails->where('subcategory', $fixedCategory)->count() > 0)
+                                    @if (
+                in_array($fixedCategory, $allCategories) &&
+                $report->reportDetails->where('subcategory', $fixedCategory)->count() > 0
+            )
                                         {{ $report->reportDetails->where('subcategory', $fixedCategory)->count() }}
                                         {{ $report->reportDetails->where('subcategory', $fixedCategory)->count() === 1 ? __('Channel') : __('Channels') }}
                                     @else
@@ -471,18 +464,18 @@
                                                                 <tbody>
                                                                     @foreach ($detail->reportContentLosses as $loss)
                                                                         @php
-                                                                            $start = \Carbon\Carbon::parse(
-                                                                                $loss->start_time,
-                                                                            );
-                                                                            $end = \Carbon\Carbon::parse($loss->end_time);
-                                                                            $diff = $start->diff($end);
-                                                                            $days = $diff->format('%a');
-                                                                            $hours = $diff->format('%H');
-                                                                            $minutes = $diff->format('%I');
+                            $start = \Carbon\Carbon::parse(
+                                $loss->start_time,
+                            );
+                            $end = \Carbon\Carbon::parse($loss->end_time);
+                            $diff = $start->diff($end);
+                            $days = $diff->format('%a');
+                            $hours = $diff->format('%H');
+                            $minutes = $diff->format('%I');
 
-                                                                            $duration =
-                                                                                ($days > 0 ? "{$days}d " : '') .
-                                                                                "{$hours}h {$minutes}m";
+                            $duration =
+                                ($days > 0 ? "{$days}d " : '') .
+                                "{$hours}h {$minutes}m";
                                                                         @endphp
                                                                         <tr
                                                                             class="border-b border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600">
