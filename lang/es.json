@@ -427,7 +427,6 @@
     "Resolved": "Resuelto",
     "Show only resolved reports": "Mostrar solo reportes resueltos",
     "Show only revision reports": "Mostrar solo reportes de revisión",
-    "Edit this report": "Editar este reporte",
     "Reported by": "Reportado por",
     "Under review by": "En revisión por",
     "Not updated yet": "No actualizado aún",
@@ -727,5 +726,6 @@
     "November": "Noviembre",
     "Radio TV Channel": "Canal de TV Radio",
     "Learning TV Channel": "Canal de TV Aprende",
-    "Radio TV Channel (DTH)": "Canal de TV Radio (DTH)"
+    "Radio TV Channel (DTH)": "Canal de TV Radio (DTH)",
+    "Devices": "Dispositivos"
 }

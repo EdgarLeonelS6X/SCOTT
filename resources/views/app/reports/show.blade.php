@@ -75,7 +75,7 @@ if ($report->area === 'DTH') {
                 </div>
                 <div class="flex flex-col sm:flex-row items-center gap-2 justify-center sm:justify-start w-full sm:w-auto space-y-2 sm:space-y-0">
                     <a href="{{ route('reports.index') }}"
-                        class="inline-flex w-full sm:w-auto items-center justify-center gap-2 px-4 py-2 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg border border-gray-300 dark:border-gray-600 hover:bg-gray-200 dark:hover:bg-gray-600 shadow-2xl">
+                        class="inline-flex w-full sm:w-auto items-center justify-center gap-2 px-4 py-2 mr-0 md:mr-2 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg border border-gray-300 dark:border-gray-600 hover:bg-gray-200 dark:hover:bg-gray-600 shadow-2xl">
                         <i class="fa-solid fa-arrow-left"></i>
                         <span class="text-sm font-medium">{{ __('Go back') }}</span>
                     </a>

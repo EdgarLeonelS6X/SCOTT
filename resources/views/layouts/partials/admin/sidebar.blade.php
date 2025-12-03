@@ -32,6 +32,18 @@
             'active' => request()->routeIs('admin.stages.*'),
         ],
         [
+            'name' => __('Devices'),
+            'icon' => 'fa-brands fa-apple',
+            'route' => route('dashboard'),
+            'active' => request()->routeIs('dashboard'),
+        ],
+        [
+            'name' => __('Radios'),
+            'icon' => 'fa-solid fa-radio',
+            'route' => route('dashboard'),
+            'active' => request()->routeIs('dashboard'),
+        ],
+        [
             'name' => __('Grafana'),
             'icon' => 'fa-solid fa-chart-pie',
             'route' => route('admin.grafana.index'),
@@ -45,6 +57,24 @@
             'active' => false,
         ],
     ];
+
+    $currentUser = Auth::user();
+
+    $userArea = strtolower(trim((string) ($currentUser?->default_area ?? '')));
+
+    if (!($currentUser && $currentUser->id === 1)) {
+        if ($userArea === 'ott') {
+            $links = array_values(array_filter($links, function ($l) {
+                return !isset($l['icon']) || $l['icon'] !== 'fa-solid fa-radio';
+            }));
+        }
+
+        if ($userArea === 'dth') {
+            $links = array_values(array_filter($links, function ($l) {
+                return !isset($l['icon']) || $l['icon'] !== 'fa-brands fa-apple';
+            }));
+        }
+    }
 @endphp
 
 <aside id="logo-sidebar" class="fixed top-0 left-0 z-40 w-52 h-[100dvh] pt-[60px] bg-white dark:bg-gray-900 border-r border-gray-100 dark:border-gray-800 transition-transform duration-300
