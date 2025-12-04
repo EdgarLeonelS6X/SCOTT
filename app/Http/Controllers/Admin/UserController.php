@@ -81,7 +81,7 @@ class UserController extends Controller
         }
 
         $canSwitch = array_key_exists('can_switch_area', $data) ? (bool) $data['can_switch_area'] : false;
-        if (! $data['status'] && $canSwitch) {
+        if (!$data['status'] && $canSwitch) {
             session()->flash('swal', [
                 'icon' => 'error',
                 'title' => __('Invalid configuration!'),
@@ -117,7 +117,7 @@ class UserController extends Controller
         } else {
             $all = Permission::all();
             $allowed = $all->filter(function ($perm) use ($forbidden, $assignedRole) {
-                return ! in_array($perm->name, $forbidden[$assignedRole] ?? []);
+                return !in_array($perm->name, $forbidden[$assignedRole] ?? []);
             })->pluck('name')->toArray();
             $user->syncPermissions($allowed);
         }
@@ -172,7 +172,7 @@ class UserController extends Controller
             return redirect()->back()->withInput();
         }
         $canSwitchUpdate = array_key_exists('can_switch_area', $data) ? (bool) $data['can_switch_area'] : (bool) $user->can_switch_area;
-        if (! $data['status'] && $canSwitchUpdate) {
+        if (!$data['status'] && $canSwitchUpdate) {
             session()->flash('swal', [
                 'icon' => 'error',
                 'title' => __('Invalid user configuration!'),
@@ -180,6 +180,8 @@ class UserController extends Controller
             ]);
             return redirect()->back()->withInput();
         }
+
+        $previousRole = $user->roles->pluck('name')->first();
         $user->name = $data['name'];
         $user->email = $data['email'];
         $user->area = $data['area'];
@@ -200,20 +202,23 @@ class UserController extends Controller
         if (isset($data['role'])) {
             $user->syncRoles([$data['role']]);
         }
-        $forbidden = [
-            'admin' => ['roles.edit'],
-            'user' => ['roles.edit', 'permissions.assign'],
-        ];
 
-        $finalRole = $user->roles->pluck('name')->first();
-        if ($finalRole === 'master') {
-            $user->syncPermissions(Permission::all()->pluck('name')->toArray());
-        } else {
-            $all = Permission::all();
-            $allowed = $all->filter(function ($perm) use ($forbidden, $finalRole) {
-                return ! in_array($perm->name, $forbidden[$finalRole] ?? []);
-            })->pluck('name')->toArray();
-            $user->syncPermissions($allowed);
+        if (isset($data['role']) && $data['role'] !== $previousRole) {
+            $forbidden = [
+                'admin' => ['roles.edit'],
+                'user' => ['roles.edit', 'permissions.assign'],
+            ];
+
+            $finalRole = $user->roles->pluck('name')->first();
+            if ($finalRole === 'master') {
+                $user->syncPermissions(Permission::all()->pluck('name')->toArray());
+            } else {
+                $all = Permission::all();
+                $allowed = $all->filter(function ($perm) use ($forbidden, $finalRole) {
+                    return !in_array($perm->name, $forbidden[$finalRole] ?? []);
+                })->pluck('name')->toArray();
+                $user->syncPermissions($allowed);
+            }
         }
         session()->flash('swal', [
             'icon' => 'success',
@@ -302,20 +307,20 @@ class UserController extends Controller
         $area
     ): RedirectResponse {
         $user = Auth::user();
-        if (! $user) {
+        if (!$user) {
             return Redirect::back();
         }
 
         $allowedAreas = ['OTT', 'DTH'];
-        if (! in_array($area, $allowedAreas)) {
+        if (!in_array($area, $allowedAreas)) {
             return Redirect::back();
         }
 
-        if (! $user->can_switch_area) {
+        if (!$user->can_switch_area) {
             return Redirect::back();
         }
 
-        if (! $user->status) {
+        if (!$user->status) {
             session()->flash('swal', [
                 'icon' => 'error',
                 'title' => __('Action not allowed'),
