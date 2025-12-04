@@ -61,10 +61,12 @@
                         class="inline-flex items-center px-2 py-1 text-xs font-semibold rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600 border border-gray-200 dark:border-gray-600 ml-2 mr-2 transition">
                         <i class="fa-solid fa-eye mr-1"></i> {{ __('Show') }}
                     </a>
-                    <a href="{{ route('reports.edit', ['report' => $selectedReport->id]) }}"
-                        class="inline-flex items-center px-2 py-1 text-xs font-semibold rounded-lg bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-200 hover:bg-blue-200 dark:hover:bg-blue-800 border border-blue-200 dark:border-blue-700 ml-2 transition">
-                        <i class="fa-solid fa-pen-to-square mr-1"></i> {{ __('Edit') }}
-                    </a>
+                    @if(Auth::check() && $selectedReport->canBeEditedBy(Auth::user()))
+                        <a href="{{ route('reports.edit', ['report' => $selectedReport->id]) }}"
+                            class="inline-flex items-center px-2 py-1 text-xs font-semibold rounded-lg bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-200 hover:bg-blue-200 dark:hover:bg-blue-800 border border-blue-200 dark:border-blue-700 ml-2 transition">
+                            <i class="fa-solid fa-pen-to-square mr-1"></i> {{ __('Edit') }}
+                        </a>
+                    @endif
                 </div>
             </div>
         </div>
@@ -79,10 +81,12 @@
             class="inline-flex justify-center items-center px-2 py-2 text-xs text-center font-semibold rounded-lg bg-gray-100 dark:bg-gray-900 text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-800 border border-gray-200 dark:border-gray-700 transition">
             <i class="fa-solid fa-eye mr-1"></i> {{ __('Show') }}
         </a>
-        <a href="{{ route('reports.edit', ['report' => $selectedReport->id]) }}"
-            class="inline-flex justify-center items-center px-2 py-2 text-xs text-center font-semibold rounded-lg bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-200 hover:bg-blue-200 dark:hover:bg-blue-800 border border-blue-200 dark:border-blue-700 mb-6 transition">
-            <i class="fa-solid fa-pen-to-square mr-1"></i> {{ __('Edit') }}
-        </a>
+        @if(Auth::check() && $selectedReport->canBeEditedBy(Auth::user()))
+            <a href="{{ route('reports.edit', ['report' => $selectedReport->id]) }}"
+                class="inline-flex justify-center items-center px-2 py-2 text-xs text-center font-semibold rounded-lg bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-200 hover:bg-blue-200 dark:hover:bg-blue-800 border border-blue-200 dark:border-blue-700 mb-6 transition">
+                <i class="fa-solid fa-pen-to-square mr-1"></i> {{ __('Edit') }}
+            </a>
+        @endif
     </div>
 
     <div

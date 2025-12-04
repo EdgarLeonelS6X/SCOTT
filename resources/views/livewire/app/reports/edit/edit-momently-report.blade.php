@@ -27,12 +27,12 @@ use App\Enums\ChannelReviewer;
                             </h3>
                             <x-input x-show="editingName" x-model="categoryName" @click.stop
                                 @click.away="editingName = false;
-                                             if (categoryName.trim() === '') { categoryName = ''; }
-                                             $wire.set('reportData.category', categoryName);"
+                                    if (categoryName.trim() === '') { categoryName = ''; }
+                                    $wire.set('reportData.category', categoryName);"
                                 @keydown.enter.prevent="editingName = false;
-                                                        if (categoryName.trim() === '') { categoryName = ''; }
-                                                        $wire.set('reportData.category', categoryName);"
-                                placeholder="{{ __('Category name') }}" autofocus />
+                                    if (categoryName.trim() === '') { categoryName = ''; }
+                                    $wire.set('reportData.category', categoryName);"
+                                    placeholder="{{ __('Category name') }}" autofocus />
                         </div>
                     </div>
                     <div class="flex items-center gap-3 transition-all duration-300"

@@ -80,7 +80,7 @@
                         <span class="text-sm font-medium">{{ __('Go back') }}</span>
                     </a>
 
-                    @if ($report->type === 'Momentary' && $report->status === 'Revision')
+                    @if ($report->type === 'Momentary' && $report->status === 'Revision' && Auth::check() && $report->canBeEditedBy(Auth::user()))
                         <a href="{{ route('reports.edit', ['report' => $report->id]) }}" class="inline-flex w-full sm:w-auto items-center justify-center gap-2 px-4 py-2 bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-200 hover:bg-blue-200 dark:hover:bg-blue-800 border border-blue-200 dark:border-blue-700 rounded-lg">
                             <i class="fa-solid fa-pen-to-square text-xs"></i>
                             <span class="text-sm font-medium">{{ __('Edit') }}</span>
@@ -95,11 +95,11 @@
                 text-white dark:text-gray-100 ring-1 ring-white/20 dark:ring-gray-700 hover:shadow-[0_8px_25px_rgba(0,0,0,0.3)]">
                 <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6">
                     <div class="flex items-center gap-4 w-auto">
-                        <img src="{{ $report->reportedBy->profile_photo_url }}" alt="{{ $report->reportedBy->name }}"
+                        <img src="{{ optional($report->reportedBy)->profile_photo_url ?? '' }}" alt="{{ optional($report->reportedBy)->name ?? __('User') }}"
                             class="w-12 h-12 rounded-full shadow-2xl">
                         <div>
                             <h4 class="text-sm font-semibold">{{ __('Reported by') }}</h4>
-                            <p class="text-base font-bold">{{ $report->reportedBy->name }}</p>
+                            <p class="text-base font-bold">{{ optional($report->reportedBy)->name ?? __('Unknown') }}</p>
                             <p class="text-xs opacity-80">
                                 {{ $report->created_at->format('d/m/Y h:i A') }}
                                 @if ($report->updated_at && $report->updated_at->gt($report->created_at))
@@ -297,16 +297,16 @@
                 <x-report-profile-table :report="$report" />
             @else
                 @php
-    $fixedCategories = [];
-    if ($report->type === 'Hourly') {
-        $fixedCategories = ['CDN TELMEX', 'CDN CEF+', 'STINGRAY'];
-    } elseif ($report->type === 'Functions') {
-        $fixedCategories = ['RESTART', 'CUTV', 'EPG', 'PC'];
-    }
+                    $fixedCategories = [];
+                    if ($report->type === 'Hourly') {
+                        $fixedCategories = ['CDN TELMEX', 'CDN CEF+', 'STINGRAY'];
+                    } elseif ($report->type === 'Functions') {
+                        $fixedCategories = ['RESTART', 'CUTV', 'EPG', 'PC'];
+                    }
 
-    $dynamicCategories = $report->reportDetails->pluck('subcategory')->unique()->toArray();
+                    $dynamicCategories = $report->reportDetails->pluck('subcategory')->unique()->toArray();
 
-    $allCategories = collect($fixedCategories)->merge($dynamicCategories)->unique()->values()->toArray();
+                    $allCategories = collect($fixedCategories)->merge($dynamicCategories)->unique()->values()->toArray();
                 @endphp
                 @if ($report->type === 'Hourly' || $report->type === 'Functions')
                     @foreach ($allCategories as $fixedCategory)
@@ -328,10 +328,8 @@
                                 </div>
                                 <span
                                     class="bg-primary-100 text-primary-800 text-sm font-medium py-1 px-3 rounded-full text-center sm:text-left w-full sm:w-auto">
-                                    @if (
-                in_array($fixedCategory, $allCategories) &&
-                $report->reportDetails->where('subcategory', $fixedCategory)->count() > 0
-            )
+                                    @if (in_array($fixedCategory, $allCategories) &&
+                                        $report->reportDetails->where('subcategory', $fixedCategory)->count() > 0)
                                         {{ $report->reportDetails->where('subcategory', $fixedCategory)->count() }}
                                         {{ $report->reportDetails->where('subcategory', $fixedCategory)->count() === 1 ? __('Channel') : __('Channels') }}
                                     @else
@@ -433,67 +431,67 @@
                                         <span class="text-[10px] mt-1 text-gray-500 dark:text-gray-300">HLS</span>
                                     </div>
                                 </div>
-                                            @if ($fixedCategory === 'CUTV' && $detail->reportContentLosses->isNotEmpty())
-                                                <div x-data="{ showLosses: false }" class="mt-5 w-full text-center">
-                                                    <div class="flex justify-center">
-                                                        <button @click="showLosses = !showLosses"
-                                                            class="text-[10px] lg:text-[11px] text-primary-600 dark:text-primary-400 font-medium flex justify-center items-center gap-1 hover:underline">
-                                                            <i class="fa-solid fa-clock text-xs"></i>
-                                                            {{ __('View content loss intervals') }}
-                                                            <i :class="showLosses ? 'fa-chevron-up' : 'fa-chevron-down'"
-                                                                class="fa-solid ml-1 text-xs transition-transform duration-200"></i>
-                                                        </button>
-                                                    </div>
+                                    @if ($fixedCategory === 'CUTV' && $detail->reportContentLosses->isNotEmpty())
+                                        <div x-data="{ showLosses: false }" class="mt-5 w-full text-center">
+                                            <div class="flex justify-center">
+                                                <button @click="showLosses = !showLosses"
+                                                    class="text-[10px] lg:text-[11px] text-primary-600 dark:text-primary-400 font-medium flex justify-center items-center gap-1 hover:underline">
+                                                    <i class="fa-solid fa-clock text-xs"></i>
+                                                    {{ __('View content loss intervals') }}
+                                                    <i :class="showLosses ? 'fa-chevron-up' : 'fa-chevron-down'"
+                                                        class="fa-solid ml-1 text-xs transition-transform duration-200"></i>
+                                                </button>
+                                            </div>
 
-                                                    <div x-show="showLosses" x-collapse class="mt-4 overflow-x-auto">
-                                                        <div
-                                                            class="inline-block min-w-full align-middle border border-gray-200 dark:border-gray-700 lg:rounded-lg overflow-hidden bg-white dark:bg-gray-800 shadow-sm">
-                                                            <table
-                                                                class="min-w-full text-[10px] lg:text-[11px] text-gray-700 dark:text-gray-300">
-                                                                <thead>
-                                                                    <tr class="bg-gray-100 dark:bg-gray-700">
-                                                                        <th class="py-2 px-3 text-center">
-                                                                            {{ __('Start time') }}</th>
-                                                                        <th class="py-2 px-3 text-center">
-                                                                            {{ __('End time') }}</th>
-                                                                        <th class="py-2 px-3 text-center">
-                                                                            {{ __('Duration') }}</th>
-                                                                    </tr>
-                                                                </thead>
-                                                                <tbody>
-                                                                    @foreach ($detail->reportContentLosses as $loss)
-                                                                        @php
-                            $start = \Carbon\Carbon::parse(
-                                $loss->start_time,
-                            );
-                            $end = \Carbon\Carbon::parse($loss->end_time);
-                            $diff = $start->diff($end);
-                            $days = $diff->format('%a');
-                            $hours = $diff->format('%H');
-                            $minutes = $diff->format('%I');
+                                            <div x-show="showLosses" x-collapse class="mt-4 overflow-x-auto">
+                                                <div
+                                                    class="inline-block min-w-full align-middle border border-gray-200 dark:border-gray-700 lg:rounded-lg overflow-hidden bg-white dark:bg-gray-800 shadow-sm">
+                                                    <table
+                                                        class="min-w-full text-[10px] lg:text-[11px] text-gray-700 dark:text-gray-300">
+                                                        <thead>
+                                                            <tr class="bg-gray-100 dark:bg-gray-700">
+                                                                <th class="py-2 px-3 text-center">
+                                                                    {{ __('Start time') }}</th>
+                                                                <th class="py-2 px-3 text-center">
+                                                                    {{ __('End time') }}</th>
+                                                                <th class="py-2 px-3 text-center">
+                                                                    {{ __('Duration') }}</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            @foreach ($detail->reportContentLosses as $loss)
+                                                                @php
+                                                                    $start = \Carbon\Carbon::parse(
+                                                                        $loss->start_time,
+                                                                    );
+                                                                    $end = \Carbon\Carbon::parse($loss->end_time);
+                                                                    $diff = $start->diff($end);
+                                                                    $days = $diff->format('%a');
+                                                                    $hours = $diff->format('%H');
+                                                                    $minutes = $diff->format('%I');
 
-                            $duration =
-                                ($days > 0 ? "{$days}d " : '') .
-                                "{$hours}h {$minutes}m";
-                                                                        @endphp
-                                                                        <tr
-                                                                            class="border-b border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600">
-                                                                            <td class="py-2 px-3 text-center">
-                                                                                {{ $start->format('d/m/Y H:i') }}</td>
-                                                                            <td class="py-2 px-3 text-center">
-                                                                                {{ $end->format('d/m/Y H:i') }}</td>
-                                                                            <td
-                                                                                class="py-2 px-3 text-center font-semibold">
-                                                                                {{ $duration }}</td>
-                                                                        </tr>
-                                                                    @endforeach
-                                                                </tbody>
-                                                            </table>
-                                                        </div>
-                                                    </div>
+                                                                    $duration =
+                                                                        ($days > 0 ? "{$days}d " : '') .
+                                                                        "{$hours}h {$minutes}m";
+                                                                @endphp
+                                                                <tr
+                                                                    class="border-b border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600">
+                                                                    <td class="py-2 px-3 text-center">
+                                                                        {{ $start->format('d/m/Y H:i') }}</td>
+                                                                    <td class="py-2 px-3 text-center">
+                                                                        {{ $end->format('d/m/Y H:i') }}</td>
+                                                                    <td
+                                                                        class="py-2 px-3 text-center font-semibold">
+                                                                        {{ $duration }}</td>
+                                                                </tr>
+                                                            @endforeach
+                                                        </tbody>
+                                                    </table>
                                                 </div>
-                                            @endif
+                                            </div>
                                         </div>
+                                    @endif
+                                </div>
                                     @endforeach
                                 @else
                                     <div

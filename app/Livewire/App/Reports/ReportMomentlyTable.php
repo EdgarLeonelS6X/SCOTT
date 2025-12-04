@@ -148,15 +148,13 @@ class ReportMomentlyTable extends Component
         if ($auth && $auth->id === 1) {
             if (in_array($this->areaFilter, ['OTT', 'DTH'])) {
                 $filter = $this->areaFilter;
-                $allowed = [$filter, 'DTH/OTT'];
-                $query->whereIn('area', $allowed);
+                $query->where('area', $filter);
             }
         } else {
             if ($auth) {
                 $viewerArea = $auth->area ?? null;
                 if (in_array($viewerArea, ['OTT', 'DTH'])) {
-                    $allowed = [$viewerArea, 'DTH/OTT'];
-                    $query->whereIn('area', $allowed);
+                    $query->where('area', $viewerArea);
                 } else {
                     $query->whereRaw('1 = 0');
                 }
@@ -167,13 +165,15 @@ class ReportMomentlyTable extends Component
 
         $reports = $query->paginate(5);
 
-        $reports->getCollection()->transform(function ($report) {
+        $collection = $reports->getCollection();
+        $collection = $collection->map(function ($report) {
             $report->formatted_date = $this->formatDate($report->created_at);
             $report->channels_preview = $report->reportDetails->take(3)
                 ->map(fn($detail) => $detail->channel->name)
                 ->implode(', ') . ($report->reportDetails->count() > 3 ? '...' : '');
             return $report;
         });
+        $reports->setCollection($collection);
 
         return view('livewire.app.reports.report-momently-table', [
             'reports' => $reports,

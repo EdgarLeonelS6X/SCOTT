@@ -23,13 +23,13 @@ class EditMomentlyReport extends Component
     public function mount(Report $report)
     {
         $currentUser = auth()->user();
-        $userArea = strtolower(trim($currentUser->area ?? ''));
-        $reportArea = strtolower(trim($report->area ?? ''));
-
-        if (($currentUser->id ?? null) !== 1) {
-            if ($report->status !== 'Revision' && $userArea !== $reportArea) {
+        try {
+            if (empty($currentUser) || ! $report->canBeEditedBy($currentUser)) {
                 abort(403);
             }
+        } catch (\Throwable $e) {
+            \Log::error('EditMomentlyReport mount authorization failed: '.$e->getMessage(), ['report_id' => $report->id]);
+            abort(403);
         }
 
         $this->report = $report;

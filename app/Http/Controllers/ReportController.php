@@ -36,6 +36,16 @@ class ReportController extends Controller
      */
     public function show(Report $report)
     {
+        $currentUser = auth()->user();
+        try {
+            if (empty($currentUser) || ! $report->canBeViewedBy($currentUser)) {
+                abort(403);
+            }
+        } catch (\Throwable $e) {
+            \Log::error('Report show authorization failed: '.$e->getMessage(), ['report_id' => $report->id]);
+            abort(403);
+        }
+
         return view("app.reports.show", compact("report"));
     }
 
@@ -45,17 +55,13 @@ class ReportController extends Controller
     public function edit(Report $report)
     {
         $currentUser = auth()->user();
-        if (empty($currentUser)) {
-            abort(403);
-        }
-
-        $userArea = strtolower(trim($currentUser->area ?? ''));
-        $reportArea = strtolower(trim($report->area ?? ''));
-
-        if (($currentUser->id ?? null) !== 1) {
-            if ($report->status !== 'Revision' && $userArea !== $reportArea) {
+        try {
+            if (empty($currentUser) || ! $report->canBeEditedBy($currentUser)) {
                 abort(403);
             }
+        } catch (\Throwable $e) {
+            \Log::error('Report edit authorization failed: '.$e->getMessage(), ['report_id' => $report->id]);
+            abort(403);
         }
 
         return view('app.reports.edit', [

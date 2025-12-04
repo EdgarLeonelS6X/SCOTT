@@ -182,11 +182,11 @@ class ReportHistoryTable extends Component
 
         if ($auth && $auth->id === 1) {
             if ($this->areaFilter && in_array($this->areaFilter, ['DTH', 'OTT'], true)) {
-                $query->whereIn('area', [$this->areaFilter, 'DTH/OTT']);
+                $query->where('area', $this->areaFilter);
             }
         } else {
             if ($auth && ($viewerArea = ($auth->area))) {
-                $query->whereIn('area', [$viewerArea, 'DTH/OTT']);
+                $query->where('area', $viewerArea);
             } else {
                 $query->whereRaw('1 = 0');
             }

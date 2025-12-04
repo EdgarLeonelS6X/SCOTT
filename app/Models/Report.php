@@ -84,4 +84,25 @@ class Report extends Model
     {
         return $this->hasMany(ChannelTest::class);
     }
+
+    public function canBeViewedBy($user): bool
+    {
+        if (! $user) {
+            return false;
+        }
+
+        if ((int) ($user->id ?? 0) === 1) {
+            return true;
+        }
+
+        $userArea = strtolower(trim($user->area ?? ''));
+        $reportArea = strtolower(trim($this->area ?? ''));
+
+        return $userArea !== '' && $userArea === $reportArea;
+    }
+
+    public function canBeEditedBy($user): bool
+    {
+        return $this->canBeViewedBy($user);
+    }
 }
