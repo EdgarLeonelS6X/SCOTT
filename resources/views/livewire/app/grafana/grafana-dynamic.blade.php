@@ -87,7 +87,7 @@
                         <div class="relative flex-1">
                             <img x-show="selectedChannel && search === (selectedChannel.number + ' ' + selectedChannel.name)"
                                 :src="selectedChannel.image"
-                                class="absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 object-contain rounded bg-white dark:bg-gray-700">
+                                class="absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 object-contain rounded dark:bg-gray-700">
                             <input type="text" x-model="search" @focus="open = true" @click="open = true"
                                 @input="open = true" @click.away="open = false"
                                 placeholder="{{ __('Search channel...') }}"
