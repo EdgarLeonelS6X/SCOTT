@@ -55,20 +55,20 @@
 
                     @if (in_array($panel->id, [1, 3]))
                         <div class="flex items-center gap-3">
-                            <span class="{{ $dthClasses }}" role="status" aria-label="Área DTH" title="Área DTH">
+                            <span class="{{ $dthClasses }}" role="status">
                                 <i class="fa-solid fa-satellite-dish mr-2"></i> DTH
                             </span>
-                            <span class="{{ $ottClasses }}" role="status" aria-label="Área OTT" title="Área OTT">
+                            <span class="{{ $ottClasses }}" role="status">
                                 <i class="fa-solid fa-cube mr-2"></i> OTT
                             </span>
                         </div>
                     @else
                         @if ($panel->area === 'OTT')
-                            <span class="{{ $ottClasses }}" role="status" aria-label="Área OTT" title="Área OTT">
+                            <span class="{{ $ottClasses }}" role="status">
                                 <i class="fa-solid fa-cube mr-2"></i> OTT
                             </span>
                         @elseif ($panel->area === 'DTH')
-                            <span class="{{ $dthClasses }}" role="status" aria-label="Área DTH" title="Área DTH">
+                            <span class="{{ $dthClasses }}" role="status">
                                 <i class="fa-solid fa-satellite-dish mr-2"></i> DTH
                             </span>
                         @else
@@ -92,11 +92,11 @@
                 </div>
                 <div class="flex flex-col gap-1">
                     <x-label><i class="fa-solid fa-cloud mr-1"></i> {{ __('Endpoint') }}</x-label>
-                    <div class="flex items-center gap-2">
+                    <div class="flex items-center gap-4">
                         <x-input type="text" :value="$panel->endpoint" disabled class="w-full truncate leading-tight" />
                         @if($panel->endpoint)
                             <a href="{{ $panel->endpoint }}" target="_blank" rel="noopener noreferrer"
-                                class="flex items-center gap-2 min-w-[150px] justify-center px-4 py-3.5 text-sm font-semibold text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600"
+                                class="flex items-center gap-2 min-w-[150px] justify-center px-4 py-[11px] text-sm font-semibold text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600"
                                 title="{{ __('Open endpoint in new tab') }}">
                                 <i class="fa-solid fa-arrow-up-right-from-square"></i>
                                 <span>{{ __('Open endpoint') }}</span>
@@ -106,12 +106,12 @@
                 </div>
                 <div class="flex flex-col gap-1">
                     <x-label><i class="fa-solid fa-key mr-1"></i> {{ __('API Key') }}</x-label>
-                    <div class="flex items-center gap-2">
+                    <div class="flex items-center gap-4">
                         @if($panel->api_key)
                             <x-input type="text" :value="str_repeat('*', strlen($panel->api_key))" disabled
                                 class="w-full font-mono truncate leading-tight" id="api-key-value" />
                             <button id="toggle-key-btn" type="button"
-                                class="flex items-center gap-2 min-w-[150px] justify-center px-4 py-3.5 text-sm font-semibold text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600"
+                                class="flex items-center gap-2 min-w-[150px] justify-center px-4 py-[11px] text-sm font-semibold text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600"
                                 onclick="toggleKeyVisibility()" title="{{ __('Show/Hide API Key') }}">
                                 <i class="fa-solid fa-eye" id="key-eye-icon"></i>
                                 <span id="key-btn-label">{{ __('Show key') }}</span>

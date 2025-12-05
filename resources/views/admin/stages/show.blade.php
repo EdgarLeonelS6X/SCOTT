@@ -48,39 +48,39 @@
                                 class="block text-center md:text-left font-extrabold text-3xl text-gray-900 dark:text-white mb-2 md:mb-0">{{ __($stage->name) }}</span>
                             <div class="flex flex-row flex-wrap items-center justify-center md:justify-end gap-3">
                                 @php
-                                    $areaClasses = $stage->area === 'DTH'
-                                        ? 'bg-secondary-200 text-secondary-800 dark:bg-secondary-700 dark:text-secondary-100'
-                                        : 'bg-primary-200 text-primary-800 dark:bg-primary-700 dark:text-primary-100';
+$areaClasses = $stage->area === 'DTH'
+    ? 'bg-secondary-200 text-secondary-800 dark:bg-secondary-700 dark:text-secondary-100'
+    : 'bg-primary-200 text-primary-800 dark:bg-primary-700 dark:text-primary-100';
                                 @endphp
-                                @if ($stage->area === 'OTT')
-                                    <span
-                                        class="inline-flex items-center px-3 py-1 text-sm font-semibold rounded-full {{ $areaClasses }} shadow transition duration-150"
-                                        role="status" aria-label="Área OTT" title="Área OTT">
-                                        <i class="fa-solid fa-cube mr-2"></i> OTT
-                                    </span>
-                                @elseif ($stage->area === 'DTH')
-                                    <span
-                                        class="inline-flex items-center px-3 py-1 text-sm font-semibold rounded-full {{ $areaClasses }} shadow transition duration-150"
-                                        role="status" aria-label="Área DTH" title="Área DTH">
-                                        <i class="fa-solid fa-satellite-dish mr-2"></i> DTH
-                                    </span>
-                                @else
-                                    <span class="text-sm text-gray-400 italic">{{ __('N/A') }}</span>
-                                @endif
                                 @if ($stage->status === 1)
                                     <span
                                         class="inline-flex items-center px-3 py-1 text-sm font-semibold text-green-800 bg-green-200 rounded-full dark:bg-green-800 dark:text-green-200 shadow transition duration-150"
-                                        role="status" aria-label="Activo" title="Activo">
+                                        role="status">
                                         <i class="fa-solid fa-check-circle mr-2"></i>
                                         {{ __('Active') }}
                                     </span>
                                 @else
                                     <span
                                         class="inline-flex items-center px-3 py-1 text-sm font-semibold text-red-800 bg-red-200 rounded-full dark:bg-red-800 dark:text-red-200 shadow transition duration-150"
-                                        role="status" aria-label="Inactivo" title="Inactivo">
+                                        role="status">
                                         <i class="fa-solid fa-times-circle mr-2"></i>
                                         {{ __('Inactive') }}
                                     </span>
+                                @endif
+                                @if ($stage->area === 'OTT')
+                                    <span
+                                        class="inline-flex items-center px-3 py-1 text-sm font-semibold rounded-full {{ $areaClasses }} shadow transition duration-150"
+                                        role="status">
+                                        <i class="fa-solid fa-cube mr-2"></i> OTT
+                                    </span>
+                                @elseif ($stage->area === 'DTH')
+                                    <span
+                                        class="inline-flex items-center px-3 py-1 text-sm font-semibold rounded-full {{ $areaClasses }} shadow transition duration-150"
+                                        role="status">
+                                        <i class="fa-solid fa-satellite-dish mr-2"></i> DTH
+                                    </span>
+                                @else
+                                    <span class="text-sm text-gray-400 italic">{{ __('N/A') }}</span>
                                 @endif
                             </div>
                         </div>

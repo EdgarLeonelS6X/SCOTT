@@ -46,7 +46,7 @@
                                 }
                             @endphp
 
-                            <span class="inline-flex items-center gap-1 px-2 py-1 rounded-md md:rounded-lg {{ $areaBadgeClass }} text-[10px] font-medium uppercase tracking-wide md:px-3 md:py-1.5 md:text-xs md:mr-2 flex-shrink-0" title="{{ $report->area ?? '' }}" aria-label="Area {{ $report->area ?? '' }}">
+                            <span class="inline-flex items-center gap-1 px-2 py-1 rounded-md md:rounded-lg {{ $areaBadgeClass }} text-[10px] font-medium uppercase tracking-wide md:px-3 md:py-1.5 md:text-xs md:mr-2 flex-shrink-0" aria-label="Area {{ $report->area ?? '' }}">
                                 <i class="fa-solid {{ $areaIcon }} text-[10px] md:text-xs leading-none" aria-hidden="true"></i>
                                 <span class="leading-none">{{ $report->area ?? '' }}</span>
                             </span>

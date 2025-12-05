@@ -21,7 +21,7 @@
                                 : 'text-gray-800 bg-gray-200 dark:bg-gray-700 dark:text-gray-200');
                     @endphp
 
-                    <span class="inline-flex items-center gap-1 px-2 py-1 mr-2 text-xs font-medium rounded-md {{ $areaBadge }} shadow-sm" title="{{ $area ?? __('N/A') }}">
+                    <span class="inline-flex items-center gap-1 px-2 py-1 mr-2 text-xs font-medium rounded-md {{ $areaBadge }} shadow-sm">
                         @if($area === 'DTH')
                             <i class="fa-solid fa-satellite-dish"></i>
                         @elseif($area === 'OTT')
