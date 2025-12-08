@@ -40,8 +40,8 @@
         [
             'name' => __('Radios'),
             'icon' => 'fa-solid fa-radio',
-            'route' => route('dashboard'),
-            'active' => request()->routeIs('dashboard'),
+            'route' => route('admin.radios.index'),
+            'active' => request()->routeIs('admin.radios.*'),
         ],
         [
             'name' => __('Grafana'),

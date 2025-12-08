@@ -31,12 +31,17 @@ class UserPermissions extends Component
             'report_general_created' => false,
         ];
 
-        $userPreferences = is_string($user->report_mail_preferences)
-            ? json_decode($user->report_mail_preferences, true)
-            : $user->report_mail_preferences;
-
-        if (!is_array($userPreferences)) {
-            $userPreferences = [];
+        $userPreferences = [];
+        $rawPreferences = $user->report_mail_preferences;
+        if (is_string($rawPreferences)) {
+            $decoded = json_decode($rawPreferences, true);
+            if (is_array($decoded)) {
+                $userPreferences = $decoded;
+            }
+        } elseif (is_array($rawPreferences)) {
+            $userPreferences = $rawPreferences;
+        } elseif (is_object($rawPreferences)) {
+            $userPreferences = (array) $rawPreferences;
         }
 
         $this->reportMails = array_merge($defaultPreferences, $userPreferences);
@@ -53,7 +58,6 @@ class UserPermissions extends Component
 
         $auth = auth()->user();
 
-        // Ensure we have an authenticated user; abort early to avoid calling methods on null
         if (! $auth) {
             abort(403);
         }
@@ -182,6 +186,14 @@ class UserPermissions extends Component
             });
             $this->permissions = $allowed->pluck('name')->toArray();
         }
+        // Enforce that only authenticated users from DTH or super-admin (id=1) can assign radios.* permissions
+        $auth = auth()->user();
+        $authIsDthOrSuper = $auth && ($auth->id === 1 || (isset($auth->area) && strtolower(trim($auth->area)) === 'dth'));
+        if (! $authIsDthOrSuper) {
+            $this->permissions = collect($this->permissions)->reject(function ($p) {
+                return substr($p, 0, 6) === 'radios.';
+            })->values()->toArray();
+        }
     }
 
     public function onRoleChanged($value)
@@ -204,6 +216,14 @@ class UserPermissions extends Component
         }
 
         $requestedPermissions = collect($this->permissions);
+        // Prevent non-DTH/non-super users from saving radios.* permissions server-side
+        $auth = auth()->user();
+        $authIsDthOrSuper = $auth && ($auth->id === 1 || (isset($auth->area) && strtolower(trim($auth->area)) === 'dth'));
+        if (! $authIsDthOrSuper) {
+            $requestedPermissions = $requestedPermissions->reject(function ($p) {
+                return substr($p, 0, 6) === 'radios.';
+            })->values();
+        }
         $forbidden = [
             'admin' => ['roles.edit'],
             'user' => ['roles.edit', 'permissions.assign'],

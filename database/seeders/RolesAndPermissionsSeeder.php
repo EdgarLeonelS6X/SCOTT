@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
+use App\Models\User;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\PermissionRegistrar;
@@ -22,6 +23,10 @@ class RolesAndPermissionsSeeder extends Seeder
             'stages.create',
             'stages.edit',
             'stages.delete',
+            'radios.view',
+            'radios.create',
+            'radios.edit',
+            'radios.delete',
             'grafana.view',
             'grafana.create',
             'grafana.edit',
@@ -39,5 +44,10 @@ class RolesAndPermissionsSeeder extends Seeder
         Role::firstOrCreate(['name' => 'user', 'guard_name' => 'web']);
 
         $master->syncPermissions(Permission::all());
+
+        $user = User::find(1);
+        if ($user) {
+            $user->syncPermissions(Permission::pluck('name')->toArray());
+        }
     }
 }

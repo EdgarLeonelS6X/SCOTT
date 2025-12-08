@@ -319,20 +319,27 @@ $resetBtnText = $area === 'OTT' ? 'text-gray-700 dark:text-gray-200' : ($area ==
             <i class="fa-solid fa-key mr-2"></i>
             {{ __('Permissions') }}
         </h2>
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+        <div class="flex flex-col md:flex-row md:flex-nowrap gap-4">
             @php
                 $grouped = collect($allPermissions)->groupBy(fn($perm) => explode('.', $perm->name)[0]);
                 $icons = [
                     'channels' => 'fa-tv',
                     'stages' => 'fa-bars-staggered',
                     'grafana' => 'fa-chart-pie',
+                    'radios' => 'fa-radio',
                     'roles' => 'fa-shield-halved',
                     'permissions' => 'fa-key',
                 ];
+
+                $auth = Auth::user();
+                $authIsDthOrSuper = $auth && ($auth->id === 1 || ($auth->area ?? '') === 'DTH');
             @endphp
             @foreach ($grouped as $group => $perms)
                 @if (!in_array($group, ['roles', 'permissions']))
-                    <div class="p-4 rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700">
+                    @if($group === 'radios' && ! $authIsDthOrSuper)
+                        @continue
+                    @endif
+                    <div class="flex-1 min-w-0 p-4 rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700">
                         <h3
                             class="text-sm font-bold text-gray-700 dark:text-white uppercase mb-3 flex items-center gap-2 {{ !$canEditPermissions ? 'opacity-50' : '' }}">
                             <i class="fa-solid {{ $icons[$group] ?? 'fa-lock' }}"></i>{{ __(ucfirst($group)) }}
@@ -348,11 +355,13 @@ $resetBtnText = $area === 'OTT' ? 'text-gray-700 dark:text-gray-200' : ($area ==
                             @foreach ($sortedPerms as $permission)
                                 @php
                                     $primaryCheckbox = $area === 'OTT' ? 'text-primary-600 focus:ring-primary-500' : ($area === 'DTH' ? 'text-secondary-600 focus:ring-secondary-500' : 'text-primary-600 focus:ring-primary-500');
+                                    $isRadioPerm = substr($permission->name, 0, 6) === 'radios.';
+                                    $disabledForArea = $isRadioPerm && ! $authIsDthOrSuper;
                                 @endphp
                                 <label class="flex items-center gap-2 {{ !$canEditPermissions ? 'opacity-50' : '' }}">
                                     <input type="checkbox" value="{{ $permission->name }}" wire:model="permissions"
                                         class="w-4 h-4 {{ $primaryCheckbox }} bg-white border-gray-300 rounded focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                                        @disabled(!$canEditPermissions || in_array($permission->name, $forbiddenPermissions))>
+                                        @disabled(!$canEditPermissions || in_array($permission->name, $forbiddenPermissions) || $disabledForArea)>
                                     <span class="text-sm text-gray-800 dark:text-gray-200">
                                         {{ __(ucfirst(str_replace($group . '.', '', $permission->name))) }}
                                     </span>
@@ -363,7 +372,7 @@ $resetBtnText = $area === 'OTT' ? 'text-gray-700 dark:text-gray-200' : ($area ==
                 @endif
             @endforeach
             @if(isset($grouped['roles']) || isset($grouped['permissions']))
-                <div class="p-4 rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700">
+                <div class="flex-1 min-w-0 p-4 rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700">
                     <h3
                         class="text-sm font-bold text-gray-700 dark:text-white uppercase mb-3 flex items-center gap-2 {{ !$canEditPermissions ? 'opacity-50' : '' }}">
                         <i class="fa-solid fa-shield-halved"></i>{{ __('Roles & Permissions') }}
