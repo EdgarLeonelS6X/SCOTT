@@ -6,6 +6,8 @@ use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvid
 use Illuminate\Support\Facades\Gate;
 use App\Models\Radio;
 use App\Policies\RadioPolicy;
+use App\Models\Device;
+use App\Policies\DevicePolicy;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -16,6 +18,7 @@ class AuthServiceProvider extends ServiceProvider
      */
     protected $policies = [
         Radio::class => RadioPolicy::class,
+        Device::class => DevicePolicy::class,
     ];
 
     /**

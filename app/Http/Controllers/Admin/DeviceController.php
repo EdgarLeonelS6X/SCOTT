@@ -4,13 +4,14 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Radio;
+use App\Models\Device;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
-class RadioController extends Controller
+class DeviceController extends Controller
 {
     use AuthorizesRequests;
+
     /**
      * Display a listing of the resource.
      */
@@ -19,14 +20,14 @@ class RadioController extends Controller
         $user = Auth::user();
 
         if (! ($user && $user->id === 1)) {
-            $this->authorize('viewAny', Radio::class);
+            $this->authorize('viewAny', Device::class);
         }
 
-        $radios = Radio::when($user && $user->id !== 1, function ($query) use ($user) {
+        $devices = Device::when($user && $user->id !== 1, function ($query) use ($user) {
             return $query->where('area', $user->area);
         })->paginate(10);
 
-        return view('admin.radios.index', compact('radios'));
+        return view('admin.devices.index', compact('devices'));
     }
 
     /**

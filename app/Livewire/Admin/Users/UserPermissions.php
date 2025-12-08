@@ -186,12 +186,19 @@ class UserPermissions extends Component
             });
             $this->permissions = $allowed->pluck('name')->toArray();
         }
-        // Enforce that only authenticated users from DTH or super-admin (id=1) can assign radios.* permissions
         $auth = auth()->user();
         $authIsDthOrSuper = $auth && ($auth->id === 1 || (isset($auth->area) && strtolower(trim($auth->area)) === 'dth'));
+        $authIsOttOrSuper = $auth && ($auth->id === 1 || (isset($auth->area) && strtolower(trim($auth->area)) === 'ott'));
+
         if (! $authIsDthOrSuper) {
             $this->permissions = collect($this->permissions)->reject(function ($p) {
                 return substr($p, 0, 6) === 'radios.';
+            })->values()->toArray();
+        }
+
+        if (! $authIsOttOrSuper) {
+            $this->permissions = collect($this->permissions)->reject(function ($p) {
+                return substr($p, 0, 8) === 'devices.';
             })->values()->toArray();
         }
     }
@@ -216,12 +223,19 @@ class UserPermissions extends Component
         }
 
         $requestedPermissions = collect($this->permissions);
-        // Prevent non-DTH/non-super users from saving radios.* permissions server-side
         $auth = auth()->user();
-        $authIsDthOrSuper = $auth && ($auth->id === 1 || (isset($auth->area) && strtolower(trim($auth->area)) === 'dth'));
+        $authIsDthOrSuper = $auth && ($auth->id === 1 || (isset($auth->area) && strtolower(trim($auth->area)) === 'DTH'));
+        $authIsOttOrSuper = $auth && ($auth->id === 1 || (isset($auth->area) && strtolower(trim($auth->area)) === 'OTT'));
+
         if (! $authIsDthOrSuper) {
             $requestedPermissions = $requestedPermissions->reject(function ($p) {
                 return substr($p, 0, 6) === 'radios.';
+            })->values();
+        }
+
+        if (! $authIsOttOrSuper) {
+            $requestedPermissions = $requestedPermissions->reject(function ($p) {
+                return substr($p, 0, 8) === 'devices.';
             })->values();
         }
         $forbidden = [

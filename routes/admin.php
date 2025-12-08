@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\ChannelController;
+use App\Http\Controllers\Admin\DeviceController;
 use App\Http\Controllers\Admin\GrafanaController;
 use App\Http\Controllers\Admin\RadioController;
 use App\Http\Controllers\Admin\StageController;
@@ -20,6 +21,9 @@ Route::resource('/channels', ChannelController::class)
 
 Route::resource('/stages', StageController::class)
     ->middleware(['auth', 'verified', 'can:viewAny,App\Models\Stage']);
+
+Route::resource('/devices', DeviceController::class)
+    ->middleware(['auth', 'verified', 'can:viewAny,App\Models\Device']);
 
 Route::resource('/radios', RadioController::class)
     ->middleware(['auth', 'verified', 'can:viewAny,App\Models\Radio']);

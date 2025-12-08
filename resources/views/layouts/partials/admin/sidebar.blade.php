@@ -33,9 +33,9 @@
         ],
         [
             'name' => __('Devices'),
-            'icon' => 'fa-brands fa-apple',
-            'route' => route('dashboard'),
-            'active' => request()->routeIs('dashboard'),
+            'icon' => 'fa-solid fa-hard-drive',
+            'route' => route('admin.devices.index'),
+            'active' => request()->routeIs('admin.devices.*'),
         ],
         [
             'name' => __('Radios'),

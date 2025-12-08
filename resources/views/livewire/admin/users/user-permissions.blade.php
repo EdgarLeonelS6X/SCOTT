@@ -325,8 +325,9 @@ $resetBtnText = $area === 'OTT' ? 'text-gray-700 dark:text-gray-200' : ($area ==
                 $icons = [
                     'channels' => 'fa-tv',
                     'stages' => 'fa-bars-staggered',
-                    'grafana' => 'fa-chart-pie',
+                    'devices' => 'fa-hard-drive',
                     'radios' => 'fa-radio',
+                    'grafana' => 'fa-chart-pie',
                     'roles' => 'fa-shield-halved',
                     'permissions' => 'fa-key',
                 ];
@@ -334,42 +335,59 @@ $resetBtnText = $area === 'OTT' ? 'text-gray-700 dark:text-gray-200' : ($area ==
                 $auth = Auth::user();
                 $authIsDthOrSuper = $auth && ($auth->id === 1 || ($auth->area ?? '') === 'DTH');
             @endphp
-            @foreach ($grouped as $group => $perms)
-                @if (!in_array($group, ['roles', 'permissions']))
-                    @if($group === 'radios' && ! $authIsDthOrSuper)
-                        @continue
-                    @endif
-                    <div class="flex-1 min-w-0 p-4 rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700">
-                        <h3
-                            class="text-sm font-bold text-gray-700 dark:text-white uppercase mb-3 flex items-center gap-2 {{ !$canEditPermissions ? 'opacity-50' : '' }}">
-                            <i class="fa-solid {{ $icons[$group] ?? 'fa-lock' }}"></i>{{ __(ucfirst($group)) }}
-                        </h3>
-                        <div class="space-y-2">
-                            @php
-                                $sortedPerms = collect($perms)->sortBy(function ($p) use ($group) {
-                                    $parts = explode('.', $p->name, 2);
-                                    $action = $parts[1] ?? '';
-                                    return $action === 'view' ? 0 : 1;
-                                })->values();
-                            @endphp
-                            @foreach ($sortedPerms as $permission)
-                                @php
-                                    $primaryCheckbox = $area === 'OTT' ? 'text-primary-600 focus:ring-primary-500' : ($area === 'DTH' ? 'text-secondary-600 focus:ring-secondary-500' : 'text-primary-600 focus:ring-primary-500');
-                                    $isRadioPerm = substr($permission->name, 0, 6) === 'radios.';
-                                    $disabledForArea = $isRadioPerm && ! $authIsDthOrSuper;
-                                @endphp
-                                <label class="flex items-center gap-2 {{ !$canEditPermissions ? 'opacity-50' : '' }}">
-                                    <input type="checkbox" value="{{ $permission->name }}" wire:model="permissions"
-                                        class="w-4 h-4 {{ $primaryCheckbox }} bg-white border-gray-300 rounded focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                                        @disabled(!$canEditPermissions || in_array($permission->name, $forbiddenPermissions) || $disabledForArea)>
-                                    <span class="text-sm text-gray-800 dark:text-gray-200">
-                                        {{ __(ucfirst(str_replace($group . '.', '', $permission->name))) }}
-                                    </span>
-                                </label>
-                            @endforeach
-                        </div>
-                    </div>
+            @php
+                $preferredOrder = ['channels', 'stages', 'devices', 'radios', 'grafana'];
+                $allGroups = $grouped->keys()->toArray();
+
+                $ordered = [];
+                foreach ($preferredOrder as $g) {
+                    if (in_array($g, $allGroups)) {
+                        $ordered[] = $g;
+                        $allGroups = array_values(array_diff($allGroups, [$g]));
+                    }
+                }
+
+                foreach ($allGroups as $g) {
+                    if (! in_array($g, ['roles', 'permissions'])) {
+                        $ordered[] = $g;
+                    }
+                }
+            @endphp
+
+            @foreach ($ordered as $group)
+                @php $perms = $grouped[$group]; @endphp
+                @if($group === 'radios' && ! $authIsDthOrSuper)
+                    @continue
                 @endif
+                <div class="flex-1 min-w-0 p-4 rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700">
+                    <h3 class="text-sm font-bold text-gray-700 dark:text-white uppercase mb-3 flex items-center gap-2 {{ !$canEditPermissions ? 'opacity-50' : '' }}">
+                        <i class="fa-solid {{ $icons[$group] ?? 'fa-lock' }}"></i>{{ __(ucfirst($group)) }}
+                    </h3>
+                    <div class="space-y-2">
+                        @php
+                            $sortedPerms = collect($perms)->sortBy(function ($p) use ($group) {
+                                $parts = explode('.', $p->name, 2);
+                                $action = $parts[1] ?? '';
+                                return $action === 'view' ? 0 : 1;
+                            })->values();
+                        @endphp
+                        @foreach ($sortedPerms as $permission)
+                            @php
+                                $primaryCheckbox = $area === 'OTT' ? 'text-primary-600 focus:ring-primary-500' : ($area === 'DTH' ? 'text-secondary-600 focus:ring-secondary-500' : 'text-primary-600 focus:ring-primary-500');
+                                $isRadioPerm = substr($permission->name, 0, 6) === 'radios.';
+                                $disabledForArea = $isRadioPerm && ! $authIsDthOrSuper;
+                            @endphp
+                            <label class="flex items-center gap-2 {{ !$canEditPermissions ? 'opacity-50' : '' }}">
+                                <input type="checkbox" value="{{ $permission->name }}" wire:model="permissions"
+                                    class="w-4 h-4 {{ $primaryCheckbox }} bg-white border-gray-300 rounded focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                                    @disabled(!$canEditPermissions || in_array($permission->name, $forbiddenPermissions) || $disabledForArea)>
+                                <span class="text-sm text-gray-800 dark:text-gray-200">
+                                    {{ __(ucfirst(str_replace($group . '.', '', $permission->name))) }}
+                                </span>
+                            </label>
+                        @endforeach
+                    </div>
+                </div>
             @endforeach
             @if(isset($grouped['roles']) || isset($grouped['permissions']))
                 <div class="flex-1 min-w-0 p-4 rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700">
