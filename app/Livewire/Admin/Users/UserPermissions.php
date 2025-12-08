@@ -6,6 +6,8 @@ use App\Models\User;
 use Livewire\Component;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 
 class UserPermissions extends Component
 {
@@ -107,7 +109,7 @@ class UserPermissions extends Component
         if (!$canEditPreferences) {
             $this->dispatch('swal', [
                 'icon' => 'error',
-                'title' => __('Access Denied'),
+                'title' => __('Access denied'),
                 'text' => __('You are not authorized to update these preferences.'),
             ]);
             return;
@@ -145,14 +147,21 @@ class UserPermissions extends Component
         if (!($auth->id === 1 && $auth->hasRole('master'))) {
             $this->dispatch('swal', [
                 'icon' => 'error',
-                'title' => __('Access Denied'),
+                'title' => __('Access denied'),
                 'text' => __('You are not authorized to change this status.'),
             ]);
             return;
         }
 
         $this->user->status = !$this->user->status;
+        $this->user->remember_token = null;
         $this->user->save();
+
+        try {
+            if (Schema::hasTable('sessions')) {
+                DB::table('sessions')->where('user_id', $this->user->id)->delete();
+            }
+        } catch (\Exception $e) { }
 
         $this->dispatch('swal', [
             'icon' => 'success',
@@ -216,7 +225,7 @@ class UserPermissions extends Component
         if (!$this->canEditRoles && !$this->canEditPermissions) {
             $this->dispatch('swal', [
                 'icon' => 'error',
-                'title' => __('Access Denied'),
+                'title' => __('Access denied'),
                 'text' => __('You are not authorized to perform this action.')
             ]);
             return;
