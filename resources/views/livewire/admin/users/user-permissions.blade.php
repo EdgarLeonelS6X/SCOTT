@@ -163,10 +163,11 @@
 
             <div class="mt-7 flex flex-wrap gap-3 justify-center sm:justify-end">
                 @php $auth = auth()->user();
-$isSelfFirstAdmin = $auth->id === 1 && $user->id === 1 && $auth->hasRole('master'); @endphp
+                    $isSelfFirstAdmin = $auth->id === 1 && $user->id === 1 && $auth->hasRole('master');
+                @endphp
                 @php
-$resetBtnBg = $area === 'OTT' ? 'bg-gray-50 hover:bg-gray-100 dark:bg-gray-900' : ($area === 'DTH' ? 'bg-gray-50 hover:bg-gray-100 dark:bg-gray-900' : 'bg-gray-50 hover:bg-gray-100 dark:bg-gray-900');
-$resetBtnText = $area === 'OTT' ? 'text-gray-700 dark:text-gray-200' : ($area === 'DTH' ? 'text-gray-700 dark:text-gray-200' : 'text-gray-700 dark:text-gray-200');
+                    $resetBtnBg = $area === 'OTT' ? 'bg-gray-50 hover:bg-gray-100 dark:bg-gray-900' : ($area === 'DTH' ? 'bg-gray-50 hover:bg-gray-100 dark:bg-gray-900' : 'bg-gray-50 hover:bg-gray-100 dark:bg-gray-900');
+                    $resetBtnText = $area === 'OTT' ? 'text-gray-700 dark:text-gray-200' : ($area === 'DTH' ? 'text-gray-700 dark:text-gray-200' : 'text-gray-700 dark:text-gray-200');
                 @endphp
                 @if($badge)
                     <div class="relative" x-data="{ tip: false }">
@@ -193,7 +194,7 @@ $resetBtnText = $area === 'OTT' ? 'text-gray-700 dark:text-gray-200' : ($area ==
                         @mouseenter="tip = true" @mouseleave="tip = false" type="button"
                         aria-pressed="{{ $user->status ? 'true' : 'false' }}"
                         class="{{ $smallBadgeBase }} {{ $user->status ? $statusActiveClasses : $statusInactiveClasses }}">
-                        <i class="fa-solid {{ $user->status ? 'fa-user' : 'fa-circle-xmark' }} text-xs"></i>
+                        <i class="fa-solid {{ $user->status ? 'fa-circle-check' : 'fa-circle-xmark' }} text-xs"></i>
                     </button>
                     <div x-show="tip" x-cloak x-transition:enter="transition ease-out duration-150"
                         x-transition:enter-start="opacity-0 scale-95"

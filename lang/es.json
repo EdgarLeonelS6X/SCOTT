@@ -731,5 +731,12 @@
     "You are not authorized to change this user area.": "No estás autorizado para cambiar el área de este usuario.",
     "Area updated": "Área actualizada",
     "User area changed to": "Área del usuario cambiada a",
-    "December": "Diciembre"
+    "December": "Diciembre",
+    "There are no devices registered in the database.": "No hay dispositivos registrados en la base de datos.",
+    "Register new device": "Registrar nuevo dispositivo",
+    "Enter the data for the new device.": "Ingrese los datos para el nuevo dispositivo.",
+    "Enter the data for the new stage.": "Ingrese los datos para la nueva etapa.",
+    "Device name": "Nombre del dispositivo",
+    "Device protocol": "Protocolo del dispositivo",
+    "StarTV Stream URL in the app store": "URL de StarTV Stream en la tienda de aplicaciones"
 }

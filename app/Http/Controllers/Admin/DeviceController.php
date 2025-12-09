@@ -35,7 +35,9 @@ class DeviceController extends Controller
      */
     public function create()
     {
-        //
+        $this->authorize('create', Device::class);
+
+        return view('admin.devices.create');
     }
 
     /**
@@ -49,17 +51,21 @@ class DeviceController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Device $device)
     {
-        //
+        $this->authorize('view', $device);
+
+        return view('admin.devices.show', compact('device'));
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(Device $device)
     {
-        //
+        $this->authorize('update', $device);
+
+        return view('admin.devices.edit', compact('device'));
     }
 
     /**
@@ -73,8 +79,16 @@ class DeviceController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Device $device)
     {
-        //
+        $this->authorize('delete', $device);
+
+        $device->delete();
+
+        return redirect()->route('devices.index')->with('swal', [
+            'icon' => 'success',
+            'title' => __('Deleted'),
+            'text' => __('Device removed successfully.'),
+        ]);
     }
 }

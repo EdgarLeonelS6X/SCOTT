@@ -16,6 +16,7 @@ class CreateRadiosTable extends Migration
         Schema::create('radios', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->string('image_url');
             $table->string('url');
             $table->string('area')->default('DTH');
             $table->boolean('status');

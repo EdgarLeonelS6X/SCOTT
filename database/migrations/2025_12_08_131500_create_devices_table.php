@@ -16,6 +16,8 @@ return new class extends Migration
         Schema::create('devices', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->string('store_url');
+            $table->string('protocol');
             $table->string('area')->default('OTT');
             $table->boolean('status');
             $table->timestamps();

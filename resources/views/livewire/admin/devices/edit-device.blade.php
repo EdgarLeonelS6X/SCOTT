@@ -10,11 +10,11 @@
             'route' => route('admin.devices.index'),
         ],
         [
-            'name' => __('New'),
-            'icon' => 'fa-solid fa-plus',
+            'name' => __('Update'),
+            'icon' => 'fa-solid fa-pencil',
         ],
     ]">
 
-    @livewire('admin.devices.create-device')
+    @livewire('admin.devices.edit-device', ['device' => $device])
 
 </x-admin-layout>

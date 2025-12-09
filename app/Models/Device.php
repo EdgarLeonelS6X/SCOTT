@@ -13,18 +13,10 @@ class Device extends Model
      */
     protected $fillable = [
         'name',
-        'status',
+        'store_url',
+        'protocol',
         'area',
-    ];
-
-    /**
-     * The model's default values for attributes.
-     *
-     * @var array
-     */
-    protected $attributes = [
-        'area' => 'OTT',
-        'status' => true,
+        'status',
     ];
 
     /**
