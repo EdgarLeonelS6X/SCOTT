@@ -126,10 +126,6 @@
                                         <i class="fa-solid fa-radio mr-1.5 pb-[1px]"></i>
                                     @break
 
-                                    @case('Radio TV Channel (DTH)')
-                                        <i class="fa-solid fa-radio mr-1.5 pb-[1px]"></i>
-                                    @break
-
                                     @case('Learning TV Channel')
                                         <i class="fa-solid fa-book-open mr-1.5"></i>
                                     @break

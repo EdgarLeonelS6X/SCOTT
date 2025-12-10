@@ -6,7 +6,6 @@ enum ChannelCategory: string
 {
     case STANDARD = 'Standard TV Channel';
     case RADIO = 'Radio TV Channel';
-    case RADIO_DTH = 'Radio TV Channel (DTH)';
     case LEARNING = 'Learning TV Channel';
     case STINGRAY = 'Stingray Music';
     case FAST = "FAST";

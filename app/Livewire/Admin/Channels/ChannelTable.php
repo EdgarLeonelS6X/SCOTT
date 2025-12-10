@@ -106,11 +106,8 @@ class ChannelTable extends Component
             $query->where('category', $this->categoryFilter);
         }
 
-        // Area filtering: when areaFilter is not 'all', show channels matching the selected area
-        // or shared channels marked as 'DTH/OTT'. If areaFilter is 'all', don't restrict.
         if ($this->areaFilter && $this->areaFilter !== 'all') {
             if (auth()->user()?->id === 1) {
-                // Super-user: filter by selected area
                 if ($this->areaFilter === 'DTH') {
                     $query->where(function ($q) {
                         $q->where('area', 'DTH')->orWhere('area', 'DTH/OTT');
@@ -121,7 +118,6 @@ class ChannelTable extends Component
                     });
                 }
             } else {
-                // Non-super users: respect the selected filter too (only if toggled)
                 if ($this->areaFilter === 'DTH') {
                     $query->where(function ($q) {
                         $q->where('area', 'DTH')->orWhere('area', 'DTH/OTT');
