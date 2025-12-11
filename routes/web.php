@@ -6,6 +6,7 @@ use App\Http\Controllers\ReportController;
 use App\Http\Middleware\CheckUserStatus;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Auth\AuthenticatedSessionController;
 
 Route::get('/', function () {
     return redirect()->route('login');
@@ -40,4 +41,6 @@ Route::post('/language/switch', [LanguageController::class, 'switchLanguage'])
 if (file_exists(__DIR__ . '/admin.php')) {
     require __DIR__ . '/admin.php';
 }
+
+Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
 
