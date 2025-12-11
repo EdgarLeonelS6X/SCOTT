@@ -1,5 +1,6 @@
+@php $area = auth()->user()?->area ?? null; @endphp
 <button id="theme-toggle" type="button"
-    class="w-9 h-9 flex items-center justify-center rounded-md text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 focus:outline-none focus:ring-2 {{ Auth::user()->area === 'DTH' ? 'focus:ring-secondary-200 dark:focus:ring-secondary-700' : 'focus:ring-primary-200 dark:focus:ring-primary-700' }} transition">
+    class="w-9 h-9 flex items-center justify-center rounded-md text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 focus:outline-none focus:ring-2 {{ ($area === 'DTH') ? 'focus:ring-secondary-200 dark:focus:ring-secondary-700' : 'focus:ring-primary-200 dark:focus:ring-primary-700' }} transition">
     <svg id="theme-toggle-dark-icon" class="hidden w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
         <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>
     </svg>
