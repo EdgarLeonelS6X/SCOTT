@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Support\Facades\Storage;
 
 class Device extends Model
 {
@@ -13,6 +15,7 @@ class Device extends Model
      */
     protected $fillable = [
         'name',
+        'image_url',
         'store_url',
         'protocol',
         'area',
@@ -27,4 +30,11 @@ class Device extends Model
     protected $casts = [
         'status' => 'boolean',
     ];
+
+    protected function image(): Attribute
+    {
+        return Attribute::make(
+            get: fn() => Storage::url($this->image_url),
+        );
+    }
 }

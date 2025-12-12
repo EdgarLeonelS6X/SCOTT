@@ -738,5 +738,9 @@
     "Enter the data for the new stage.": "Ingrese los datos para la nueva etapa.",
     "Device name": "Nombre del dispositivo",
     "Device protocol": "Protocolo del dispositivo",
-    "StarTV Stream URL in the app store": "URL de StarTV Stream en la tienda de aplicaciones"
+    "StarTV Stream URL in the app store": "URL de StarTV Stream en la tienda de aplicaciones",
+    "Your registration for a new device contains the following errors:": "Su registro para un nuevo dispositivo contiene los siguientes errores:",
+    "New device created successfully.": "Nuevo dispositivo creado con éxito.",
+    "Device image": "Imagen del dispositivo",
+    "Select protocol": "Seleccionar protocolo"
 }

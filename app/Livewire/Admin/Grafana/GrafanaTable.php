@@ -9,6 +9,7 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 class GrafanaTable extends Component
 {
     use AuthorizesRequests;
+
     public function render()
     {
         $this->authorize('viewAny', GrafanaPanel::class);

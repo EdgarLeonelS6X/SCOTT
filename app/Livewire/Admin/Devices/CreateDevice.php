@@ -5,16 +5,17 @@ namespace App\Livewire\Admin\Devices;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use App\Models\Device;
-use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class CreateDevice extends Component
 {
-    use AuthorizesRequests, WithFileUploads;
+    use WithFileUploads;
 
     public $name;
     public $image_url;
-    public $status = true;
+    public $status = '';
+    public $protocol = '';
     public $area = 'OTT';
+    public $store_url;
 
     public function boot()
     {
@@ -31,7 +32,7 @@ class CreateDevice extends Component
                 $this->dispatch('swal', [
                     'icon' => 'error',
                     'title' => __('Error'),
-                    'html' => '<b>' . __('Please fix the following errors:') . '</b><br><br>' . $errorMessages,
+                    'html' => '<b>' . __('Your registration for a new device contains the following errors:') . '</b><br><br>' . $errorMessages,
                 ]);
             }
         });
@@ -39,17 +40,22 @@ class CreateDevice extends Component
 
     public function store()
     {
+
         $this->authorize('create', Device::class);
 
         $this->validate([
             'name' => 'required|string|max:255',
-            'status' => 'boolean',
-            'area' => 'nullable|string|in:OTT,DTH,DTH/OTT',
+            'status' => 'required|in:1,0',
+            'area' => 'required|string|in:OTT,DTH,DTH/OTT',
+            'protocol' => 'nullable|string|max:255',
+            'store_url' => 'nullable|url|max:2048',
             'image_url' => 'nullable|image|max:2048',
         ], [], [
             'name' => __('device name'),
             'image_url' => __('device image'),
             'area' => __('device area'),
+            'store_url' => __('device store url'),
+            'protocol' => __('device protocol'),
         ]);
 
         $imagePath = null;
@@ -61,9 +67,11 @@ class CreateDevice extends Component
 
         $device = Device::create([
             'name' => $this->name,
-            'status' => $this->status,
+            'status' => (bool) $this->status,
             'area' => $this->area ?: 'OTT',
             'image_url' => $imagePath,
+            'protocol' => $this->protocol ?: null,
+            'store_url' => $this->store_url ?: null,
         ]);
 
         session()->flash('swal', [

@@ -1,84 +1,129 @@
-<div class="w-full bg-white dark:bg-gray-800 shadow rounded-lg p-4">
-    <div class="flex items-center justify-between mb-4">
-        <h2 class="text-lg font-bold text-gray-900 dark:text-white">{{ __('Devices') }}</h2>
-        <div class="flex items-center gap-2">
-            @php $auth = auth()->user(); @endphp
-            @if($auth && ($auth->id === 1 || ($auth->area ?? '') === 'OTT'))
-                <button wire:click="create" class="px-3 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded">
-                    <i class="fa-solid fa-plus mr-2"></i> {{ __('New Device') }}
-                </button>
-            @endif
-        </div>
-    </div>
+<div class="bg-white dark:bg-gray-800 relative shadow-2xl rounded-lg overflow-hidden">
+    @can('create', App\Models\Device::class)
+        <x-slot name="action">
+            <a href="{{ route('admin.devices.create') }}"
+                class="hidden sm:block text-white {{ Auth::user()?->area === 'DTH'
+        ? 'bg-secondary-700 hover:bg-secondary-800 focus:ring-4 focus:ring-secondary-300 dark:bg-secondary-600 dark:hover:bg-secondary-700 dark:focus:ring-secondary-800'
+        : 'bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800' }} font-medium rounded-lg text-sm px-5 py-2 focus:outline-none shadow-xl">
+                <i class="fa-solid fa-plus mr-1"></i>
+                {{ __('Register new device') }}
+            </a>
+        </x-slot>
+        <a href="{{ route('admin.devices.create') }}"
+            class="mb-4 sm:hidden block text-center text-white {{ Auth::user()?->area === 'DTH'
+        ? 'bg-secondary-700 hover:bg-secondary-800 focus:ring-4 focus:ring-secondary-300 dark:bg-secondary-600 dark:hover:bg-secondary-700 dark:focus:ring-secondary-800'
+        : 'bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800' }} font-medium rounded-lg text-sm px-5 py-2 focus:outline-none shadow-xl">
+            <i class="fa-solid fa-plus mr-1"></i>
+            {{ __('Register new device') }}
+        </a>
+    @endcan
 
     <div class="overflow-x-auto">
-        <table class="w-full text-left text-sm">
-            <thead>
-                <tr class="text-xs text-gray-500 uppercase">
-                    <th class="px-3 py-2">{{ __('ID') }}</th>
-                    <th class="px-3 py-2">{{ __('Name') }}</th>
-                    <th class="px-3 py-2">{{ __('Status') }}</th>
-                    <th class="px-3 py-2">{{ __('Area') }}</th>
-                    <th class="px-3 py-2">{{ __('Actions') }}</th>
+        <table class="w-full table-fixed text-sm text-left text-gray-500 dark:text-gray-400">
+            <thead class="text-xs dark:text-white uppercase dark:bg-gray-600 shadow-2xl">
+                <tr>
+                    <th scope="col" class="px-4 py-3 w-[100px]">
+                        <i class="fa-solid fa-image mr-1"></i>
+                        {{ __('Image') }}
+                    </th>
+                    <th scope="col" class="px-4 py-3 w-[250px]">
+                        <i class="fa-solid fa-hard-drive mr-1"></i>
+                        {{ __('Device') }}
+                    </th>
+                    <th scope="col" class="px-4 py-3 w-[150px] cursor-pointer"
+                    wire:click="toggleProtocolFilter">
+                        <i class="fa-solid fa-server mr-1"></i>
+                        <span class="text-gray-500 dark:text-white">
+                            @if ($protocolFilter)
+                                {{ $protocolFilter }}
+                            @else
+                                {{ __('All Protocols') }}
+                            @endif
+                            <i class="ml-1 fa-solid fa-sort"></i>
+                        </span>
+                    </th>
+                    <th scope="col" class="px-4 py-3 w-[150px]">
+                        <i class="fa-solid fa-building mr-1"></i>
+                        {{ __('Area') }}
+                    </th>
+                    <th scope="col" class="px-4 py-3 w-[150px]">
+                        <i class="fa-solid fa-toggle-on mr-1"></i>
+                        {{ __('Status') }}
+                    </th>
+                    <th scope="col" class="px-4 py-3 w-[80px]">
+                        <span class="sr-only">
+                            <i class="fa-solid fa-sliders-h mr-1"></i>
+                            {{ __('Options') }}
+                        </span>
+                    </th>
                 </tr>
             </thead>
-            <tbody>
-                @forelse($devices as $device)
-                    <tr class="border-t border-gray-100 dark:border-gray-700">
-                        <td class="px-3 py-2">{{ $device->id }}</td>
-                        <td class="px-3 py-2">{{ $device->name }}</td>
-                        <td class="px-3 py-2">
-                            <span class="inline-flex items-center px-2 py-1 rounded text-xs {{ $device->status ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">{{ $device->status ? __('Active') : __('Inactive') }}</span>
+            <tbody x-data="{ openDropdown: null }">
+                @forelse ($devices as $device)
+                    <tr onclick="window.location.href='{{ route('admin.devices.show', $device) }}'"
+                        class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-600 text-black dark:text-white cursor-pointer">
+                        <td class="px-4 py-3">
+                            <img src="{{ $device->image_url ? asset('storage/' . $device->image_url) : asset('img/no-image.png') }}"
+                                alt="{{ $device->name }}" class="w-8 h-8 object-center object-contain rounded-sm">
                         </td>
-                        <td class="px-3 py-2">{{ $device->area }}</td>
-                        <td class="px-3 py-2">
-                            <div class="flex items-center gap-2">
-                                @can('update', $device)
-                                    <button wire:click="edit({{ $device->id }})" class="px-2 py-1 bg-gray-100 dark:bg-gray-700 rounded text-xs"> <i class="fa-solid fa-pen"></i></button>
-                                @endcan
-                                @can('update', $device)
-                                    <button wire:click="toggleStatus({{ $device->id }})" class="px-2 py-1 bg-gray-100 dark:bg-gray-700 rounded text-xs"> <i class="fa-solid fa-toggle-on"></i></button>
-                                @endcan
-                                @can('delete', $device)
-                                    <button wire:click="delete({{ $device->id }})" class="px-2 py-1 bg-red-100 text-red-800 rounded text-xs"> <i class="fa-solid fa-trash"></i></button>
-                                @endcan
-                            </div>
+                        <th scope="row"
+                            class="px-4 py-2.5 font-bold text-gray-900 dark:text-white truncate overflow-hidden">
+                            {{ $device->name }}
+                        </th>
+                        <td class="px-4 py-2.5 truncate whitespace-nowrap overflow-hidden">
+                            @if(strtoupper($device->protocol) === 'HLS')
+                                <span
+                                    class="inline-flex items-center px-2 py-1 text-xs font-medium text-blue-800 bg-blue-200 dark:bg-blue-800 dark:text-blue-200 rounded-full">
+                                    <i class="fa-solid fa-tv mr-1.5"></i>
+                                    {{ __('HLS') }}
+                                </span>
+                            @elseif(strtoupper($device->protocol) === 'DASH')
+                                <span
+                                    class="inline-flex items-center px-2 py-1 text-xs font-medium text-blue-800 bg-blue-200 dark:bg-blue-800 dark:text-blue-200 rounded-full">
+                                    <i class="fa-solid fa-desktop mr-1.5"></i>
+                                    {{ __('DASH') }}
+                                </span>
+                            @endif
+                        </td>
+                        <td class="px-4 py-2.5 truncate whitespace-nowrap overflow-hidden">
+                            <span
+                                class="inline-flex items-center px-2 py-1 text-xs font-medium text-primary-800 bg-primary-200 dark:bg-primary-800 dark:text-primary-200 rounded-full">
+                                <i class="fa-solid fa-cube mr-1.5"></i>
+                                {{ __('OTT') }}
+                            </span>
+                        </td>
+                        <td class="px-4 py-2.5 whitespace-nowrap">
+                            @if ($device->status === 1)
+                                <span
+                                    class="inline-flex items-center px-2 py-1 text-xs font-medium text-green-800 bg-green-200 rounded-full dark:bg-green-800 dark:text-green-200">
+                                    <i class="fa-solid fa-check-circle mr-1"></i>
+                                    {{ __('Active') }}
+                                </span>
+                            @else
+                                <span
+                                    class="inline-flex items-center px-2 py-1 text-xs font-medium text-red-800 bg-red-200 rounded-full dark:bg-red-800 dark:text-red-200">
+                                    <i class="fa-solid fa-times-circle mr-1"></i>
+                                    {{ __('Inactive') }}
+                                </span>
+                            @endif
+                        </td>
+                        <td class="px-4 py-4 flex items-center justify-end align-middle w-full">
+                            <span class="flex items-center h-full justify-center" style="height: 100%; min-height: 24px;">
+                                <i class="fa-solid fa-chevron-right transition-colors text-gray-300 group-hover:text-gray-700 dark:text-gray-500 dark:group-hover:text-gray-400"
+                                    style="vertical-align: middle; font-size: 1.1em; line-height: 1;"></i>
+                            </span>
                         </td>
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="5" class="px-3 py-4 text-sm text-gray-500">{{ __('No devices found.') }}</td>
+                        <td colspan="6" class="bg-white dark:bg-gray-800 py-4 text-center">
+                            <i class="fa-solid fa-circle-info mr-1"></i>
+                            {{ __('There are no channels that match your search.') }}
+                        </td>
                     </tr>
                 @endforelse
-            </tbody>
-        </table>
-    </div>
-
-    <div class="mt-4">
-        {{ $devices->links() }}
-    </div>
-
-    @if($showModal)
-        <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
-            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg w-full max-w-md p-4">
-                <h3 class="text-lg font-semibold mb-4">{{ $editingId ? __('Edit Device') : __('Create Device') }}</h3>
-                <div class="space-y-3">
-                    <div>
-                        <label class="text-sm text-gray-700 dark:text-gray-200">{{ __('Name') }}</label>
-                        <input type="text" wire:model.defer="name" class="mt-1 block w-full rounded border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 p-2" />
-                        @error('name') <span class="text-xs text-red-600">{{ $message }}</span> @enderror
-                    </div>
-                    <div class="flex items-center gap-3">
-                        <label class="text-sm text-gray-700 dark:text-gray-200">{{ __('Status') }}</label>
-                        <input type="checkbox" wire:model="status" class="h-4 w-4" />
-                    </div>
-                </div>
-
-                <div class="mt-4 flex justify-end gap-2">
-                    <button wire:click="save" class="px-3 py-2 bg-primary-600 text-white rounded">{{ __('Save') }}</button>
-                    <button wire:click="$set('showModal', false)" class="px-3 py-2 bg-gray-100 dark:bg-gray-700 rounded">{{ __('Cancel') }}</button>
-                </div>
-            </div>
+                </tbody>
+            </table>
         </div>
-    @endif
+    </div>
 </div>
