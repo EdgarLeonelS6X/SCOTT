@@ -1,3 +1,8 @@
+@php
+    use App\Enums\DeviceProtocol;
+    use App\Enums\DeviceDRM;
+@endphp
+
 <x-slot name="action">
     <a href="{{ route('admin.devices.index') }}"
         class="hidden md:block sm:flex justify-center items-center text-white bg-gray-600 hover:bg-gray-500 focus:ring-4 focus:outline-none focus:ring-gray-300 dark:focus:ring-gray-800 font-medium rounded-lg text-sm px-5 py-2 text-center">
@@ -61,28 +66,42 @@
                         autocomplete="name" placeholder="{{ __('Device name') }}" />
                 </div>
                 <div>
-                    <x-label for="protocol">
-                        <i class="fa-solid fa-server mr-1"></i>
-                        {{ __('Protocol') }}
-                    </x-label>
-                    <select id="protocol" wire:model="protocol"
-                        class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white {{ Auth::user()?->area === 'DTH'
-                        ? 'focus:ring-secondary-600 focus:border-secondary-600 dark:focus:ring-secondary-500 dark:focus:border-secondary-500'
-                        : 'focus:ring-primary-600 focus:border-primary-600 dark:focus:ring-primary-500 dark:focus:border-primary-500' }}">
-                        <option value="" selected disabled>{{ __('Select protocol') }}</option>
-                        <option value="HLS">HLS</option>
-                        <option value="DASH">DASH</option>
-                    </select>
-                </div>
-            </div>
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                <div>
                     <x-label for="store_url">
                         <i class="fa-solid fa-link mr-1"></i>
                         {{ __('StarTV Stream URL') }}
                     </x-label>
                     <x-input id="store_url" class="block mt-1 w-full" type="url" wire:model="store_url" :value="old('store_url')"
                         placeholder="{{ __('StarTV Stream URL in the app store') }}" />
+                </div>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+                <div>
+                    <x-label for="protocol">
+                        <i class="fa-solid fa-server mr-1"></i>
+                        {{ __('Protocol') }}
+                    </x-label>
+                    <select id="protocol" wire:model="protocol" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white {{ Auth::user()?->area === 'DTH'
+                        ? 'focus:ring-secondary-600 focus:border-secondary-600 dark:focus:ring-secondary-500 dark:focus:border-secondary-500'
+                        : 'focus:ring-primary-600 focus:border-primary-600 dark:focus:ring-primary-500 dark:focus:border-primary-500' }}">
+                        <option value="" selected disabled>{{ __('Select protocol') }}</option>
+                        @foreach(DeviceProtocol::cases() as $p)
+                            <option value="{{ $p->value }}">{{ $p->value }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div>
+                    <x-label for="drm">
+                        <i class="fa-solid fa-shield-halved mr-1"></i>
+                        {{ __('DRM') }}
+                    </x-label>
+                    <select id="drm" wire:model="drm" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white {{ Auth::user()?->area === 'DTH'
+                        ? 'focus:ring-secondary-600 focus:border-secondary-600 dark:focus:ring-secondary-500 dark:focus:border-secondary-500'
+                        : 'focus:ring-primary-600 focus:border-primary-600 dark:focus:ring-primary-500 dark:focus:border-primary-500' }}">
+                        <option value="" selected disabled>{{ __('Select DRM') }}</option>
+                        @foreach(DeviceDRM::cases() as $d)
+                            <option value="{{ $d->value }}">{{ $d->value }}</option>
+                        @endforeach
+                    </select>
                 </div>
                 <div>
                     <x-label for="status">

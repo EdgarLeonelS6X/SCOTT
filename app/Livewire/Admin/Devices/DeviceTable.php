@@ -19,11 +19,18 @@ class DeviceTable extends Component
 
     public function toggleProtocolFilter()
     {
-        $options = ['all', 'HLS', 'DASH'];
+        $options = ['HLS', 'DASH'];
 
         $currentIndex = array_search($this->protocolFilter, $options, true);
 
-        $this->protocolFilter = $options[($currentIndex === false ? 0 : ($currentIndex + 1) % count($options))];
+        if ($currentIndex === false) {
+            $this->protocolFilter = $options[0];
+        } else {
+            $next = $currentIndex + 1;
+            $this->protocolFilter = $next >= count($options) ? null : $options[$next];
+        }
+
+        $this->resetPage();
     }
 
     public function toggleStatusFilter()
@@ -51,12 +58,10 @@ class DeviceTable extends Component
             $query->where('area', $auth->area ?? 'OTT');
         }
 
-        // Apply protocol filter when set and not 'all'
-        if ($this->protocolFilter && $this->protocolFilter !== 'all') {
+        if (! is_null($this->protocolFilter)) {
             $query->where('protocol', $this->protocolFilter);
         }
 
-        // Apply status filter when not null (true/false)
         if (! is_null($this->statusFilter)) {
             $query->where('status', $this->statusFilter ? 1 : 0);
         }

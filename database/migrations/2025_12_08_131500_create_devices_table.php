@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('image_url');
             $table->string('store_url');
             $table->string('protocol');
+            $table->string('drm');
             $table->string('area')->default('OTT');
             $table->boolean('status');
             $table->timestamps();

@@ -18,6 +18,7 @@ class Device extends Model
         'image_url',
         'store_url',
         'protocol',
+        'drm',
         'area',
         'status',
     ];

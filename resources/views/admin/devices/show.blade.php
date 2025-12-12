@@ -1,21 +1,170 @@
-@extends('layouts.app')
+<x-admin-layout :breadcrumbs="[
+        [
+            'name' => __('Dashboard'),
+            'icon' => 'fa-solid fa-wrench',
+            'route' => route('admin.dashboard'),
+        ],
+        [
+            'name' => __('Devices'),
+            'icon' => 'fa-solid fa-hard-drive',
+            'route' => route('admin.devices.index'),
+        ],
+        [
+            'name' => __('Device'),
+            'icon' => 'fa-solid fa-circle-info',
+        ],
+    ]">
 
-@section('content')
-<div class="max-w-3xl mx-auto py-8">
-    <div class="bg-white dark:bg-gray-800 shadow rounded-lg p-6">
-        <h2 class="text-xl font-semibold mb-4">{{ __('Device') }} #{{ $device->id }}</h2>
-        <div class="space-y-3">
-            <div><strong>{{ __('Name') }}:</strong> {{ $device->name }}</div>
-            <div><strong>{{ __('Status') }}:</strong> {{ $device->status ? __('Active') : __('Inactive') }}</div>
-            <div><strong>{{ __('Area') }}:</strong> {{ $device->area }}</div>
-        </div>
-
-        <div class="mt-6">
-            <a href="{{ route('devices.index') }}" class="px-3 py-2 bg-gray-100 dark:bg-gray-700 rounded">{{ __('Back') }}</a>
-            @can('update', $device)
-                <a href="{{ route('devices.edit', $device->id) }}" class="px-3 py-2 bg-primary-600 text-white rounded">{{ __('Edit') }}</a>
+    <x-slot name="action">
+        <div class="hidden lg:flex space-x-2">
+            <a href="{{ route('admin.devices.index') }}"
+                class="flex w-full sm:w-auto justify-center items-center text-white bg-gray-600 hover:bg-gray-500 focus:ring-4 focus:outline-none focus:ring-gray-300 dark:focus:ring-gray-800 font-medium rounded-lg text-sm px-4 py-2 text-center">
+                <i class="fa-solid fa-arrow-left mr-1.5"></i>
+                {{ __('Go back') }}
+            </a>
+            <a href="{{ $device->store_url ?? $device->store_url ?? '#' }}" target="_blank" rel="noopener noreferrer"
+                class="flex w-full sm:w-auto justify-center items-center text-white
+                    {{ Auth::user()?->area === 'DTH'
+                        ? 'bg-secondary-700 hover:bg-secondary-800 focus:ring-4 focus:ring-secondary-300 dark:bg-secondary-600 dark:hover:bg-secondary-700 dark:focus:ring-secondary-800'
+                        : 'bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800' }}
+                    font-medium rounded-lg text-sm px-4 py-2 text-center">
+                <i class="fa-solid fa-arrow-up-right-from-square mr-1.5"></i>
+                {{ __('See APP in the store') }}
+            </a>
+            @can('devices.edit')
+                <a href="{{ route('admin.devices.edit', $device) }}"
+                    class="flex w-full sm:w-auto justify-center items-center text-white bg-blue-600 hover:bg-blue-500 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-4 py-2 text-center">
+                    <i class="fa-solid fa-pen-to-square mr-1.5"></i>
+                    {{ __('Edit') }}
+                </a>
+            @endcan
+            @can('devices.delete')
+                <button onclick="confirmDelete()"
+                    class="flex w-full sm:w-auto justify-center items-center text-white bg-red-600 hover:bg-red-500 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm px-4 py-2 text-center">
+                    <i class="fa-solid fa-trash-can mr-1.5"></i>
+                    {{ __('Delete') }}
+                </button>
             @endcan
         </div>
+    </x-slot>
+    <div class="w-full bg-white rounded-lg shadow-2xl dark:border dark:bg-gray-800 dark:border-gray-700">
+        <div class="p-6 space-y-6 sm:p-8">
+            <div
+                class="flex flex-col md:flex-row items-center md:items-center justify-between text-center md:text-left gap-4">
+                <div class="order-1 md:order-none flex flex-col items-center md:items-start">
+                    <h1 class="text-xl md:text-2xl font-bold text-gray-900 dark:text-white">
+                        {{ $device->name }}
+                    </h1>
+                    <div class="mt-2 flex flex-wrap justify-center md:justify-start items-center gap-2">
+                        @if ($device->status == 1)
+                            <span
+                                class="inline-flex items-center px-2 py-1 text-xs font-medium text-green-800 bg-green-200 rounded-full dark:bg-green-800 dark:text-green-200">
+                                <i class="fa-solid fa-check-circle mr-1.5"></i>
+                                {{ __('Active') }}
+                            </span>
+                        @else
+                            <span
+                                class="inline-flex items-center px-2 py-1 text-xs font-medium text-red-800 bg-red-200 rounded-full dark:bg-red-800 dark:text-red-200">
+                                <i class="fa-solid fa-times-circle mr-1.5"></i>
+                                {{ __('Inactive') }}
+                            </span>
+                        @endif
+                        <span
+                            class="inline-flex items-center px-2 py-1 text-xs font-medium text-primary-800 bg-primary-200 dark:bg-primary-800 dark:text-primary-200 rounded-full">
+                            <i class="fa-solid fa-cube mb-[1px] mr-1"></i>
+                            {{ __('OTT') }}
+                        </span>
+                    </div>
+                </div>
+                <div class="order-0 md:order-none">
+                    <img src="{{ $device->image_url ? asset('storage/' . $device->image_url) : asset('img/no-image.png') }}"
+                        alt="{{ $device->name }}"
+                        class="w-20 h-20 object-center object-contain rounded-lg mx-auto md:mx-0">
+                </div>
+            </div>
+
+            <div class="space-y-4">
+            <div>
+                <x-label for="name">
+                    <i class="fa-solid fa-hard-drive mr-1"></i>
+                    {{ __('Name') }}
+                </x-label>
+                <x-input id="name" class="block mt-1 w-full" type="text" wire:model="name"
+                    value="{{ $device->name }}" disabled />
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <x-label for="protocol">
+                        <i class="fa-solid fa-server mr-1"></i>
+                        {{ __('Protocol') }}
+                    </x-label>
+                    <x-input id="protocol" class="block mt-1 w-full" type="text" wire:model="protocol"
+                        value="{{ $device->protocol }}" disabled />
+                </div>
+                <div>
+                    <x-label for="drm">
+                        <i class="fa-solid fa-shield-halved mr-1"></i>
+                        {{ __('DRM') }}
+                    </x-label>
+                    <x-input id="drm" class="block mt-1 w-full" type="text" wire:model="drm"
+                        value="{{ $device->drm }}" disabled />
+                </div>
+            </div>
+            </div>
+        </div>
     </div>
-</div>
-@endsection
+    <div class="lg:hidden mt-6 space-y-5">
+        <a href="{{ route('admin.devices.index') }}"
+            class="flex justify-center items-center w-full text-white bg-gray-600 hover:bg-gray-500 focus:ring-4 focus:outline-none focus:ring-gray-300 dark:focus:ring-gray-800 font-medium rounded-lg text-sm px-4 py-2">
+            <i class="fa-solid fa-arrow-left mr-1.5"></i>
+            {{ __('Go back') }}
+        </a>
+        <a href="{{ $device->store_url ?? $device->store_url ?? '#' }}" target="_blank" rel="noopener noreferrer"
+            class="flex justify-center items-center w-full text-white
+                {{ Auth::user()?->area === 'DTH'
+                    ? 'bg-secondary-700 hover:bg-secondary-800 focus:ring-4 focus:ring-secondary-300 dark:bg-secondary-600 dark:hover:bg-secondary-700 dark:focus:ring-secondary-800'
+                    : 'bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800' }}
+            font-medium rounded-lg text-sm px-4 py-2">
+            <i class="fa-solid fa-arrow-up-right-from-square mr-1.5"></i>
+            {{ __('See APP in the store') }}
+        </a>
+        @can('devices.edit')
+            <a href="{{ route('admin.devices.edit', $device) }}"
+                class="flex justify-center items-center w-full text-white bg-blue-600 hover:bg-blue-500 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-4 py-2">
+                <i class="fa-solid fa-pen-to-square mr-1.5"></i>
+                {{ __('Edit') }}
+            </a>
+        @endcan
+        @can('devices.delete')
+            <button onclick="confirmDelete()"
+                class="flex justify-center items-center w-full text-white bg-red-600 hover:bg-red-500 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm px-4 py-2">
+                <i class="fa-solid fa-trash-can mr-1.5"></i>
+                {{ __('Delete') }}
+            </button>
+        @endcan
+    </div>
+    <form action="{{ route('admin.devices.destroy', $device) }}" method="POST" id="delete-form">
+        @csrf
+        @method('DELETE')
+    </form>
+    @push('js')
+        <script>
+            function confirmDelete() {
+                Swal.fire({
+                    title: "{{ __('Are you sure?') }}",
+                    text: "{{ __('You wont be able to revert this!') }}",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#3085d6",
+                    cancelButtonColor: "#d33",
+                    confirmButtonText: "{{ __('Yes, delete it!') }}",
+                    cancelButtonText: "{{ __('Cancel') }}"
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        document.getElementById('delete-form').submit();
+                    }
+                });
+            }
+        </script>
+    @endpush
+</x-admin-layout>

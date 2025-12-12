@@ -43,6 +43,10 @@
                         </span>
                     </th>
                     <th scope="col" class="px-4 py-3 w-[150px]">
+                        <i class="fa-solid fa-shield-halved mr-1"></i>
+                        {{ __('DRM') }}
+                    </th>
+                    <th scope="col" class="px-4 py-3 w-[150px]">
                         <i class="fa-solid fa-building mr-1"></i>
                         {{ __('Area') }}
                     </th>
@@ -80,9 +84,28 @@
                             @elseif(strtoupper($device->protocol) === 'DASH')
                                 <span
                                     class="inline-flex items-center px-2 py-1 text-xs font-medium text-blue-800 bg-blue-200 dark:bg-blue-800 dark:text-blue-200 rounded-full">
-                                    <i class="fa-solid fa-desktop mr-1.5"></i>
+                                    <i class="fa-solid fa-computer mr-1.5"></i>
                                     {{ __('DASH') }}
                                 </span>
+                            @endif
+                        </td>
+                        <td class="px-4 py-2.5 truncate whitespace-nowrap overflow-hidden">
+                            @if($device->drm)
+                                @if(strtoupper($device->drm) === 'VERIMATRIX')
+                                    <span
+                                        class="inline-flex items-center px-2 py-1 text-xs font-medium text-pink-800 bg-pink-200 dark:bg-pink-800 dark:text-pink-200 rounded-full">
+                                        <i class="fa-solid fa-certificate mr-1.5"></i>
+                                        {{ __('Verimatrix') }}
+                                    </span>
+                                @else
+                                    <span
+                                        class="inline-flex items-center px-2 py-1 text-xs font-medium text-pink-800 bg-pink-200 dark:bg-pink-800 dark:text-pink-200 rounded-full">
+                                        <i class="fa-brands fa-google mr-1.5"></i>
+                                        {{ __('Widevine') }}
+                                    </span>
+                                @endif
+                            @else
+                                <span class="text-xs text-gray-400">—</span>
                             @endif
                         </td>
                         <td class="px-4 py-2.5 truncate whitespace-nowrap overflow-hidden">
@@ -93,7 +116,7 @@
                             </span>
                         </td>
                         <td class="px-4 py-2.5 whitespace-nowrap">
-                            @if ($device->status === 1)
+                            @if ($device->status == 1)
                                 <span
                                     class="inline-flex items-center px-2 py-1 text-xs font-medium text-green-800 bg-green-200 rounded-full dark:bg-green-800 dark:text-green-200">
                                     <i class="fa-solid fa-check-circle mr-1"></i>
@@ -116,7 +139,7 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="6" class="bg-white dark:bg-gray-800 py-4 text-center">
+                        <td colspan="7" class="bg-white dark:bg-gray-800 py-5 text-center">
                             <i class="fa-solid fa-circle-info mr-1"></i>
                             {{ __('There are no channels that match your search.') }}
                         </td>

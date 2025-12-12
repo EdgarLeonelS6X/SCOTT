@@ -422,7 +422,7 @@
     "All Types": "Tipos",
     "All Status": "Estados",
     "Datetime": "Fecha y hora",
-    "All Users": "Todos los Usuarios",
+    "All Users": "Todos los usuarios",
     "No reports found with the current filters.": "No se encontraron reportes con los filtros actuales.",
     "Resolved": "Resuelto",
     "Show only resolved reports": "Mostrar solo reportes resueltos",
@@ -742,5 +742,18 @@
     "Your registration for a new device contains the following errors:": "Su registro para un nuevo dispositivo contiene los siguientes errores:",
     "New device created successfully.": "Nuevo dispositivo creado con éxito.",
     "Device image": "Imagen del dispositivo",
-    "Select protocol": "Seleccionar protocolo"
+    "Select protocol": "Seleccionar protocolo",
+    "Select DRM": "Seleccionar DRM",
+    "All Protocols": "Protocolos",
+    "Device": "Dispositivo",
+    "See APP in the store": "Ver APP en la tienda",
+    "device name": "nombre del dispositivo",
+    "device image": "imagen del dispositivo",
+    "device area": "área del dispositivo",
+    "device store url": "url de la tienda del dispositivo",
+    "device protocol": "protocolo del dispositivo",
+    "Your update contains the following errors:": "Su actualización contiene los siguientes errores:",
+    "Device updated successfully.": "Dispositivo actualizado con éxito.",
+    "Update device": "Actualizar dispositivo",
+    "Update the device data.": "Actualice los datos del dispositivo."
 }

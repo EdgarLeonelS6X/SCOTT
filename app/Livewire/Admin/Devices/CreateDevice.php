@@ -5,6 +5,9 @@ namespace App\Livewire\Admin\Devices;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use App\Models\Device;
+use App\Enums\DeviceProtocol;
+use App\Enums\DeviceDRM;
+use Illuminate\Validation\Rule;
 
 class CreateDevice extends Component
 {
@@ -14,6 +17,7 @@ class CreateDevice extends Component
     public $image_url;
     public $status = '';
     public $protocol = '';
+    public $drm = '';
     public $area = 'OTT';
     public $store_url;
 
@@ -40,14 +44,14 @@ class CreateDevice extends Component
 
     public function store()
     {
-
         $this->authorize('create', Device::class);
 
         $this->validate([
             'name' => 'required|string|max:255',
             'status' => 'required|in:1,0',
             'area' => 'required|string|in:OTT,DTH,DTH/OTT',
-            'protocol' => 'nullable|string|max:255',
+            'protocol' => ['nullable','string', Rule::in(array_map(fn($c) => $c->value, DeviceProtocol::cases()))],
+            'drm' => ['nullable','string', Rule::in(array_map(fn($c) => $c->value, DeviceDRM::cases()))],
             'store_url' => 'nullable|url|max:2048',
             'image_url' => 'nullable|image|max:2048',
         ], [], [
@@ -71,6 +75,7 @@ class CreateDevice extends Component
             'area' => $this->area ?: 'OTT',
             'image_url' => $imagePath,
             'protocol' => $this->protocol ?: null,
+            'drm' => $this->drm ?: null,
             'store_url' => $this->store_url ?: null,
         ]);
 
