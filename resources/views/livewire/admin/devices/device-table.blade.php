@@ -3,34 +3,34 @@
         <x-slot name="action">
             <div class="flex items-center space-x-3">
                 <a href="{{ route('admin.devices.create') }}"
-                    class="hidden sm:block text-white {{ Auth::user()?->area === 'DTH'
+                    class="hidden lg:block text-white {{ Auth::user()?->area === 'DTH'
         ? 'bg-secondary-700 hover:bg-secondary-800 focus:ring-4 focus:ring-secondary-300 dark:bg-secondary-600 dark:hover:bg-secondary-700 dark:focus:ring-secondary-800'
         : 'bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800' }} font-medium rounded-lg text-sm px-5 py-2 focus:outline-none shadow-xl">
                     <i class="fa-solid fa-plus mr-1"></i>
                     {{ __('Register new device') }}
                 </a>
-                <a href=""
-                    class="hidden sm:block text-white bg-gray-700 hover:bg-gray-800 focus:ring-4 focus:ring-gray-300 dark:bg-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-800 font-medium rounded-lg text-sm px-5 py-2 focus:outline-none shadow-xl">
+                <a href="{{ route('admin.devices.monthly-downloads') }}"
+                    class="hidden lg:block text-white bg-gray-700 hover:bg-gray-800 focus:ring-4 focus:ring-gray-300 dark:bg-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-800 font-medium rounded-lg text-sm px-5 py-2 focus:outline-none shadow-xl">
                     <i class="fa-solid fa-download mr-1"></i>
                     {{ __('Monthly downloads') }}
                 </a>
             </div>
         </x-slot>
         <a href="{{ route('admin.devices.create') }}"
-            class="mb-4 sm:hidden block text-center text-white {{ Auth::user()?->area === 'DTH'
+            class="mb-4 lg:hidden block text-center text-white {{ Auth::user()?->area === 'DTH'
         ? 'bg-secondary-700 hover:bg-secondary-800 focus:ring-4 focus:ring-secondary-300 dark:bg-secondary-600 dark:hover:bg-secondary-700 dark:focus:ring-secondary-800'
         : 'bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800' }} font-medium rounded-lg text-sm px-5 py-2 focus:outline-none shadow-xl">
             <i class="fa-solid fa-plus mr-1"></i>
             {{ __('Register new device') }}
         </a>
-        <a href=""
-            class="mb-4 sm:hidden block text-center text-white bg-gray-700 hover:bg-gray-800 focus:ring-4 focus:ring-gray-300 dark:bg-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-800 font-medium rounded-lg text-sm px-5 py-2 focus:outline-none shadow-xl">
+        <a href="{{ route('admin.devices.monthly-downloads') }}"
+            class="mb-4 lg:hidden block text-center text-white bg-gray-700 hover:bg-gray-800 focus:ring-4 focus:ring-gray-300 dark:bg-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-800 font-medium rounded-lg text-sm px-5 py-2 focus:outline-none shadow-xl">
             <i class="fa-solid fa-download mr-1"></i>
             {{ __('Monthly downloads') }}
         </a>
     @endcan
 
-    <div class="overflow-x-auto rounded-lg">
+    <div class="overflow-x-auto rounded-lg bg-white dark:bg-gray-800">
         <table class="w-full table-fixed text-sm text-left text-gray-500 dark:text-gray-400">
             <thead class="text-xs dark:text-white uppercase dark:bg-gray-600 shadow-2xl">
                 <tr>

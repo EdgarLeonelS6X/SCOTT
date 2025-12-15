@@ -14,14 +14,14 @@
                             @isset($item['icon'])
                                 <i class="{{ $item['icon'] }} text-xs opacity-75"></i>
                             @endisset
-                            <span class="truncate max-w-[120px]">{{ $item['name'] }}</span>
+                            <span class="truncate max-w-[80px] sm:max-w-none">{{ $item['name'] }}</span>
                         </a>
                     @else
                         <span class="inline-flex items-center gap-1 text-gray-500 dark:text-gray-500 cursor-default">
                             @isset($item['icon'])
                                 <i class="{{ $item['icon'] }} text-xs opacity-70"></i>
                             @endisset
-                            <span class="truncate max-w-[120px] font-medium">{{ $item['name'] }}</span>
+                            <span class="truncate max-w-[80px] sm:max-w-none font-medium">{{ $item['name'] }}</span>
                         </span>
                     @endisset
 

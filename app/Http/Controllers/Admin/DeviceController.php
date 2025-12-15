@@ -91,4 +91,11 @@ class DeviceController extends Controller
             'text' => __('Device removed successfully.'),
         ]);
     }
+
+    public function monthlyDownloads()
+    {
+        $this->authorize('viewAny', Device::class);
+
+        return view('admin.devices.monthly-downloads');
+    }
 }
