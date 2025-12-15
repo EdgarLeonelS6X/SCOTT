@@ -65,7 +65,7 @@
             <tbody x-data="{ openDropdown: null }">
                 @forelse ($devices as $device)
                     <tr onclick="window.location.href='{{ route('admin.devices.show', $device) }}'"
-                        class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-600 text-black dark:text-white cursor-pointer">
+                        class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-600 text-black dark:text-white cursor-pointer group">
                         <td class="px-4 py-3">
                             <img src="{{ $device->image_url ? asset('storage/' . $device->image_url) : asset('img/no-image.png') }}"
                                 alt="{{ $device->name }}" class="w-8 h-8 object-center object-contain rounded-sm">
@@ -146,7 +146,6 @@
                     </tr>
                 @endforelse
                 </tbody>
-            </table>
-        </div>
+        </table>
     </div>
 </div>

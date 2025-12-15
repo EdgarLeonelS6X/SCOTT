@@ -61,7 +61,7 @@
             <tbody>
                 @forelse ($users as $user)
                     <tr onclick="window.location.href='{{ route('admin.users.show', $user) }}'"
-                        class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-600 text-black dark:text-white cursor-pointer hover:bg-gray-100">
+                        class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-600 text-black dark:text-white cursor-pointer group">
                         <td class="px-6 py-4 whitespace-nowrap flex items-center space-x-4">
                             <button class="flex text-sm rounded-full shadow-2xl cursor-default">
                                 <img class="h-8 w-8 rounded-full object-cover" src="{{ $user->profile_photo_url }}"
@@ -190,7 +190,11 @@
                             @endif
                         </td>
                         <td class="px-6 py-4 text-center whitespace-nowrap">
-                            <i class="fa-solid fa-chevron-right text-lg text-gray-400"></i>
+                            <span class="flex items-center h-full justify-center"
+                                style="height: 100%; min-height: 24px;">
+                                <i class="fa-solid fa-chevron-right transition-colors text-gray-300 group-hover:text-gray-700 dark:text-gray-500 dark:group-hover:text-gray-400"
+                                style="vertical-align: middle; font-size: 1.1em; line-height: 1;"></i>
+                            </span>
                         </td>
                     </tr>
                 @empty
