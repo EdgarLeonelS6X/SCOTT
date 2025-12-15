@@ -96,6 +96,8 @@ class DeviceController extends Controller
     {
         $this->authorize('viewAny', Device::class);
 
-        return view('admin.devices.monthly-downloads');
+        $devices = Device::orderBy('name')->get(['id', 'name']);
+
+        return view('admin.devices.monthly-downloads', compact('devices'));
     }
 }
