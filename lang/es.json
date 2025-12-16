@@ -758,5 +758,6 @@
     "Update the device data.": "Actualice los datos del dispositivo.",
     "Monthly downloads": "Descargas mensuales",
     "Monthly downloads report": "Informe de descargas mensuales",
-    "Report monthly downloads per device": "Informe de descargas mensuales por dispositivo"
+    "Report monthly downloads per device": "Informe de descargas mensuales por dispositivo",
+    "Device deleted successfully.": "Dispositivo eliminado con éxito."
 }

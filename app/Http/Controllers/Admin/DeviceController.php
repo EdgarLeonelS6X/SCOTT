@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Device;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class DeviceController extends Controller
@@ -83,18 +84,26 @@ class DeviceController extends Controller
     {
         $this->authorize('delete', $device);
 
+        if ($device->image_url && Storage::disk('public')->exists($device->image_url)) {
+            Storage::disk('public')->delete($device->image_url);
+        }
+
         $device->delete();
 
-        return redirect()->route('devices.index')->with('swal', [
+        return redirect()->route('admin.devices.index')->with('swal', [
             'icon' => 'success',
-            'title' => __('Deleted'),
-            'text' => __('Device removed successfully.'),
+            'title' => __('Well done!'),
+            'text' => __('Device deleted successfully.'),
         ]);
     }
 
     public function monthlyDownloads()
     {
-        $this->authorize('viewAny', Device::class);
+        $user = Auth::user();
+
+        if (! ($user && $user->id === 1)) {
+            abort(403);
+        }
 
         $devices = Device::orderBy('name')->get(['id', 'name']);
 

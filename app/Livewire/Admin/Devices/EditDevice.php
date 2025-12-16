@@ -4,6 +4,7 @@ namespace App\Livewire\Admin\Devices;
 
 use Livewire\Component;
 use Livewire\WithFileUploads;
+use Illuminate\Support\Facades\Storage;
 use App\Models\Device;
 use App\Enums\DeviceProtocol;
 use App\Enums\DeviceDRM;
@@ -72,7 +73,11 @@ class EditDevice extends Component
         if ($this->image_url && is_object($this->image_url)) {
             $imageName = time() . '_' . $this->image_url->getClientOriginalName();
             $this->image_url->storeAs('devices', $imageName, 'public');
-            $imagePath = 'devices/' . $imageName;
+            $newPath = 'devices/' . $imageName;
+            if ($imagePath && $imagePath !== $newPath && Storage::disk('public')->exists($imagePath)) {
+                Storage::disk('public')->delete($imagePath);
+            }
+            $imagePath = $newPath;
         }
 
         $this->device->update([
