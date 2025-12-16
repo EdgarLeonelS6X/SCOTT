@@ -21,10 +21,10 @@
 </x-slot>
 <div class="w-full bg-white rounded-lg shadow-2xl dark:border md:mt-0 xl:p-0 dark:bg-gray-800 dark:border-gray-700">
     <div class="p-6 space-y-6 sm:p-8">
-        <h1 class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
+        <h1 class="text-xl font-bold truncate leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
             <i class="fa-solid fa-hard-drive mr-1.5"></i>
             {{ __('Register new device') }}
-            <p class="text-sm font-light text-gray-500 dark:text-gray-400">
+            <p class="text-sm font-light truncate leading-tight text-gray-500 dark:text-gray-400">
                 {{ __('Enter the data for the new device.') }}
             </p>
         </h1>

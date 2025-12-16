@@ -24,11 +24,11 @@
     </x-slot>
     <div class="w-full bg-white rounded-lg shadow-2xl dark:border md:mt-0 xl:p-0 dark:bg-gray-800 dark:border-gray-700">
         <div class="p-6 space-y-4 md:space-y-6 sm:p-8">
-            <h1 class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
+            <h1 class="text-xl font-bold truncate leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
                 <i class="fa-solid fa-chart-pie mr-1.5"></i>
                 {{ __('Register new Grafana panel') }}
 
-                <p class="text-sm font-light text-gray-500 dark:text-gray-400">
+                <p class="text-sm font-light text-gray-500 dark:text-gray-400 truncate leading-tight">
                     {{ __('Enter the data for the new Grafana panel.') }}
                 </p>
             </h1>

@@ -1,4 +1,4 @@
-<div class="relative shadow-2xl overflow-hidden">
+<div>
     @can('create', App\Models\Device::class)
         <x-slot name="action">
             <div class="flex items-center space-x-3">

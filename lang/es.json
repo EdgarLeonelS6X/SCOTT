@@ -408,12 +408,12 @@
     "Email verified": "Correo verificado",
     "Report mail preferences": "Preferencias de correo electrónico",
     "You don't have permission to edit this user's roles or permissions.": "No tienes permiso para editar los roles o permisos de este usuario.",
-    "Report channel issues": "Informe de Canales",
-    "Hourly general report": "Informe General",
-    "Function report": "Informe de Funciones",
-    "Chromecast report": "Informe de Chromecast",
-    "Profile report": "Informe de Perfiles",
-    "Report history": "Historial de Reportes",
+    "Report channel issues": "Informe de canales",
+    "Hourly general report": "Informe general",
+    "Function report": "Informe de funciones",
+    "Chromecast report": "Informe de chromecast",
+    "Profile report": "Informe de perfiles",
+    "Report history": "Historial de reportes",
     "Report": "Reporte",
     "There are no reports available at this time.": "No hay reportes disponibles en este momento.",
     "Reports": "Reportes",
@@ -756,5 +756,7 @@
     "Device updated successfully.": "Dispositivo actualizado con éxito.",
     "Update device": "Actualizar dispositivo",
     "Update the device data.": "Actualice los datos del dispositivo.",
-    "Monthly downloads": "Descargas mensuales"
+    "Monthly downloads": "Descargas mensuales",
+    "Monthly downloads report": "Informe de descargas mensuales",
+    "Report monthly downloads per device": "Informe de descargas mensuales por dispositivo"
 }

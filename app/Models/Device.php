@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Support\Facades\Storage;
+use App\Models\Download;
 
 class Device extends Model
 {
@@ -37,5 +38,10 @@ class Device extends Model
         return Attribute::make(
             get: fn() => Storage::url($this->image_url),
         );
+    }
+
+    public function downloads()
+    {
+        return $this->hasMany(Download::class);
     }
 }
