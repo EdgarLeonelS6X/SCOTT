@@ -66,7 +66,19 @@ class DeviceTable extends Component
             $query->where('status', $this->statusFilter ? 1 : 0);
         }
 
-        $devices = $query->orderBy('id', 'desc')->get();
+        if (is_null($this->protocolFilter) && is_null($this->statusFilter)) {
+            $query->whereIn('protocol', ['HLS', 'DASH'])
+                  ->orderByRaw("CASE WHEN protocol = 'HLS' THEN 0 WHEN protocol = 'DASH' THEN 1 ELSE 2 END")
+                  ->orderBy('name', 'asc');
+        } else {
+            if (! is_null($this->protocolFilter)) {
+                $query->orderBy('name', 'asc');
+            } else {
+                $query->orderBy('id', 'desc');
+            }
+        }
+
+        $devices = $query->get();
 
         return view('livewire.admin.devices.device-table', [
             'devices' => $devices,

@@ -22,10 +22,7 @@ class DevicePolicy
      */
     public function viewAny(User $user)
     {
-        if (! $user->can('devices.view')) {
-            return false;
-        }
-        return strtolower(trim($user->area ?? '')) === 'OTT';
+        return $user->can('devices.view');
     }
 
     public function view(User $user, Device $device)
@@ -33,7 +30,12 @@ class DevicePolicy
         if (! $user->can('devices.view')) {
             return false;
         }
-        return strtolower(trim($user->area ?? '')) === 'OTT';
+
+        $userArea = strtolower(trim($user->area ?? ''));
+        $deviceArea = strtolower(trim($device->area ?? ''));
+
+        // Allow if user is in OTT or user area matches device area
+        return $userArea === 'ott' || $userArea === $deviceArea;
     }
 
     public function create(User $user)

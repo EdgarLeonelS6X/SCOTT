@@ -22,15 +22,17 @@
                 <i class="fa-solid fa-arrow-left mr-1.5"></i>
                 {{ __('Go back') }}
             </a>
-            <a href="{{ $device->store_url ?? $device->store_url ?? '#' }}" target="_blank" rel="noopener noreferrer"
-                class="flex w-full sm:w-auto justify-center items-center text-white
-                    {{ Auth::user()?->area === 'DTH'
-                        ? 'bg-secondary-700 hover:bg-secondary-800 focus:ring-4 focus:ring-secondary-300 dark:bg-secondary-600 dark:hover:bg-secondary-700 dark:focus:ring-secondary-800'
-                        : 'bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800' }}
-                    font-medium rounded-lg text-sm px-4 py-2 text-center">
-                <i class="fa-solid fa-arrow-up-right-from-square mr-1.5"></i>
-                {{ __('See APP in the store') }}
-            </a>
+            @if($device->store_url)
+                <a href="{{ $device->store_url }}" target="_blank" rel="noopener noreferrer"
+                    class="flex w-full sm:w-auto justify-center items-center text-white
+                        {{ Auth::user()?->area === 'DTH'
+                            ? 'bg-secondary-700 hover:bg-secondary-800 focus:ring-4 focus:ring-secondary-300 dark:bg-secondary-600 dark:hover:bg-secondary-700 dark:focus:ring-secondary-800'
+                            : 'bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800' }}
+                        font-medium rounded-lg text-sm px-4 py-2 text-center">
+                    <i class="fa-solid fa-arrow-up-right-from-square mr-1.5"></i>
+                    {{ __('See APP in the store') }}
+                </a>
+            @endif
             @can('devices.edit')
                 <a href="{{ route('admin.devices.edit', $device) }}"
                     class="flex w-full sm:w-auto justify-center items-center text-white bg-blue-600 hover:bg-blue-500 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-4 py-2 text-center">
@@ -119,15 +121,17 @@
             <i class="fa-solid fa-arrow-left mr-1.5"></i>
             {{ __('Go back') }}
         </a>
-        <a href="{{ $device->store_url ?? $device->store_url ?? '#' }}" target="_blank" rel="noopener noreferrer"
-            class="flex justify-center items-center w-full text-white
-                {{ Auth::user()?->area === 'DTH'
-                    ? 'bg-secondary-700 hover:bg-secondary-800 focus:ring-4 focus:ring-secondary-300 dark:bg-secondary-600 dark:hover:bg-secondary-700 dark:focus:ring-secondary-800'
-                    : 'bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800' }}
-            font-medium rounded-lg text-sm px-4 py-2">
-            <i class="fa-solid fa-arrow-up-right-from-square mr-1.5"></i>
-            {{ __('See APP in the store') }}
-        </a>
+        @if($device->store_url)
+            <a href="{{ $device->store_url }}" target="_blank" rel="noopener noreferrer"
+                class="flex justify-center items-center w-full text-white
+                    {{ Auth::user()?->area === 'DTH'
+                        ? 'bg-secondary-700 hover:bg-secondary-800 focus:ring-4 focus:ring-secondary-300 dark:bg-secondary-600 dark:hover:bg-secondary-700 dark:focus:ring-secondary-800'
+                        : 'bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800' }}
+                font-medium rounded-lg text-sm px-4 py-2">
+                <i class="fa-solid fa-arrow-up-right-from-square mr-1.5"></i>
+                {{ __('See APP in the store') }}
+            </a>
+        @endif
         @can('devices.edit')
             <a href="{{ route('admin.devices.edit', $device) }}"
                 class="flex justify-center items-center w-full text-white bg-blue-600 hover:bg-blue-500 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-4 py-2">

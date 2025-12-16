@@ -21,7 +21,13 @@ class DeviceController extends Controller
         $user = Auth::user();
 
         if (! ($user && $user->id === 1)) {
-            $this->authorize('viewAny', Device::class);
+            if (! $user) {
+                abort(403);
+            }
+
+            if (! $user->can('viewAny', Device::class) && ! $user->can('view', Device::class)) {
+                abort(403);
+            }
         }
 
         $devices = Device::when($user && $user->id !== 1, function ($query) use ($user) {
