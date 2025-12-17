@@ -759,5 +759,18 @@
     "Monthly downloads": "Descargas mensuales",
     "Monthly downloads report": "Informe de descargas mensuales",
     "Report monthly downloads per device": "Informe de descargas mensuales por dispositivo",
-    "Device deleted successfully.": "Dispositivo eliminado con éxito."
+    "Device deleted successfully.": "Dispositivo eliminado con éxito.",
+    "Save report": "Guardar informe",
+    "January": "Enero",
+    "February": "Febrero",
+    "March": "Marzo",
+    "April": "Abril",
+    "May": "Mayo",
+    "June": "Junio",
+    "July": "Julio",
+    "August": "Agosto",
+    "Total downloads for month": "Descargas totales del mes",
+    "Average downloads": "Promedio de descargas",
+    "Downloads": "Descargas",
+    "Average": "Promedio"
 }
