@@ -12,6 +12,8 @@ class MonthlyDownloadsReport extends Component
 {
     public $year;
     public $month;
+    public $years = [];
+    public $months = [];
     public $devices;
     public $counts = [];
     public $successMessage = null;
@@ -37,6 +39,39 @@ class MonthlyDownloadsReport extends Component
         foreach ($this->devices as $device) {
             $this->counts[$device->id] = 0;
         }
+
+        $current = (int) date('Y');
+        $currentMonth = (int) date('n');
+
+        $minYear = Download::min('year');
+        $maxYear = Download::max('year');
+
+        if (! $minYear) {
+            $minYear = $current - 5;
+        }
+
+        if (! $maxYear) {
+            $maxYear = $current;
+        }
+
+        $maxYear = min($maxYear, $current);
+
+        $minYear = min($minYear, $current - 5);
+
+        for ($y = $maxYear; $y >= $minYear; $y--) {
+            $this->years[] = $y;
+        }
+
+        if ($this->year >= $current) {
+            $maxMonth = $currentMonth;
+        } else {
+            $maxMonth = 12;
+        }
+
+        $this->months = [];
+        for ($m = 1; $m <= $maxMonth; $m++) {
+            $this->months[] = $m;
+        }
     }
 
     public function getTotalProperty()
@@ -52,12 +87,34 @@ class MonthlyDownloadsReport extends Component
 
     public function updatedYear()
     {
+        $this->buildMonths();
         $this->loadCounts();
     }
 
     public function updatedMonth()
     {
         $this->loadCounts();
+    }
+
+    protected function buildMonths()
+    {
+        $current = (int) date('Y');
+        $currentMonth = (int) date('n');
+
+        if ($this->year >= $current) {
+            $maxMonth = $currentMonth;
+        } else {
+            $maxMonth = 12;
+        }
+
+        $this->months = [];
+        for ($m = 1; $m <= $maxMonth; $m++) {
+            $this->months[] = $m;
+        }
+
+        if (! in_array($this->month, $this->months)) {
+            $this->month = end($this->months) ?: $currentMonth;
+        }
     }
 
     protected function loadCounts()
