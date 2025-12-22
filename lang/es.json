@@ -773,5 +773,9 @@
     "Average downloads": "Promedio de descargas",
     "Downloads": "Descargas",
     "Average": "Promedio",
-    "Monthly downloads saved successfully.": "Descargas mensuales guardadas con éxito."
+    "Monthly downloads saved successfully.": "Descargas mensuales guardadas con éxito.",
+    "History of monthly downloads": "Historial de descargas mensuales",
+    "Month": "Mes",
+    "Year": "Año",
+    "No detailed downloads for this month.": "No hay descargas detalladas para este mes."
 }
