@@ -52,7 +52,7 @@ class DeviceTable extends Component
 
         $auth = auth()->user();
 
-        $query = Device::query();
+        $query = Device::query()->where('name', '!=', 'Android (Mobile & TV)');
 
         if (! ($auth && $auth->id === 1)) {
             $query->where('area', $auth->area ?? 'OTT');

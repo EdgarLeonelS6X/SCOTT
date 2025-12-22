@@ -60,6 +60,10 @@ class DeviceController extends Controller
      */
     public function show(Device $device)
     {
+        if ($device->id === 10 && (! Auth::user() || Auth::id() !== 1)) {
+            abort(403);
+        }
+
         $this->authorize('view', $device);
 
         return view('admin.devices.show', compact('device'));
@@ -70,6 +74,10 @@ class DeviceController extends Controller
      */
     public function edit(Device $device)
     {
+        if ($device->id === 10 && (! Auth::user() || Auth::id() !== 1)) {
+            abort(403);
+        }
+
         $this->authorize('update', $device);
 
         return view('admin.devices.edit', compact('device'));
@@ -88,6 +96,10 @@ class DeviceController extends Controller
      */
     public function destroy(Device $device)
     {
+        if ($device->id === 10 && (! Auth::user() || Auth::id() !== 1)) {
+            abort(403);
+        }
+
         $this->authorize('delete', $device);
 
         if ($device->image_url && Storage::disk('public')->exists($device->image_url)) {
