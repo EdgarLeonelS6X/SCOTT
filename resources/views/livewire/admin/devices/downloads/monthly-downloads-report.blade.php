@@ -94,7 +94,18 @@
                             </div>
                         </td>
                         <td class="px-5 py-3 text-right">
-                            <x-input type="number" min="0" wire:model.defer="counts.{{ $device->id }}" />
+                            <x-input
+                                type="number"
+                                min="0"
+                                wire:model.live="counts.{{ $device->id }}"
+                                inputmode="numeric"
+                                pattern="\d*"
+                                onfocus="this.select()"
+                                onclick="this.select()"
+                                onkeydown="if(['e','E','-','+','.'].includes(event.key)) event.preventDefault()"
+                                oninput="this.value=this.value.replace(/[^0-9]/g,'')"
+                                onpaste="setTimeout(()=>this.value=this.value.replace(/[^0-9]/g,''),0)"
+                            />
                         </td>
                     </tr>
                 @endforeach
