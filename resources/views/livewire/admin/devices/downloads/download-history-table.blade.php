@@ -48,7 +48,7 @@
             "
             class="w-full sm:w-auto">
             <x-input id="downloads-datepicker-range" x-ref="input" type="text" autocomplete="off" placeholder="{{ __('Select a range time') }}"
-                class="min-w-[16rem] w-full px-3 py-2 text-sm border border-gray-300 rounded-md dark:bg-gray-800 dark:border-gray-600 dark:text-white" />
+                class="min-w-[16rem] w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:ring-primary-500 focus:border-primary-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" />
         </div>
 
             <button wire:click="resetFilters"
@@ -63,15 +63,15 @@
         <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
             <thead class="text-xs dark:text-white uppercase dark:bg-gray-600 shadow-2xl">
                 <tr>
-                    <th class="py-3 px-4 text-left cursor-pointer w-[160px]" wire:click="setOrder('month')">
+                    <th class="py-3 px-4 text-left w-[160px]">
                         <i class="fa-solid fa-calendar-days mr-1.5"></i>
                         {{ __('Month') }}
                     </th>
-                    <th class="py-3 px-4 text-left cursor-pointer w-[160px]" wire:click="setOrder('year')">
+                    <th class="py-3 px-4 text-left w-[160px]">
                         <i class="fa-solid fa-calendar mr-1.5"></i>
                         {{ __('Year') }}
                     </th>
-                    <th class="py-3 px-4 text-left cursor-pointer w-[160px]" wire:click="setOrder('count')">
+                    <th class="py-3 px-4 text-left w-[160px]">
                         <i class="fa-solid fa-download mr-1.5"></i>
                         {{ __('Total downloads') }}
                     </th>
@@ -89,7 +89,7 @@
                         <td colspan="4" class="bg-white dark:bg-gray-800 text-center py-6 pb-3">
                             <div class="text-gray-500 dark:text-gray-300">
                                 <i class="fa-solid fa-circle-info mr-1"></i>
-                                {{ __('No monthly aggregates found with the current filters.') }}
+                                {{ __('No monthly downloads reports found with the current filters.') }}
                             </div>
                         </td>
                     </tr>

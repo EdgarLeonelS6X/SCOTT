@@ -778,5 +778,6 @@
     "Month": "Mes",
     "Year": "Año",
     "No detailed downloads for this month.": "No hay descargas detalladas para este mes.",
-    "Total downloads": "Descargas totales"
+    "Total downloads": "Descargas totales",
+    "No monthly downloads reports found with the current filters.": "No se encontraron informes de descargas mensuales con los filtros actuales."
 }
