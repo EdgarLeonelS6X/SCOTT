@@ -8,6 +8,55 @@
         </div>
         <div
             class="w-full md:w-auto flex flex-col sm:flex-row sm:flex-wrap items-stretch lg:items-center justify-start md:justify-end gap-3">
+            <script>
+                (function() {
+                    var id = 'flatpickr-theme';
+                    var darkHref = 'https://npmcdn.com/flatpickr/dist/themes/dark.css';
+                    var lightHref = 'https://npmcdn.com/flatpickr/dist/themes/default.css';
+
+                    function applyFlatpickrTheme(theme) {
+                        var href = theme === 'dark' ? darkHref : lightHref;
+                        var link = document.getElementById(id);
+                        if (!link) {
+                            link = document.createElement('link');
+                            link.id = id;
+                            link.rel = 'stylesheet';
+                            link.href = href;
+                            document.head.appendChild(link);
+                        } else {
+                            link.href = href;
+                        }
+                    }
+
+                    function resolveTheme() {
+                        var stored = localStorage.getItem('color-theme');
+                        if (stored) return stored;
+                        return document.documentElement.classList.contains('dark') ? 'dark' : 'light';
+                    }
+
+                    applyFlatpickrTheme(resolveTheme());
+
+                    window.addEventListener('storage', function(e) {
+                        if (e.key === 'color-theme') {
+                            applyFlatpickrTheme(e.newValue || 'light');
+                        }
+                    });
+
+                    window.addEventListener('color-theme-changed', function() {
+                        applyFlatpickrTheme(resolveTheme());
+                    });
+
+                    var observer = new MutationObserver(function(mutations) {
+                        for (var i = 0; i < mutations.length; i++) {
+                            if (mutations[i].attributeName === 'class' || mutations[i].attributeName === 'data-theme') {
+                                applyFlatpickrTheme(resolveTheme());
+                                break;
+                            }
+                        }
+                    });
+                    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class', 'data-theme'] });
+                })();
+            </script>
             <div x-data="{
                 start: @entangle('startDate').defer,
                 end: @entangle('endDate').defer,
@@ -98,8 +147,8 @@
                         <tr wire:click="showMonthDetails({{ $agg->year }}, {{ $agg->month }})" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-600 text-black dark:text-white cursor-pointer group">
                             <td class="py-3 px-4 font-bold whitespace-nowrap">
                                 @php
-                                    $monthName = __(\Carbon\Carbon::createFromFormat('!m', $agg->month)->locale(app()->getLocale())->translatedFormat('F'));
-                                    $monthName = mb_strtoupper(mb_substr($monthName, 0, 1, 'UTF-8'), 'UTF-8') . mb_substr($monthName, 1, null, 'UTF-8');
+        $monthName = __(\Carbon\Carbon::createFromFormat('!m', $agg->month)->locale(app()->getLocale())->translatedFormat('F'));
+        $monthName = mb_strtoupper(mb_substr($monthName, 0, 1, 'UTF-8'), 'UTF-8') . mb_substr($monthName, 1, null, 'UTF-8');
                                 @endphp
                                 {{ $monthName }}
                             </td>
@@ -132,9 +181,9 @@
 
     @if($showDetailsModal)
         @php
-            $userArea = Auth::user()?->area;
-            $isDTH = $userArea === 'DTH';
-            $accentColor = $isDTH ? 'secondary' : 'primary';
+    $userArea = Auth::user()?->area;
+    $isDTH = $userArea === 'DTH';
+    $accentColor = $isDTH ? 'secondary' : 'primary';
         @endphp
         <div class="fixed inset-0 z-50 flex items-start md:items-center justify-center bg-black/50 overflow-y-auto p-4 backdrop-blur-sm" @keydown.escape="$wire.call('$set', 'showDetailsModal', false)">
             <div class="w-full max-w-3xl bg-white dark:bg-gray-800 rounded-xl shadow-2xl overflow-hidden my-auto">
@@ -147,8 +196,8 @@
                             <div class="text-sm font-medium text-gray-500 dark:text-gray-400">{{ __('Details') }}</div>
                             <h2 class="text-xl font-bold text-gray-900 dark:text-white">
                                 @php
-                                    $detailsMonthName = __(\Carbon\Carbon::createFromFormat('!m', $detailsMonth)->locale(app()->getLocale())->translatedFormat('F'));
-                                    $detailsMonthName = mb_strtoupper(mb_substr($detailsMonthName, 0, 1, 'UTF-8'), 'UTF-8') . mb_substr($detailsMonthName, 1, null, 'UTF-8');
+    $detailsMonthName = __(\Carbon\Carbon::createFromFormat('!m', $detailsMonth)->locale(app()->getLocale())->translatedFormat('F'));
+    $detailsMonthName = mb_strtoupper(mb_substr($detailsMonthName, 0, 1, 'UTF-8'), 'UTF-8') . mb_substr($detailsMonthName, 1, null, 'UTF-8');
                                 @endphp
                                 {{ $detailsMonthName }} {{ $detailsYear }}
                             </h2>
@@ -171,8 +220,8 @@
                         <div class="max-h-[70vh] overflow-y-auto space-y-3 pr-4 scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600 scrollbar-track-transparent">
                             @foreach($detailsGrouped as $ts => $items)
                                 @php
-                                    $dt = \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $ts);
-                                    $totalDownloads = array_sum(array_column($items, 'count'));
+            $dt = \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $ts);
+            $totalDownloads = array_sum(array_column($items, 'count'));
                                 @endphp
                                 <div x-data="{ open: false }" class="group border border-gray-200 dark:border-gray-700 rounded-xl overflow-hidden transition-all duration-200" :class="open ? '{{ $isDTH ? 'border-secondary-300 dark:border-secondary-500 shadow-lg bg-gradient-to-br from-secondary-50 to-white dark:from-gray-700/50 dark:to-gray-800' : 'border-primary-300 dark:border-primary-500 shadow-lg bg-gradient-to-br from-primary-50 to-white dark:from-gray-700/50 dark:to-gray-800' }}' : 'hover:border-{{ $accentColor }}-300 dark:hover:border-{{ $accentColor }}-500'">
                                     <button @click="open = !open" class="w-full flex items-center justify-between px-5 py-4 bg-gray-50 dark:bg-gray-700/50 hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-150 cursor-pointer" :class="open ? '{{ $isDTH ? 'bg-gradient-to-r from-secondary-50 to-transparent dark:from-gray-700 dark:to-gray-800' : 'bg-gradient-to-r from-primary-50 to-transparent dark:from-gray-700 dark:to-gray-800' }}' : ''">

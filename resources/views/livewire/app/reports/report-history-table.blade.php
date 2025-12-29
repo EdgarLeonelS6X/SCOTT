@@ -13,6 +13,55 @@
         </div>
         <div
             class="w-full md:w-auto flex flex-col sm:flex-row sm:flex-wrap items-stretch lg:items-center justify-start md:justify-end gap-3">
+            <script>
+                (function () {
+                    var id = 'flatpickr-theme';
+                    var darkHref = 'https://npmcdn.com/flatpickr/dist/themes/dark.css';
+                    var lightHref = 'https://npmcdn.com/flatpickr/dist/themes/default.css';
+
+                    function applyFlatpickrTheme(theme) {
+                        var href = theme === 'dark' ? darkHref : lightHref;
+                        var link = document.getElementById(id);
+                        if (!link) {
+                            link = document.createElement('link');
+                            link.id = id;
+                            link.rel = 'stylesheet';
+                            link.href = href;
+                            document.head.appendChild(link);
+                        } else {
+                            link.href = href;
+                        }
+                    }
+
+                    function resolveTheme() {
+                        var stored = localStorage.getItem('color-theme');
+                        if (stored) return stored;
+                        return document.documentElement.classList.contains('dark') ? 'dark' : 'light';
+                    }
+
+                    applyFlatpickrTheme(resolveTheme());
+
+                    window.addEventListener('storage', function (e) {
+                        if (e.key === 'color-theme') {
+                            applyFlatpickrTheme(e.newValue || 'light');
+                        }
+                    });
+
+                    window.addEventListener('color-theme-changed', function () {
+                        applyFlatpickrTheme(resolveTheme());
+                    });
+
+                    var observer = new MutationObserver(function (mutations) {
+                        for (var i = 0; i < mutations.length; i++) {
+                            if (mutations[i].attributeName === 'class' || mutations[i].attributeName === 'data-theme') {
+                                applyFlatpickrTheme(resolveTheme());
+                                break;
+                            }
+                        }
+                    });
+                    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class', 'data-theme'] });
+                })();
+            </script>
             <div x-data="{
                 start: @entangle('startDate').defer,
                 end: @entangle('endDate').defer,
