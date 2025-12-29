@@ -97,7 +97,7 @@
             "
             class="w-full sm:w-auto">
             <x-input id="downloads-datepicker-range" x-ref="input" type="text" autocomplete="off" placeholder="{{ __('Select a range time') }}"
-                class="min-w-[16rem] w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:ring-primary-500 focus:border-primary-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" />
+                class="min-w-[16rem] w-full px-3 py-[9px] text-sm border border-gray-300 rounded-md focus:ring-primary-500 focus:border-primary-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" />
         </div>
 
             <button wire:click="resetFilters"
@@ -163,7 +163,7 @@
                                     </span>
                                 </div>
                             </td>
-                            <td class="px-4 py-3 flex items-center justify-end align-middle w-[80px]">
+                            <td class="px-4 py-3 flex items-center justify-end align-middle">
                                 <span class="flex items-center h-full justify-center" style="height: 100%; min-height: 24px;">
                                     <i class="fa-solid fa-chevron-right transition-colors text-gray-300 group-hover:text-gray-700 dark:text-gray-500 dark:group-hover:text-gray-400"
                                         style="vertical-align: middle; font-size: 1.1em; line-height: 1;"></i>

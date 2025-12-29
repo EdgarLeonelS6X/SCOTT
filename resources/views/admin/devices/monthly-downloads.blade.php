@@ -60,9 +60,9 @@
         </div>
     </div>
 
-    <div class="container mx-auto py-6">
+    <div class="container mx-auto space-y-6">
 
-        {{-- @livewire('admin.devices.downloads.download-graph') --}}
+        @livewire('admin.devices.downloads.download-graph')
 
         @livewire('admin.devices.downloads.download-history-table')
 
