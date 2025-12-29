@@ -64,16 +64,16 @@
             <thead class="text-xs dark:text-white uppercase dark:bg-gray-600 shadow-2xl">
                 <tr>
                     <th class="py-3 px-4 text-left cursor-pointer w-[160px]" wire:click="setOrder('month')">
-                        <i class="fa-solid fa-calendar-days mr-1"></i>
+                        <i class="fa-solid fa-calendar-days mr-1.5"></i>
                         {{ __('Month') }}
                     </th>
                     <th class="py-3 px-4 text-left cursor-pointer w-[160px]" wire:click="setOrder('year')">
-                        <i class="fa-solid fa-calendar mr-1"></i>
+                        <i class="fa-solid fa-calendar mr-1.5"></i>
                         {{ __('Year') }}
                     </th>
                     <th class="py-3 px-4 text-left cursor-pointer w-[160px]" wire:click="setOrder('count')">
-                        <i class="fa-solid fa-download mr-1"></i>
-                        {{ __('Total') }}
+                        <i class="fa-solid fa-download mr-1.5"></i>
+                        {{ __('Total downloads') }}
                     </th>
                     <th scope="col" class="px-4 py-3 w-[80px]">
                         <span class="sr-only">
@@ -103,11 +103,16 @@
                                 @endphp
                                 {{ $monthName }}
                             </td>
-                            <td class="py-3 px-4 text-xs font-bold whitespace-nowrap">
+                            <td class="py-3 px-4 font-bold whitespace-nowrap">
                                 {{ $agg->year }}
                             </td>
-                            <td class="py-3 px-4">
-                                {{ $agg->total_count }}
+                            <td class="py-4 px-4">
+                                <div class="flex items-center gap-2">
+                                    <span class="inline-flex items-center gap-1 bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 px-3 py-1 rounded-full text-sm font-bold">
+                                    <i class="fa-solid fa-arrow-down text-green-500 dark:text-green-400 mr-1"></i>
+                                        {{ $agg->total_count }}
+                                    </span>
+                                </div>
                             </td>
                             <td class="px-4 py-4 flex items-center justify-end align-middle w-full">
                                 <span class="flex items-center h-full justify-center" style="height: 100%; min-height: 24px;">
