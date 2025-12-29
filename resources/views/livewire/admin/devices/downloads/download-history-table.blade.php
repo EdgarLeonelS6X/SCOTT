@@ -1,7 +1,7 @@
 <div class="bg-white dark:bg-gray-800 relative shadow-2xl rounded-lg overflow-hidden mb-6">
     <div class="flex flex-col gap-4 p-4 bg-white dark:bg-gray-800 md:flex-row md:items-center md:justify-between">
         <div class="w-full md:w-1/3">
-            <h2 class="text-lg font-semibold text-gray-900 dark:text-white">
+            <h2 class="text-lg font-semibold text-gray-900 dark:text-white truncate leading-tight">
                 <i class="fa-solid fa-folder mr-1.5 text-gray-600 dark:text-gray-300"></i>
                 {{ __('History of monthly downloads') }}
             </h2>
@@ -109,7 +109,7 @@
     </div>
 
     <div class="overflow-x-auto">
-        <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+        <table class="w-full table-fixed text-sm text-left text-gray-500 dark:text-gray-400">
             <thead class="text-xs dark:text-white uppercase dark:bg-gray-600 shadow-2xl">
                 <tr>
                     <th class="py-3 px-4 text-left w-[160px]">
@@ -120,7 +120,7 @@
                         <i class="fa-solid fa-calendar mr-1.5"></i>
                         {{ __('Year') }}
                     </th>
-                    <th class="py-3 px-4 text-left w-[160px]">
+                    <th class="py-3 px-4 text-left w-[160px] truncate leading-tight">
                         <i class="fa-solid fa-download mr-1.5"></i>
                         {{ __('Total downloads') }}
                     </th>
@@ -145,17 +145,17 @@
                 @else
                     @foreach ($aggregates as $agg)
                         <tr wire:click="showMonthDetails({{ $agg->year }}, {{ $agg->month }})" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-600 text-black dark:text-white cursor-pointer group">
-                            <td class="py-3 px-4 font-bold whitespace-nowrap">
+                            <td class="py-3 px-4 font-bold whitespace-nowrap w-[160px]">
                                 @php
-        $monthName = __(\Carbon\Carbon::createFromFormat('!m', $agg->month)->locale(app()->getLocale())->translatedFormat('F'));
-        $monthName = mb_strtoupper(mb_substr($monthName, 0, 1, 'UTF-8'), 'UTF-8') . mb_substr($monthName, 1, null, 'UTF-8');
+                                    $monthName = __(\Carbon\Carbon::createFromFormat('!m', $agg->month)->locale(app()->getLocale())->translatedFormat('F'));
+                                    $monthName = mb_strtoupper(mb_substr($monthName, 0, 1, 'UTF-8'), 'UTF-8') . mb_substr($monthName, 1, null, 'UTF-8');
                                 @endphp
                                 {{ $monthName }}
                             </td>
-                            <td class="py-3 px-4 font-bold whitespace-nowrap">
+                            <td class="py-3 px-4 font-bold whitespace-nowrap w-[160px]">
                                 {{ $agg->year }}
                             </td>
-                            <td class="py-4 px-4">
+                            <td class="py-3 px-4 w-[160px]">
                                 <div class="flex items-center gap-2">
                                     <span class="inline-flex items-center gap-1 bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 px-3 py-1 rounded-full text-sm font-bold">
                                     <i class="fa-solid fa-arrow-down text-green-500 dark:text-green-400 mr-1"></i>
@@ -163,7 +163,7 @@
                                     </span>
                                 </div>
                             </td>
-                            <td class="px-4 py-4 flex items-center justify-end align-middle w-full">
+                            <td class="px-4 py-3 flex items-center justify-end align-middle w-[80px]">
                                 <span class="flex items-center h-full justify-center" style="height: 100%; min-height: 24px;">
                                     <i class="fa-solid fa-chevron-right transition-colors text-gray-300 group-hover:text-gray-700 dark:text-gray-500 dark:group-hover:text-gray-400"
                                         style="vertical-align: middle; font-size: 1.1em; line-height: 1;"></i>
@@ -181,9 +181,9 @@
 
     @if($showDetailsModal)
         @php
-    $userArea = Auth::user()?->area;
-    $isDTH = $userArea === 'DTH';
-    $accentColor = $isDTH ? 'secondary' : 'primary';
+            $userArea = Auth::user()?->area;
+            $isDTH = $userArea === 'DTH';
+            $accentColor = $isDTH ? 'secondary' : 'primary';
         @endphp
         <div class="fixed inset-0 z-50 flex items-start md:items-center justify-center bg-black/50 overflow-y-auto p-4 backdrop-blur-sm" @keydown.escape="$wire.call('$set', 'showDetailsModal', false)">
             <div class="w-full max-w-3xl bg-white dark:bg-gray-800 rounded-xl shadow-2xl overflow-hidden my-auto">
@@ -196,8 +196,8 @@
                             <div class="text-sm font-medium text-gray-500 dark:text-gray-400">{{ __('Details') }}</div>
                             <h2 class="text-xl font-bold text-gray-900 dark:text-white">
                                 @php
-    $detailsMonthName = __(\Carbon\Carbon::createFromFormat('!m', $detailsMonth)->locale(app()->getLocale())->translatedFormat('F'));
-    $detailsMonthName = mb_strtoupper(mb_substr($detailsMonthName, 0, 1, 'UTF-8'), 'UTF-8') . mb_substr($detailsMonthName, 1, null, 'UTF-8');
+                                    $detailsMonthName = __(\Carbon\Carbon::createFromFormat('!m', $detailsMonth)->locale(app()->getLocale())->translatedFormat('F'));
+                                    $detailsMonthName = mb_strtoupper(mb_substr($detailsMonthName, 0, 1, 'UTF-8'), 'UTF-8') . mb_substr($detailsMonthName, 1, null, 'UTF-8');
                                 @endphp
                                 {{ $detailsMonthName }} {{ $detailsYear }}
                             </h2>
@@ -220,8 +220,8 @@
                         <div class="max-h-[70vh] overflow-y-auto space-y-3 pr-4 scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600 scrollbar-track-transparent">
                             @foreach($detailsGrouped as $ts => $items)
                                 @php
-            $dt = \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $ts);
-            $totalDownloads = array_sum(array_column($items, 'count'));
+                                    $dt = \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $ts);
+                                    $totalDownloads = array_sum(array_column($items, 'count'));
                                 @endphp
                                 <div x-data="{ open: false }" class="group border border-gray-200 dark:border-gray-700 rounded-xl overflow-hidden transition-all duration-200" :class="open ? '{{ $isDTH ? 'border-secondary-300 dark:border-secondary-500 shadow-lg bg-gradient-to-br from-secondary-50 to-white dark:from-gray-700/50 dark:to-gray-800' : 'border-primary-300 dark:border-primary-500 shadow-lg bg-gradient-to-br from-primary-50 to-white dark:from-gray-700/50 dark:to-gray-800' }}' : 'hover:border-{{ $accentColor }}-300 dark:hover:border-{{ $accentColor }}-500'">
                                     <button @click="open = !open" class="w-full flex items-center justify-between px-5 py-4 bg-gray-50 dark:bg-gray-700/50 hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-150 cursor-pointer" :class="open ? '{{ $isDTH ? 'bg-gradient-to-r from-secondary-50 to-transparent dark:from-gray-700 dark:to-gray-800' : 'bg-gradient-to-r from-primary-50 to-transparent dark:from-gray-700 dark:to-gray-800' }}' : ''">
