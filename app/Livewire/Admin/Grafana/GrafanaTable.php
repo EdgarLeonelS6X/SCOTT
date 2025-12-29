@@ -18,15 +18,28 @@ class GrafanaTable extends Component
 
         $query = GrafanaPanel::query();
 
-        if ($user && in_array($user->area, ['OTT', 'DTH'])) {
-            if ($user->area === 'DTH') {
-                $query->where(function ($q) {
-                    $q->where('area', 'DTH')
-                        ->orWhereIn('id', [1, 3]);
-                });
+        if ($user) {
+            if ($user->id === 1) {
             } else {
-                $query->where('area', $user->area);
+                if (in_array($user->area, ['OTT', 'DTH'])) {
+                    if ($user->area === 'DTH') {
+                        $query->where(function ($q) {
+                            $q->where('area', 'DTH')
+                                ->orWhereIn('id', [1, 3]);
+                        });
+                    } else {
+                        $query->where('area', $user->area);
+                    }
+                } else {
+                    if (!empty($user->area)) {
+                        $query->where('area', $user->area);
+                    } else {
+                        $query->whereRaw('0 = 1');
+                    }
+                }
             }
+        } else {
+            $query->whereRaw('0 = 1');
         }
 
         $panels = $query->get();
