@@ -779,5 +779,10 @@
     "Year": "Año",
     "No detailed downloads for this month.": "No hay descargas detalladas para este mes.",
     "Total downloads": "Descargas totales",
-    "No monthly downloads reports found with the current filters.": "No se encontraron informes de descargas mensuales con los filtros actuales."
+    "No monthly downloads reports found with the current filters.": "No se encontraron informes de descargas mensuales con los filtros actuales.",
+    "Monthly downloads for device and year.": "Descargas mensuales por dispositivo y año.",
+    "Loading...": "Cargando...",
+    "Refresh": "Refrescar",
+    "Monthly breakdown": "Desglose mensual",
+    "All devices": "Todos los dispositivos"
 }
