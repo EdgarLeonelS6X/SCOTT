@@ -31,8 +31,8 @@ class MonthlyDownloadsReport extends Component
             abort(403);
         }
 
-        $this->year = date('Y');
-        $this->month = date('n');
+        $this->year = (int) date('Y');
+        $this->month = (int) date('n');
         $exclude = ['Web Client', 'Android Mobile', 'Android TV'];
         $this->devices = Device::whereNotIn('name', $exclude)->orderBy('name')->get();
 
@@ -54,9 +54,9 @@ class MonthlyDownloadsReport extends Component
             $maxYear = $current;
         }
 
-        $maxYear = min($maxYear, $current);
+        $maxYear = max($maxYear, $current);
 
-        $minYear = min($minYear, $current - 5);
+        $minYear = min($minYear, $current - 3);
 
         for ($y = $maxYear; $y >= $minYear; $y--) {
             $this->years[] = $y;
@@ -87,6 +87,7 @@ class MonthlyDownloadsReport extends Component
 
     public function updatedYear()
     {
+        $this->year = (int) $this->year;
         $this->buildMonths();
         $this->loadCounts();
     }
@@ -101,7 +102,9 @@ class MonthlyDownloadsReport extends Component
         $current = (int) date('Y');
         $currentMonth = (int) date('n');
 
-        if ($this->year >= $current) {
+        $selectedYear = (int) $this->year;
+
+        if ($selectedYear >= $current) {
             $maxMonth = $currentMonth;
         } else {
             $maxMonth = 12;
@@ -112,8 +115,8 @@ class MonthlyDownloadsReport extends Component
             $this->months[] = $m;
         }
 
-        if (! in_array($this->month, $this->months)) {
-            $this->month = end($this->months) ?: $currentMonth;
+        if (! in_array((int) $this->month, $this->months)) {
+            $this->month = (int) (end($this->months) ?: $currentMonth);
         }
     }
 
@@ -156,6 +159,12 @@ class MonthlyDownloadsReport extends Component
             'icon' => 'success',
             'title' => __('Well done!'),
             'text' => __('Monthly downloads saved successfully.'),
+        ]);
+
+        // Notify other components (history table, graphs) that downloads changed
+        $this->dispatch('downloads-updated', [
+            'year' => $this->year,
+            'month' => $this->month,
         ]);
     }
 

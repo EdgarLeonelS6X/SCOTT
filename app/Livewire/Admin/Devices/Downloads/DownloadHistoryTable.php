@@ -12,6 +12,10 @@ class DownloadHistoryTable extends Component
 {
     use WithPagination;
 
+    protected $listeners = [
+        'downloads-updated' => 'onDownloadsUpdated',
+    ];
+
     public $startDate;
     public $endDate;
     public $showDetailsModal = false;
@@ -115,9 +119,14 @@ class DownloadHistoryTable extends Component
     public function render()
     {
         $query = $this->aggregatesQuery();
-        $query->orderBy('created_at', 'desc');
+        $query->orderBy('year', 'desc')->orderBy('month', 'asc');
         $aggregates = $query->paginate(10);
 
         return view('livewire.admin.devices.downloads.download-history-table', compact('aggregates'));
+    }
+
+    public function onDownloadsUpdated($payload = null)
+    {
+        $this->resetPage();
     }
 }

@@ -4,7 +4,7 @@
             <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
                 <div class="flex items-center gap-2 w-full sm:w-44">
                     <label class="sr-only">{{ __('Month') }}</label>
-                    <select aria-label="Month" wire:model="month" class="cursor-pointer bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white {{ Auth::user()?->area === 'DTH' ? 'focus:ring-secondary-600 focus:border-secondary-600 dark:focus:ring-secondary-500 dark:focus:border-secondary-500'
+                    <select aria-label="Month" wire:model.live="month" class="cursor-pointer bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white {{ Auth::user()?->area === 'DTH' ? 'focus:ring-secondary-600 focus:border-secondary-600 dark:focus:ring-secondary-500 dark:focus:border-secondary-500'
                         : 'focus:ring-primary-600 focus:border-primary-600 dark:focus:ring-primary-500 dark:focus:border-primary-500' }}">
                         @foreach($months as $m)
                             <option value="{{ $m }}">{{ __(DateTime::createFromFormat('!m', $m)->format('F')) }}</option>
@@ -14,7 +14,7 @@
 
                 <div class="flex items-center gap-2 w-full sm:w-44">
                     <label class="sr-only">{{ __('Year') }}</label>
-                    <select aria-label="Year" wire:model="year" class="cursor-pointer bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white {{ Auth::user()?->area === 'DTH' ? 'focus:ring-secondary-600 focus:border-secondary-600 dark:focus:ring-secondary-500 dark:focus:border-secondary-500'
+                    <select aria-label="Year" wire:model.live="year" class="cursor-pointer bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white {{ Auth::user()?->area === 'DTH' ? 'focus:ring-secondary-600 focus:border-secondary-600 dark:focus:ring-secondary-500 dark:focus:border-secondary-500'
                         : 'focus:ring-primary-600 focus:border-primary-600 dark:focus:ring-primary-500 dark:focus:border-primary-500' }}">
                         @foreach($years as $y)
                             <option value="{{ $y }}">{{ $y }}</option>
