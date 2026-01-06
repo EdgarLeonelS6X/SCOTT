@@ -784,5 +784,8 @@
     "Loading...": "Cargando...",
     "Refresh": "Refrescar",
     "Monthly breakdown": "Desglose mensual",
-    "All devices": "Todos los dispositivos"
+    "All devices": "Todos los dispositivos",
+    "Downloads - Yearly view": "Descargas - Vista anual",
+    "Monthly downloads for the selected year.": "Descargas mensuales para el año seleccionado.",
+    "Select year": "Seleccionar año"
 }

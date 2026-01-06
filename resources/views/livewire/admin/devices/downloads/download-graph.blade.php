@@ -1,53 +1,44 @@
 <div>
-    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
-        <div class="flex flex-wrap items-center gap-3">
-            <div
-                class="flex items-center bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-700 rounded px-3 py-1 shadow-sm">
-                <i class="fa-solid fa-calendar-days text-gray-400 mr-2"></i>
-                <label for="select-year" class="text-sm text-gray-700 dark:text-gray-200 mr-2">{{ __('Year')
-                        }}</label>
-                <select id="select-year" wire:model="selectedYear" wire:change="$set('selectedYear', $event.target.value)" class="border-0 bg-transparent text-sm focus:outline-none">
-                    @for($y = date('Y'); $y >= date('Y') - 5; $y--)
-                        <option value="{{ $y }}">{{ $y }}</option>
-                    @endfor
-                </select>
-            </div>
-
-            @if(isset($devices) && $devices->count())
-                <div
-                    class="flex items-center bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-700 rounded px-3 py-1 shadow-sm">
-                    <i class="fa-solid fa-hard-drive text-gray-400 mr-2"></i>
-                    <label for="select-device" class="text-sm text-gray-700 dark:text-gray-200 mr-2">{{ __('Device')
-                            }}</label>
-                    <select id="select-device" class="border-0 bg-transparent text-sm focus:outline-none">
-                        <option value="">{{ __('All devices') }}</option>
-                        @foreach($devices as $d)
-                            <option value="{{ $d->id }}">{{ $d->name }}</option>
-                        @endforeach
-                    </select>
-                </div>
-            @endif
-        </div>
-    </div>
-
+@php
+    $area = Auth::user()?->area;
+    $selectRingClass = $area === 'OTT'
+        ? 'focus-within:ring-2 focus-within:ring-primary-400 dark:focus-within:ring-primary-600'
+        : ($area === 'DTH'
+            ? 'focus-within:ring-2 focus-within:ring-secondary-400 dark:focus-within:ring-secondary-600'
+            : 'focus-within:ring-2 focus-within:ring-primary-400 dark:focus-within:ring-primary-600');
+@endphp
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div class="lg:col-span-2 bg-white dark:bg-gray-800 rounded-lg shadow p-4 h-[336px] relative overflow-hidden">
-            <div class="flex items-center justify-between mb-3">
-                <div>
-                    <h2 class="text-lg font-semibold">{{ __('Downloads - Yearly view') }}</h2>
-                    <p class="text-sm text-gray-500 mt-1">{{ __('Shows monthly downloads for the selected device and
-                            year') }}</p>
+            <div class="flex items-center justify-between mb-3 gap-4">
+                <div class="flex-1 min-w-0">
+                    <h2 class="text-lg font-semibold truncate text-gray-900 dark:text-gray-100">
+                        <i class="fa-solid fa-download mr-2" aria-hidden="true"></i>
+                        {{ __('Downloads - Yearly view') }}
+                    </h2>
+                    <p class="text-sm mt-1 truncate text-gray-600 dark:text-gray-400">
+                        {{ __('Monthly downloads for the selected year.') }}
+                    </p>
                 </div>
+
                 <div class="flex items-center gap-3">
-                    <div id="chart-loading" class="text-sm text-gray-500 hidden">{{ __('Loading...') }}</div>
-                    <button id="btn-refresh"
-                        class="text-sm text-gray-600 bg-gray-50 hover:bg-gray-100 px-2 py-1 rounded shadow-sm">
-                        <i class="fa-solid fa-arrow-rotate-right"></i>
-                    </button>
+                    <div id="chart-loading" class="text-sm text-gray-500 hidden" aria-hidden="true">{{ __('Loading...') }}</div>
+
+                    <div class="flex items-center space-x-3">
+                        <label for="select-year" class="sr-only">{{ __('Year') }}</label>
+                        <div class="inline-flex items-center rounded-lg bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-700 px-3 py-1 shadow-sm {{ $selectRingClass }}">
+                            <i class="fa-solid fa-calendar-days text-gray-400 mx-2" aria-hidden="true"></i>
+                            <select id="select-year" wire:model="selectedYear" wire:change="$set('selectedYear', $event.target.value)" class="appearance-none bg-transparent border-0 pl-2 pr-6 text-sm font-semibold text-gray-700 dark:text-gray-100 focus:outline-none cursor-pointer min-w-[70px] focus:ring-0 focus:border-0" aria-label="{{ __('Select year') }}">
+                                @for($y = date('Y'); $y >= date('Y') - 5; $y--)
+                                    <option style="color:#1f2937;" class="dark:text-gray-100" value="{{ $y }}">{{ $y }}</option>
+                                @endfor
+                            </select>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="w-full h-full" wire:ignore>
-                <canvas id="monthlyDownloadsChart" class="w-full h-full block mb-16"></canvas>
+
+            <div class="w-full h-full relative" wire:ignore>
+                <canvas id="monthlyDownloadsChart" class="w-full h-full block mb-16" role="img" aria-label="{{ __('Monthly downloads chart') }}"></canvas>
             </div>
         </div>
 
@@ -64,15 +55,15 @@
             <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-3 grid grid-cols-3 gap-3 text-center">
                 <div>
                     <h4 class="text-xs text-gray-500">{{ __('Total (year)') }}</h4>
-                    <div class="text-xl font-bold mt-1" id="kpi-total">0</div>
+                    <div class="text-xl font-bold mt-1 text-gray-900 dark:text-gray-100" id="kpi-total">{{ $kpis['total'] ?? 0 }}</div>
                 </div>
                 <div>
                     <h4 class="text-xs text-gray-500">{{ __('Average / month') }}</h4>
-                    <div class="text-xl font-bold mt-1" id="kpi-average">0</div>
+                    <div class="text-xl font-bold mt-1 text-gray-900 dark:text-gray-100" id="kpi-average">{{ $kpis['average'] ?? 0 }}</div>
                 </div>
                 <div>
                     <h4 class="text-xs text-gray-500">{{ __('Top month') }}</h4>
-                    <div class="text-xl font-bold mt-1" id="kpi-top">—</div>
+                    <div class="text-xl font-bold mt-1 text-gray-900 dark:text-gray-100" id="kpi-top">{{ $kpis['top']['month'] ?? '—' }}</div>
                 </div>
             </div>
         </div>

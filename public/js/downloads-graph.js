@@ -9,30 +9,16 @@
     loadOnce(function () {
         let pieChart = null;
 
-        function setStatus(text, short) {
-            try {
-                let el = document.getElementById('downloads-chart-status');
-                if (!el) {
-                    el = document.createElement('div');
-                    el.id = 'downloads-chart-status';
-                    el.style.position = 'absolute';
-                    el.style.right = '12px';
-                    el.style.top = '12px';
-                    el.style.padding = '4px 8px';
-                    el.style.background = 'rgba(0,0,0,0.6)';
-                    el.style.color = 'white';
-                    el.style.fontSize = '12px';
-                    el.style.borderRadius = '6px';
-                    el.style.zIndex = '60';
-                    const container = document.querySelector('.lg\\:col-span-2') || document.body;
-                    container.style.position = container.style.position || 'relative';
-                    container.appendChild(el);
-                }
-                el.textContent = short ? text : (text + ' — ' + new Date().toLocaleTimeString());
-            } catch (e) { console.log('setStatus err', e); }
+        function setStatus() {
+            return;
         }
 
         setStatus('init', false);
+
+        try {
+            const oldBadge = document.getElementById('downloads-chart-status');
+            if (oldBadge && oldBadge.parentNode) oldBadge.parentNode.removeChild(oldBadge);
+        } catch (e) { }
 
         const defaultLabels = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 
@@ -131,15 +117,6 @@
                 }
             }
 
-            const rawKpis = normalize(payload.kpis ?? payload) || {};
-            const total = rawKpis?.total ?? payload.total;
-            const average = rawKpis?.average ?? payload.average;
-            const topRaw = normalize(rawKpis?.top ?? payload.top);
-            const top = topRaw?.month ?? (topRaw?.month ?? topRaw);
-            if (typeof total !== 'undefined') document.getElementById('kpi-total').textContent = total;
-            if (typeof average !== 'undefined') document.getElementById('kpi-average').textContent = average;
-            if (typeof top !== 'undefined') document.getElementById('kpi-top').textContent = top;
-
             if (pieChart && Array.isArray(payload.pie)) {
                 pieChart.data.datasets[0].data = payload.pie.slice(0, 3);
                 if (Array.isArray(payload.pieLabels) && payload.pieLabels.length) pieChart.data.labels = payload.pieLabels.slice(0, 3);
@@ -156,7 +133,7 @@
                 const canvas = getCanvas();
                 if (!canvas) return false;
                 try { applyPayloadToChart(payload); } catch (e) { console.debug(e); }
-                try { setStatus('updated', true); } catch (e) {}
+                try { setStatus('new', true); } catch (e) {}
                 return true;
             }
 
