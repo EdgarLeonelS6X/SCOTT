@@ -63,16 +63,18 @@
                 </div>
                 <div>
                     <h4 class="text-xs text-gray-500">{{ __('Top month') }}</h4>
-                    <div class="text-xl font-bold mt-1 text-gray-900 dark:text-gray-100" id="kpi-top">{{ $kpis['top']['month'] ?? '—' }}</div>
+                    <div class="text-xl font-bold mt-1 text-gray-900 dark:text-gray-100" id="kpi-top">{{ __($kpis['top']['month'] ?? '—') }}</div>
                 </div>
-            </div>
-            <div class="mt-2 text-center text-xs text-gray-600 dark:text-gray-400">
-                <strong>{{ __('Top device this year:') }}</strong>
-                @if(!empty($kpis['top_device']))
-                    {{ $kpis['top_device']['name'] ?? '—' }} ({{ $kpis['top_device']['total'] ?? 0 }})
-                @else
-                    —
-                @endif
+
+                {{-- <div class="col-span-3 mt-2 flex items-center justify-center gap-3">
+                    <div class="text-xs text-gray-600 dark:text-gray-400">{{ __('Top device this year:') }}</div>
+                    @if(!empty($kpis['top_device']))
+                        <div class="text-xs font-semibold text-gray-900 dark:text-gray-100 truncate leading-tight max-w-[220px]">{{ $kpis['top_device']['name'] ?? '—' }}</div>
+                        <div class="text-xs text-gray-500">({{ $kpis['top_device']['total'] ?? 0 }})</div>
+                    @else
+                        <div class="text-sm font-semibold text-gray-900 dark:text-gray-100">—</div>
+                    @endif
+                </div> --}}
             </div>
         </div>
     </div>
