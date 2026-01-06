@@ -69,17 +69,17 @@
     </div>
 
     @push('js')
-    <script>
-        window.addEventListener('close-monthly-report-modal', () => {
-            const modal = document.getElementById('create-momently-report-modal');
-            if (modal && window.FlowbiteInstances) {
-                const modalInstance = window.FlowbiteInstances.getInstance('Modal', 'create-momently-report-modal');
-                if (modalInstance) {
-                    modalInstance.hide();
+        <script>
+            window.addEventListener('close-monthly-report-modal', () => {
+                const modal = document.getElementById('create-momently-report-modal');
+                if (modal && window.FlowbiteInstances) {
+                    const modalInstance = window.FlowbiteInstances.getInstance('Modal', 'create-momently-report-modal');
+                    if (modalInstance) {
+                        modalInstance.hide();
+                    }
                 }
-            }
-        });
-    </script>
+            });
+        </script>
     @endpush
 
 </x-admin-layout>

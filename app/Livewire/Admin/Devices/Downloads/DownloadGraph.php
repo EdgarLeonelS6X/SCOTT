@@ -21,7 +21,7 @@ class DownloadGraph extends Component
     {
         $this->selectedYear = $year ? (int) $year : (int) date('Y');
         $this->loadData();
-        $this->loadDeviceData(); // Load device data
+        $this->loadDeviceData();
     }
 
     public function loadData()
@@ -65,8 +65,7 @@ class DownloadGraph extends Component
             'kpis' => $this->kpis,
         ];
 
-        try { $this->emit('downloads-updated', $payload); } catch (\Exception $e) {}
-        try { $this->dispatchBrowserEvent('downloads-updated', $payload); } catch (\Exception $e) {}
+        try { $this->dispatch('downloads-updated', $payload); } catch (\Exception $e) {}
     }
 
     public function loadDeviceData()
