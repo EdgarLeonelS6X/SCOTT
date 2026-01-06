@@ -66,6 +66,14 @@
                     <div class="text-xl font-bold mt-1 text-gray-900 dark:text-gray-100" id="kpi-top">{{ $kpis['top']['month'] ?? '—' }}</div>
                 </div>
             </div>
+            <div class="mt-2 text-center text-xs text-gray-600 dark:text-gray-400">
+                <strong>{{ __('Top device this year:') }}</strong>
+                @if(!empty($kpis['top_device']))
+                    {{ $kpis['top_device']['name'] ?? '—' }} ({{ $kpis['top_device']['total'] ?? 0 }})
+                @else
+                    —
+                @endif
+            </div>
         </div>
     </div>
 </div>

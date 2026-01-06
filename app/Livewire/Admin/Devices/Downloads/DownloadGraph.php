@@ -59,6 +59,20 @@ class DownloadGraph extends Component
             'top' => ['month' => $topMonth, 'value' => $max],
         ];
 
+        try {
+            $this->loadDeviceData();
+        } catch (\Exception $e) {
+        }
+
+        if (!empty($this->monthlyDeviceData) && is_iterable($this->monthlyDeviceData)) {
+            $top = collect($this->monthlyDeviceData)->sortByDesc('total')->first();
+            if ($top) {
+                $deviceName = $top->name ?? ($top->device_id ?? '—');
+                $deviceTotal = isset($top->total) ? (int) $top->total : 0;
+                $this->kpis['top_device'] = ['name' => $deviceName ?? '—', 'total' => $deviceTotal];
+            }
+        }
+
         $payload = [
             'data' => $this->monthlyData,
             'year' => $this->selectedYear,
@@ -72,8 +86,10 @@ class DownloadGraph extends Component
     {
         try {
             $this->monthlyDeviceData = DB::table('downloads')
-                ->select('device_type', DB::raw('SUM(`count`) as total'))
-                ->groupBy('device_type')
+                ->where('year', $this->selectedYear)
+                ->join('devices', 'downloads.device_id', '=', 'devices.id')
+                ->select('devices.id as device_id', 'devices.name', DB::raw('SUM(`count`) as total'))
+                ->groupBy('devices.id', 'devices.name')
                 ->get();
         } catch (\Exception $e) {
             $this->monthlyDeviceData = collect();
