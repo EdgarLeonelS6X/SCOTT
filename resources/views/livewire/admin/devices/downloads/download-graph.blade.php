@@ -6,7 +6,7 @@
                 <i class="fa-solid fa-calendar-days text-gray-400 mr-2"></i>
                 <label for="select-year" class="text-sm text-gray-700 dark:text-gray-200 mr-2">{{ __('Year')
                         }}</label>
-                <select id="select-year" class="border-0 bg-transparent text-sm focus:outline-none">
+                <select id="select-year" wire:model="selectedYear" wire:change="$set('selectedYear', $event.target.value)" class="border-0 bg-transparent text-sm focus:outline-none">
                     @for($y = date('Y'); $y >= date('Y') - 5; $y--)
                         <option value="{{ $y }}">{{ $y }}</option>
                     @endfor
@@ -27,19 +27,6 @@
                     </select>
                 </div>
             @endif
-        </div>
-
-        <div class="flex items-center gap-2">
-            <a href="#" id="btn-export"
-                class="inline-flex items-center gap-2 text-sm bg-white border border-gray-200 hover:bg-gray-50 px-3 py-2 rounded shadow-sm">
-                <i class="fa-solid fa-file-csv text-green-600"></i>
-                <span class="text-gray-700">{{ __('Export CSV') }}</span>
-            </a>
-            <a href="#" id="btn-new"
-                class="inline-flex items-center gap-2 text-sm bg-primary-600 text-white hover:bg-primary-700 px-4 py-2 rounded shadow">
-                <i class="fa-solid fa-plus"></i>
-                <span>{{ __('New monthly report') }}</span>
-            </a>
         </div>
     </div>
 
@@ -71,8 +58,7 @@
                 <div class="w-full flex-1 mt-2 flex items-center justify-center">
                     <canvas id="pieDownloadsChart" class="w-40 h-40"></canvas>
                 </div>
-                <div class="mt-3 text-xs text-gray-500 text-center">{{ __('Distribution across device categories or
-                        regions') }}</div>
+                <div class="mt-3 text-xs text-gray-500 text-center">{{ __('Lorem ipsum dolor sit amet.') }}</div>
             </div>
 
             <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-3 grid grid-cols-3 gap-3 text-center">
@@ -96,11 +82,30 @@
 @push('js')
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
+    @php
+        $__initialDownloadsData = $monthlyData ?? array_fill(0, 12, 0);
+        $__initialDownloadsKpis = $kpis ?? ['total' => 0, 'average' => 0, 'top' => ['month' => '—', 'value' => 0]];
+    @endphp
+
+    <script type="application/json" id="initialDownloadsData">{!! json_encode($__initialDownloadsData) !!}</script>
+    <script type="application/json" id="initialDownloadsKpis">{!! json_encode($__initialDownloadsKpis) !!}</script>
+
     <script>
         (function () {
-            const ctx = document.getElementById('monthlyDownloadsChart').getContext('2d');
+            function initMonthlyDownloads() {
+                const canvas = document.getElementById('monthlyDownloadsChart');
+                if (!canvas) {
+                    return setTimeout(initMonthlyDownloads, 50);
+                }
+                let ctx;
+                try {
+                    ctx = canvas.getContext('2d');
+                } catch (e) {
+                    console.error('Chart init error', e);
+                    return;
+                }
 
-            function getLastMonths(count) {
+                function getLastMonths(count) {
                 const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
                 const result = [];
                 const now = new Date();
@@ -111,12 +116,12 @@
                 return result;
             }
 
-            const labels = getLastMonths(7);
+            const labels = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
             const data = {
                 labels: labels,
                 datasets: [{
                     label: '{{ __('Downloads') }}',
-                    data: [65, 59, 80, 81, 56, 55, 40],
+                    data: Array(12).fill(0),
                     backgroundColor: [
                         'rgba(255, 99, 132, 0.2)',
                         'rgba(255, 159, 64, 0.2)',
@@ -151,23 +156,21 @@
                 }
             };
 
-            const chart = new Chart(ctx, config);
-            const pieCtx = document.getElementById('pieDownloadsChart')?.getContext('2d');
+                window.downloadsChart = new Chart(ctx, config);
+                const pieCtx = document.getElementById('pieDownloadsChart')?.getContext('2d');
             let pieChart = null;
             if (pieCtx) {
                 const pieData = {
                     labels: [
-                        'Red',
-                        'Blue',
-                        'Yellow'
+                        'HLS',
+                        'DASH'
                     ],
                     datasets: [{
                         label: 'My First Dataset',
-                        data: [300, 50, 100],
+                        data: [300, 50],
                         backgroundColor: [
-                            'rgb(255, 99, 132)',
                             'rgb(54, 162, 235)',
-                            'rgb(255, 205, 86)'
+                            'rgb(255, 205, 86)',
                         ],
                         hoverOffset: 4
                     }]
@@ -184,16 +187,67 @@
                 });
             }
 
+            function ensureDownloadsChart() {
+                const canvas = document.getElementById('monthlyDownloadsChart');
+                if (!canvas) return null;
+
+                if (window.downloadsChart && window.downloadsChart.canvas === canvas) {
+                    return window.downloadsChart;
+                }
+
+                const seedData = (window.__lastDownloadsPayload && Array.isArray(window.__lastDownloadsPayload.data))
+                    ? window.__lastDownloadsPayload.data.slice(0, 12)
+                    : (window.downloadsChart && window.downloadsChart.data && window.downloadsChart.data.datasets[0]
+                        ? window.downloadsChart.data.datasets[0].data.slice(0, 12)
+                        : Array(12).fill(0));
+
+                if (window.downloadsChart) {
+                    try { window.downloadsChart.destroy(); } catch (e) { console.debug(e); }
+                    window.downloadsChart = null;
+                }
+
+                const ctx2 = canvas.getContext('2d');
+                const cfg = JSON.parse(JSON.stringify(config));
+                cfg.data.datasets[0].data = seedData.concat();
+                window.downloadsChart = new Chart(ctx2, cfg);
+                return window.downloadsChart;
+            }
+
             window.updateMonthlyDownloads = function (payload) {
+                console.debug('updateMonthlyDownloads payload:', payload);
+                const chartInstance = ensureDownloadsChart();
+                if (!chartInstance) return;
                 if (payload) {
                     document.getElementById('chart-loading')?.classList.add('hidden');
-                    if (Array.isArray(payload.series)) {
-                        chart.data.datasets[0].data = payload.series.slice(0, 12);
-                        chart.update();
+                    function normalize(value) {
+                        if (!value) return value;
+                        if (Array.isArray(value) && value.length === 2 && Array.isArray(value[0]) && value[1] && value[1].s === 'arr') {
+                            return value[0];
+                        }
+                        if (Array.isArray(value) && value.length === 2 && typeof value[0] === 'object' && value[1] && value[1].s === 'arr') {
+                            return value[0];
+                        }
+                        return value;
                     }
-                    if (typeof payload.total !== 'undefined') document.getElementById('kpi-total').textContent = payload.total;
-                    if (typeof payload.average !== 'undefined') document.getElementById('kpi-average').textContent = payload.average;
-                    if (typeof payload.top !== 'undefined') document.getElementById('kpi-top').textContent = payload.top;
+
+                    const rawSeries = Array.isArray(payload.series) ? payload.series : (Array.isArray(payload.data) ? payload.data : []);
+                    const series = normalize(rawSeries);
+                    if (Array.isArray(series) && series.length) {
+                        const s = series.slice(0, 12).map(n => (typeof n === 'number' ? n : (parseInt(n) || 0)));
+                        while (s.length < 12) s.push(0);
+                        console.debug('setting chart data to', s);
+                        chartInstance.data.datasets[0].data = s;
+                        chartInstance.update();
+                    }
+
+                    const rawKpis = normalize(payload.kpis ?? payload);
+                    const total = rawKpis?.total ?? payload.total;
+                    const average = rawKpis?.average ?? payload.average;
+                    const topRaw = normalize(rawKpis?.top ?? payload.top);
+                    const top = topRaw?.month ?? (topRaw?.month ?? topRaw);
+                    if (typeof total !== 'undefined') document.getElementById('kpi-total').textContent = total;
+                    if (typeof average !== 'undefined') document.getElementById('kpi-average').textContent = average;
+                    if (typeof top !== 'undefined') document.getElementById('kpi-top').textContent = top;
                     if (pieChart && Array.isArray(payload.pie)) {
                         pieChart.data.datasets[0].data = payload.pie.slice(0, 3);
                         if (Array.isArray(payload.pieLabels) && payload.pieLabels.length) pieChart.data.labels = payload.pieLabels.slice(0, 3);
@@ -202,21 +256,43 @@
                 }
             }
 
-            document.getElementById('select-year').addEventListener('change', function () {
-                document.getElementById('chart-loading')?.classList.remove('hidden');
-                setTimeout(() => {
-                    const demoSeries = Array.from({ length: labels.length }, () => Math.floor(Math.random() * 120));
-                    const total = demoSeries.reduce((a, b) => a + b, 0);
-                    const avg = Math.round(total / labels.length);
-                    const topIndex = demoSeries.indexOf(Math.max(...demoSeries));
-                    const months = labels;
-                    window.updateMonthlyDownloads({ series: demoSeries, total: total, average: avg, top: months[topIndex], pie: [300, 50, 100], pieLabels: ['Red', 'Blue', 'Yellow'] });
-                }, 600);
+            if (window.Livewire) {
+                Livewire.on('downloads-updated', (payload) => {
+                    console.debug('Livewire.on downloads-updated received', payload);
+                    window.__lastDownloadsPayload = payload || {};
+                    try { window.updateMonthlyDownloads(window.__lastDownloadsPayload); } catch (e) { console.debug(e); }
+                });
+
+                if (Livewire.hook) {
+                    Livewire.hook('message.processed', (message, component) => {
+                        if (window.__lastDownloadsPayload) {
+                            setTimeout(() => {
+                                console.debug('Livewire.message.processed applying lastDownloadsPayload');
+                                try { window.updateMonthlyDownloads(window.__lastDownloadsPayload); } catch (e) { console.debug(e); }
+                            }, 20);
+                        }
+                    });
+                }
+            }
+
+            window.addEventListener('downloads-updated', (e) => {
+                console.debug('browser event downloads-updated received', e.detail);
+                const payload = e?.detail ?? {};
+                window.__lastDownloadsPayload = payload;
+                try { window.updateMonthlyDownloads(payload); } catch (e) { console.debug(e); }
             });
 
-            document.getElementById('select-device')?.addEventListener('change', function () {
-                document.getElementById('select-year').dispatchEvent(new Event('change'));
-            });
+            try {
+                const initialDataEl = document.getElementById('initialDownloadsData');
+                const initialKpisEl = document.getElementById('initialDownloadsKpis');
+                const initialData = initialDataEl ? JSON.parse(initialDataEl.textContent) : Array(12).fill(0);
+                const initialKpis = initialKpisEl ? JSON.parse(initialKpisEl.textContent) : { total: 0, average: 0, top: { month: '—', value: 0 } };
+                console.debug('initialPayload', { data: initialData, kpis: initialKpis });
+                window.updateMonthlyDownloads({ data: initialData, kpis: initialKpis });
+            } catch (e) { console.error(e); }
+            }
+
+            initMonthlyDownloads();
         })();
     </script>
 @endpush

@@ -119,7 +119,7 @@ class DownloadHistoryTable extends Component
     public function render()
     {
         $query = $this->aggregatesQuery();
-        $query->orderBy('year', 'desc')->orderBy('month', 'asc');
+        $query->orderBy('year', 'desc')->orderBy('month', 'desc');
         $aggregates = $query->paginate(10);
 
         return view('livewire.admin.devices.downloads.download-history-table', compact('aggregates'));

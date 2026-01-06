@@ -161,11 +161,17 @@ class MonthlyDownloadsReport extends Component
             'text' => __('Monthly downloads saved successfully.'),
         ]);
 
-        // Notify other components (history table, graphs) that downloads changed
         $this->dispatch('downloads-updated', [
             'year' => $this->year,
             'month' => $this->month,
         ]);
+
+        $this->year = (int) date('Y');
+        $this->month = (int) date('n');
+        $this->buildMonths();
+        $this->loadCounts();
+
+        try { $this->dispatch('close-monthly-report-modal'); } catch (\Exception $e) {}
     }
 
     public function render()
