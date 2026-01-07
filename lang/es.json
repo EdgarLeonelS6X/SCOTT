@@ -781,15 +781,16 @@
     "Total downloads": "Descargas totales",
     "No monthly downloads reports found with the current filters.": "No se encontraron informes de descargas mensuales con los filtros actuales.",
     "Monthly downloads for device and year.": "Descargas mensuales por dispositivo y año.",
-    "Loading...": "Cargando...",
     "Refresh": "Refrescar",
     "Monthly breakdown": "Desglose mensual",
     "All devices": "Todos los dispositivos",
     "Downloads - Yearly view": "Descargas - Vista anual",
     "Monthly downloads for the selected year.": "Descargas mensuales para el año seleccionado.",
     "Select year": "Seleccionar año",
-    "Total (year)": "Total (año)",
-    "Average / month": "Promedio / mes",
+    "Annual total": "Total anual",
+    "Average per month": "Promedio por mes",
     "Top month": "Mes principal",
-    "Top device this year:": "Dispositivo principal este año:"
+    "Top device this year:": "Dispositivo principal este año:",
+    "Monthly downloads chart": "Gráfico de descargas mensuales",
+    "Distribution": "Distribución"
 }

@@ -4,6 +4,7 @@ namespace App\Livewire\Admin\Devices\Downloads;
 
 use Livewire\Component;
 use Illuminate\Support\Facades\DB;
+use App\Models\Device;
 
 class DownloadGraph extends Component
 {
@@ -23,7 +24,11 @@ class DownloadGraph extends Component
     {
         $this->selectedYear = $year ? (int) $year : (int) date('Y');
         try {
-            $this->devices = DB::table('devices')->select('id','name')->orderBy('name')->get();
+            $this->devices = DB::table('devices')
+                ->select('id','name')
+                ->whereNotIn('name', ['Web Client', 'Android Mobile', 'Android TV'])
+                ->orderBy('name')
+                ->get();
         } catch (\Exception $e) {
             $this->devices = collect();
         }
@@ -72,15 +77,31 @@ class DownloadGraph extends Component
 
         try {
             $this->loadDeviceData();
-        } catch (\Exception $e) {
-        }
+        } catch (\Exception $e) { }
 
         if (!empty($this->monthlyDeviceData) && is_iterable($this->monthlyDeviceData)) {
             $top = collect($this->monthlyDeviceData)->sortByDesc('total')->first();
             if ($top) {
                 $deviceName = $top->name ?? ($top->device_id ?? '—');
                 $deviceTotal = isset($top->total) ? (int) $top->total : 0;
-                $this->kpis['top_device'] = ['name' => $deviceName ?? '—', 'total' => $deviceTotal];
+                $topDeviceImage = null;
+                try {
+                    if (!empty($top->device_id)) {
+                        $dev = Device::find($top->device_id);
+                        if ($dev) {
+                            $topDeviceImage = $dev->image ?? null;
+                        }
+                    }
+                } catch (\Exception $e) {
+                    $topDeviceImage = null;
+                }
+
+                $this->kpis['top_device'] = [
+                    'id' => $top->device_id ?? null,
+                    'name' => $deviceName ?? '—',
+                    'total' => $deviceTotal,
+                    'image' => $topDeviceImage,
+                ];
             }
         }
 

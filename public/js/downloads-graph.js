@@ -9,8 +9,16 @@
     loadOnce(function () {
         let pieChart = null;
 
-        function setStatus() {
-            return;
+        function setStatus(state, show) {
+            try {
+                const el = document.getElementById('chart-loading');
+                if (!el) return;
+                if (show) {
+                    el.classList.remove('hidden');
+                } else {
+                    el.classList.add('hidden');
+                }
+            } catch (e) { console.debug('setStatus error', e); }
         }
 
         setStatus('init', false);
@@ -20,7 +28,7 @@
             if (oldBadge && oldBadge.parentNode) oldBadge.parentNode.removeChild(oldBadge);
         } catch (e) { }
 
-        const defaultLabels = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+        const defaultLabels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
         const baseConfig = {
             type: 'bar',
@@ -127,7 +135,6 @@
         }
 
         function applyPayloadToChart(payload) {
-            try { document.getElementById('chart-loading')?.classList.add('hidden'); } catch (e) {}
 
             const rawSeries = (payload && (payload.series !== undefined ? payload.series : payload.data));
             let series = [];
@@ -142,6 +149,7 @@
                 if (chart) {
                     chart.data.datasets[0].data = s;
                     try { chart.update(); } catch (e) { console.debug(e); }
+                    try { setStatus('loaded', false); } catch (e) { }
                 }
             }
 
@@ -149,6 +157,7 @@
                 pieChart.data.datasets[0].data = payload.pie.slice(0, 3);
                 if (Array.isArray(payload.pieLabels) && payload.pieLabels.length) pieChart.data.labels = payload.pieLabels.slice(0, 3);
                 try { pieChart.update(); } catch (e) { console.debug(e); }
+                try { setStatus('loaded', false); } catch (e) { }
             }
         }
 
@@ -161,14 +170,12 @@
                 const canvas = getCanvas();
                 if (!canvas) return false;
                 try { applyPayloadToChart(payload); } catch (e) { console.debug(e); }
-                try { setStatus('new', true); } catch (e) {}
                 return true;
             }
 
             if (!tryApply()) {
                 const retry = () => {
                     attempts++;
-                    try { setStatus('retry ' + attempts, true); } catch (e) {}
                     if (tryApply() || attempts >= maxAttempts) return;
                     setTimeout(retry, 80 + attempts * 20);
                 };
@@ -183,8 +190,8 @@
             const ctx = pieCtxEl ? pieCtxEl.getContext('2d') : null;
             if (!ctx) return;
             const pieData = {
-                labels: ['HLS','DASH'],
-                datasets: [{ data: [1,1], backgroundColor: ['rgb(56, 189, 248)','rgb(59, 130, 246)'] }]
+                labels: ['HLS', 'DASH'],
+                datasets: [{ data: [1, 1], backgroundColor: ['rgb(56, 189, 248)', 'rgb(59, 130, 246)'] }]
             };
             pieChart = new Chart(ctx, { type: 'doughnut', data: pieData, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } } });
         }
@@ -199,8 +206,8 @@
                 if (Array.isArray(payloadArg) && payloadArg.length === 1 && typeof payloadArg[0] === 'object') {
                     payloadArg = payloadArg[0];
                 }
-                try { console.log('Livewire.on downloads-updated', payloadArg); } catch (e) {}
-                try { setStatus('payload received', true); } catch (e) {}
+                try { console.log('Livewire.on downloads-updated', payloadArg); } catch (e) { }
+                try { setStatus('payload received', false); } catch (e) { }
                 updateMonthlyDownloads(payloadArg || {});
             });
 
@@ -213,14 +220,14 @@
                             const parsedData = dataEl ? JSON.parse(dataEl.textContent) : null;
                             const parsedKpis = kpisEl ? JSON.parse(kpisEl.textContent) : null;
                             const payload = Object.assign({}, window.__lastDownloadsPayload || {});
-                            if (Array.isArray(parsedData)) payload.data = parsedData;
-                            if (parsedKpis && typeof parsedKpis === 'object') payload.kpis = parsedKpis;
-                            try { console.log('message.processed payload', payload); } catch (e) {}
-                            try { setStatus('apply post', true); } catch (e) {}
+                            if ((!payload.data || !Array.isArray(payload.data) || payload.data.length === 0) && Array.isArray(parsedData)) payload.data = parsedData;
+                            if ((!payload.kpis || typeof payload.kpis !== 'object') && parsedKpis && typeof parsedKpis === 'object') payload.kpis = parsedKpis;
+                            try { console.log('message.processed payload', payload); } catch (e) { }
+                            try { setStatus('apply post', false); } catch (e) { }
                             updateMonthlyDownloads(payload);
                         } catch (e) {
-                            try { console.log('message.processed parse error', e); } catch (er) {}
-                            try { setStatus('parse error', true); } catch (er) {}
+                            try { console.log('message.processed parse error', e); } catch (er) { }
+                            try { setStatus('parse error', false); } catch (er) { }
                             if (window.__lastDownloadsPayload) updateMonthlyDownloads(window.__lastDownloadsPayload);
                         }
                     }, 30);
@@ -256,8 +263,8 @@
                         const parsedData = dataEl ? JSON.parse(dataEl.textContent) : null;
                         const parsedKpis = kpisEl ? JSON.parse(kpisEl.textContent) : null;
                         const payload = Object.assign({}, window.__lastDownloadsPayload || {});
-                        if (Array.isArray(parsedData)) payload.data = parsedData;
-                        if (parsedKpis && typeof parsedKpis === 'object') payload.kpis = parsedKpis;
+                        if ((!payload.data || !Array.isArray(payload.data) || payload.data.length === 0) && Array.isArray(parsedData)) payload.data = parsedData;
+                        if ((!payload.kpis || typeof payload.kpis !== 'object') && parsedKpis && typeof parsedKpis === 'object') payload.kpis = parsedKpis;
                         console.debug('observer apply payload', payload);
                         updateMonthlyDownloads(payload);
                     } catch (e) { console.debug('observer parse error', e); }
@@ -281,6 +288,17 @@
 
         try { observeInitialDataChanges(); } catch (e) { console.debug(e); }
 
+        try {
+            document.addEventListener('change', function (ev) {
+                try {
+                    const id = ev?.target?.id;
+                    if (id === 'select-device' || id === 'select-year') {
+                        try { setStatus('loading', true); } catch (e) { }
+                    }
+                } catch (e) { }
+            }, { passive: true });
+        } catch (e) { console.debug('attach selector listener error', e); }
+
         window.addEventListener('downloads-updated', (e) => {
             try {
                 const det = e?.detail ?? {};
@@ -295,7 +313,9 @@
             const initialKpisEl = document.getElementById('initialDownloadsKpis');
             const initialData = initialDataEl ? JSON.parse(initialDataEl.textContent) : Array(12).fill(0);
             const initialKpis = initialKpisEl ? JSON.parse(initialKpisEl.textContent) : { total: 0, average: 0, top: { month: '—', value: 0 } };
+            try { setStatus('loaded', false); } catch (e) { }
             updateMonthlyDownloads({ data: initialData, kpis: initialKpis });
+            try { setStatus('loaded', false); } catch (e) { }
         } catch (e) { console.log('initial payload parse error', e); }
 
         function initLoop() {
