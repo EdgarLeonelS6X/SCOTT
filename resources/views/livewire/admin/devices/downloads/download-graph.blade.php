@@ -68,23 +68,25 @@
             <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-4 flex-1 flex flex-col">
                 <h3 class="text-sm text-gray-500 flex items-center gap-2"><i
                         class="fa-solid fa-chart-pie text-gray-400"></i>{{ __('Distribution') }}</h3>
-                <div class="w-full flex-1 mt-2 flex items-center justify-center">
-                    <canvas id="pieDownloadsChart" class="w-40 h-40"></canvas>
+                <div class="mt-2 flex items-center justify-center" wire:ignore>
+                    <div class="w-[180px] h-[180px]">
+                        <canvas id="pieDownloadsChart" class="w-full h-full" aria-label="{{ __('Downloads distribution chart') }}"></canvas>
+                    </div>
                 </div>
             </div>
 
             <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-3 grid grid-cols-3 gap-3 text-center">
                 <div class="mt-1">
-                    <h4 class="text-xs text-gray-500">{{ __('Annual total') }}</h4>
-                    <div class="text-xl font-bold mt-1 text-gray-900 dark:text-gray-100" id="kpi-total">{{ $kpis['total'] ?? 0 }}</div>
+                    <h4 class="text-xs text-gray-500">{{ __('Top month') }}</h4>
+                    <div class="text-xl font-bold mt-1 text-gray-900 dark:text-gray-100" id="kpi-top">{{ __($kpis['top']['month'] ?? '—') }}</div>
                 </div>
                 <div class="mt-1">
                     <h4 class="text-xs text-gray-500">{{ __('Average per month') }}</h4>
                     <div class="text-xl font-bold mt-1 text-gray-900 dark:text-gray-100" id="kpi-average">{{ $kpis['average'] ?? 0 }}</div>
                 </div>
                 <div class="mt-1">
-                    <h4 class="text-xs text-gray-500">{{ __('Top month') }}</h4>
-                    <div class="text-xl font-bold mt-1 text-gray-900 dark:text-gray-100" id="kpi-top">{{ __($kpis['top']['month'] ?? '—') }}</div>
+                    <h4 class="text-xs text-gray-500">{{ __('Total per year') }}</h4>
+                    <div class="text-xl font-bold mt-1 text-gray-900 dark:text-gray-100" id="kpi-total">{{ $kpis['total'] ?? 0 }}</div>
                 </div>
 
                 <div class="col-span-3 mt-2">

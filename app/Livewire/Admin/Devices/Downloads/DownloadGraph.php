@@ -105,10 +105,30 @@ class DownloadGraph extends Component
             }
         }
 
+        $pie = [0, 0];
+        $pieLabels = ['HLS', 'DASH'];
+        try {
+            $pieRows = DB::table('downloads')
+                ->where('year', $this->selectedYear)
+                ->join('devices', 'downloads.device_id', '=', 'devices.id')
+                ->whereIn('devices.protocol', ['HLS', 'DASH'])
+                ->select('devices.protocol', DB::raw('SUM(downloads.`count`) as total_downloads'))
+                ->groupBy('devices.protocol')
+                ->get()
+                ->keyBy('protocol');
+
+            $pie[0] = isset($pieRows['HLS']) ? (int) $pieRows['HLS']->total_downloads : 0;
+            $pie[1] = isset($pieRows['DASH']) ? (int) $pieRows['DASH']->total_downloads : 0;
+        } catch (\Exception $e) {
+            $pie = [0, 0];
+        }
+
         $payload = [
             'data' => $this->monthlyData,
             'year' => $this->selectedYear,
             'kpis' => $this->kpis,
+            'pie' => $pie,
+            'pieLabels' => $pieLabels,
             'device_name' => null,
             'device_id' => $this->selectedDevice,
         ];

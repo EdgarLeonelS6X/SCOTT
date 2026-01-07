@@ -154,8 +154,18 @@
             }
 
             if (pieChart && Array.isArray(payload.pie)) {
-                pieChart.data.datasets[0].data = payload.pie.slice(0, 3);
-                if (Array.isArray(payload.pieLabels) && payload.pieLabels.length) pieChart.data.labels = payload.pieLabels.slice(0, 3);
+                const vals = payload.pie.slice(0, 2).map(v => Number(v) || 0);
+                const labels = (Array.isArray(payload.pieLabels) && payload.pieLabels.length) ? payload.pieLabels.slice(0, 2) : ['HLS', 'DASH'];
+                const sum = vals.reduce((a, b) => a + b, 0);
+                const displayLabels = labels.map((lab, i) => {
+                    const v = vals[i] || 0;
+                    const pct = sum ? Math.round((v / sum) * 100) : 0;
+                    return `${lab} — ${pct}% (${v})`;
+                });
+
+                pieChart.data.datasets[0].data = vals;
+                try { pieChart._rawLabels = labels; } catch (e) { }
+                pieChart.data.labels = displayLabels;
                 try { pieChart.update(); } catch (e) { console.debug(e); }
                 try { setStatus('loaded', false); } catch (e) { }
             }
@@ -186,14 +196,48 @@
         window.updateMonthlyDownloads = updateMonthlyDownloads;
 
         function initPie() {
-            const pieCtxEl = document.getElementById('pieDownloadsChart');
-            const ctx = pieCtxEl ? pieCtxEl.getContext('2d') : null;
-            if (!ctx) return;
+            const pieCanvas = document.getElementById('pieDownloadsChart');
+            if (!pieCanvas) return;
+            if (pieChart && pieChart.canvas === pieCanvas) return;
+            const ctx = pieCanvas.getContext('2d');
             const pieData = {
                 labels: ['HLS', 'DASH'],
                 datasets: [{ data: [1, 1], backgroundColor: ['rgb(56, 189, 248)', 'rgb(59, 130, 246)'] }]
             };
-            pieChart = new Chart(ctx, { type: 'doughnut', data: pieData, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } } });
+            try {
+                if (pieChart) {
+                    try { pieChart.destroy(); } catch (e) { console.debug('pie destroy', e); }
+                    pieChart = null;
+                }
+            } catch (e) { }
+            pieChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: pieData,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    aspectRatio: 1,
+                    plugins: {
+                        legend: { position: 'bottom' },
+                        tooltip: {
+                            callbacks: {
+                                label: function (context) {
+                                    try {
+                                        const chart = context.chart || context?.chart || this;
+                                        const data = chart.data.datasets[0].data || [];
+                                        const idx = context.dataIndex;
+                                        const value = Number(data[idx]) || 0;
+                                        const sum = data.reduce((a, b) => a + (Number(b) || 0), 0);
+                                        const pct = sum ? Math.round((value / sum) * 100) : 0;
+                                        const rawLabel = (chart._rawLabels && chart._rawLabels[idx]) ? chart._rawLabels[idx] : (chart.data.labels && chart.data.labels[idx]) || context.label || '';
+                                        return `${rawLabel}: ${value} (${pct}%)`;
+                                    } catch (e) { return context.label || ''; }
+                                }
+                            }
+                        }
+                    }
+                }
+            });
         }
 
         function attachLivewireHandlers() {
