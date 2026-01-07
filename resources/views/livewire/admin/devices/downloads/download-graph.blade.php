@@ -24,6 +24,18 @@
                     <div id="chart-loading" class="text-sm text-gray-500 hidden" aria-hidden="true">{{ __('Loading...') }}</div>
 
                     <div class="flex items-center space-x-3">
+                        @if(isset($devices) && $devices->count())
+                            <div class="inline-flex items-center rounded-lg bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-700 px-3 py-1 shadow-sm">
+                                <i class="fa-solid fa-hard-drive text-gray-400 mx-2" aria-hidden="true"></i>
+                                <select id="select-device" wire:model="selectedDevice" wire:change="$set('selectedDevice', $event.target.value)" class="appearance-none bg-transparent border-0 pl-2 pr-6 text-sm text-gray-700 dark:text-gray-100 focus:outline-none cursor-pointer min-w-[120px]">
+                                    <option value="">{{ __('All devices') }}</option>
+                                    @foreach($devices as $d)
+                                        <option style="color:#1f2937;" class="dark:text-gray-100" value="{{ $d->id }}">{{ $d->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        @endif
+
                         <label for="select-year" class="sr-only">{{ __('Year') }}</label>
                         <div class="inline-flex items-center rounded-lg bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-700 px-3 py-1 shadow-sm {{ $selectRingClass }}">
                             <i class="fa-solid fa-calendar-days text-gray-400 mx-2" aria-hidden="true"></i>

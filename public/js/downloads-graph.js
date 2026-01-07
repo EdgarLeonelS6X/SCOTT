@@ -30,32 +30,32 @@
                     label: 'Downloads',
                     data: Array(12).fill(0),
                     backgroundColor: [
-                        'rgba(56, 189, 248, 0.7)',
-                        'rgba(34, 197, 94, 0.7)',
-                        'rgba(251, 191, 36, 0.7)',
-                        'rgba(239, 68, 68, 0.7)',
-                        'rgba(168, 85, 247, 0.7)',
-                        'rgba(59, 130, 246, 0.7)',
-                        'rgba(16, 185, 129, 0.7)',
-                        'rgba(244, 63, 94, 0.7)',
-                        'rgba(251, 113, 133, 0.7)',
-                        'rgba(253, 224, 71, 0.7)',
-                        'rgba(52, 211, 153, 0.7)',
-                        'rgba(99, 102, 241, 0.7)'
+                        'rgba(20, 184, 166, 0.75)',
+                        'rgba(59, 130, 246, 0.75)',
+                        'rgba(79, 70, 229, 0.75)',
+                        'rgba(139, 92, 246, 0.75)',
+                        'rgba(126, 34, 206, 0.75)',
+                        'rgba(236, 72, 153, 0.75)',
+                        'rgba(239, 68, 68, 0.75)',
+                        'rgba(249, 115, 22, 0.75)',
+                        'rgba(245, 158, 11, 0.75)',
+                        'rgba(132, 204, 22, 0.75)',
+                        'rgba(16, 185, 129, 0.75)',
+                        'rgba(6, 182, 212, 0.75)'
                     ],
                     borderColor: [
-                        'rgb(56, 189, 248)',
-                        'rgb(34, 197, 94)',
-                        'rgb(251, 191, 36)',
-                        'rgb(239, 68, 68)',
-                        'rgb(168, 85, 247)',
+                        'rgb(20, 184, 166)',
                         'rgb(59, 130, 246)',
+                        'rgb(79, 70, 229)',
+                        'rgb(139, 92, 246)',
+                        'rgb(126, 34, 206)',
+                        'rgb(236, 72, 153)',
+                        'rgb(239, 68, 68)',
+                        'rgb(249, 115, 22)',
+                        'rgb(245, 158, 11)',
+                        'rgb(132, 204, 22)',
                         'rgb(16, 185, 129)',
-                        'rgb(244, 63, 94)',
-                        'rgb(251, 113, 133)',
-                        'rgb(253, 224, 71)',
-                        'rgb(52, 211, 153)',
-                        'rgb(99, 102, 241)'
+                        'rgb(6, 182, 212)'
                     ],
                     borderWidth: 1
                 }]
@@ -102,11 +102,39 @@
             return value;
         }
 
+        function objectToArrayLike(obj) {
+            try {
+                if (!obj || typeof obj !== 'object') return null;
+                const out = [];
+                for (let i = 0; i < 12; i++) {
+                    if (Object.prototype.hasOwnProperty.call(obj, i)) {
+                        out.push(Number(obj[i]) || 0);
+                        continue;
+                    }
+                    const key1 = String(i + 1);
+                    if (Object.prototype.hasOwnProperty.call(obj, key1)) {
+                        out.push(Number(obj[key1]) || 0);
+                        continue;
+                    }
+                    if (Object.prototype.hasOwnProperty.call(obj, String(i))) {
+                        out.push(Number(obj[String(i)]) || 0);
+                        continue;
+                    }
+                    out.push(0);
+                }
+                return out;
+            } catch (e) { return null; }
+        }
+
         function applyPayloadToChart(payload) {
             try { document.getElementById('chart-loading')?.classList.add('hidden'); } catch (e) {}
 
-            const rawSeries = Array.isArray(payload.series) ? payload.series : (Array.isArray(payload.data) ? payload.data : []);
-            const series = normalize(rawSeries) || [];
+            const rawSeries = (payload && (payload.series !== undefined ? payload.series : payload.data));
+            let series = [];
+            if (!rawSeries) series = [];
+            else if (Array.isArray(rawSeries)) series = normalize(rawSeries) || rawSeries;
+            else if (typeof rawSeries === 'object') series = objectToArrayLike(rawSeries) || [];
+            else series = [];
             if (Array.isArray(series) && series.length) {
                 const s = series.slice(0, 12).map(n => (typeof n === 'number' ? n : (parseInt(n) || 0)));
                 while (s.length < 12) s.push(0);
@@ -161,7 +189,11 @@
             pieChart = new Chart(ctx, { type: 'doughnut', data: pieData, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } } });
         }
 
-        if (window.Livewire) {
+        function attachLivewireHandlers() {
+            if (window.__downloadsGraphLWAttached) return;
+            if (!window.Livewire) return;
+            window.__downloadsGraphLWAttached = true;
+
             Livewire.on('downloads-updated', (...args) => {
                 let payloadArg = (args && args.length === 1) ? args[0] : args;
                 if (Array.isArray(payloadArg) && payloadArg.length === 1 && typeof payloadArg[0] === 'object') {
@@ -195,6 +227,59 @@
                 });
             }
         }
+
+        try {
+            if (window.Livewire) attachLivewireHandlers();
+            else {
+                let lwAttempts = 0;
+                const lwMax = 30;
+                const lwInterval = setInterval(() => {
+                    lwAttempts++;
+                    if (window.Livewire) {
+                        clearInterval(lwInterval);
+                        attachLivewireHandlers();
+                        return;
+                    }
+                    if (lwAttempts >= lwMax) clearInterval(lwInterval);
+                }, 200);
+            }
+        } catch (e) { console.debug('livewire attach poll error', e); }
+
+        function observeInitialDataChanges() {
+            try {
+                const dataEl = document.getElementById('initialDownloadsData');
+                const kpisEl = document.getElementById('initialDownloadsKpis');
+                if (!dataEl && !kpisEl) return;
+
+                const applyFromElements = () => {
+                    try {
+                        const parsedData = dataEl ? JSON.parse(dataEl.textContent) : null;
+                        const parsedKpis = kpisEl ? JSON.parse(kpisEl.textContent) : null;
+                        const payload = Object.assign({}, window.__lastDownloadsPayload || {});
+                        if (Array.isArray(parsedData)) payload.data = parsedData;
+                        if (parsedKpis && typeof parsedKpis === 'object') payload.kpis = parsedKpis;
+                        console.debug('observer apply payload', payload);
+                        updateMonthlyDownloads(payload);
+                    } catch (e) { console.debug('observer parse error', e); }
+                };
+
+                const obs = new MutationObserver((mutations) => {
+                    for (const m of mutations) {
+                        if (m.type === 'characterData' || m.type === 'childList') {
+                            applyFromElements();
+                            return;
+                        }
+                    }
+                });
+
+                if (dataEl) obs.observe(dataEl, { characterData: true, childList: true, subtree: true });
+                if (kpisEl) obs.observe(kpisEl, { characterData: true, childList: true, subtree: true });
+
+                applyFromElements();
+            } catch (e) { console.debug('observeInitialDataChanges error', e); }
+        }
+
+        try { observeInitialDataChanges(); } catch (e) { console.debug(e); }
 
         window.addEventListener('downloads-updated', (e) => {
             try {

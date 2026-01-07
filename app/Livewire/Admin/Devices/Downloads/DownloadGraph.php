@@ -11,6 +11,8 @@ class DownloadGraph extends Component
     public $monthlyData = [];
     public $kpis = [];
     public $monthlyDeviceData = [];
+    public $devices;
+    public $selectedDevice = null;
 
     public function render()
     {
@@ -20,6 +22,12 @@ class DownloadGraph extends Component
     public function mount($year = null)
     {
         $this->selectedYear = $year ? (int) $year : (int) date('Y');
+        try {
+            $this->devices = DB::table('devices')->select('id','name')->orderBy('name')->get();
+        } catch (\Exception $e) {
+            $this->devices = collect();
+        }
+
         $this->loadData();
         $this->loadDeviceData();
     }
@@ -29,6 +37,9 @@ class DownloadGraph extends Component
         try {
             $rows = DB::table('downloads')
                 ->where('year', $this->selectedYear)
+                ->when($this->selectedDevice && $this->selectedDevice !== '', function ($q) {
+                    $q->where('device_id', $this->selectedDevice);
+                })
                 ->selectRaw('month, SUM(`count`) as total')
                 ->groupBy('month')
                 ->get()
@@ -77,7 +88,18 @@ class DownloadGraph extends Component
             'data' => $this->monthlyData,
             'year' => $this->selectedYear,
             'kpis' => $this->kpis,
+            'device_name' => null,
+            'device_id' => $this->selectedDevice,
         ];
+
+        if ($this->selectedDevice) {
+            try {
+                $name = DB::table('devices')->where('id', $this->selectedDevice)->value('name');
+                $payload['device_name'] = $name ?: null;
+            } catch (\Exception $e) {
+                $payload['device_name'] = null;
+            }
+        }
 
         try { $this->dispatch('downloads-updated', $payload); } catch (\Exception $e) {}
     }
@@ -94,6 +116,13 @@ class DownloadGraph extends Component
         } catch (\Exception $e) {
             $this->monthlyDeviceData = collect();
         }
+    }
+
+    public function updatedSelectedDevice($value)
+    {
+        $this->selectedDevice = $value === '' ? null : $value;
+        $this->loadData();
+        $this->loadDeviceData();
     }
 
     public function updatedSelectedYear($value)
