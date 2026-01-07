@@ -66,7 +66,7 @@
 
         <div class="flex flex-col space-y-4">
             <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-4 flex-1 flex flex-col">
-                <h3 class="text-sm text-gray-500 flex items-center gap-2">
+                <h3 class="text-sm text-gray-600 dark:text-gray-400 flex items-center gap-2">
                     <i class="fa-solid fa-chart-pie"></i>{{ __('Distribution') }}</h3>
                 <div class="mt-2 flex items-center justify-center" wire:ignore>
                     <div class="w-[180px] h-[180px]">
