@@ -38,32 +38,32 @@
                     label: 'Downloads',
                     data: Array(12).fill(0),
                     backgroundColor: [
-                        'rgba(20, 184, 166, 0.75)',
-                        'rgba(59, 130, 246, 0.75)',
-                        'rgba(79, 70, 229, 0.75)',
-                        'rgba(139, 92, 246, 0.75)',
-                        'rgba(126, 34, 206, 0.75)',
-                        'rgba(236, 72, 153, 0.75)',
-                        'rgba(239, 68, 68, 0.75)',
-                        'rgba(249, 115, 22, 0.75)',
-                        'rgba(245, 158, 11, 0.75)',
-                        'rgba(132, 204, 22, 0.75)',
-                        'rgba(16, 185, 129, 0.75)',
-                        'rgba(6, 182, 212, 0.75)'
+                        'rgba(6, 182, 212, 0.85)',
+                        'rgba(59, 130, 246, 0.85)',
+                        'rgba(99, 102, 241, 0.85)',
+                        'rgba(139, 92, 246, 0.85)',
+                        'rgba(168, 85, 247, 0.85)',
+                        'rgba(236, 72, 153, 0.85)',
+                        'rgba(239, 68, 68, 0.85)',
+                        'rgba(249, 115, 22, 0.85)',
+                        'rgba(245, 158, 11, 0.85)',
+                        'rgba(34, 197, 94, 0.85)',
+                        'rgba(16, 185, 129, 0.85)',
+                        'rgba(14, 165, 233, 0.85)'
                     ],
                     borderColor: [
-                        'rgb(20, 184, 166)',
+                        'rgb(6, 182, 212)',
                         'rgb(59, 130, 246)',
-                        'rgb(79, 70, 229)',
+                        'rgb(99, 102, 241)',
                         'rgb(139, 92, 246)',
-                        'rgb(126, 34, 206)',
+                        'rgb(168, 85, 247)',
                         'rgb(236, 72, 153)',
                         'rgb(239, 68, 68)',
                         'rgb(249, 115, 22)',
                         'rgb(245, 158, 11)',
-                        'rgb(132, 204, 22)',
+                        'rgb(34, 197, 94)',
                         'rgb(16, 185, 129)',
-                        'rgb(6, 182, 212)'
+                        'rgb(14, 165, 233)'
                     ],
                     borderWidth: 1
                 }]
@@ -154,18 +154,8 @@
             }
 
             if (pieChart && Array.isArray(payload.pie)) {
-                const vals = payload.pie.slice(0, 2).map(v => Number(v) || 0);
-                const labels = (Array.isArray(payload.pieLabels) && payload.pieLabels.length) ? payload.pieLabels.slice(0, 2) : ['HLS', 'DASH'];
-                const sum = vals.reduce((a, b) => a + b, 0);
-                const displayLabels = labels.map((lab, i) => {
-                    const v = vals[i] || 0;
-                    const pct = sum ? Math.round((v / sum) * 100) : 0;
-                    return `${lab} — ${pct}% (${v})`;
-                });
-
-                pieChart.data.datasets[0].data = vals;
-                try { pieChart._rawLabels = labels; } catch (e) { }
-                pieChart.data.labels = displayLabels;
+                pieChart.data.datasets[0].data = payload.pie.slice(0, 2);
+                if (Array.isArray(payload.pieLabels) && payload.pieLabels.length) pieChart.data.labels = payload.pieLabels.slice(0, 2);
                 try { pieChart.update(); } catch (e) { console.debug(e); }
                 try { setStatus('loaded', false); } catch (e) { }
             }
@@ -202,7 +192,12 @@
             const ctx = pieCanvas.getContext('2d');
             const pieData = {
                 labels: ['HLS', 'DASH'],
-                datasets: [{ data: [1, 1], backgroundColor: ['rgb(56, 189, 248)', 'rgb(59, 130, 246)'] }]
+                datasets: [{
+                    data: [1, 1], backgroundColor: [
+                        '#06B6D4',
+                        '#8B5CF6'
+                    ]
+                }]
             };
             try {
                 if (pieChart) {
@@ -210,34 +205,7 @@
                     pieChart = null;
                 }
             } catch (e) { }
-            pieChart = new Chart(ctx, {
-                type: 'doughnut',
-                data: pieData,
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: true,
-                    aspectRatio: 1,
-                    plugins: {
-                        legend: { position: 'bottom' },
-                        tooltip: {
-                            callbacks: {
-                                label: function (context) {
-                                    try {
-                                        const chart = context.chart || context?.chart || this;
-                                        const data = chart.data.datasets[0].data || [];
-                                        const idx = context.dataIndex;
-                                        const value = Number(data[idx]) || 0;
-                                        const sum = data.reduce((a, b) => a + (Number(b) || 0), 0);
-                                        const pct = sum ? Math.round((value / sum) * 100) : 0;
-                                        const rawLabel = (chart._rawLabels && chart._rawLabels[idx]) ? chart._rawLabels[idx] : (chart.data.labels && chart.data.labels[idx]) || context.label || '';
-                                        return `${rawLabel}: ${value} (${pct}%)`;
-                                    } catch (e) { return context.label || ''; }
-                                }
-                            }
-                        }
-                    }
-                }
-            });
+            pieChart = new Chart(ctx, { type: 'doughnut', data: pieData, options: { responsive: true, maintainAspectRatio: true, aspectRatio: 1, plugins: { legend: { position: 'bottom' } } } });
         }
 
         function attachLivewireHandlers() {

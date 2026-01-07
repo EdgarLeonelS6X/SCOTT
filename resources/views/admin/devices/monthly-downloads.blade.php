@@ -60,7 +60,7 @@
         </div>
     </div>
 
-    <div class="container mx-auto space-y-6">
+    <div class="w-full mx-auto space-y-6">
 
         @livewire('admin.devices.downloads.download-graph')
 

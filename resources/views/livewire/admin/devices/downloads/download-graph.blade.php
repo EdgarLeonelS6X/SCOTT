@@ -50,7 +50,7 @@
                         <div class="inline-flex items-center rounded-lg bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-700 px-3 py-1 shadow-sm {{ $selectRingClass }}">
                             <i class="fa-solid fa-calendar text-gray-400 mx-2" aria-hidden="true"></i>
                             <select id="select-year" wire:model="selectedYear" wire:change="$set('selectedYear', $event.target.value)" class="appearance-none bg-transparent border-0 pl-2 pr-6 text-sm font-semibold text-gray-700 dark:text-gray-100 focus:outline-none cursor-pointer min-w-[70px] focus:ring-0 focus:border-0" aria-label="{{ __('Select year') }}">
-                                @for($y = date('Y'); $y >= date('Y') - 5; $y--)
+                                @for($y = date('Y'); $y >= date('Y') - 3; $y--)
                                     <option style="color:#1f2937;" class="dark:text-gray-100" value="{{ $y }}">{{ $y }}</option>
                                 @endfor
                             </select>
@@ -66,8 +66,8 @@
 
         <div class="flex flex-col space-y-4">
             <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-4 flex-1 flex flex-col">
-                <h3 class="text-sm text-gray-500 flex items-center gap-2"><i
-                        class="fa-solid fa-chart-pie text-gray-400"></i>{{ __('Distribution') }}</h3>
+                <h3 class="text-sm text-gray-500 flex items-center gap-2">
+                    <i class="fa-solid fa-chart-pie"></i>{{ __('Distribution') }}</h3>
                 <div class="mt-2 flex items-center justify-center" wire:ignore>
                     <div class="w-[180px] h-[180px]">
                         <canvas id="pieDownloadsChart" class="w-full h-full" aria-label="{{ __('Downloads distribution chart') }}"></canvas>
@@ -77,11 +77,11 @@
 
             <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-3 grid grid-cols-3 gap-3 text-center">
                 <div class="mt-1">
-                    <h4 class="text-xs text-gray-500">{{ __('Top month') }}</h4>
+                    <h4 class="text-xs text-gray-600 dark:text-gray-400">{{ __('Top month') }}</h4>
                     <div class="text-xl font-bold mt-1 text-gray-900 dark:text-gray-100" id="kpi-top">{{ __($kpis['top']['month'] ?? '—') }}</div>
                 </div>
                 <div class="mt-1">
-                    <h4 class="text-xs text-gray-500">{{ __('Average per month') }}</h4>
+                    <h4 class="text-xs text-gray-600 dark:text-gray-400">{{ __('Average per month') }}</h4>
                     <div class="text-xl font-bold mt-1 text-gray-900 dark:text-gray-100" id="kpi-average">{{ $kpis['average'] ?? 0 }}</div>
                 </div>
                 <div class="mt-1">
@@ -106,11 +106,6 @@
 
                                 <div class="min-w-0 flex-1">
                                     <div class="text-xs font-semibold text-gray-900 dark:text-gray-100 truncate" title="{{ $kpis['top_device']['name'] ?? '' }}">{{ $kpis['top_device']['name'] ?? '—' }}</div>
-                                </div>
-
-                                <div class="ml-3 text-xs text-gray-500 flex-shrink-0">
-                                    <i class="fa-solid fa-arrow-down mr-0.5"></i>
-                                    {{ $kpis['top_device']['total'] ?? 0 }}
                                 </div>
                             </div>
                         @else
