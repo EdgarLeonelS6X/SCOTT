@@ -38,15 +38,15 @@
         <table class="w-full table-fixed text-sm text-left text-gray-500 dark:text-gray-400">
             <thead class="text-xs dark:text-white uppercase dark:bg-gray-600 shadow-2xl">
                 <tr>
-                    <th scope="col" class="px-4 py-3 w-[100px]">
+                    <th scope="col" class="px-4 py-3 w-[100px] text-left">
                         <i class="fa-solid fa-image mr-1"></i>
                         {{ __('Image') }}
                     </th>
-                    <th scope="col" class="px-4 py-3 w-[250px]">
+                    <th scope="col" class="px-4 py-3 w-[250px] text-left">
                         <i class="fa-solid fa-hard-drive mr-1"></i>
                         {{ __('Device') }}
                     </th>
-                    <th scope="col" class="px-4 py-3 w-[150px] cursor-pointer"
+                    <th scope="col" class="px-4 py-3 w-[150px] cursor-pointer text-left"
                     wire:click="toggleProtocolFilter">
                         <i class="fa-solid fa-server mr-1"></i>
                         <span class="text-gray-500 dark:text-white">
@@ -58,19 +58,19 @@
                             <i class="ml-1 fa-solid fa-sort"></i>
                         </span>
                     </th>
-                    <th scope="col" class="px-4 py-3 w-[150px]">
+                    <th scope="col" class="px-4 py-3 w-[150px] text-left">
                         <i class="fa-solid fa-shield-halved mr-1"></i>
                         {{ __('DRM') }}
                     </th>
-                    <th scope="col" class="px-4 py-3 w-[150px]">
+                    <th scope="col" class="px-4 py-3 w-[150px] text-left">
                         <i class="fa-solid fa-building mr-1"></i>
                         {{ __('Area') }}
                     </th>
-                    <th scope="col" class="px-4 py-3 w-[150px]">
+                    <th scope="col" class="px-4 py-3 w-[150px] text-left">
                         <i class="fa-solid fa-toggle-on mr-1"></i>
                         {{ __('Status') }}
                     </th>
-                    <th scope="col" class="px-4 py-3 w-[80px]">
+                    <th scope="col" class="px-4 py-3 w-[80px] text-left">
                         <span class="sr-only">
                             <i class="fa-solid fa-sliders-h mr-1"></i>
                             {{ __('Options') }}

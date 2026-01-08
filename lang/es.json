@@ -793,5 +793,12 @@
     "Top device this year:": "Dispositivo principal este año:",
     "Monthly downloads chart": "Gráfico de descargas mensuales",
     "Distribution": "Distribución",
-    "Downloads distribution chart": "Gráfico de distribución de descargas"
+    "Downloads distribution chart": "Gráfico de distribución de descargas",
+    "There are no radios registered in the database.": "No hay radios registradas en la base de datos.",
+    "Register new radio": "Registrar nueva radio",
+    "Enter the data for the new radio.": "Ingrese los datos para la nueva radio.",
+    "Radio name": "Nombre de la radio",
+    "Radio stream URL": "URL de la transmisión de la radio",
+    "New radio created successfully.": "Nueva radio creada con éxito.",
+    "Your registration for a new radio contains the following errors:": "Su registro para una nueva radio contiene los siguientes errores:"
 }
