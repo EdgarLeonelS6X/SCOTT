@@ -9,7 +9,7 @@
                     <i class="fa-solid fa-plus mr-1"></i>
                     {{ __('Register new device') }}
                 </a>
-                @if(Auth::user()?->id === 1)
+                @if(in_array(Auth::id(), [1, 2, 5, 7, 8], true))
                     <a href="{{ route('admin.devices.monthly-downloads') }}"
                         class="hidden lg:block text-white bg-gray-700 hover:bg-gray-800 focus:ring-4 focus:ring-gray-300 dark:bg-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-800 font-medium rounded-lg text-sm px-5 py-2 focus:outline-none shadow-xl">
                         <i class="fa-solid fa-download mr-1"></i>
@@ -25,7 +25,7 @@
             <i class="fa-solid fa-plus mr-1"></i>
             {{ __('Register new device') }}
         </a>
-        @if(Auth::user()?->id === 1)
+        @if(in_array(Auth::id(), [1, 2, 5, 7, 8], true))
             <a href="{{ route('admin.devices.monthly-downloads') }}"
                 class="mb-4 lg:hidden block text-center text-white bg-gray-700 hover:bg-gray-800 focus:ring-4 focus:ring-gray-300 dark:bg-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-800 font-medium rounded-lg text-sm px-5 py-2 focus:outline-none shadow-xl">
                 <i class="fa-solid fa-download mr-1"></i>

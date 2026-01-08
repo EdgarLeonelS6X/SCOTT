@@ -119,7 +119,9 @@ class DeviceController extends Controller
     {
         $user = Auth::user();
 
-        if (! ($user && $user->id === 1)) {
+        $allowedIds = [1, 2, 5, 7, 8];
+
+        if (! ($user && in_array($user->id, $allowedIds, true))) {
             abort(403);
         }
 
