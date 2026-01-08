@@ -58,15 +58,16 @@
                     </figure>
                 </div>
 
+                <div>
+                    <x-label for="name">
+                        <i class="fa-solid fa-radio mr-1"></i>
+                        {{ __('Name') }}
+                    </x-label>
+                    <x-input id="name" class="block mt-1 w-full" type="text" wire:model="name" :value="old('name')"
+                        required autocomplete="name" placeholder="{{ __('Radio name') }}" />
+                </div>
+
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                    <div>
-                        <x-label for="name">
-                            <i class="fa-solid fa-radio mr-1"></i>
-                            {{ __('Name') }}
-                        </x-label>
-                        <x-input id="name" class="block mt-1 w-full" type="text" wire:model="name" :value="old('name')"
-                            required autocomplete="name" placeholder="{{ __('Radio name') }}" />
-                    </div>
                     <div>
                         <x-label for="url">
                             <i class="fa-solid fa-link mr-1"></i>
@@ -75,16 +76,13 @@
                         <x-input id="url" class="block mt-1 w-full" type="url" wire:model="url" :value="old('url')"
                             placeholder="{{ __('Radio stream URL') }}" />
                     </div>
-                </div>
-
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
                     <div>
                         <x-label for="status">
                             <i class="fa-solid fa-toggle-on mr-1"></i>
                             {{ __('Status') }}
                         </x-label>
                         <select id="status" wire:model="status" required
-                            class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white {{ Auth::user()?->area === 'DTH'
+                            class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block w-full dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white {{ Auth::user()?->area === 'DTH'
     ? 'focus:ring-secondary-600 focus:border-secondary-600 dark:focus:ring-secondary-500 dark:focus:border-secondary-500'
     : 'focus:ring-primary-600 focus:border-primary-600 dark:focus:ring-primary-500 dark:focus:border-primary-500' }}">
                             <option value="" disabled>{{ __('Select status') }}</option>

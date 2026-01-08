@@ -14,9 +14,9 @@ class EditRadio extends Component
     public $radioId;
     public $name;
     public $url;
-    public $image_url; // temporary uploaded file
-    public $existingImage; // public URL for existing image
-    public $existingImagePath; // storage path for deletion
+    public $image_url;
+    public $existingImage;
+    public $existingImagePath;
     public $status = '';
     public $area = 'DTH';
 
@@ -25,8 +25,8 @@ class EditRadio extends Component
         $this->radioId = $radio->id;
         $this->name = $radio->name;
         $this->url = $radio->url;
-        $this->existingImage = $radio->image; // accessor returns Storage::url()
-        $this->existingImagePath = $radio->image_url; // raw storage path
+        $this->existingImage = $radio->image;
+        $this->existingImagePath = $radio->image_url;
         $this->status = $radio->status ? 1 : 0;
         $this->area = $radio->area ?? 'DTH';
     }
@@ -80,9 +80,7 @@ class EditRadio extends Component
             if ($this->existingImagePath) {
                 try {
                     Storage::disk('public')->delete($this->existingImagePath);
-                } catch (\Throwable $e) {
-                    // ignore deletion failure
-                }
+                } catch (\Throwable $e) { }
             }
         }
 
@@ -96,7 +94,7 @@ class EditRadio extends Component
 
         session()->flash('swal', [
             'icon' => 'success',
-            'title' => __('Updated!'),
+            'title' => __('Well done!'),
             'text' => __('Radio updated successfully.'),
         ]);
 

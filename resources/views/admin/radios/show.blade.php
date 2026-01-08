@@ -22,7 +22,7 @@
                 <i class="fa-solid fa-arrow-left mr-1.5"></i>
                 {{ __('Go back') }}
             </a>
-            @can('edit', $radio)
+            @can('update', $radio)
                 <a href="{{ route('admin.radios.edit', $radio) }}"
                     class="flex w-full sm:w-auto justify-center items-center text-white bg-blue-600 hover:bg-blue-500 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-4 py-2 text-center">
                     <i class="fa-solid fa-pen-to-square mr-1.5"></i>
@@ -101,7 +101,7 @@
             <i class="fa-solid fa-arrow-left mr-1.5"></i>
             {{ __('Go back') }}
         </a>
-        @can('edit', $radio)
+        @can('update', $radio)
             <a href="{{ route('admin.radios.edit', $radio) }}"
                 class="flex justify-center items-center w-full text-white bg-blue-600 hover:bg-blue-500 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-4 py-2">
                 <i class="fa-solid fa-pen-to-square mr-1.5"></i>

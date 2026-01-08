@@ -800,5 +800,11 @@
     "Radio name": "Nombre de la radio",
     "Radio stream URL": "URL de la transmisión de la radio",
     "New radio created successfully.": "Nueva radio creada con éxito.",
-    "Your registration for a new radio contains the following errors:": "Su registro para una nueva radio contiene los siguientes errores:"
+    "Your registration for a new radio contains the following errors:": "Su registro para una nueva radio contiene los siguientes errores:",
+    "Radio updated successfully.": "Radio actualizada con éxito.",
+    "Your changes contain the following errors:": "Sus cambios contienen los siguientes errores:",
+    "radio name": "nombre de la radio",
+    "radio image": "imagen de la radio",
+    "radio area": "área de la radio",
+    "radio url": "url de la radio"
 }
