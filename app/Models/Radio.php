@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 
 class Radio extends Model
 {
@@ -24,6 +25,7 @@ class Radio extends Model
     protected $fillable = [
         'name',
         'url',
+        'image_url',
         'status',
         'area',
     ];
@@ -50,5 +52,19 @@ class Radio extends Model
                 $radio->status = true;
             }
         });
+    }
+
+    /**
+     * Return a public URL for the image if set, otherwise null.
+     *
+     * @return string|null
+     */
+    public function getImageAttribute()
+    {
+        if (empty($this->image_url)) {
+            return null;
+        }
+
+        return Storage::url($this->image_url);
     }
 }
