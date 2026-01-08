@@ -16,6 +16,7 @@
         $iconColor = $area === 'OTT' ? 'text-primary-500 dark:text-primary-400' : ($area === 'DTH' ? 'text-secondary-500 dark:text-secondary-400' : 'text-primary-500 dark:text-primary-400');
         $hoverColor = $area === 'OTT' ? 'hover:text-primary-600 dark:hover:text-primary-400' : ($area === 'DTH' ? 'hover:text-secondary-600 dark:hover:text-secondary-400' : 'hover:text-primary-600 dark:hover:text-primary-400');
     @endphp
+
     <div class="max-w-xl mx-auto">
         <div class="dark:bg-gray-900 dark:border-gray-800 rounded-lg p-2 text-center relative overflow-hidden">
             <div class="relative flex flex-col items-center gap-3">
@@ -72,7 +73,7 @@
                     </span>
                     <div>
                         <p class="text-xs text-gray-500 dark:text-gray-400 uppercase">{{ __('Last update') }}</p>
-                        <p class="text-gray-900 dark:text-gray-100 font-medium">{{ __('December') }} 2025</p>
+                        <p class="text-gray-900 dark:text-gray-100 font-medium">{{ __('January') }} 2026</p>
                     </div>
                 </div>
             </div>
