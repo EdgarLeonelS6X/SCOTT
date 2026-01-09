@@ -806,5 +806,7 @@
     "radio name": "nombre de la radio",
     "radio image": "imagen de la radio",
     "radio area": "área de la radio",
-    "radio url": "url de la radio"
+    "radio url": "url de la radio",
+    "Edit radio": "Editar radio",
+    "Update the radio information.": "Actualice la información de la radio."
 }

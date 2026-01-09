@@ -30,7 +30,7 @@
                 <div>
                     <x-label for="image-input" class="block mb-3 font-semibold">
                         <i class="fa-solid fa-image mr-1"></i>
-                        {{ __('Radio image') }}
+                        {{ __('Image') }}
                     </x-label>
                     <figure class="bg-gray-100 dark:bg-gray-700 rounded-lg cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-600">
                         <input type="file" id="image-input" class="hidden" wire:model="image_url" accept="image/*">
