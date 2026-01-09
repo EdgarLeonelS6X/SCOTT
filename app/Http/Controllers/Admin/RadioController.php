@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Radio;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class RadioController extends Controller
@@ -16,19 +17,25 @@ class RadioController extends Controller
     {
         $user = Auth::user();
 
-        if (! ($user && $user->id === 1)) {
-            $this->authorize('viewAny', Radio::class);
+        if (! ($user && ($user->id === 1 || ($user->area ?? null) === 'DTH'))) {
+            abort(403);
         }
 
         $radios = Radio::when($user && $user->id !== 1, function ($query) use ($user) {
             return $query->where('area', $user->area);
-        })->get();
+        })->orderByDesc('created_at')->get();
 
         return view('admin.radios.index', compact('radios'));
     }
 
     public function create()
     {
+        $user = Auth::user();
+
+        if (! ($user && ($user->id === 1 || ($user->area ?? null) === 'DTH'))) {
+            abort(403);
+        }
+
         $this->authorize('create', Radio::class);
 
         return view('admin.radios.create');
@@ -36,11 +43,17 @@ class RadioController extends Controller
 
     public function store(Request $request)
     {
-        //
+
     }
 
     public function show(Radio $radio)
     {
+        $user = Auth::user();
+
+        if (! ($user && ($user->id === 1 || ($user->area ?? null) === 'DTH'))) {
+            abort(403);
+        }
+
         $this->authorize('view', $radio);
 
         return view('admin.radios.show', compact('radio'));
@@ -48,7 +61,9 @@ class RadioController extends Controller
 
     public function edit(Radio $radio)
     {
-        if ($radio->id === 10 && (! Auth::user() || Auth::id() !== 1)) {
+        $user = Auth::user();
+
+        if (! ($user && ($user->id === 1 || ($user->area ?? null) === 'DTH'))) {
             abort(403);
         }
 
@@ -59,11 +74,29 @@ class RadioController extends Controller
 
     public function update(Request $request, string $id)
     {
-        //
+
     }
 
-    public function destroy(string $id)
+    public function destroy(Radio $radio)
     {
-        //
+        $user = Auth::user();
+
+        if (! ($user && ($user->id === 1 || ($user->area ?? null) === 'DTH'))) {
+            abort(403);
+        }
+
+        $this->authorize('delete', $radio);
+
+        if ($radio->image_url && Storage::disk('public')->exists($radio->image_url)) {
+
+            Storage::disk('public')->delete($radio->image_url);
+        }
+
+        $radio->delete();
+        return redirect()->route('admin.devices.index')->with('swal', [
+            'icon' => 'success',
+            'title' => __('Well done!'),
+            'text' => __('Device deleted successfully.'),
+        ]);
     }
 }

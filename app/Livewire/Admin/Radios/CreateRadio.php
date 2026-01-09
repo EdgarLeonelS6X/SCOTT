@@ -5,6 +5,7 @@ namespace App\Livewire\Admin\Radios;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use App\Models\Radio;
+use Illuminate\Support\Facades\Gate;
 
 class CreateRadio extends Component
 {
@@ -28,7 +29,7 @@ class CreateRadio extends Component
 
                 $errorMessages .= '</ul>';
 
-                $this->dispatch('swal', [
+                $this->dispatchBrowserEvent('swal', [
                     'icon' => 'error',
                     'title' => __('Error'),
                     'html' => '<b>' . __('Your registration for a new radio contains the following errors:') . '</b><br><br>' . $errorMessages,
@@ -39,7 +40,7 @@ class CreateRadio extends Component
 
     public function store()
     {
-        $this->authorize('create', Radio::class);
+        Gate::authorize('create', Radio::class);
 
         $this->validate([
             'name' => 'required|string|max:255',

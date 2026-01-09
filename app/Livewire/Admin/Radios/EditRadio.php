@@ -6,6 +6,7 @@ use Livewire\Component;
 use Livewire\WithFileUploads;
 use App\Models\Radio;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Gate;
 
 class EditRadio extends Component
 {
@@ -43,7 +44,7 @@ class EditRadio extends Component
 
                 $errorMessages .= '</ul>';
 
-                $this->dispatch('swal', [
+                $this->dispatchBrowserEvent('swal', [
                     'icon' => 'error',
                     'title' => __('Error'),
                     'html' => '<b>' . __('Your changes contain the following errors:') . '</b><br><br>' . $errorMessages,
@@ -56,7 +57,7 @@ class EditRadio extends Component
     {
         $radio = Radio::findOrFail($this->radioId);
 
-        $this->authorize('update', $radio);
+        Gate::authorize('update', $radio);
 
         $this->validate([
             'name' => 'required|string|max:255',
