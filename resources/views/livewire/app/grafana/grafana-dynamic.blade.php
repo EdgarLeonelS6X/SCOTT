@@ -1,8 +1,17 @@
+@php
+    $area = Auth::user()?->area ?? 'OTT';
+    $isDth = $area === 'DTH';
+    $iconColor = $isDth ? 'text-secondary-600 dark:text-secondary-400' : 'text-primary-600 dark:text-primary-400';
+    $iconHover = $isDth ? 'hover:text-secondary-500 dark:hover:text-secondary-400' : 'hover:text-primary-500 dark:hover:text-primary-700';
+    $focusRing = $isDth ? 'focus:ring-secondary-500 focus:border-secondary-500 dark:focus:ring-secondary-800' : 'focus:ring-primary-500 focus:border-primary-500 dark:focus:ring-primary-800';
+    $gradientClasses = $isDth ? 'text-white bg-gradient-to-r from-secondary-500 to-secondary-600 hover:from-secondary-600 hover:to-secondary-700 dark:focus:ring-secondary-800' : 'text-white bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 dark:focus:ring-primary-800';
+@endphp
+
 <div class="w-full mx-auto">
     <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden">
         <div class="flex items-center justify-between px-4 py-4 border-b border-gray-200 dark:border-gray-700">
             <h2 class="text-xl font-bold text-gray-800 dark:text-gray-200 flex items-center gap-2">
-                <i class="fa-solid fa-diagram-project text-primary-600"></i>
+                <i class="fa-solid fa-diagram-project {{ $iconColor }}"></i>
                 {{ $grafanaPanel?->name }}
             </h2>
             <span class="flex items-center gap-1 text-xs text-gray-400 dark:text-gray-500">
@@ -20,8 +29,7 @@
                                 transform: rotate(180deg);
                             }
                         </style>
-                        <i
-                            :class="['fa-solid', 'fa-repeat', 'text-primary-600', 'hover:text-primary-500', 'dark:hover:text-primary-700', 'text-base', spinning ? 'spin-once' : '']"></i>
+                        <i class="fa-solid fa-repeat {{ $iconColor }} {{ $iconHover }} text-base" :class="spinning ? 'spin-once' : ''"></i>
                     </button>
                 @endif
             </span>
@@ -91,7 +99,7 @@
                             <input type="text" x-model="search" @focus="open = true" @click="open = true"
                                 @input="open = true" @click.away="open = false"
                                 placeholder="{{ __('Search channel...') }}"
-                                class="w-full pl-12 pr-2 py-2 rounded-md bg-gray-50 border border-gray-300 dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-primary-500 text-sm transition-all h-10 cursor-pointer"
+                                class="w-full pl-12 pr-2 py-2 rounded-md bg-gray-50 border border-gray-300 dark:bg-gray-700 dark:text-white focus:ring-2 {{ $focusRing }} text-sm transition-all h-10 cursor-pointer"
                                 autocomplete="off">
                             <div x-show="open"
                                 class="absolute z-20 mt-1 w-full bg-white border border-gray-300 rounded-lg shadow-2xl dark:bg-gray-700 dark:border-gray-600">
@@ -120,7 +128,7 @@
                         <div class="flex items-center">
                             <button type="button" x-show="selectedChannel && selectedChannel.multicast"
                                 @click="window.downloadM3U(selectedChannel.multicast, selectedChannel.number, selectedChannel.name)"
-                                class="flex justify-center items-center text-white bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 focus:ring-2 focus:outline-none focus:ring-primary-300 dark:focus:ring-primary-800 font-semibold rounded-md text-sm px-3 h-10 shadow transition">
+                                class="flex justify-center items-center {{ $gradientClasses }} focus:ring-2 focus:outline-none font-semibold rounded-md text-sm px-3 h-10 shadow transition">
                                 <i class="fa-solid fa-video"></i>
                             </button>
                         </div>
@@ -133,7 +141,7 @@
                     {{ __('Time range') }}
                 </label>
                 <select wire:model.live="preset"
-                    class="bg-gray-50 border border-gray-300 text-gray-900 rounded-md focus:ring-2 focus:ring-primary-500 focus:border-primary-500 block w-full py-2 px-2 text-sm dark:bg-gray-700 dark:text-white transition-all h-10 truncate leading-tight">
+                    class="bg-gray-50 border border-gray-300 text-gray-900 rounded-md focus:ring-2 {{ $focusRing }} block w-full py-2 px-2 text-sm dark:bg-gray-700 dark:text-white transition-all h-10 truncate leading-tight">
                     <option value="5m">{{ __('Last 5 minutes') }}</option>
                     <option value="15m">{{ __('Last 15 minutes') }}</option>
                     <option value="30m">{{ __('Last 30 minutes') }}</option>
