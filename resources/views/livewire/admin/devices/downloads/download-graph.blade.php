@@ -7,20 +7,37 @@
             ? 'focus-within:ring-2 focus-within:ring-secondary-400 dark:focus-within:ring-secondary-600'
             : 'focus-within:ring-2 focus-within:ring-primary-400 dark:focus-within:ring-primary-600');
 @endphp
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div class="lg:col-span-2 bg-white dark:bg-gray-800 rounded-lg shadow p-4 h-[375px] relative overflow-hidden">
-            <div class="flex items-center justify-between mb-5 gap-4">
-                <div class="flex-1 min-w-0">
-                    <h2 class="text-lg font-semibold truncate text-gray-900 dark:text-gray-100">
+<style>
+    @media (max-width: 640px) {
+        #downloads-chart-panel #chart-loading:not(.hidden) {
+            position: absolute !important;
+            inset: 0 !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            z-index: 60 !important;
+            background: transparent !important;
+        }
+
+        #downloads-chart-panel #chart-loading:not(.hidden) ~ * {
+            display: none !important;
+        }
+    }
+</style>
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6">
+        <div id="downloads-chart-panel" class="lg:col-span-2 bg-white dark:bg-gray-800 rounded-lg shadow p-3 md:p-4 flex flex-col min-h-[360px] md:min-h-[420px] relative">
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-2 md:mb-4 gap-2 md:gap-4">
+                <div class="flex-1 items-center min-w-0">
+                    <h2 class="text-base md:text-lg font-semibold truncate text-gray-900 dark:text-gray-100">
                         <i class="fa-solid fa-download mr-2" aria-hidden="true"></i>
                         {{ __('Downloads - Yearly view') }}
                     </h2>
-                    <p class="text-sm mt-1 truncate text-gray-600 dark:text-gray-400">
+                    <p class="text-sm mt-1 truncate text-gray-600 dark:text-gray-400 mb-2 md:mb-0">
                         {{ __('Monthly downloads for the selected year.') }}
                     </p>
                 </div>
 
-                <div class="flex items-center gap-3">
+                <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-3 w-full md:w-auto">
                     @php
                         $spinnerFillClass = $area === 'OTT' ? 'fill-primary-600' : ($area === 'DTH' ? 'fill-secondary-600' : 'fill-blue-600');
                     @endphp
@@ -33,11 +50,11 @@
                         </div>
                     </div>
 
-                    <div class="flex items-center space-x-3">
+                    <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-3 w-full sm:w-auto">
                         @if(isset($devices) && $devices->count())
-                        <div class="inline-flex items-center rounded-lg bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-700 px-3 py-1 shadow-sm {{ $selectRingClass }}">
+                            <div class="inline-flex items-center rounded-lg bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-700 px-3 py-1.5 sm:py-1 shadow-sm {{ $selectRingClass }} w-full sm:w-auto">
                                 <i class="fa-solid fa-hard-drive text-gray-400 mx-2" aria-hidden="true"></i>
-                                <select id="select-device" wire:model="selectedDevice" wire:change="$set('selectedDevice', $event.target.value)" class="appearance-none bg-transparent border-0 pl-2 pr-6 text-sm font-semibold text-gray-700 dark:text-gray-100 focus:outline-none cursor-pointer w-[220px] focus:ring-0 focus:border-0 truncate leading-tight" aria-label="{{ __('Select device') }}">
+                                <select id="select-device" wire:model="selectedDevice" wire:change="$set('selectedDevice', $event.target.value)" class="appearance-none bg-transparent border-0 pl-2 pr-6 text-sm font-semibold text-gray-700 dark:text-gray-100 focus:outline-none cursor-pointer w-full sm:w-[220px] focus:ring-0 focus:border-0 truncate leading-tight" aria-label="{{ __('Select device') }}">
                                     <option style="color:#1f2937;" class="dark:text-gray-100" value="">{{ __('All devices') }}</option>
                                     @foreach($devices as $d)
                                         <option style="color:#1f2937;" class="dark:text-gray-100" value="{{ $d->id }}">{{ $d->name }}</option>
@@ -47,9 +64,9 @@
                         @endif
 
                         <label for="select-year" class="sr-only">{{ __('Year') }}</label>
-                        <div class="inline-flex items-center rounded-lg bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-700 px-3 py-1 shadow-sm {{ $selectRingClass }}">
+                        <div class="inline-flex items-center rounded-lg bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-700 px-3 py-1.5 sm:py-1 shadow-sm {{ $selectRingClass }} w-full sm:w-auto mt-2 md:mt-0">
                             <i class="fa-solid fa-calendar text-gray-400 mx-2" aria-hidden="true"></i>
-                            <select id="select-year" wire:model="selectedYear" wire:change="$set('selectedYear', $event.target.value)" class="appearance-none bg-transparent border-0 pl-2 pr-6 text-sm font-semibold text-gray-700 dark:text-gray-100 focus:outline-none cursor-pointer min-w-[70px] focus:ring-0 focus:border-0" aria-label="{{ __('Select year') }}">
+                            <select id="select-year" wire:model="selectedYear" wire:change="$set('selectedYear', $event.target.value)" class="appearance-none bg-transparent border-0 pl-2 pr-6 text-sm font-semibold text-gray-700 dark:text-gray-100 focus:outline-none cursor-pointer w-full sm:min-w-[70px] focus:ring-0 focus:border-0" aria-label="{{ __('Select year') }}">
                                 @for($y = date('Y'); $y >= date('Y') - 3; $y--)
                                     <option style="color:#1f2937;" class="dark:text-gray-100" value="{{ $y }}">{{ $y }}</option>
                                 @endfor
@@ -59,59 +76,61 @@
                 </div>
             </div>
 
-            <div class="w-full h-full relative" wire:ignore>
-                <canvas id="monthlyDownloadsChart" class="w-full h-full block mb-20" role="img" aria-label="{{ __('Monthly downloads chart') }}"></canvas>
+            <div class="w-full flex-1 relative mt-2 md:mt-0" wire:ignore>
+                <canvas id="monthlyDownloadsChart" class="w-full h-full block" role="img" aria-label="{{ __('Monthly downloads chart') }}"></canvas>
             </div>
         </div>
 
-        <div class="flex flex-col space-y-4">
-            <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-4 flex-1 flex flex-col">
+        <div class="flex flex-col space-y-3 md:space-y-4">
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-3 md:p-4 flex-1 flex flex-col justify-between">
                 <h3 class="text-sm text-gray-600 dark:text-gray-400 flex items-center gap-2">
-                    <i class="fa-solid fa-chart-pie"></i>{{ __('Distribution') }}</h3>
-                <div class="mt-2 flex items-center justify-center" wire:ignore>
-                    <div class="w-[180px] h-[180px]">
+                    <i class="fa-solid fa-chart-pie"></i>{{ __('Distribution') }}
+                </h3>
+
+                <div class="mt-3 flex items-end justify-center" wire:ignore>
+                    <div class="w-[200px] h-[200px] sm:w-[220px] sm:h-[220px]">
                         <canvas id="pieDownloadsChart" class="w-full h-full" aria-label="{{ __('Downloads distribution chart') }}"></canvas>
+                    </div>
+                </div>
+
+                <div class="col-span-1 sm:col-span-2 md:col-span-3 mt-2">
+                    <div class="flex flex-col sm:flex-row items-center sm:items-center sm:justify-between gap-2 px-2">
+                        <div class="flex-shrink-0 text-[11px] sm:text-xs text-gray-600 dark:text-gray-400 mr-2">{{ __('Top device this year:') }}</div>
+
+                        @if(!empty($kpis['top_device']))
+                            @php $topDeviceImage = $kpis['top_device']['image'] ?? null; @endphp
+                            <div class="flex items-center gap-2 min-w-0">
+                                @if($topDeviceImage)
+                                    <img src="{{ $topDeviceImage }}" alt="{{ $kpis['top_device']['name'] ?? '' }}" class="w-5 h-5 sm:w-5 sm:h-5 object-contain object-center rounded flex-shrink-0" />
+                                @else
+                                    <div class="w-5 h-5 sm:w-5 sm:h-5 rounded bg-gray-100 dark:bg-gray-700 flex items-center justify-center flex-shrink-0">
+                                        <i class="fa-solid fa-hard-drive text-gray-400 text-[11px]"></i>
+                                    </div>
+                                @endif
+
+                                <div class="min-w-0">
+                                    <div class="text-[12px] sm:text-sm font-semibold text-gray-900 dark:text-gray-100 truncate" title="{{ $kpis['top_device']['name'] ?? '' }}">{{ $kpis['top_device']['name'] ?? '—' }}</div>
+                                </div>
+                            </div>
+                        @else
+                            <div class="text-xs sm:text-sm font-semibold text-gray-900 dark:text-gray-100">—</div>
+                        @endif
                     </div>
                 </div>
             </div>
 
-            <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-3 grid grid-cols-3 gap-3 text-center">
-                <div class="mt-1">
-                    <h4 class="text-xs text-gray-600 dark:text-gray-400">{{ __('Top month') }}</h4>
-                    <div class="text-xl font-bold mt-1 text-gray-900 dark:text-gray-100" id="kpi-top">{{ __($kpis['top']['month'] ?? '—') }}</div>
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-2.5 sm:p-3 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 text-center">
+                <div class="py-1 sm:py-2">
+                    <h4 class="text-[11px] sm:text-xs text-gray-600 dark:text-gray-400">{{ __('Top month') }}</h4>
+                    <div class="text-base sm:text-lg font-bold mt-0.5 text-gray-900 dark:text-gray-100" id="kpi-top">{{ __($kpis['top']['month'] ?? '—') }}</div>
                 </div>
-                <div class="mt-1">
-                    <h4 class="text-xs text-gray-600 dark:text-gray-400">{{ __('Average per month') }}</h4>
-                    <div class="text-xl font-bold mt-1 text-gray-900 dark:text-gray-100" id="kpi-average">{{ $kpis['average'] ?? 0 }}</div>
+                <div class="py-1 sm:py-2">
+                    <h4 class="text-[11px] sm:text-xs text-gray-600 dark:text-gray-400">{{ __('Average per month') }}</h4>
+                    <div class="text-base sm:text-lg font-bold mt-0.5 text-gray-900 dark:text-gray-100" id="kpi-average">{{ $kpis['average'] ?? 0 }}</div>
                 </div>
-                <div class="mt-1">
-                    <h4 class="text-xs text-gray-500">{{ __('Total per year') }}</h4>
-                    <div class="text-xl font-bold mt-1 text-gray-900 dark:text-gray-100" id="kpi-total">{{ $kpis['total'] ?? 0 }}</div>
-                </div>
-
-                <div class="col-span-3 mt-2">
-                    <div class="flex flex-col sm:flex-row items-start sm:items-center sm:justify-between gap-3 px-2">
-                        <div class="flex-shrink-0 text-xs text-gray-600 dark:text-gray-400">{{ __('Top device this year:') }}</div>
-
-                        @if(!empty($kpis['top_device']))
-                            @php $topDeviceImage = $kpis['top_device']['image'] ?? null; @endphp
-                            <div class="flex items-center gap-3 min-w-0 w-full sm:w-auto">
-                                @if($topDeviceImage)
-                                    <img src="{{ $topDeviceImage }}" alt="{{ $kpis['top_device']['name'] ?? '' }}" class="w-5 h-5 object-contain object-center rounded flex-shrink-0" />
-                                @else
-                                    <div class="w-5 h-5 rounded bg-gray-100 dark:bg-gray-700 flex items-center justify-center flex-shrink-0">
-                                        <i class="fa-solid fa-hard-drive text-gray-400"></i>
-                                    </div>
-                                @endif
-
-                                <div class="min-w-0 flex-1">
-                                    <div class="text-xs font-semibold text-gray-900 dark:text-gray-100 truncate" title="{{ $kpis['top_device']['name'] ?? '' }}">{{ $kpis['top_device']['name'] ?? '—' }}</div>
-                                </div>
-                            </div>
-                        @else
-                            <div class="text-sm font-semibold text-gray-900 dark:text-gray-100">—</div>
-                        @endif
-                    </div>
+                <div class="py-1 sm:py-2">
+                    <h4 class="text-[11px] sm:text-xs text-gray-500">{{ __('Total per year') }}</h4>
+                    <div class="text-base sm:text-lg font-bold mt-0.5 text-gray-900 dark:text-gray-100" id="kpi-total">{{ $kpis['total'] ?? 0 }}</div>
                 </div>
             </div>
         </div>
