@@ -17,19 +17,18 @@ class DownloadExportController extends Controller
 
         $query = DB::table('downloads')
             ->select([
-                'devices.id as device_id',
+                'downloads.id',
+                'downloads.device_id',
+                'downloads.year',
+                'downloads.month',
+                'downloads.count',
+                'downloads.created_at',
                 'devices.name as device_name',
                 'devices.protocol',
                 'devices.area as device_area',
-                'downloads.year',
-                'downloads.month',
-                DB::raw('SUM(downloads.count) as device_total'),
             ])
             ->join('devices', 'downloads.device_id', '=', 'devices.id')
-            ->groupBy('devices.id', 'devices.name', 'devices.protocol', 'devices.area', 'downloads.year', 'downloads.month')
-            ->orderBy('downloads.year', 'desc')
-            ->orderBy('downloads.month', 'desc')
-            ->orderBy('devices.name', 'asc');
+            ->orderBy('downloads.created_at', 'desc');
 
         if ($start && $end) {
             try {
@@ -49,7 +48,7 @@ class DownloadExportController extends Controller
             }
         }
 
-        $filename = 'download-history-' . now()->format('Ymd-His') . '.csv';
+        $filename = __('Download history') . '-' . now()->format('dmY-His') . '.csv';
 
         $headers = [
             'Content-Type' => 'text/csv; charset=UTF-8',
@@ -60,60 +59,27 @@ class DownloadExportController extends Controller
             $handle = fopen('php://output', 'w');
             fputs($handle, chr(0xEF) . chr(0xBB) . chr(0xBF));
 
-            fputcsv($handle, [__('Report'), __('History of monthly downloads')]);
-            fputcsv($handle, [__('Generated at'), now()->toDateTimeString()]);
-            if ($start || $end) {
-                fputcsv($handle, [__('Range start'), $start ?: '—']);
-                fputcsv($handle, [__('Range end'), $end ?: '—']);
-            } else {
-                fputcsv($handle, [__('Range'), __('All time')]);
-            }
-            fputcsv($handle, []);
-            fputcsv($handle, []);
+            $headerRow = ['id', 'device_id', 'device_name', 'protocol', 'device_area', 'year', 'month', 'count', 'created_at'];
+            fputcsv($handle, $headerRow);
 
-            fputcsv($handle, [
-                __('Device'), __('Protocol'), __('Year'), __('Month'), __('Total Downloads')
-            ]);
-
-            $currentYm = null;
-            $subtotal = 0;
-            $grandTotal = 0;
-
-            $query->chunk(500, function ($rows) use ($handle, &$currentYm, &$subtotal, &$grandTotal) {
+            $query->chunk(500, function ($rows) use ($handle) {
                 foreach ($rows as $r) {
-                    $ym = sprintf('%04d-%02d', $r->year, $r->month);
-                    $monthName = '';
-                    try {
-                        $monthName = \Carbon\Carbon::createFromFormat('!m', $r->month)->locale(app()->getLocale())->translatedFormat('F');
-                    } catch (\Throwable $e) {
-                        $monthName = (string) $r->month;
-                    }
-
-                    if ($currentYm !== null && $currentYm !== $ym) {
-                        fputcsv($handle, ['', '', '', __('Subtotal for') . ' ' . $currentYm, $subtotal]);
-                        $subtotal = 0;
-                    }
-
-                    fputcsv($handle, [
-                        $r->device_name,
-                        $r->protocol,
-                        $r->year,
-                        $monthName,
-                        $r->device_total,
-                    ]);
-
-                    $currentYm = $ym;
-                    $subtotal += (int) $r->device_total;
-                    $grandTotal += (int) $r->device_total;
+                    $values = [
+                        $r->id ?? '—',
+                        $r->device_id ?? '—',
+                        $r->device_name ?? '—',
+                        $r->protocol ?? '—',
+                        $r->device_area ?? '—',
+                        $r->year ?? '—',
+                        $r->month ?? '—',
+                        $r->count ?? '—',
+                        isset($r->created_at)
+                            ? Carbon::parse($r->created_at)->format('Y-m-d H:i:s') . ' UTC-6'
+                            : '—',
+                    ];
+                    fputcsv($handle, $values);
                 }
             });
-
-            if ($currentYm !== null) {
-                fputcsv($handle, ['', '', '', __('Subtotal for') . ' ' . $currentYm, $subtotal]);
-            }
-
-            fputcsv($handle, []);
-            fputcsv($handle, ['', '', '', __('Grand total'), $grandTotal]);
 
             fclose($handle);
         };
