@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\ChannelController;
 use App\Http\Controllers\Admin\DeviceController;
 use App\Http\Controllers\Admin\GrafanaController;
 use App\Http\Controllers\Admin\RadioController;
+use App\Http\Controllers\Admin\DownloadExportController;
 use App\Http\Controllers\Admin\StageController;
 use App\Http\Controllers\Admin\UserController;
 use Illuminate\Support\Facades\Route;
@@ -24,6 +25,10 @@ Route::resource('/stages', StageController::class)
 
 Route::get('devices/monthly-downloads', [DeviceController::class, 'monthlyDownloads'])
     ->name('admin.devices.monthly-downloads')
+    ->middleware(['auth', 'verified', 'can:viewAny,App\Models\Device']);
+
+Route::get('devices/downloads/history.csv', [DownloadExportController::class, 'historyCsv'])
+    ->name('admin.downloads.history.csv')
     ->middleware(['auth', 'verified', 'can:viewAny,App\Models\Device']);
 
 Route::resource('/devices', DeviceController::class)
