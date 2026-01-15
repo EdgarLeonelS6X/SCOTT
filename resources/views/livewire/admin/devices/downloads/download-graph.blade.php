@@ -88,7 +88,7 @@ $selectRingClass = $area === 'OTT'
             <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-3 md:p-4 flex-1 flex flex-col justify-between">
                 <div class="flex items-center justify-between">
                     <h3 class="text-sm text-gray-600 dark:text-gray-400 flex items-center gap-2">
-                        <i class="fa-solid fa-chart-pie"></i>Distribución por año:<span style="font-weight:600;">{{ $selectedYear ?? date('Y') }}</span>
+                        <i class="fa-solid fa-chart-pie"></i>{{ __(key: 'Distribution by year:') }}<span style="font-weight:600;">{{ $selectedYear ?? date('Y') }}</span>
                     </h3>
 
                     <div class="ml-0 sm:ml-2 mt-0 sm:mt-0">
@@ -263,7 +263,12 @@ $selectRingClass = $area === 'OTT'
                     const url = URL.createObjectURL(blob);
                     const a = document.createElement('a');
                     a.href = url;
-                    a.download = 'downloads-charts.pdf';
+                    (function(){
+                        const now = new Date();
+                        const pad = (n) => String(n).padStart(2, '0');
+                        const filename = `Download History ${now.getFullYear()}${pad(now.getMonth()+1)}${pad(now.getDate())} ${pad(now.getHours())}${pad(now.getMinutes())}${pad(now.getSeconds())}.pdf`;
+                        a.download = filename;
+                    })();
                     document.body.appendChild(a);
                     a.click();
                     a.remove();

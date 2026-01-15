@@ -18,13 +18,29 @@
         .title { font-size: 20px; font-weight: 700; color: var(--brand); }
         .badge { background: var(--brand); color: #fff; padding: 4px 10px; border-radius: 999px; font-size: 11px; letter-spacing: 0.4px; }
         .meta-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin-bottom: 16px; }
-        .card { border: 1px solid var(--border); border-radius: 10px; background: var(--bg); padding: 12px 14px; margin-bottom: 12px; }
+        .card { border: 1px solid var(--border); border-radius: 10px; background: var(--bg); padding: 12px 14px; margin-bottom: 12px; break-inside: avoid; page-break-inside: avoid; }
         .card h4 { margin: 0 0 6px 0; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--muted); }
         .card .value { font-size: 14px; font-weight: 700; color: var(--text); }
         .section { margin-top: 14px; margin-bottom: 16px; }
         .section h3 { margin: 0 0 8px 0; font-size: 14px; color: var(--text); }
         .chart-box { text-align: center; border: 1px solid var(--border); border-radius: 10px; padding: 10px; background: #fff; }
         .chart-box img { max-width: 100%; height: auto; max-height: 360px; object-fit: contain; }
+        .compact-table { width:100%; border-collapse:collapse; font-size:11px; }
+        .compact-table th, .compact-table td { padding:8px 10px; border-bottom:1px solid #eef2f6; }
+        .compact-table thead th { background:#f8fafc; color:var(--muted); font-weight:700; text-align:left; }
+        .compact-table td { color:var(--text); }
+        .compact-table tr:nth-child(even) { background: #fbfcfd; }
+        .group-card { page-break-inside: avoid; border-radius:8px; border:1px solid #eef2f6; background:#fff; padding:10px; margin-bottom:10px; }
+        .device-header { display:flex; align-items:center; gap:8px; }
+        .device-name { font-weight:700; font-size:13px; color:var(--text); }
+        .device-meta { font-size:11px; color:var(--muted); }
+        .device-total { font-weight:700; color:var(--text); }
+        .device-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; align-items: start; }
+        .month-list { margin:6px 0 0 0; padding:0; list-style:none; font-size:11px; color:var(--muted); }
+        .month-list li { margin-bottom:6px; }
+        .card .card-header { display:flex; align-items:center; gap:8px; width:100%; }
+        .card .card-header .device-name-inline { font-weight:700; font-size:13px; color:var(--text); flex:1; min-width:0; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; }
+        .card .card-header .device-total-inline { font-size:12px; color:var(--muted); flex:0 0 auto; }
         .details-section { page-break-before: always; }
         .details-table { page-break-inside: avoid; }
         tr { page-break-inside: avoid; page-break-after: auto; }
@@ -44,9 +60,67 @@
                 <div class="value">{{ now()->format('Y-m-d H:i:s') }}</div>
             </div>
             <div class="card">
-                <h4>{{ __('Year') }}</h4>
+                <h4>{{ __('Report year') }}</h4>
                 <div class="value">{{ $year ?? date('Y') }}</div>
             </div>
+            @php
+                $__months_local = ['',
+                    __('months.january'), __('months.february'), __('months.march'), __('months.april'), __('months.may'), __('months.june'),
+                    __('months.july'), __('months.august'), __('months.september'), __('months.october'), __('months.november'), __('months.december')
+                ];
+
+                $top_raw = $summary['top_month_label'] ?? null;
+                $top_month_label = '—';
+                if (!empty($top_raw)) {
+                    if (is_numeric($top_raw)) {
+                        $mi = intval($top_raw);
+                        $top_month_label = $__months_local[$mi] ?? $top_raw;
+                    } else {
+                        if (preg_match('/(\d{4})[-\/](\d{1,2})/', $top_raw, $m)) {
+                            $year = $m[1]; $mi = intval($m[2]);
+                            $top_month_label = ($__months_local[$mi] ?? $top_raw) . ' ' . $year;
+                        } elseif (preg_match('/(\d{1,2})[-\/](\d{4})/', $top_raw, $m2)) {
+                            $mi = intval($m2[1]); $year = $m2[2];
+                            $top_month_label = ($__months_local[$mi] ?? $top_raw) . ' ' . $year;
+                        } else {
+                            $map = [
+                                'january' => __('months.january'), 'february' => __('months.february'), 'march' => __('months.march'),
+                                'april' => __('months.april'), 'may' => __('months.may'), 'june' => __('months.june'),
+                                'july' => __('months.july'), 'august' => __('months.august'), 'september' => __('months.september'),
+                                'october' => __('months.october'), 'november' => __('months.november'), 'december' => __('months.december'),
+                                'jan' => __('months.january'), 'feb' => __('months.february'), 'mar' => __('months.march'),
+                                'apr' => __('months.april'), 'jun' => __('months.june'), 'jul' => __('months.july'),
+                                'aug' => __('months.august'), 'sep' => __('months.september'), 'oct' => __('months.october'),
+                                'nov' => __('months.november'), 'dec' => __('months.december'),
+                                'enero' => __('months.january'), 'febrero' => __('months.february'), 'marzo' => __('months.march'),
+                                'abril' => __('months.april'), 'mayo' => __('months.may'), 'junio' => __('months.june'),
+                                'julio' => __('months.july'), 'agosto' => __('months.august'), 'septiembre' => __('months.september'),
+                                'octubre' => __('months.october'), 'noviembre' => __('months.november'), 'diciembre' => __('months.december'),
+                                'ene' => __('months.january'), 'abr' => __('months.april'), 'ago' => __('months.august'),
+                                'dic' => __('months.december')
+                            ];
+                            $found = false;
+                            foreach ($map as $k => $v) {
+                                if (stripos($top_raw, $k) !== false) {
+                                    if (preg_match('/(\d{4})/', $top_raw, $y)) {
+                                        $top_month_label = $v . ' ' . $y[1];
+                                    } else {
+                                        $top_month_label = $v;
+                                    }
+                                    $found = true; break;
+                                }
+                            }
+                            if (!$found) {
+                                if (preg_match('/(\d{1,2})$/', $top_raw, $m3)) {
+                                    $mi = intval($m3[1]); if ($mi >=1 && $mi <=12) $top_month_label = $__months_local[$mi]; else $top_month_label = $top_raw;
+                                } else {
+                                    $top_month_label = $top_raw;
+                                }
+                            }
+                        }
+                    }
+                }
+            @endphp
             @if(!empty($summary))
                 <div class="card">
                     <h4>{{ __('Total downloads') }}</h4>
@@ -58,7 +132,7 @@
                 </div>
                 <div class="card">
                     <h4>{{ __('Top month') }}</h4>
-                    <div class="value">{{ $summary['top_month_label'] ?? '—' }} ({{ $summary['top_month_value'] ?? 0 }})</div>
+                    <div class="value">{{ $top_month_label }} ({{ $summary['top_month_value'] ?? 0 }})</div>
                 </div>
             @endif
         </div>
@@ -89,28 +163,38 @@
 
         <div class="section">
             <h3>{{ __('Downloads by device') }}</h3>
+            @php
+                $monthsFull = ['',
+                    __('months.january'), __('months.february'), __('months.march'), __('months.april'), __('months.may'), __('months.june'),
+                    __('months.july'), __('months.august'), __('months.september'), __('months.october'), __('months.november'), __('months.december')
+                ];
+            @endphp
             @if(!empty($devices) && count($devices))
-                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;">
+                <div class="device-grid">
                     @foreach($devices as $d)
                         <div class="card" style="display:flex;flex-direction:column;gap:8px;">
-                            <div style="display:flex;align-items:center;gap:8px;">
-                                @if(!empty($d['image']))
-                                    <img src="{{ $d['image'] }}" alt="" style="width:34px;height:34px;object-fit:contain;border-radius:6px;border:1px solid var(--border);background:#fff;" />
-                                @endif
-                                <div style="font-weight:700;font-size:13px;color:var(--text);">{{ $d['name'] }}</div>
-                                <div style="margin-left:auto;font-size:12px;color:var(--muted);">{{ __('Total') }}: {{ $d['total'] }}</div>
+                            <div class="card-header">
+                                <div class="device-name-inline">{{ $d['name'] }}</div>
+                                <div class="device-total-inline">{{ __('Total') }}: {{ $d['total'] }}</div>
                             </div>
 
                             <div style="width:100%">{!! $d['sparkline'] !!}</div>
 
-                            <div style="font-size:11px;color:var(--muted);">
+                            <div style="font-size:11px;color:var(--muted);margin-top:12px;">
                                 <strong>{{ __('Monthly counts') }}:</strong>
-                                <span>
+                                <ul class="month-list">
                                     @foreach($d['counts'] as $i => $c)
-                                        @php $lbl = $period_labels[$i] ?? ''; @endphp
-                                        <div style="display:inline-block;margin-right:8px;">{{ $lbl }}: {{ $c }}</div>
+                                        @php
+                                            if (is_numeric($i)) {
+                                                $mIndex = intval($i) + 1;
+                                                $lbl = $monthsFull[$mIndex] ?? ($period_labels[$i] ?? '');
+                                            } else {
+                                                $lbl = $period_labels[$i] ?? '';
+                                            }
+                                        @endphp
+                                        <li>{{ $lbl }}: {{ $c }}</li>
                                     @endforeach
-                                </span>
+                                </ul>
                             </div>
                         </div>
                     @endforeach
@@ -130,32 +214,43 @@
             <div style="overflow:auto; border:1px solid var(--border); border-radius:8px; padding:8px; background:#fff;">
                 @if(!empty($grouped_by_device) && count($grouped_by_device))
                     @foreach($grouped_by_device as $device)
-                        <div class="card" style="margin-bottom:10px; padding:10px;">
-                            <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;">
+                        <div class="group-card">
+                            <div class="device-header" style="justify-content:space-between;">
                                 <div>
-                                    <div style="font-weight:700;font-size:13px;color:var(--text);">{{ $device['name'] ?? $device['device_name'] ?? __('Unknown device') }}</div>
-                                    <div style="font-size:11px;color:var(--muted);">{{ $device['protocol'] ?? '' }} @if(!empty($device['device_area'])) — {{ $device['device_area'] }} @endif</div>
+                                    <div class="device-name">{{ $device['name'] ?? $device['device_name'] ?? __('Unknown device') }}</div>
+                                    <div class="device-meta">{{ $device['protocol'] ?? '' }} @if(!empty($device['device_area'])) — {{ $device['device_area'] }} @endif</div>
                                 </div>
-                                <div style="font-weight:700;color:var(--text);">{{ __('Total') }}: {{ $device['total'] ?? (is_array($device['counts'] ?? null) ? array_sum($device['counts']) : 0) }}</div>
+                                <div class="device-total">{{ __('Total') }}: {{ $device['total'] ?? (is_array($device['counts'] ?? null) ? array_sum($device['counts']) : 0) }}</div>
                             </div>
 
                             <div style="margin-top:8px;">
-                                <table style="width:100%; border-collapse:collapse; font-size:11px;">
+                                <table class="compact-table">
                                     <thead>
                                         <tr>
-                                            <th style="text-align:left; padding:6px 8px; border-bottom:1px solid var(--border);">{{ __('Month') }}</th>
-                                            <th style="text-align:right; padding:6px 8px; border-bottom:1px solid var(--border);">{{ __('Downloads') }}</th>
+                                            <th>{{ __('Month') }}</th>
+                                            <th style="text-align:right;">{{ __('Downloads') }}</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         @php
                                             $counts = $device['counts'] ?? $device['months'] ?? [];
+                                            $monthsArr = ['',
+                                                __('months.january'), __('months.february'), __('months.march'), __('months.april'), __('months.may'), __('months.june'),
+                                                __('months.july'), __('months.august'), __('months.september'), __('months.october'), __('months.november'), __('months.december')
+                                            ];
                                         @endphp
                                         @if(is_array($counts) && count($counts))
                                             @foreach($counts as $idx => $cnt)
+                                                @php
+                                                    $lbl = $period_labels[$idx] ?? ($device['months_labels'][$idx] ?? null);
+                                                    if (!$lbl) {
+                                                        $mIndex = intval($idx) + 1;
+                                                        $lbl = ($monthsArr[$mIndex] ?? '') . ' ' . ($device['year'] ?? $year ?? '');
+                                                    }
+                                                @endphp
                                                 <tr>
-                                                    <td style="padding:6px 8px; border-bottom:1px solid #f1f3f5;">{{ $period_labels[$idx] ?? ($device['months_labels'][$idx] ?? '') }}</td>
-                                                    <td style="padding:6px 8px; text-align:right; border-bottom:1px solid #f1f3f5;">{{ $cnt }}</td>
+                                                    <td>{{ $lbl }}</td>
+                                                    <td style="text-align:right;">{{ $cnt }}</td>
                                                 </tr>
                                             @endforeach
                                         @else
@@ -198,26 +293,38 @@
                             if (($a['year'] ?? '') != ($b['year'] ?? '')) return (($a['year'] ?? 0) <=> ($b['year'] ?? 0));
                             return (($a['month'] ?? 0) <=> ($b['month'] ?? 0));
                         });
+                        $monthsArr = ['',
+                            __('months.january'), __('months.february'), __('months.march'), __('months.april'), __('months.may'), __('months.june'),
+                            __('months.july'), __('months.august'), __('months.september'), __('months.october'), __('months.november'), __('months.december')
+                        ];
                     @endphp
 
-                    <table style="width:100%; border-collapse:collapse; font-size:11px;">
+                    <table class="compact-table">
                         <thead>
                             <tr>
-                                <th style="text-align:left; padding:6px 8px; border-bottom:1px solid var(--border);">{{ __('Device') }}</th>
-                                <th style="text-align:left; padding:6px 8px; border-bottom:1px solid var(--border);">{{ __('Protocol') }}</th>
-                                <th style="text-align:right; padding:6px 8px; border-bottom:1px solid var(--border);">{{ __('Month') }}</th>
-                                <th style="text-align:right; padding:6px 8px; border-bottom:1px solid var(--border);">{{ __('Year') }}</th>
-                                <th style="text-align:right; padding:6px 8px; border-bottom:1px solid var(--border);">{{ __('Downloads') }}</th>
+                                <th>{{ __('Device') }}</th>
+                                <th>{{ __('Protocol') }}</th>
+                                <th style="text-align:right;">{{ __('Month') }}</th>
+                                <th style="text-align:right;">{{ __('Year') }}</th>
+                                <th style="text-align:right;">{{ __('Downloads') }}</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach($groupedRows as $row)
+                                @php
+                                    $m = $row['month'];
+                                    $monthLabel = $m;
+                                    if (is_numeric($m)) {
+                                        $mi = intval($m);
+                                        $monthLabel = ($monthsArr[$mi] ?? $m);
+                                    }
+                                @endphp
                                 <tr>
-                                    <td style="padding:6px 8px; border-bottom:1px solid #f1f3f5;">{{ $row['device_name'] }}</td>
-                                    <td style="padding:6px 8px; border-bottom:1px solid #f1f3f5;">{{ $row['protocol'] }}</td>
-                                    <td style="padding:6px 8px; text-align:right; border-bottom:1px solid #f1f3f5;">{{ $row['month'] }}</td>
-                                    <td style="padding:6px 8px; text-align:right; border-bottom:1px solid #f1f3f5;">{{ $row['year'] }}</td>
-                                    <td style="padding:6px 8px; text-align:right; border-bottom:1px solid #f1f3f5;">{{ $row['count'] }}</td>
+                                    <td>{{ $row['device_name'] }}</td>
+                                    <td>{{ $row['protocol'] }}</td>
+                                    <td style="text-align:right;">{{ $monthLabel }}</td>
+                                    <td style="text-align:right;">{{ $row['year'] }}</td>
+                                    <td style="text-align:right;">{{ $row['count'] }}</td>
                                 </tr>
                             @endforeach
                         </tbody>

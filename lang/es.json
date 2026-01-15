@@ -821,5 +821,20 @@
     "Detailed downloads": "Descargas detalladas",
     "Figure 3. Monthly download trends per device for the selected range.": "Figura 3. Tendencias mensuales de descargas por dispositivo para el rango seleccionado.",
     "No detailed download records for the selected range.": "No hay registros de descargas detalladas para el rango seleccionado.",
-    "No monthly counts for this device.": "No hay recuentos mensuales para este dispositivo."
+    "No monthly counts for this device.": "No hay recuentos mensuales para este dispositivo.",
+    "Monthly counts": "Recuentos mensuales",
+    "months.january": "Enero",
+    "months.february": "Febrero",
+    "months.march": "Marzo",
+    "months.april": "Abril",
+    "months.may": "Mayo",
+    "months.june": "Junio",
+    "months.july": "Julio",
+    "months.august": "Agosto",
+    "months.september": "Septiembre",
+    "months.october": "Octubre",
+    "months.november": "Noviembre",
+    "months.december": "Diciembre",
+    "Distribution by year:": "Distribución por año:",
+    "Report year": "Año del reporte"
 }

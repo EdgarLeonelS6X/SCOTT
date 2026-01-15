@@ -560,7 +560,7 @@ class DownloadExportController extends Controller
         $dompdf->render();
 
         $pdf = $dompdf->output();
-        $filename = __('Download history') . ' - ' . now()->format(format: 'dmY-His') . '.pdf';
+        $filename = __('Download History') . ' ' . now()->format(format: 'dmY His') . '.pdf';
 
         return response($pdf, 200, [
             'Content-Type' => 'application/pdf',
