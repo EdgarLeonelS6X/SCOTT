@@ -35,7 +35,7 @@
         .device-name { font-weight:700; font-size:13px; color:var(--text); }
         .device-meta { font-size:11px; color:var(--muted); }
         .device-total { font-weight:700; color:var(--text); }
-        .device-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; align-items: start; }
+        .device-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; align-items: start; }
         .month-list { margin:6px 0 0 0; padding:0; list-style:none; font-size:11px; color:var(--muted); }
         .month-list li { margin-bottom:6px; }
         .card .card-header { display:flex; align-items:center; gap:8px; width:100%; }
@@ -172,7 +172,7 @@
             @if(!empty($devices) && count($devices))
                 <div class="device-grid">
                     @foreach($devices as $d)
-                        <div class="card" style="display:flex;flex-direction:column;gap:8px;">
+                        <div class="card" style="display:flex;flex-direction:column;">
                             <div class="card-header">
                                 <div class="device-name-inline">{{ $d['name'] }}</div>
                                 <div class="device-total-inline">{{ __('Total') }}: {{ $d['total'] }}</div>
@@ -213,56 +213,124 @@
             <h3>{{ __('Detailed downloads') }}</h3>
             <div style="overflow:auto; border:1px solid var(--border); border-radius:8px; padding:8px; background:#fff;">
                 @if(!empty($grouped_by_device) && count($grouped_by_device))
-                    @foreach($grouped_by_device as $device)
-                        <div class="group-card">
-                            <div class="device-header" style="justify-content:space-between;">
-                                <div>
-                                    <div class="device-name">{{ $device['name'] ?? $device['device_name'] ?? __('Unknown device') }}</div>
-                                    <div class="device-meta">{{ $device['protocol'] ?? '' }} @if(!empty($device['device_area'])) — {{ $device['device_area'] }} @endif</div>
-                                </div>
-                                <div class="device-total">{{ __('Total') }}: {{ $device['total'] ?? (is_array($device['counts'] ?? null) ? array_sum($device['counts']) : 0) }}</div>
-                            </div>
+                    @php $deviceCount = count($grouped_by_device); @endphp
+                    @if($deviceCount > 1)
+                        @php
+                            $monthsArr = ['',
+                                __('months.january'), __('months.february'), __('months.march'), __('months.april'), __('months.may'), __('months.june'),
+                                __('months.july'), __('months.august'), __('months.september'), __('months.october'), __('months.november'), __('months.december')
+                            ];
+                            $byMonth = [];
+                            foreach ($grouped_by_device as $dev) {
+                                $name = $dev['name'] ?? $dev['device_name'] ?? __('Unknown device');
+                                $protocol = $dev['protocol'] ?? '';
+                                $area = $dev['device_area'] ?? '';
+                                $counts = $dev['counts'] ?? $dev['months'] ?? [];
+                                $devYear = $dev['year'] ?? $year ?? date('Y');
+                                if (!is_array($counts)) continue;
+                                foreach ($counts as $idx => $cnt) {
+                                    $mIndex = intval($idx) + 1;
+                                    if ($mIndex < 1 || $mIndex > 12) continue;
+                                    $monthKey = sprintf('%04d-%02d', intval($devYear), $mIndex);
+                                    $label = ($monthsArr[$mIndex] ?? '') . ' ' . $devYear;
+                                    if (!isset($byMonth[$monthKey])) {
+                                        $byMonth[$monthKey] = ['label' => $label, 'rows' => []];
+                                    }
+                                    $byMonth[$monthKey]['rows'][] = [
+                                        'device_name' => $name,
+                                        'protocol' => $protocol,
+                                        'area' => $area,
+                                        'count' => $cnt,
+                                    ];
+                                }
+                            }
+                            ksort($byMonth);
+                        @endphp
 
-                            <div style="margin-top:8px;">
-                                <table class="compact-table">
-                                    <thead>
-                                        <tr>
-                                            <th>{{ __('Month') }}</th>
-                                            <th style="text-align:right;">{{ __('Downloads') }}</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @php
-                                            $counts = $device['counts'] ?? $device['months'] ?? [];
-                                            $monthsArr = ['',
-                                                __('months.january'), __('months.february'), __('months.march'), __('months.april'), __('months.may'), __('months.june'),
-                                                __('months.july'), __('months.august'), __('months.september'), __('months.october'), __('months.november'), __('months.december')
-                                            ];
-                                        @endphp
-                                        @if(is_array($counts) && count($counts))
-                                            @foreach($counts as $idx => $cnt)
-                                                @php
-                                                    $lbl = $period_labels[$idx] ?? ($device['months_labels'][$idx] ?? null);
-                                                    if (!$lbl) {
-                                                        $mIndex = intval($idx) + 1;
-                                                        $lbl = ($monthsArr[$mIndex] ?? '') . ' ' . ($device['year'] ?? $year ?? '');
-                                                    }
-                                                @endphp
+                        @foreach($byMonth as $monthKey => $mdata)
+                            <div class="group-card">
+                                <div class="device-header" style="justify-content:space-between;">
+                                    <div>
+                                        <div class="device-name">{{ $mdata['label'] }}</div>
+                                        <div class="device-meta">{{ __('Devices') }}</div>
+                                    </div>
+                                    <div class="device-total">{{ __('Total') }}: {{ array_sum(array_column($mdata['rows'], 'count')) }}</div>
+                                </div>
+
+                                <div style="margin-top:8px;">
+                                    <table class="compact-table">
+                                        <thead>
+                                            <tr>
+                                                <th>{{ __('Device') }}</th>
+                                                <th>{{ __('Protocol') }}</th>
+                                                <th style="text-align:right;">{{ __('Downloads') }}</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach($mdata['rows'] as $r)
                                                 <tr>
-                                                    <td>{{ $lbl }}</td>
-                                                    <td style="text-align:right;">{{ $cnt }}</td>
+                                                    <td>{{ $r['device_name'] }}</td>
+                                                    <td>{{ $r['protocol'] }}{{ $r['area'] ? ' — ' . $r['area'] : '' }}</td>
+                                                    <td style="text-align:right;">{{ $r['count'] }}</td>
                                                 </tr>
                                             @endforeach
-                                        @else
-                                            <tr>
-                                                <td colspan="2" style="padding:8px;color:var(--muted);">{{ __('No monthly counts for this device.') }}</td>
-                                            </tr>
-                                        @endif
-                                    </tbody>
-                                </table>
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
-                        </div>
-                    @endforeach
+                        @endforeach
+                    @else
+                        @foreach($grouped_by_device as $device)
+                            <div class="group-card">
+                                <div class="device-header" style="justify-content:space-between;">
+                                    <div>
+                                        <div class="device-name">{{ $device['name'] ?? $device['device_name'] ?? __('Unknown device') }}</div>
+                                        <div class="device-meta">{{ $device['protocol'] ?? '' }} @if(!empty($device['device_area'])) — {{ $device['device_area'] }} @endif</div>
+                                    </div>
+                                    <div class="device-total">{{ __('Total') }}: {{ $device['total'] ?? (is_array($device['counts'] ?? null) ? array_sum($device['counts']) : 0) }}</div>
+                                </div>
+
+                                <div style="margin-top:8px;">
+                                    <table class="compact-table">
+                                        <thead>
+                                            <tr>
+                                                <th>{{ __('Month') }}</th>
+                                                <th style="text-align:right;">{{ __('Downloads') }}</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @php
+                                                $counts = $device['counts'] ?? $device['months'] ?? [];
+                                                $monthsArr = ['',
+                                                    __('months.january'), __('months.february'), __('months.march'), __('months.april'), __('months.may'), __('months.june'),
+                                                    __('months.july'), __('months.august'), __('months.september'), __('months.october'), __('months.november'), __('months.december')
+                                                ];
+                                            @endphp
+                                            @if(is_array($counts) && count($counts))
+                                                @foreach($counts as $idx => $cnt)
+                                                    @php
+                                                        $lbl = $period_labels[$idx] ?? ($device['months_labels'][$idx] ?? null);
+                                                        if (!$lbl) {
+                                                            $mIndex = intval($idx) + 1;
+                                                            $lbl = ($monthsArr[$mIndex] ?? '') . ' ' . ($device['year'] ?? $year ?? '');
+                                                        }
+                                                    @endphp
+                                                    <tr>
+                                                        <td>{{ $lbl }}</td>
+                                                        <td style="text-align:right;">{{ $cnt }}</td>
+                                                    </tr>
+                                                @endforeach
+                                            @else
+                                                <tr>
+                                                    <td colspan="2" style="padding:8px;color:var(--muted);">{{ __('No monthly counts for this device.') }}</td>
+                                                </tr>
+                                            @endif
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        @endforeach
+                    @endif
                 @elseif(!empty($download_rows) && count($download_rows))
                     @php
                         $grouped = [];
