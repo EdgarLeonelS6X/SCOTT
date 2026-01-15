@@ -8,6 +8,7 @@ $selectRingClass = $area === 'OTT'
         ? 'focus-within:ring-2 focus-within:ring-secondary-400 dark:focus-within:ring-secondary-600'
         : 'focus-within:ring-2 focus-within:ring-primary-400 dark:focus-within:ring-primary-600');
 @endphp
+
 <style>
     @media (max-width: 640px) {
         #downloads-chart-panel #chart-loading:not(.hidden) {
@@ -172,9 +173,64 @@ $selectRingClass = $area === 'OTT'
         <script src="/js/downloads-graph.js"></script>
         <script>
             const downloadsPdfUrl = "{{ route('admin.downloads.history.pdf') }}";
+            const downloadsDataUrl = "{{ route('admin.downloads.history.data') }}";
 
-            function exportChartsPdf(e) {
+            if (window && typeof Livewire !== 'undefined') {
+                try {
+                    Livewire.on('downloads-updated', function(payload) {
+                        window.__downloadsLatest = payload;
+                        console.log('cached downloads-updated payload', payload);
+                    });
+                } catch (e) {}
+            }
+
+            async function exportChartsPdf(e) {
                 e && e.preventDefault();
+
+                const yearSelect = document.querySelector('#select-year');
+                const deviceSelect = document.querySelector('#select-device');
+                const params = new URLSearchParams();
+                if (yearSelect) params.append('year', yearSelect.value);
+                if (deviceSelect && deviceSelect.value) params.append('device_id', deviceSelect.value);
+
+                const tokenMeta = document.querySelector('meta[name="csrf-token"]');
+                const headers = tokenMeta ? { 'X-CSRF-TOKEN': tokenMeta.getAttribute('content') } : {};
+
+                console.log('Checking for cached Livewire payload...');
+
+                let preData = null;
+                try {
+                    if (window.__downloadsLatest && window.__downloadsLatest.year == (yearSelect?.value || '') && ( (!deviceSelect || !deviceSelect.value) || window.__downloadsLatest.device_id == (deviceSelect?.value || null) )) {
+                        preData = window.__downloadsLatest;
+                        console.log('Using cached Livewire payload for PDF export', preData);
+                    }
+                } catch (e) { console.warn(e); }
+
+                if (!preData) {
+                    console.log('Fetching data from: ' + downloadsDataUrl + '?' + params.toString());
+                    try {
+                        const resp = await fetch(downloadsDataUrl + '?' + params.toString(), { headers: { 'X-Requested-With': 'XMLHttpRequest', ...(headers || {}) } });
+                        console.log('Data endpoint response status:', resp.status);
+                        if (!resp.ok) throw new Error('Data fetch failed with status ' + resp.status);
+                        preData = await resp.json();
+                        console.log('Prefetched data received:', preData);
+                    } catch (err) {
+                        console.error('Error fetching historical data:', err);
+                        alert('Error fetching historical data from server: ' + err.message);
+                        return;
+                    }
+                }
+
+                if (!preData || typeof preData !== 'object') {
+                    console.error('Invalid data response (not object):', preData);
+                    alert('Invalid data response from server');
+                    return;
+                }
+
+                if (!preData.download_rows || !Array.isArray(preData.download_rows)) {
+                    console.warn('Warning: download_rows not present or not array', preData);
+                }
+
                 const monthlyCanvas = document.getElementById('monthlyDownloadsChart');
                 const pieCanvas = document.getElementById('pieDownloadsChart');
                 if (!monthlyCanvas || !pieCanvas) {
@@ -188,37 +244,35 @@ $selectRingClass = $area === 'OTT'
                 const fd = new FormData();
                 fd.append('charts[monthly]', monthlyData);
                 fd.append('charts[pie]', pieData);
-                const yearSelect = document.querySelector('#select-year');
-                const deviceSelect = document.querySelector('#select-device');
-                if (yearSelect) {
-                    fd.append('year', yearSelect.value);
-                }
-                if (deviceSelect) {
-                    fd.append('device_id', deviceSelect.value);
-                }
+                if (yearSelect) fd.append('year', yearSelect.value);
+                if (deviceSelect) fd.append('device_id', deviceSelect.value);
+                fd.append('data', JSON.stringify(preData));
 
-                const tokenMeta = document.querySelector('meta[name="csrf-token"]');
-                const headers = tokenMeta ? { 'X-CSRF-TOKEN': tokenMeta.getAttribute('content') } : {};
+                console.log('Posting PDF with data, fields:', {
+                    has_year: !!yearSelect?.value,
+                    has_device_id: !!deviceSelect?.value,
+                    data_size: JSON.stringify(preData).length,
+                    download_rows_count: preData.download_rows?.length || 0,
+                });
 
-                fetch(downloadsPdfUrl, { method: 'POST', body: fd, headers })
-                    .then(resp => {
-                        if (!resp.ok) throw new Error('PDF generation failed');
-                        return resp.blob();
-                    })
-                    .then(blob => {
-                        const url = URL.createObjectURL(blob);
-                        const a = document.createElement('a');
-                        a.href = url;
-                        a.download = 'downloads-charts.pdf';
-                        document.body.appendChild(a);
-                        a.click();
-                        a.remove();
-                        URL.revokeObjectURL(url);
-                    })
-                    .catch(err => {
-                        console.error(err);
-                        alert('Error generating PDF');
-                    });
+                try {
+                    const resp = await fetch(downloadsPdfUrl, { method: 'POST', body: fd, headers });
+                    console.log('PDF endpoint response status:', resp.status);
+                    if (!resp.ok) throw new Error('PDF generation failed with status ' + resp.status);
+                    const blob = await resp.blob();
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = 'downloads-charts.pdf';
+                    document.body.appendChild(a);
+                    a.click();
+                    a.remove();
+                    URL.revokeObjectURL(url);
+                    console.log('PDF downloaded successfully');
+                } catch (err) {
+                    console.error('Error generating PDF:', err);
+                    alert('Error generating PDF: ' + err.message);
+                }
             }
         </script>
     @endpush

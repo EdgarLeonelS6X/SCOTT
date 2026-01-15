@@ -165,6 +165,9 @@ class DownloadGraph extends Component
                 'DASH' => $dashPercent ?? 0,
                 'totalDevices' => $totalDevicesWithDownloads ?? 0,
             ],
+            'download_rows' => [],
+            'devices' => [],
+            'period_labels' => [],
         ];
 
         if ($this->selectedDevice) {
@@ -175,6 +178,110 @@ class DownloadGraph extends Component
                 $payload['device_name'] = null;
             }
         }
+
+        try {
+            $months = [];
+            for ($m = 1; $m <= 12; $m++) {
+                $months[] = sprintf('%04d-%02d', $this->selectedYear, $m);
+            }
+
+            $rows = DB::table('downloads')
+                ->selectRaw('downloads.device_id, downloads.month as month, SUM(downloads.count) as total, devices.name')
+                ->join('devices', 'downloads.device_id', '=', 'devices.id')
+                ->where('downloads.year', $this->selectedYear)
+                ->when($this->selectedDevice && $this->selectedDevice !== '', function ($q) {
+                    $q->where('downloads.device_id', $this->selectedDevice);
+                })
+                ->groupBy('downloads.device_id', 'downloads.month', 'devices.name')
+                ->orderBy('devices.name')
+                ->get();
+
+            $devices = [];
+            foreach ($rows as $r) {
+                $did = $r->device_id;
+                if (!isset($devices[$did])) {
+                    $devices[$did] = [
+                        'id' => $did,
+                        'name' => $r->name,
+                        'image' => $r->image ?? null,
+                        'months' => array_fill(0, 12, 0),
+                    ];
+                }
+                $idx = intval($r->month) - 1;
+                if ($idx >= 0 && $idx < 12) $devices[$did]['months'][$idx] = (int)$r->total;
+            }
+
+            $devicesList = [];
+            foreach ($devices as $dev) {
+                $counts = $dev['months'];
+                $total = array_sum($counts);
+                $avg = count($counts) ? round($total / count($counts), 2) : 0;
+                $topIndex = array_search(max($counts), $counts);
+                $topLabel = $topIndex !== false ? date('M Y', mktime(0,0,0, $topIndex+1, 1, $this->selectedYear)) : null;
+                $topValue = $counts[$topIndex] ?? 0;
+
+                $max = max($counts) ?: 1;
+                $w = 260; $h = 48; $pad = 6;
+                $pts = [];
+                $n = count($counts);
+                for ($i = 0; $i < $n; $i++) {
+                    $x = $pad + ($i * ($w - $pad * 2) / max(1, $n - 1));
+                    $y = $h - $pad - (($counts[$i] / $max) * ($h - $pad * 2));
+                    $pts[] = round($x,1) . ',' . round($y,1);
+                }
+                $points = implode(' ', $pts);
+                $svg = '<svg width="' . $w . '" height="' . $h . '" xmlns="http://www.w3.org/2000/svg"><polyline fill="none" stroke="#0f6fec" stroke-width="2" points="' . $points . '"/></svg>';
+
+                $devicesList[] = [
+                    'id' => $dev['id'],
+                    'name' => $dev['name'],
+                    'image' => $dev['image'] ?? null,
+                    'counts' => $counts,
+                    'total' => $total,
+                    'average' => $avg,
+                    'top_month_label' => $topLabel,
+                    'top_month_value' => $topValue,
+                    'sparkline' => $svg,
+                ];
+            }
+
+            $downloadRows = DB::table('downloads')
+                ->select([
+                    'downloads.id',
+                    'downloads.device_id',
+                    'devices.name as device_name',
+                    'devices.protocol',
+                    'devices.area as device_area',
+                    'downloads.year',
+                    'downloads.month',
+                    'downloads.count',
+                    'downloads.created_at',
+                ])
+                ->join('devices', 'downloads.device_id', '=', 'devices.id')
+                ->where('downloads.year', $this->selectedYear)
+                ->when($this->selectedDevice && $this->selectedDevice !== '', function ($q) {
+                    $q->where('downloads.device_id', $this->selectedDevice);
+                })
+                ->orderBy('downloads.created_at', 'desc')
+                ->get()
+                ->map(function ($r) {
+                    return [
+                        'id' => $r->id,
+                        'device_id' => $r->device_id,
+                        'device_name' => $r->device_name,
+                        'protocol' => $r->protocol,
+                        'device_area' => $r->device_area ?? '',
+                        'year' => $r->year,
+                        'month' => $r->month,
+                        'count' => $r->count,
+                        'created_at' => isset($r->created_at) ? date('Y-m-d H:i:s', strtotime($r->created_at)) : null,
+                    ];
+                })->toArray();
+
+            $payload['download_rows'] = $downloadRows;
+            $payload['devices'] = $devicesList;
+            $payload['period_labels'] = array_map(function ($m) { return date('M Y', strtotime($m . '-01')); }, $months);
+        } catch (\Exception $e) { }
 
         try { $this->dispatch('downloads-updated', $payload); } catch (\Exception $e) {}
     }
