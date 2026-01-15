@@ -1,12 +1,12 @@
 <div>
 
 @php
-    $area = Auth::user()?->area;
-    $selectRingClass = $area === 'OTT'
-        ? 'focus-within:ring-2 focus-within:ring-primary-400 dark:focus-within:ring-primary-600'
-        : ($area === 'DTH'
-            ? 'focus-within:ring-2 focus-within:ring-secondary-400 dark:focus-within:ring-secondary-600'
-            : 'focus-within:ring-2 focus-within:ring-primary-400 dark:focus-within:ring-primary-600');
+$area = Auth::user()?->area;
+$selectRingClass = $area === 'OTT'
+    ? 'focus-within:ring-2 focus-within:ring-primary-400 dark:focus-within:ring-primary-600'
+    : ($area === 'DTH'
+        ? 'focus-within:ring-2 focus-within:ring-secondary-400 dark:focus-within:ring-secondary-600'
+        : 'focus-within:ring-2 focus-within:ring-primary-400 dark:focus-within:ring-primary-600');
 @endphp
 <style>
     @media (max-width: 640px) {
@@ -85,9 +85,18 @@
 
         <div class="flex flex-col space-y-3 md:space-y-4">
             <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-3 md:p-4 flex-1 flex flex-col justify-between">
-                <h3 class="text-sm text-gray-600 dark:text-gray-400 flex items-center gap-2">
-                    <i class="fa-solid fa-chart-pie"></i>{{ __('Distribution') }}
-                </h3>
+                <div class="flex items-center justify-between">
+                    <h3 class="text-sm text-gray-600 dark:text-gray-400 flex items-center gap-2">
+                        <i class="fa-solid fa-chart-pie"></i>Distribución por año: <span style="font-weight:600;">{{ $selectedYear ?? date('Y') }}</span>
+                    </h3>
+
+                    <div class="ml-0 sm:ml-2 mt-0 sm:mt-0">
+                        <button type="button" id="exportPdfBtn" onclick="exportChartsPdf(event)"
+                            class="inline-flex items-center px-3 py-1.5 bg-gray-600 text-white rounded-lg text-sm hover:bg-gray-700 focus:outline-none">
+                            <i class="fa-solid fa-file-pdf mr-2"></i> {{ __('Export PDF') }}
+                        </button>
+                    </div>
+                </div>
 
                 <div class="mt-3 flex items-end justify-center" wire:ignore>
                     <div class="w-[200px] h-[200px] sm:w-[220px] sm:h-[220px]">
@@ -95,8 +104,26 @@
                     </div>
                 </div>
 
-                <div class="col-span-1 sm:col-span-2 md:col-span-3 mt-2">
-                    <div class="flex flex-col sm:flex-row items-center sm:items-center sm:justify-between gap-2 px-2">
+                @php
+                    $devProtocol = $kpis['device_protocol_percent'] ?? null;
+                @endphp
+
+                @if(!empty($devProtocol) && is_array($devProtocol))
+                    <div class="flex items-center justify-center gap-3 mt-2">
+                        <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-blue-50 text-blue-800 border border-blue-100 dark:bg-blue-900 dark:text-blue-200">
+                            <i class="fa-solid fa-tv mr-1.5"></i>
+                            HLS: {{ $devProtocol['HLS'] }}%
+                        </span>
+
+                        <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-green-50 text-green-800 border border-green-100 dark:bg-green-900 dark:text-green-200">
+                            <i class="fa-solid fa-computer mr-1.5"></i>
+                            DASH: {{ $devProtocol['DASH'] }}%
+                        </span>
+                    </div>
+                @endif
+
+                <div class="col-span-1 sm:col-span-2 md:col-span-3">
+                    <div class="flex flex-col sm:flex-row items-center sm:items-center sm:justify-between gap-2">
                         <div class="flex-shrink-0 text-[11px] sm:text-xs text-gray-600 dark:text-gray-400 mr-2">{{ __('Top device this year:') }}</div>
 
                         @if(!empty($kpis['top_device']))
@@ -198,8 +225,8 @@
 @endonce
 
 @php
-    $__initialDownloadsData = $monthlyData ?? array_fill(0, 12, 0);
-    $__initialDownloadsKpis = $kpis ?? ['total' => 0, 'average' => 0, 'top' => ['month' => '—', 'value' => 0]];
+$__initialDownloadsData = $monthlyData ?? array_fill(0, 12, 0);
+$__initialDownloadsKpis = $kpis ?? ['total' => 0, 'average' => 0, 'top' => ['month' => '—', 'value' => 0]];
 @endphp
 
 <script type="application/json" id="initialDownloadsData">{!! json_encode($__initialDownloadsData) !!}</script>

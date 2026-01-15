@@ -809,5 +809,6 @@
     "radio url": "url de la radio",
     "Edit radio": "Editar radio",
     "Update the radio information.": "Actualice la información de la radio.",
-    "Export CSV": "Exportar CSV"
+    "Export CSV": "Exportar CSV",
+    "Export PDF": "Exportar PDF"
 }

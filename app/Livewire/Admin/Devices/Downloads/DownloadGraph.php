@@ -123,6 +123,35 @@ class DownloadGraph extends Component
             $pie = [0, 0];
         }
 
+        try {
+            $perDeviceProtocol = DB::table('downloads')
+                ->where('year', $this->selectedYear)
+                ->join('devices', 'downloads.device_id', '=', 'devices.id')
+                ->select('devices.protocol', 'downloads.device_id', DB::raw('SUM(downloads.`count`) as total'))
+                ->groupBy('downloads.device_id', 'devices.protocol')
+                ->havingRaw('SUM(downloads.`count`) > 0')
+                ->get();
+
+            $totalDevicesWithDownloads = $perDeviceProtocol->count();
+            $hlsDevices = $perDeviceProtocol->where('protocol', 'HLS')->count();
+            $dashDevices = $perDeviceProtocol->where('protocol', 'DASH')->count();
+
+            $hlsPercent = $totalDevicesWithDownloads ? round(($hlsDevices / $totalDevicesWithDownloads) * 100, 1) : 0;
+            $dashPercent = $totalDevicesWithDownloads ? round(($dashDevices / $totalDevicesWithDownloads) * 100, 1) : 0;
+        } catch (\Exception $e) {
+            $totalDevicesWithDownloads = 0;
+            $hlsPercent = 0;
+            $dashPercent = 0;
+        }
+
+        $this->kpis = array_merge($this->kpis, [
+            'device_protocol_percent' => [
+                'HLS' => $hlsPercent ?? 0,
+                'DASH' => $dashPercent ?? 0,
+                'totalDevices' => $totalDevicesWithDownloads ?? 0,
+            ],
+        ]);
+
         $payload = [
             'data' => $this->monthlyData,
             'year' => $this->selectedYear,
@@ -131,6 +160,11 @@ class DownloadGraph extends Component
             'pieLabels' => $pieLabels,
             'device_name' => null,
             'device_id' => $this->selectedDevice,
+            'deviceProtocolPercent' => [
+                'HLS' => $hlsPercent ?? 0,
+                'DASH' => $dashPercent ?? 0,
+                'totalDevices' => $totalDevicesWithDownloads ?? 0,
+            ],
         ];
 
         if ($this->selectedDevice) {
