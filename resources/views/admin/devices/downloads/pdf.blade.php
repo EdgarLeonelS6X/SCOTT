@@ -2,10 +2,10 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>{{ __('Downloads Report') }}</title>
+    <title>{{ __('Downloads report') }}</title>
     <style>
         :root {
-            --brand: #0f6fec;
+            --brand: #9F24A5;
             --text: #1f2933;
             --muted: #52606d;
             --border: #e5e7eb;
@@ -18,7 +18,7 @@
         .title { font-size: 20px; font-weight: 700; color: var(--brand); }
         .badge { background: var(--brand); color: #fff; padding: 4px 10px; border-radius: 999px; font-size: 11px; letter-spacing: 0.4px; }
         .meta-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin-bottom: 16px; }
-        .card { border: 1px solid var(--border); border-radius: 10px; background: var(--bg); padding: 12px 14px; }
+        .card { border: 1px solid var(--border); border-radius: 10px; background: var(--bg); padding: 12px 14px; margin-bottom: 12px; }
         .card h4 { margin: 0 0 6px 0; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--muted); }
         .card .value { font-size: 14px; font-weight: 700; color: var(--text); }
         .section { margin-top: 14px; margin-bottom: 16px; }
@@ -29,14 +29,13 @@
         .details-table { page-break-inside: avoid; }
         tr { page-break-inside: avoid; page-break-after: auto; }
         .note { font-size: 11px; color: var(--muted); margin-top: 6px; }
-        .footer { font-size: 11px; color: var(--muted); text-align: center; margin-top: 10px; border-top: 1px solid var(--border); padding-top: 8px; }
+        .footer { font-size: 11px; color: var(--muted); text-align: center; margin-top: 10px; padding-top: 8px; }
     </style>
 </head>
 <body>
     <div class="page">
         <div class="header">
-            <div class="title">{{ __('Downloads Report') }}</div>
-            <div class="badge">{{ __('Charts') }}</div>
+            <div class="title">{{ __('Downloads report by devices') }}</div>
         </div>
 
         <div class="meta-grid">
@@ -48,63 +47,23 @@
                 <h4>{{ __('Year') }}</h4>
                 <div class="value">{{ $year ?? date('Y') }}</div>
             </div>
-        </div>
-
-        @if(!empty($summary))
-            <div style="display:flex;gap:10px;margin-bottom:8px;">
-                <div class="card" style="flex:1;">
+            @if(!empty($summary))
+                <div class="card">
                     <h4>{{ __('Total downloads') }}</h4>
                     <div class="value">{{ $summary['total'] ?? 0 }}</div>
                 </div>
-                <div class="card" style="flex:1;">
+                <div class="card">
                     <h4>{{ __('Average per month') }}</h4>
                     <div class="value">{{ $summary['average'] ?? 0 }}</div>
                 </div>
-                <div class="card" style="flex:1;">
+                <div class="card">
                     <h4>{{ __('Top month') }}</h4>
                     <div class="value">{{ $summary['top_month_label'] ?? '—' }} ({{ $summary['top_month_value'] ?? 0 }})</div>
                 </div>
-            </div>
-        @endif
-
-        <div class="section details-section" style="margin-top:0;">
-            <h3>{{ __('Detailed downloads') }}</h3>
-            <div style="overflow:auto; border:1px solid var(--border); border-radius:8px; padding:8px; background:#fff;">
-                @if(!empty($download_rows) && count($download_rows))
-                    <table class="details-table" style="width:100%; border-collapse:collapse; font-size:10px;">
-                        <thead>
-                            <tr>
-                                <th style="text-align:left; padding:6px 8px; border-bottom:1px solid var(--border);">{{ __('ID') }}</th>
-                                <th style="text-align:left; padding:6px 8px; border-bottom:1px solid var(--border);">{{ __('Device') }}</th>
-                                <th style="text-align:left; padding:6px 8px; border-bottom:1px solid var(--border);">{{ __('Protocol') }}</th>
-                                <th style="text-align:left; padding:6px 8px; border-bottom:1px solid var(--border);">{{ __('Area') }}</th>
-                                <th style="text-align:right; padding:6px 8px; border-bottom:1px solid var(--border);">{{ __('Year') }}</th>
-                                <th style="text-align:right; padding:6px 8px; border-bottom:1px solid var(--border);">{{ __('Month') }}</th>
-                                <th style="text-align:right; padding:6px 8px; border-bottom:1px solid var(--border);">{{ __('Count') }}</th>
-                                <th style="text-align:left; padding:6px 8px; border-bottom:1px solid var(--border);">{{ __('Created at') }}</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach($download_rows as $row)
-                                <tr>
-                                    <td style="padding:6px 8px; border-bottom:1px solid #f1f3f5;">{{ $row['id'] }}</td>
-                                    <td style="padding:6px 8px; border-bottom:1px solid #f1f3f5;">{{ $row['device_name'] }}</td>
-                                    <td style="padding:6px 8px; border-bottom:1px solid #f1f3f5;">{{ $row['protocol'] }}</td>
-                                    <td style="padding:6px 8px; border-bottom:1px solid #f1f3f5;">{{ $row['device_area'] }}</td>
-                                    <td style="padding:6px 8px; text-align:right; border-bottom:1px solid #f1f3f5;">{{ $row['year'] }}</td>
-                                    <td style="padding:6px 8px; text-align:right; border-bottom:1px solid #f1f3f5;">{{ $row['month'] }}</td>
-                                    <td style="padding:6px 8px; text-align:right; border-bottom:1px solid #f1f3f5;">{{ $row['count'] }}</td>
-                                    <td style="padding:6px 8px; border-bottom:1px solid #f1f3f5;">{{ $row['created_at'] }}</td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                @else
-                    <div style="padding:12px;color:var(--muted);">{{ __('No detailed download records for the selected range.') }}</div>
-                @endif
-            </div>
-            <div class="note">{{ __('Table. Full download records for the selected range.') }}</div>
+            @endif
         </div>
+
+        <br><br>
 
         @if(!empty($monthlyImage))
             <div class="section">
@@ -117,7 +76,7 @@
         @endif
 
         @if(!empty($pieImage))
-            <div class="section">
+            <div class="section" style="margin-top: 12px;">
                 <h3>{{ __('Protocol distribution') }}</h3>
                 <div class="chart-box">
                     <img src="{{ $pieImage }}" alt="pie chart">
@@ -125,6 +84,8 @@
                 <div class="note">{{ __('Figure 2. Share of downloads by protocol.') }}</div>
             </div>
         @endif
+
+        <br>
 
         <div class="section">
             <h3>{{ __('Downloads by device') }}</h3>
@@ -161,34 +122,102 @@
                 </div>
             @endif
         </div>
-        <div class="section" style="margin-top:18px;">
+
+        <br><br><br>
+
+        <div class="section details-section" style="margin-top:18px;">
             <h3>{{ __('Detailed downloads') }}</h3>
             <div style="overflow:auto; border:1px solid var(--border); border-radius:8px; padding:8px; background:#fff;">
-                @if(!empty($download_rows) && count($download_rows))
+                @if(!empty($grouped_by_device) && count($grouped_by_device))
+                    @foreach($grouped_by_device as $device)
+                        <div class="card" style="margin-bottom:10px; padding:10px;">
+                            <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;">
+                                <div>
+                                    <div style="font-weight:700;font-size:13px;color:var(--text);">{{ $device['name'] ?? $device['device_name'] ?? __('Unknown device') }}</div>
+                                    <div style="font-size:11px;color:var(--muted);">{{ $device['protocol'] ?? '' }} @if(!empty($device['device_area'])) — {{ $device['device_area'] }} @endif</div>
+                                </div>
+                                <div style="font-weight:700;color:var(--text);">{{ __('Total') }}: {{ $device['total'] ?? (is_array($device['counts'] ?? null) ? array_sum($device['counts']) : 0) }}</div>
+                            </div>
+
+                            <div style="margin-top:8px;">
+                                <table style="width:100%; border-collapse:collapse; font-size:11px;">
+                                    <thead>
+                                        <tr>
+                                            <th style="text-align:left; padding:6px 8px; border-bottom:1px solid var(--border);">{{ __('Month') }}</th>
+                                            <th style="text-align:right; padding:6px 8px; border-bottom:1px solid var(--border);">{{ __('Downloads') }}</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @php
+                                            $counts = $device['counts'] ?? $device['months'] ?? [];
+                                        @endphp
+                                        @if(is_array($counts) && count($counts))
+                                            @foreach($counts as $idx => $cnt)
+                                                <tr>
+                                                    <td style="padding:6px 8px; border-bottom:1px solid #f1f3f5;">{{ $period_labels[$idx] ?? ($device['months_labels'][$idx] ?? '') }}</td>
+                                                    <td style="padding:6px 8px; text-align:right; border-bottom:1px solid #f1f3f5;">{{ $cnt }}</td>
+                                                </tr>
+                                            @endforeach
+                                        @else
+                                            <tr>
+                                                <td colspan="2" style="padding:8px;color:var(--muted);">{{ __('No monthly counts for this device.') }}</td>
+                                            </tr>
+                                        @endif
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    @endforeach
+                @elseif(!empty($download_rows) && count($download_rows))
+                    @php
+                        $grouped = [];
+                        foreach ($download_rows as $r) {
+                            $deviceName = $r['device_name'] ?? ($r['device'] ?? '');
+                            $protocol = $r['protocol'] ?? '';
+                            $area = $r['device_area'] ?? ($r['area'] ?? '');
+                            $month = $r['month'] ?? '';
+                            $yearRow = $r['year'] ?? ($r['year'] ?? '');
+                            $count = isset($r['count']) ? (int)$r['count'] : 0;
+                            $key = implode('|', [$deviceName, $protocol, $area, $month, $yearRow]);
+                            if (!isset($grouped[$key])) {
+                                $grouped[$key] = [
+                                    'device_name' => $deviceName,
+                                    'protocol' => $protocol,
+                                    'device_area' => $area,
+                                    'month' => $month,
+                                    'year' => $yearRow,
+                                    'count' => 0,
+                                ];
+                            }
+                            $grouped[$key]['count'] += $count;
+                        }
+                        $groupedRows = array_values($grouped);
+                        usort($groupedRows, function($a, $b) {
+                            $cmp = strcmp($a['device_name'] ?? '', $b['device_name'] ?? '');
+                            if ($cmp !== 0) return $cmp;
+                            if (($a['year'] ?? '') != ($b['year'] ?? '')) return (($a['year'] ?? 0) <=> ($b['year'] ?? 0));
+                            return (($a['month'] ?? 0) <=> ($b['month'] ?? 0));
+                        });
+                    @endphp
+
                     <table style="width:100%; border-collapse:collapse; font-size:11px;">
                         <thead>
                             <tr>
-                                <th style="text-align:left; padding:6px 8px; border-bottom:1px solid var(--border);">{{ __('ID') }}</th>
                                 <th style="text-align:left; padding:6px 8px; border-bottom:1px solid var(--border);">{{ __('Device') }}</th>
                                 <th style="text-align:left; padding:6px 8px; border-bottom:1px solid var(--border);">{{ __('Protocol') }}</th>
-                                <th style="text-align:left; padding:6px 8px; border-bottom:1px solid var(--border);">{{ __('Area') }}</th>
-                                <th style="text-align:right; padding:6px 8px; border-bottom:1px solid var(--border);">{{ __('Year') }}</th>
                                 <th style="text-align:right; padding:6px 8px; border-bottom:1px solid var(--border);">{{ __('Month') }}</th>
-                                <th style="text-align:right; padding:6px 8px; border-bottom:1px solid var(--border);">{{ __('Count') }}</th>
-                                <th style="text-align:left; padding:6px 8px; border-bottom:1px solid var(--border);">{{ __('Created at') }}</th>
+                                <th style="text-align:right; padding:6px 8px; border-bottom:1px solid var(--border);">{{ __('Year') }}</th>
+                                <th style="text-align:right; padding:6px 8px; border-bottom:1px solid var(--border);">{{ __('Downloads') }}</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach($download_rows as $row)
+                            @foreach($groupedRows as $row)
                                 <tr>
-                                    <td style="padding:6px 8px; border-bottom:1px solid #f1f3f5;">{{ $row['id'] }}</td>
                                     <td style="padding:6px 8px; border-bottom:1px solid #f1f3f5;">{{ $row['device_name'] }}</td>
                                     <td style="padding:6px 8px; border-bottom:1px solid #f1f3f5;">{{ $row['protocol'] }}</td>
-                                    <td style="padding:6px 8px; border-bottom:1px solid #f1f3f5;">{{ $row['device_area'] }}</td>
-                                    <td style="padding:6px 8px; text-align:right; border-bottom:1px solid #f1f3f5;">{{ $row['year'] }}</td>
                                     <td style="padding:6px 8px; text-align:right; border-bottom:1px solid #f1f3f5;">{{ $row['month'] }}</td>
+                                    <td style="padding:6px 8px; text-align:right; border-bottom:1px solid #f1f3f5;">{{ $row['year'] }}</td>
                                     <td style="padding:6px 8px; text-align:right; border-bottom:1px solid #f1f3f5;">{{ $row['count'] }}</td>
-                                    <td style="padding:6px 8px; border-bottom:1px solid #f1f3f5;">{{ $row['created_at'] }}</td>
                                 </tr>
                             @endforeach
                         </tbody>
@@ -200,7 +229,7 @@
             <div class="note">{{ __('Table. Full download records for the selected range.') }}</div>
         </div>
 
-        <div class="footer">{{ config('app.name') }} — {{ __('Confidential') }}</div>
+        <div class="footer">{{ config('app.name') }}</div>
     </div>
 </body>
 </html>

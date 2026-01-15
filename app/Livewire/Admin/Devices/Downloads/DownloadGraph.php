@@ -281,6 +281,46 @@ class DownloadGraph extends Component
             $payload['download_rows'] = $downloadRows;
             $payload['devices'] = $devicesList;
             $payload['period_labels'] = array_map(function ($m) { return date('M Y', strtotime($m . '-01')); }, $months);
+
+            $groupedByDevice = [];
+            foreach ($devicesList as $dev) {
+                $monthRows = [];
+                foreach ($payload['period_labels'] as $idx => $label) {
+                    $monthRows[] = [
+                        'label' => $label,
+                        'count' => $dev['counts'][$idx] ?? 0,
+                    ];
+                }
+                $groupedByDevice[$dev['id']] = [
+                    'id' => $dev['id'],
+                    'name' => $dev['name'],
+                    'months' => $monthRows,
+                    'total' => $dev['total'] ?? array_sum($dev['counts']),
+                ];
+            }
+
+            $groupedByMonth = [];
+            foreach ($payload['period_labels'] as $idx => $label) {
+                $devicesForMonth = [];
+                $monthTotal = 0;
+                foreach ($devicesList as $dev) {
+                    $c = $dev['counts'][$idx] ?? 0;
+                    $devicesForMonth[] = [
+                        'device_id' => $dev['id'],
+                        'name' => $dev['name'],
+                        'count' => $c,
+                    ];
+                    $monthTotal += $c;
+                }
+                $groupedByMonth[] = [
+                    'label' => $label,
+                    'devices' => $devicesForMonth,
+                    'total' => $monthTotal,
+                ];
+            }
+
+            $payload['grouped_by_device'] = $groupedByDevice;
+            $payload['grouped_by_month'] = $groupedByMonth;
         } catch (\Exception $e) { }
 
         try { $this->dispatch('downloads-updated', $payload); } catch (\Exception $e) {}

@@ -286,6 +286,46 @@ class DownloadExportController extends Controller
                 'top_month_value' => $overallTopValue,
             ];
 
+            $groupedByDevice = [];
+            foreach ($data['devices'] as $dev) {
+                $monthRows = [];
+                foreach ($data['period_labels'] as $idx => $label) {
+                    $monthRows[] = [
+                        'label' => $label,
+                        'count' => $dev['counts'][$idx] ?? 0,
+                    ];
+                }
+                $groupedByDevice[$dev['id']] = [
+                    'id' => $dev['id'],
+                    'name' => $dev['name'],
+                    'months' => $monthRows,
+                    'total' => $dev['total'] ?? array_sum($dev['counts']),
+                ];
+            }
+
+            $groupedByMonth = [];
+            foreach ($data['period_labels'] as $idx => $label) {
+                $devicesForMonth = [];
+                $monthTotal = 0;
+                foreach ($data['devices'] as $dev) {
+                    $c = $dev['counts'][$idx] ?? 0;
+                    $devicesForMonth[] = [
+                        'device_id' => $dev['id'],
+                        'name' => $dev['name'],
+                        'count' => $c,
+                    ];
+                    $monthTotal += $c;
+                }
+                $groupedByMonth[] = [
+                    'label' => $label,
+                    'devices' => $devicesForMonth,
+                    'total' => $monthTotal,
+                ];
+            }
+
+            $data['grouped_by_device'] = $groupedByDevice;
+            $data['grouped_by_month'] = $groupedByMonth;
+
             \Log::info('historyData: Final response prepared', [
                 'devices_count' => count($data['devices']),
                 'download_rows_count' => count($data['download_rows']),

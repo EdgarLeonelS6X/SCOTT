@@ -88,7 +88,7 @@ $selectRingClass = $area === 'OTT'
             <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-3 md:p-4 flex-1 flex flex-col justify-between">
                 <div class="flex items-center justify-between">
                     <h3 class="text-sm text-gray-600 dark:text-gray-400 flex items-center gap-2">
-                        <i class="fa-solid fa-chart-pie"></i>Distribución por año: <span style="font-weight:600;">{{ $selectedYear ?? date('Y') }}</span>
+                        <i class="fa-solid fa-chart-pie"></i>Distribución por año:<span style="font-weight:600;">{{ $selectedYear ?? date('Y') }}</span>
                     </h3>
 
                     <div class="ml-0 sm:ml-2 mt-0 sm:mt-0">
@@ -110,7 +110,7 @@ $selectRingClass = $area === 'OTT'
                 @endphp
 
                 @if(!empty($devProtocol) && is_array($devProtocol))
-                    <div class="flex items-center justify-center gap-3 mt-2">
+                    <div class="flex items-center justify-center gap-3">
                         <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-blue-50 text-blue-800 border border-blue-100 dark:bg-blue-900 dark:text-blue-200">
                             <i class="fa-solid fa-tv mr-1.5"></i>
                             HLS: {{ $devProtocol['HLS'] }}%

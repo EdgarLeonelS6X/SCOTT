@@ -810,5 +810,16 @@
     "Edit radio": "Editar radio",
     "Update the radio information.": "Actualice la información de la radio.",
     "Export CSV": "Exportar CSV",
-    "Export PDF": "Exportar PDF"
+    "Export PDF": "Exportar PDF",
+    "Downloads report by devices": "Informe de descargas por dispositivos",
+    "Generated at": "Generado en",
+    "Figure 1. Monthly downloads for the selected year.": "Figura 1. Descargas mensuales para el año seleccionado.",
+    "Protocol distribution": "Distribución de protocolos",
+    "Figure 2. Share of downloads by protocol.": "Figura 2. Partición de descargas por protocolo.",
+    "Downloads by device": "Descargas por dispositivo",
+    "Table. Full download records for the selected range.": "Tabla. Registros completos de descargas para el rango seleccionado.",
+    "Detailed downloads": "Descargas detalladas",
+    "Figure 3. Monthly download trends per device for the selected range.": "Figura 3. Tendencias mensuales de descargas por dispositivo para el rango seleccionado.",
+    "No detailed download records for the selected range.": "No hay registros de descargas detalladas para el rango seleccionado.",
+    "No monthly counts for this device.": "No hay recuentos mensuales para este dispositivo."
 }
