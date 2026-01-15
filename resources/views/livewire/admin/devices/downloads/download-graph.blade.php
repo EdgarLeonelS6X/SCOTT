@@ -1,4 +1,5 @@
 <div>
+
 @php
     $area = Auth::user()?->area;
     $selectRingClass = $area === 'OTT'
@@ -24,6 +25,7 @@
         }
     }
 </style>
+
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6">
         <div id="downloads-chart-panel" class="lg:col-span-2 bg-white dark:bg-gray-800 rounded-lg shadow p-3 md:p-4 flex flex-col min-h-[360px] md:min-h-[420px] relative">
             <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-2 md:mb-4 gap-2 md:gap-4">
@@ -141,6 +143,57 @@
     @push('js')
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
         <script src="/js/downloads-graph.js"></script>
+        <script>
+            const downloadsPdfUrl = "{{ route('admin.downloads.history.pdf') }}";
+
+            function exportChartsPdf(e) {
+                e && e.preventDefault();
+                const monthlyCanvas = document.getElementById('monthlyDownloadsChart');
+                const pieCanvas = document.getElementById('pieDownloadsChart');
+                if (!monthlyCanvas || !pieCanvas) {
+                    alert('Charts not ready');
+                    return;
+                }
+
+                const monthlyData = monthlyCanvas.toDataURL('image/png');
+                const pieData = pieCanvas.toDataURL('image/png');
+
+                const fd = new FormData();
+                fd.append('charts[monthly]', monthlyData);
+                fd.append('charts[pie]', pieData);
+                const yearSelect = document.querySelector('#select-year');
+                const deviceSelect = document.querySelector('#select-device');
+                if (yearSelect) {
+                    fd.append('year', yearSelect.value);
+                }
+                if (deviceSelect) {
+                    fd.append('device_id', deviceSelect.value);
+                }
+
+                const tokenMeta = document.querySelector('meta[name="csrf-token"]');
+                const headers = tokenMeta ? { 'X-CSRF-TOKEN': tokenMeta.getAttribute('content') } : {};
+
+                fetch(downloadsPdfUrl, { method: 'POST', body: fd, headers })
+                    .then(resp => {
+                        if (!resp.ok) throw new Error('PDF generation failed');
+                        return resp.blob();
+                    })
+                    .then(blob => {
+                        const url = URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.href = url;
+                        a.download = 'downloads-charts.pdf';
+                        document.body.appendChild(a);
+                        a.click();
+                        a.remove();
+                        URL.revokeObjectURL(url);
+                    })
+                    .catch(err => {
+                        console.error(err);
+                        alert('Error generating PDF');
+                    });
+            }
+        </script>
     @endpush
 @endonce
 
